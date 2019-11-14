@@ -100,6 +100,7 @@ class MTV_PUBLIC DTVMultiplex
     uint             mplex;
     QString          sistandard;
     IPTVTuningData   iptv_tuning;
+    uint             transportid;
 };
 
 class MTV_PUBLIC ScanDTVTransport : public DTVMultiplex

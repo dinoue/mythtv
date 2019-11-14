@@ -38,6 +38,7 @@
 #include <sys/select.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <linux/version.h>
 
 // MythTV headers
 #include "mythconfig.h"
@@ -341,7 +342,7 @@ bool DVBChannel::Open(DVBChannel *who)
     if (tunerType.IsDiSEqCSupported())
     {
 
-        diseqc_tree = diseqc_dev.FindTree(m_inputid);
+        //diseqc_tree = diseqc_dev.FindTree(m_inputid);
         if (diseqc_tree)
         {
             bool is_SCR = false;
@@ -732,7 +733,7 @@ bool DVBChannel::Tune(const DTVMultiplex &tuning,
     {
         LOG(VB_GENERAL, LOG_ERR, LOC +
             "DVB-S needs device tree for LNB handling");
-        return false;
+        //return false;
     }
 
     desired_tuning = tuning;
@@ -879,15 +880,51 @@ bool DVBChannel::Tune(const DTVMultiplex &tuning,
         else
 #endif
         {
-            struct dvb_frontend_parameters params = dtvmultiplex_to_dvbparams(
-                tunerType, tuning, intermediate_freq, can_fec_auto);
-
-            if (ioctl(fd_frontend, FE_SET_FRONTEND, &params) < 0)
+            if (DTVTunerType::kTunerTypeDVBS1 == tunerType)
             {
-                LOG(VB_GENERAL, LOG_ERR, LOC +
-                    "Tune(): Setting Frontend tuning parameters failed." + ENO);
-                return false;
+                usleep(500 * 1000);
+
+                struct dtv_properties *cmds;
+
+                cmds = (struct dtv_properties*) calloc(1, sizeof(*cmds));
+                cmds->props = (struct dtv_property*) calloc(11, sizeof(*(cmds->props)));
+                cmds->props[0].cmd      = DTV_VOLTAGE;
+                cmds->props[0].u.data   = SEC_VOLTAGE_18;
+                cmds->props[1].cmd      = DTV_FREQUENCY;
+                cmds->props[1].u.data   = tuning.frequency;
+                #if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+                    cmds->props[2].cmd      = DTV_ISDBS_TS_ID;
+                #else
+                    cmds->props[2].cmd      = DTV_ISDBS_TS_ID_LEGACY;
+                #endif
+                cmds->props[2].u.data   = tuning.transportid;
+                cmds->props[3].cmd      = DTV_TUNE;
+                cmds->props[3].u.data   = 1;
+                cmds->num = 4;
+
+                int res = ioctl(fd_frontend, FE_SET_PROPERTY, cmds);
+
+                free(cmds->props);
+                free(cmds);
+
+                if (res < 0)
+                {
+                    LOG(VB_GENERAL, LOG_ERR, LOC +
+                        "Tune(): Setting Frontend tuning parameters failed." + ENO);
+                    return false;
+                }
             }
+           else
+           {
+                struct dvb_frontend_parameters params = dtvmultiplex_to_dvbparams(
+                    tunerType, tuning, intermediate_freq, can_fec_auto);
+                if (ioctl(fd_frontend, FE_SET_FRONTEND, &params) < 0)
+                {
+                    LOG(VB_GENERAL, LOG_ERR, LOC +
+                        "Tune(): Setting Frontend tuning parameters failed." + ENO);
+                    return false;
+                }
+           }
         }
 
         // Extra delay to add for broken DVB drivers

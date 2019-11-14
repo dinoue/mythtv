@@ -99,6 +99,7 @@ desc_list_t MPEGDescriptor::FindAll(const desc_list_t &parsed, uint desc_tag)
     return tmp;
 }
 
+/*
 static uint maxPriority(const QMap<uint,uint> &langPrefs)
 {
     uint max_pri = 0;
@@ -200,6 +201,7 @@ desc_list_t MPEGDescriptor::FindBestMatches(
 
     return tmp;
 }
+*/
 
 #define EMPTY_STR_16 "","","","", "","","","", "","","","", "","","","",
 
@@ -397,8 +399,8 @@ QString MPEGDescriptor::toString() const
         SET_STRING(ComponentNameDescriptor);
     else if (DescriptorID::conditional_access == DescriptorTag())
         SET_STRING(ConditionalAccessDescriptor);
-    else if (DescriptorID::network_name == DescriptorTag())
-        SET_STRING(NetworkNameDescriptor);
+    //else if (DescriptorID::network_name == DescriptorTag())
+    //    SET_STRING(NetworkNameDescriptor);
     //else if (DescriptorID::linkage == DescriptorTag())
     //    SET_STRING(LinkageDescriptor);
     else if (DescriptorID::adaptation_field_data == DescriptorTag())
@@ -413,14 +415,14 @@ QString MPEGDescriptor::toString() const
         SET_STRING(TerrestrialDeliverySystemDescriptor);
     else if (DescriptorID::frequency_list == DescriptorTag())
         SET_STRING(FrequencyListDescriptor);
-    else if (DescriptorID::service == DescriptorTag())
-        SET_STRING(ServiceDescriptor);
+    //else if (DescriptorID::service == DescriptorTag())
+    //    SET_STRING(ServiceDescriptor);
     else if (DescriptorID::stream_identifier == DescriptorTag())
         SET_STRING(StreamIdentifierDescriptor);
     else if (DescriptorID::default_authority == DescriptorTag())
         SET_STRING(DefaultAuthorityDescriptor);
-    else if (DescriptorID::bouquet_name == DescriptorTag())
-        SET_STRING(BouquetNameDescriptor);
+    //else if (DescriptorID::bouquet_name == DescriptorTag())
+    //    SET_STRING(BouquetNameDescriptor);
     else if (DescriptorID::country_availability == DescriptorTag())
         SET_STRING(CountryAvailabilityDescriptor);
     else if (DescriptorID::service_list == DescriptorTag())

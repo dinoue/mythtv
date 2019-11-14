@@ -241,11 +241,12 @@ void EITHelper::AddETT(uint atsc_major, uint atsc_minor,
 static void parse_dvb_event_descriptors(desc_list_t list, FixupValue fix,
                                         QMap<uint,uint> languagePreferences,
                                         QString &title, QString &subtitle,
-                                        QString &description, QMap<QString,QString> &items)
+                                        QString &description, QMap<QString,QString> &items,
+				        DVBKind dvbkind)
 {
     const unsigned char *bestShortEvent =
-        MPEGDescriptor::FindBestMatch(
-            list, DescriptorID::short_event, languagePreferences);
+        DVBDescriptor::FindBestMatch(
+            list, DescriptorID::short_event, languagePreferences, dvbkind);
 
     // from EN 300 468, Appendix A.2 - Selection of character table
     unsigned char enc_1[3]  = { 0x10, 0x00, 0x01 };
@@ -298,23 +299,38 @@ static void parse_dvb_event_descriptors(desc_list_t list, FixupValue fix,
 
     if (bestShortEvent)
     {
-        ShortEventDescriptor sed(bestShortEvent);
+        QRegExp pre_pattern(QString::fromUtf8("^((\\[.{1,2}\\]|【.】|<[^>]+>|5[\\.．]1)+)")); 
+        QRegExp suf_pattern(QString::fromUtf8(".+(?:〜[^〜]+〜)?.*(?:(?:-[^\\-]+-)|(?:−[^−]+−))?.*(((\\[.{1,2}\\])+|[#＃]\\d+|\\([#＃]?\\d+\\)|（[#＃]?\\d+）|vol\\.\\d+|\\(?第(?!.{1,3}部)|最終回|「(?![^」]+」(.?[<＜]|.*[#＃第]\\d+))|[<＜【▽◆]).*)"), Qt::CaseInsensitive); 
+        ShortEventDescriptor sed(bestShortEvent, dvbkind);
         if (enc)
         {
             title    = sed.EventName(enc, enc_len);
-            subtitle = sed.Text(enc, enc_len);
+            pre_pattern.indexIn(title);
+            subtitle = pre_pattern.cap(1);
+            title    = title.remove(pre_pattern);
+            suf_pattern.indexIn(title);
+            subtitle += suf_pattern.cap(1);
+            title    = title.remove(suf_pattern.cap(1)).trimmed();
+            subtitle += sed.Text(enc, enc_len);
         }
         else
         {
             title    = sed.EventName();
-            subtitle = sed.Text();
+            pre_pattern.indexIn(title);
+            subtitle = pre_pattern.cap(1);
+            title    = title.remove(pre_pattern);
+            suf_pattern.indexIn(title);
+            subtitle += suf_pattern.cap(1);
+            title    = title.remove(suf_pattern.cap(1)).trimmed();
+            subtitle += sed.Text();
         }
     }
 
     vector<const unsigned char*> bestExtendedEvents =
-        MPEGDescriptor::FindBestMatches(
-            list, DescriptorID::extended_event, languagePreferences);
+        DVBDescriptor::FindBestMatches(
+            list, DescriptorID::extended_event, languagePreferences, dvbkind);
 
+    QByteArray saved_text;
     description = "";
     for (uint j = 0; j < bestExtendedEvents.size(); j++)
     {
@@ -324,14 +340,22 @@ static void parse_dvb_event_descriptors(desc_list_t list, FixupValue fix,
             break;
         }
 
-        ExtendedEventDescriptor eed(bestExtendedEvents[j]);
-        if (enc)
+        ExtendedEventDescriptor eed(bestExtendedEvents[j], dvbkind);
+        if (dvbkind == kKindISDB)
+            description += eed.ItemText(saved_text);
+        else if (enc)
             description += eed.Text(enc, enc_len);
         else
             description += eed.Text();
 
         // add items from the decscriptor to the items
         items.unite (eed.Items());
+    }
+    if (dvbkind == kKindISDB && !saved_text.isEmpty()) {
+        DVBDescriptor d(NULL, kKindISDB, 0);
+        description += d.dvb_decode_text((unsigned char *)saved_text.data(),
+                                         saved_text.size());
+        description += "\n";
     }
 }
 
@@ -386,6 +410,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
 
     uint tableid   = eit->TableID();
     uint version   = eit->Version();
+    DVBKind dvbkind = eit->DVBKindStatus();
     for (uint i = 0; i < eit->EventCount(); i++)
     {
         // Skip event if we have already processed it before...
@@ -434,7 +459,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
         else
         {
             parse_dvb_event_descriptors(list, fix, languagePreferences,
-                                        title, subtitle, description, items);
+                                        title, subtitle, description, items, dvbkind);
         }
 
         parse_dvb_component_descriptors(list, subtitle_type, audio_props,
@@ -515,8 +540,8 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
         {
             if ((EITFixUp::kFixDish & fix) || (EITFixUp::kFixBell & fix))
             {
-                DishContentDescriptor content(content_data);
-                switch (content.GetTheme())
+                DishContentDescriptor content(content_data, dvbkind);
+                switch (content.GetTheme(dvbkind))
                 {
                     case kThemeMovie :
                         category_type = ProgramInfo::kCategoryMovie;
@@ -531,11 +556,11 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
                         category_type = ProgramInfo::kCategoryNone;
                 }
                 if (EITFixUp::kFixDish & fix)
-                    category  = content.GetCategory();
+                    category  = content.GetCategory(dvbkind);
             }
             else if (EITFixUp::kFixAUDescription & fix)//AU Freeview assigned genres
             {
-                ContentDescriptor content(content_data);
+                ContentDescriptor content(content_data, dvbkind);
                 switch (content.Nibble1(0))
                 {
                     case 0x01:
@@ -588,7 +613,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
             }
             else if (EITFixUp::kFixGreekEIT & fix)//Greek
             {
-                ContentDescriptor content(content_data);
+                ContentDescriptor content(content_data, dvbkind);
                 switch (content.Nibble2(0))
                 {
                     case 0x01:
@@ -614,7 +639,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
             }
             else
             {
-                ContentDescriptor content(content_data);
+                ContentDescriptor content(content_data, dvbkind);
                 category      = content.GetDescription(0);
 #if 0 /* there is no category_type in DVB EIT */
                 category_type = content.GetMythCategory(0);
@@ -721,7 +746,7 @@ void EITHelper::AddEIT(const PremiereContentInformationTable *cit)
         cit->Descriptors(), cit->DescriptorsLength());
 
     parse_dvb_event_descriptors(list, fix, languagePreferences,
-                                title, subtitle, description, items);
+                                title, subtitle, description, items, kKindDVB);
 
     parse_dvb_component_descriptors(list, subtitle_type, audio_props,
                                     video_props);
@@ -730,7 +755,7 @@ void EITHelper::AddEIT(const PremiereContentInformationTable *cit)
         MPEGDescriptor::Find(list, DescriptorID::content);
     if (content_data)
     {
-        ContentDescriptor content(content_data);
+        ContentDescriptor content(content_data, kKindDVB);
         // fix events without real content data
         if (content.Nibble(0)==0x00)
         {
