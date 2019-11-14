@@ -2328,7 +2328,7 @@ bool MythMainWindow::eventFilter(QObject * /*watched*/, QEvent *e)
                 break;
             }
             QVector<MythScreenStack *>::Iterator it;
-            for (it = d->stackList.end()-1; it != d->stackList.begin()-1; --it)
+            for (it = d->m_stackList.end()-1; it != d->m_stackList.begin()-1; --it)
             {
                 MythScreenType *top = (*it)->GetTopScreen();
                 if (top)
