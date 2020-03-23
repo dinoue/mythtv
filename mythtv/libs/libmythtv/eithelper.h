@@ -8,6 +8,7 @@
 #include <ctime>
 
 // Qt includes
+#include <QByteArray>
 #include <QDateTime>
 #include <QMap>
 #include <QMutex>

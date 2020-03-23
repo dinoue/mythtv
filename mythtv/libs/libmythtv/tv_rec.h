@@ -29,6 +29,7 @@
 #include "videoouttypes.h"              // for PictureAttribute
 
 #include "mythconfig.h"
+#include "recorders/dvbchannel.h"
 
 // locking order
 // setChannelLock -> stateChangeLock -> triggerEventLoopLock

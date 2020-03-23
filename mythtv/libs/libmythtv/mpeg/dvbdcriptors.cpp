@@ -1,7 +1,5 @@
 // C headers
 #include <unistd.h>
-#include <limits.h>
-#include <algorithm>
 
 // Qt headers
 #include <QTextCodec>
@@ -52,52 +50,22 @@ static QString decode_iso6937(const unsigned char *buf, uint length)
 
 static QString decode_text(const unsigned char *buf, uint length);
 
-// Decode a text string according to ETSI EN 300 468 Annex A or ISDB/ARIB STD-24
-QString DVBDescriptor::dvb_decode_text(const unsigned char *src, uint raw_length,
+// Decode a text string according to ETSI EN 300 468 Annex A
+QString dvb_decode_text(const unsigned char *src, uint raw_length,
                         const unsigned char *encoding_override,
-                        uint encoding_override_length) const
+                        uint encoding_override_length)
 {
     if (!raw_length)
         return "";
 
-    if (_dvbkind == kKindISDB)
-    {
-        unsigned char buf[4096 * 6];
-        unsigned int len;
-        len = isdb_decode_text(hisdbdecode, src, (unsigned int)raw_length,
-                               buf, (unsigned int)sizeof(buf));
-        return QString::fromUtf8((const char *)buf, (int)len).
-           replace(QString("\n"), QString(" ")); 
-    }
-
     if (src[0] == 0x1f)
         return freesat_huffman_to_string(src, raw_length);
-   
-    if (src[0] == 0x15) 
-	return QString::fromUtf8((char *)(src + 1), raw_length - 1). 
-	    replace(QString("\n"), QString(" ")); 
-    else if (src[0] == 0x11) 
-	return QTextCodec::codecForName("UTF-16BE")->toUnicode((char *)(src + 1), raw_length - 1). 
-	    replace(QString("\n"), QString(" ")); 
 
-
-    /* UCS-2 aka ISO/IEC 10646-1 Basic Multilingual Plane */
-    if (src[0] == 0x11)
-    {
-        size_t length = (raw_length - 1) / 2;
-        QChar *to = new QChar[length];
-        for (size_t i=0; i<length; i++)
-            to[i] = (src[1 + i*2] << 8) + src[1 + i*2 + 1];
-        QString to2(to, length);
-        delete [] to;
-        return to2;
-    }
-
-    if (((0x11 < src[0]) && (src[0] < 0x15)) ||
-        ((0x15 < src[0]) && (src[0] < 0x1f)))
+    if (((0x10 < src[0]) && (src[0] < 0x15)) ||
+        ((0x15 < src[0]) && (src[0] < 0x20)))
     {
         // TODO: Handle multi-byte encodings
-        LOG(VB_SIPARSER, LOG_ERR,
+        LOG(VB_SIPARSER, LOG_ERR, 
             "dvb_decode_text: Multi-byte coded text is not yet supported.");
         return "";
     }
@@ -161,11 +129,11 @@ static QString decode_text(const unsigned char *buf, uint length)
     {
         return decode_iso6937(buf, length);
     }
-    if ((buf[0] >= 0x01) && (buf[0] <= 0x0B))
+    else if ((buf[0] >= 0x01) && (buf[0] <= 0x0B))
     {
         return iso8859_codecs[4 + buf[0]]->toUnicode((char*)(buf + 1), length - 1);
     }
-    if (buf[0] == 0x10)
+    else if (buf[0] == 0x10)
     {
         // If the first byte of the text field has a value "0x10"
         // then the following two bytes carry a 16-bit value (uimsbf) N
@@ -176,19 +144,22 @@ static QString decode_text(const unsigned char *buf, uint length)
         uint code = buf[1] << 8 | buf[2];
         if (code <= 15)
             return iso8859_codecs[code]->toUnicode((char*)(buf + 3), length - 3);
-        return QString::fromLocal8Bit((char*)(buf + 3), length - 3);
+        else
+            return QString::fromLocal8Bit((char*)(buf + 3), length - 3);
     }
-    if (buf[0] == 0x15) // Already Unicode
+    else if (buf[0] == 0x15) // Already Unicode
     {
         return QString::fromUtf8((char*)(buf + 1), length - 1);
     }
-
-    // Unknown/invalid encoding - assume local8Bit
-    return QString::fromLocal8Bit((char*)(buf + 1), length - 1);
+    else
+    {
+        // Unknown/invalid encoding - assume local8Bit
+        return QString::fromLocal8Bit((char*)(buf + 1), length - 1);
+    }
 }
 
 
-QString DVBDescriptor::dvb_decode_short_name(const unsigned char *src, uint raw_length) const
+QString dvb_decode_short_name(const unsigned char *src, uint raw_length)
 {
     if (raw_length > 50)
     {
@@ -198,27 +169,6 @@ QString DVBDescriptor::dvb_decode_short_name(const unsigned char *src, uint raw_
                 .arg(raw_length));
         return "";
     }
-
-    if (src[0] == 0x15) 
-	return QString::fromUtf8((char *)(src + 1), raw_length - 1). 
-	    replace(QString("\n"), QString(" ")); 
-    else if (src[0] == 0x11) 
-	return QTextCodec::codecForName("UTF-16BE")->toUnicode((char *)(src + 1), raw_length - 1). 
-	    replace(QString("\n"), QString(" ")); 
-
-    if (_dvbkind == kKindISDB)
-    {
-        unsigned char buf[50 * 6];
-        unsigned int len;
-        len = isdb_decode_text(hisdbdecode, src, (unsigned int)raw_length,
-                               buf, (unsigned int)sizeof(buf));
-        return QString::fromUtf8((const char *)buf, (int)len).
-           replace(QString("\n"), QString(" ")); 
-    }
-
-    if (src[0] == 0x11) 
-       return QTextCodec::codecForName("UTF-16BE")->toUnicode((char *)(src + 1), raw_length - 1). 
-           replace(QString("\n"), QString(" ")); 
 
     if (((0x10 < src[0]) && (src[0] < 0x15)) ||
         ((0x15 < src[0]) && (src[0] < 0x20)))
@@ -244,140 +194,12 @@ QString DVBDescriptor::dvb_decode_short_name(const unsigned char *src, uint raw_
                     dst[length++] = 0x20;
             }
 
-    QString sStr = (!length) ? dvb_decode_text(src, raw_length)
+    QString sStr = (!length) ? dvb_decode_text(src, raw_length) 
                              : decode_text(dst, length);
-
+                                     
     delete [] dst;
 
     return sStr;
-}
-
-static uint maxPriority(const QMap<uint,uint> &langPrefs)
-{
-    uint max_pri = 0;
-    QMap<uint,uint>::const_iterator it = langPrefs.begin();
-    for (; it != langPrefs.end(); ++it)
-        max_pri = max(max_pri, *it);
-    return max_pri;
-}
-
-const unsigned char *DVBDescriptor::FindBestMatch(
-    const desc_list_t &parsed, uint desc_tag, QMap<uint,uint> &langPrefs, DVBKind dvbkind)
-{
-    uint match_idx = 0;
-    uint match_pri = UINT_MAX;
-    int  unmatched_idx = -1;
-
-    uint i = (desc_tag == DescriptorID::short_event) ? 0 : parsed.size();
-    for (; i < parsed.size(); i++)
-    {
-        if (DescriptorID::short_event == parsed[i][0])
-        {
-            ShortEventDescriptor sed(parsed[i], dvbkind);
-            QMap<uint,uint>::const_iterator it =
-                langPrefs.find(sed.CanonicalLanguageKey());
-
-            if ((it != langPrefs.end()) && (*it < match_pri))
-            {
-                match_idx = i;
-                match_pri = *it;
-            }
-
-            if (unmatched_idx < 0)
-                unmatched_idx = i;
-        }
-    }
-
-    if (match_pri != UINT_MAX)
-        return parsed[match_idx];
-
-    if ((desc_tag == DescriptorID::short_event) && (unmatched_idx >= 0))
-    {
-        ShortEventDescriptor sed(parsed[unmatched_idx], dvbkind);
-        langPrefs[sed.CanonicalLanguageKey()] = maxPriority(langPrefs) + 1;
-        return parsed[unmatched_idx];
-    }
-
-    return NULL;
-}
-
-desc_list_t DVBDescriptor::FindBestMatches(
-    const desc_list_t &parsed, uint desc_tag, QMap<uint,uint> &langPrefs, DVBKind dvbkind)
-{
-    uint match_pri = UINT_MAX;
-    int  match_key = 0;
-    int  unmatched_idx = -1;
-
-    uint i = (desc_tag == DescriptorID::extended_event) ? 0 : parsed.size();
-    for (; i < parsed.size(); i++)
-    {
-        if (DescriptorID::extended_event == parsed[i][0])
-        {
-            ExtendedEventDescriptor eed(parsed[i], dvbkind);
-            QMap<uint,uint>::const_iterator it =
-                langPrefs.find(eed.CanonicalLanguageKey());
-
-            if ((it != langPrefs.end()) && (*it < match_pri))
-            {
-                match_key = eed.LanguageKey();
-                match_pri = *it;
-            }
-            if (unmatched_idx < 0)
-                unmatched_idx = i;
-        }
-    }
-
-    if ((desc_tag == DescriptorID::extended_event) &&
-        (match_key == 0) && (unmatched_idx >= 0))
-    {
-        ExtendedEventDescriptor eed(parsed[unmatched_idx], dvbkind);
-        langPrefs[eed.CanonicalLanguageKey()] = maxPriority(langPrefs) + 1;
-        match_key = eed.LanguageKey();
-    }
-
-    desc_list_t tmp;
-    if (match_pri == UINT_MAX)
-        return tmp;
-
-    for (uint i = 0; i < parsed.size(); i++)
-    {
-        if ((DescriptorID::extended_event == desc_tag) &&
-            (DescriptorID::extended_event == parsed[i][0]))
-        {
-            ExtendedEventDescriptor eed(parsed[i], dvbkind);
-            if (eed.LanguageKey() == match_key)
-                tmp.push_back(parsed[i]);
-        }
-    }
-    return tmp;
-}
-
-#define SET_STRING(DESC_NAME) do { \
-    if (IsValid()) { DESC_NAME d(_data, _dvbkind, DescriptorLength()+2); \
-    if (d.IsValid()) str = d.toString(); } } while (0)
-
-QString DVBDescriptor::toString() const
-{
-    QString str;
-
-    if (DescriptorID::network_name == DescriptorTag())
-        SET_STRING(NetworkNameDescriptor);
-    else if (DescriptorID::service == DescriptorTag())
-        SET_STRING(ServiceDescriptor);
-    else if (DescriptorID::bouquet_name == DescriptorTag())
-        SET_STRING(BouquetNameDescriptor);
-    else if (IsValid())
-    {
-        str = QString("%1 Descriptor (0x%2) length(%3)")
-            .arg(DescriptorTagString())
-            .arg(DescriptorTag(),2,16,QChar('0'))
-            .arg(DescriptorLength());
-     }
-     else
-     {
-         str = "Invalid Descriptor";
-     }
-     return str;
 }
 
 QMutex             ContentDescriptor::categoryLock;
@@ -386,14 +208,6 @@ volatile bool      ContentDescriptor::categoryDescExists = false;
 
 ProgramInfo::CategoryType ContentDescriptor::GetMythCategory(uint i) const
 {
-    if (_dvbkind == kKindISDB) {
-        if (0x6 == Nibble1(i))
-            return ProgramInfo::kCategoryMovie;
-        if (0x1 == Nibble1(i))
-            return ProgramInfo::kCategorySports;
-        return ProgramInfo::kCategoryTVShow;
-    }
-
     if (0x1 == Nibble1(i))
         return ProgramInfo::kCategoryMovie;
     if (0x4 == Nibble1(i))
@@ -443,7 +257,7 @@ QString LinkageDescriptor::MobileHandOverTypeString(void) const
 QString ContentDescriptor::GetDescription(uint i) const
 {
     if (!categoryDescExists)
-        Init(_dvbkind);
+        Init();
 
     QMutexLocker locker(&categoryLock);
 
@@ -469,7 +283,7 @@ QString ContentDescriptor::toString() const
     return tmp;
 }
 
-void ContentDescriptor::Init(DVBKind dvbkind)
+void ContentDescriptor::Init(void)
 {
     QMutexLocker locker(&categoryLock);
 
@@ -477,49 +291,8 @@ void ContentDescriptor::Init(DVBKind dvbkind)
         return;
 
     //: %1 is the main category, %2 is the subcategory
-    QString subCatStr = QCoreApplication::translate("(Categories)",
+    QString subCatStr = QCoreApplication::translate("(Categories)", 
         "%1 - %2", "Category with subcategory display");
-
-    if (dvbkind == kKindISDB) {
-        categoryDesc[0x00] = QCoreApplication::translate("(Categories)",
-                                                    "ニュース／報道", 0
-                                         );
-        categoryDesc[0x10] = QCoreApplication::translate("(Categories)",
-                                                          "スポーツ", 0
-                                         );
-        categoryDesc[0x20] = QCoreApplication::translate("(Categories)",
-                                                "情報／ワイドショー", 0
-                                         );
-        categoryDesc[0x30] = QCoreApplication::translate("(Categories)",
-                                                            "ドラマ", 0
-                                         );
-        categoryDesc[0x40] = QCoreApplication::translate("(Categories)",
-                                                              "音楽", 0
-                                         );
-        categoryDesc[0x50] = QCoreApplication::translate("(Categories)",
-                                                        "バラエティ", 0
-                                         );
-        categoryDesc[0x60] = QCoreApplication::translate("(Categories)",
-                                                              "映画", 0
-                                         );
-        categoryDesc[0x70] = QCoreApplication::translate("(Categories)",
-                                                      "アニメ／特撮", 0
-                                         );
-        categoryDesc[0x80] = QCoreApplication::translate("(Categories)",
-                                            "ドキュメンタリー／教養", 0
-                                         );
-        categoryDesc[0x90] = QCoreApplication::translate("(Categories)",
-                                                        "劇場／公演", 0
-                                         );
-        categoryDesc[0xA0] = QCoreApplication::translate("(Categories)",
-                                                        "趣味／教育", 0
-                                         );
-        categoryDesc[0xB0] = QCoreApplication::translate("(Categories)",
-                                                              "福祉", 0
-                                         );
-        categoryDescExists = true;
-        return;
-    }
 
     categoryDesc[0x10] = QCoreApplication::translate("(Categories)", "Movie");
     categoryDesc[0x11] = subCatStr
@@ -527,29 +300,29 @@ void ContentDescriptor::Init(DVBKind dvbkind)
         .arg(QCoreApplication::translate("(Categories)", "Detective/Thriller"));
     categoryDesc[0x12] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"))
-        .arg(QCoreApplication::translate("(Categories)",
+        .arg(QCoreApplication::translate("(Categories)", 
                                          "Adventure/Western/War"));
     categoryDesc[0x13] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"))
-        .arg(QCoreApplication::translate("(Categories)",
+        .arg(QCoreApplication::translate("(Categories)", 
                                          "Science Fiction/Fantasy/Horror"));
     categoryDesc[0x14] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"))
         .arg(QCoreApplication::translate("(Categories)", "Comedy"));
     categoryDesc[0x15] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"))
-        .arg(QCoreApplication::translate("(Categories)",
+        .arg(QCoreApplication::translate("(Categories)", 
                                          "Soap/melodrama/folkloric"));
     categoryDesc[0x16] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"))
         .arg(QCoreApplication::translate("(Categories)", "Romance"));
     categoryDesc[0x17] = subCatStr
         .arg(QCoreApplication::translate("(Categories)","Movie"))
-        .arg(QCoreApplication::translate("(Categories)",
+        .arg(QCoreApplication::translate("(Categories)", 
             "Serious/Classical/Religious/Historical Movie/Drama"));
     categoryDesc[0x18] = subCatStr
         .arg(QCoreApplication::translate("(Categories)","Movie"))
-        .arg(QCoreApplication::translate("(Categories)", "Adult",
+        .arg(QCoreApplication::translate("(Categories)", "Adult", 
                                          "Adult Movie"));
 
     categoryDesc[0x20] = QCoreApplication::translate("(Categories)", "News");
@@ -582,7 +355,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
     categoryDesc[0x44] = QCoreApplication::translate("(Categories)",
                                                      "Tennis/Squash");
     categoryDesc[0x45] = QCoreApplication::translate("(Categories)",
-                                                     "Misc. Team Sports");
+                                                     "Misc. Team Sports"); 
                                                      // not football/soccer
     categoryDesc[0x46] = QCoreApplication::translate("(Categories)",
                                                      "Athletics");
@@ -725,12 +498,10 @@ QString ServiceDescriptorMapping::toString() const
         str.append(" (Radio)");
     else if (IsHDTV())
         str.append(" (HDTV)");
-    else if (IsUHDTV())
-        str.append(" (UHDTV)");
     else if (IsTeletext())
         str.append(" (Teletext)");
     else
-        str.append(QString(" (Unknown 0x%1)").arg(ServiceType(),2,16,QChar('0')));
+        str.append(QString(" (Unknown %1)").arg(ServiceType(),2,16));
 
     return str;
 }
@@ -745,7 +516,7 @@ QString TeletextDescriptor::toString(void) const
         if (1 != StreamCount())
             str.append("\n ");
 
-        str.append(QString("     type(%1) mag(%2) page(%3) lang(%4)")
+        str.append(QString(" type(%1) mag(%2) page(%3) lang(%4)")
                    .arg(TeletextType(i))
                    .arg(TeletextMagazineNum(i), 0, 16)
                    .arg(TeletextPageNum(i), 2, 16, QChar('0'))
@@ -773,8 +544,7 @@ QString SatelliteDeliverySystemDescriptor::toString() const
 {
     QString str = QString("SatelliteDeliverySystemDescriptor: ");
 
-    str.append(QString("Frequency: %1, Type: %2\n").arg(FrequencyHz())
-        .arg(ModulationSystemString()));
+    str.append(QString("Frequency: %1\n").arg(FrequencyHz()));
     str.append(QString("      Mod=%1, SymbR=%2, FECInner=%3, Orbit=%4, Pol=%5")
         .arg(ModulationString())
         .arg(SymbolRateHz())
@@ -801,7 +571,7 @@ QString TerrestrialDeliverySystemDescriptor::toString() const
     return str;
 }
 
-QString DVBLogicalChannelDescriptor::toString() const
+QString UKChannelListDescriptor::toString() const
 {
     QString ret = "UKChannelListDescriptor sid->chan_num: ";
     for (uint i = 0; i < ChannelCount(); i++)
@@ -809,82 +579,6 @@ QString DVBLogicalChannelDescriptor::toString() const
         ret += QString("%1->%2").arg(ServiceID(i)).arg(ChannelNumber(i));
         ret += (i+1<ChannelCount()) ? ", " : "";
     }
-    return ret;
-}
-
-QString DVBSimulcastChannelDescriptor::toString() const
-{
-    QString ret = "DVBSimulcastChannelDescriptor sid->chan_num: ";
-    for (uint i = 0; i < ChannelCount(); i++)
-    {
-        ret += QString("%1->%2").arg(ServiceID(i)).arg(ChannelNumber(i));
-        ret += (i+1<ChannelCount()) ? ", " : "";
-    }
-    return ret;
-}
-
-QString BSkyBLCNDescriptor::toString() const
-{
-    QString ret = "BSkyB Logical Channel Number Descriptor ";
-    ret += QString("(0x%1) ").arg(DescriptorTag(),2,16,QChar('0'));
-    ret += QString("length(%1)").arg(DescriptorLength());
-
-    ret += QString("\n      RegionID (%1) (0x%2) Raw (0x%3)")
-        .arg(RegionID()).arg(RegionID(),4,16,QChar('0')).arg(RegionRaw(),4,16,QChar('0'));
-
-    for (uint i=0; i<ServiceCount(); i++)
-    {
-        ret += QString("\n        ServiceID (%1) (0x%2) ").arg(ServiceID(i)).arg(ServiceID(i),4,16,QChar('0'));
-        ret += QString("ServiceType (0x%1) ").arg(ServiceType(i),2,16,QChar('0'));
-        ret += QString("LCN (%1) ").arg(LogicalChannelNumber(i));
-        ret += QString("U1(0x%1) ").arg(Unknown1(i),4,16,QChar('0'));
-        ret += QString("U2(0x%1) ").arg(Unknown2(i),4,16,QChar('0'));
-    }
-
-    return ret;
-}
-
-QString FreesatLCNDescriptor::toString() const
-{
-    QString ret = "Freesat Logical Channel Number Descriptor ";
-    ret += QString("(0x%1)").arg(DescriptorTag(),2,16,QChar('0'));
-    ret += QString(" length(%1)").arg(DescriptorLength());
-
-    for (uint i=0; i<ServiceCount(); i++)
-    {
-        ret += QString("\n      ServiceID (%1) (0x%2) ").arg(ServiceID(i)).arg(ServiceID(i),4,16,QChar('0'));
-        ret += QString("ChanID (0x%1)").arg(ChanID(i), 4, 16, QChar('0'));
-        for (uint j=0; j<LCNCount(i); j++)
-        {
-            ret += QString("\n        LCN: %1 Region: %2").arg(LogicalChannelNumber(i,j),3).arg(RegionID(i,j));
-        }
-    }
-    return ret;
-}
-
-QString FreesatRegionDescriptor::toString() const
-{
-    QString ret = "Freesat Region Descriptor ";
-    ret += QString("(0x%1)").arg(DescriptorTag(),2,16,QChar('0'));
-    ret += QString(" length(%1)").arg(DescriptorLength());
-
-    for (uint i=0; i<RegionCount(); ++i)
-    {
-        uint region_id = RegionID(i);
-        QString language = Language(i);
-        QString region_name = RegionName(i);
-        ret += QString("\n    Region (%1) (%2) '%3'")
-            .arg(region_id,2).arg(language).arg(region_name);
-    }
-    return ret;
-}
-
-QString FreesatCallsignDescriptor::toString(void) const
-{
-    QString ret = QString("Freesat Callsign Descriptor ");
-    ret += QString("(0x%1)").arg(DescriptorTag(),2,16,QChar('0'));
-    ret += QString(" length(%1)").arg(DescriptorLength());
-    ret += QString("  (%1) '%2'").arg(Language()).arg(Callsign());
     return ret;
 }
 
@@ -911,11 +605,11 @@ QString DataBroadcastDescriptor::toString(void) const
     for (uint i = 0; i < SelectorLength(); i++)
         ret += QString("%1 ").arg(Selector()[i], 0, 16);
     ret += ") ";
-
+    
     ret += QString("ISO_639_language_code(%1) ")
         .arg(LanguageString());
 
-    ret += QString("text(%1) ") + Text();
+    ret += QString("text(%1) ") + QString(Text());
 
     return ret;
 }
@@ -973,23 +667,4 @@ QString AC3Descriptor::toString(void) const
     return ret;
 }
 
-QMap<QString,QString> ExtendedEventDescriptor::Items(void) const
-{
-    QMap<QString, QString> ret;
 
-    uint index = 0;
-
-    /* handle all items
-     * minimum item size is for 8bit length + 8bit length
-     */
-    while (LengthOfItems() - index >= 2)
-    {
-        QString item_description = dvb_decode_text (&_data[8 + index], _data[7 + index]);
-        index += 1 + _data[7 + index];
-        QString item = dvb_decode_text (&_data[8 + index], _data[7 + index]);
-        index += 1 + _data[7 + index];
-        ret.insertMulti (item_description, item);
-    }
-
-    return ret;
-}

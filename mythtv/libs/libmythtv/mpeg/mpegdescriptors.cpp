@@ -99,6 +99,7 @@ desc_list_t MPEGDescriptor::FindAll(const desc_list_t &parsed, uint desc_tag)
     return tmp;
 }
 
+/*
 static uint maxPriority(const QMap<uint,uint> &langPrefs)
 {
     uint max_pri = 0;
@@ -210,6 +211,7 @@ desc_list_t MPEGDescriptor::FindBestMatches(
 
     return tmp;
 }
+*/
 
 #define EMPTY_STR_16 "","","","", "","","","", "","","","", "","","","",
 
@@ -384,8 +386,12 @@ QString MPEGDescriptor::DescriptorTagString(void) const
 }
 
 #define SET_STRING(DESC_NAME) do { \
-    if (IsValid()) { DESC_NAME d(_data, DescriptorLength()+2); \
-    if (d.IsValid()) str = d.toString(); } } while (false)
+		if (IsValid()) { DESC_NAME d(_data, DescriptorLength()+2); \
+		if (d.IsValid()) str = d.toString(); } } while (false)
+
+//#define SET_STRING_D(DESC_NAME) do {									\
+//		if (IsValid()) { DESC_NAME d(_data, dvbkind, DescriptorLength()+2); \
+//		if (d.IsValid()) str = d.toString(); } } while (false)
 
 QString MPEGDescriptor::descrDump(QString name) const
 {
@@ -419,18 +425,21 @@ QString MPEGDescriptor::toStringPD(uint priv_dsid) const
         SET_STRING(AVCVideoDescriptor);
     else if (DescriptorID::hevc_video == DescriptorTag())
         SET_STRING(HEVCVideoDescriptor);
-    else if (DescriptorID::network_name == DescriptorTag())
-        SET_STRING(NetworkNameDescriptor);
+	// ToDo: Check not comment out is right 20200324
+//    else if (DescriptorID::network_name == DescriptorTag())
+//        SET_STRING_D(NetworkNameDescriptor);
     else if (DescriptorID::service_list == DescriptorTag())
         SET_STRING(ServiceListDescriptor);
     else if (DescriptorID::satellite_delivery_system == DescriptorTag())
         SET_STRING(SatelliteDeliverySystemDescriptor);
     else if (DescriptorID::cable_delivery_system == DescriptorTag())
         SET_STRING(CableDeliverySystemDescriptor);
-    else if (DescriptorID::bouquet_name == DescriptorTag())
-        SET_STRING(BouquetNameDescriptor);
-    else if (DescriptorID::service == DescriptorTag())
-        SET_STRING(ServiceDescriptor);
+	// ToDo: Check not comment out is right 20200324
+//    else if (DescriptorID::bouquet_name == DescriptorTag())
+//        SET_STRING_D(BouquetNameDescriptor);
+	// ToDo: Check not comment out is right 20200324
+//    else if (DescriptorID::service == DescriptorTag())
+//        SET_STRING_D(ServiceDescriptor);
     else if (DescriptorID::country_availability == DescriptorTag())
         SET_STRING(CountryAvailabilityDescriptor);
     //else if (DescriptorID::linkage == DescriptorTag())
