@@ -371,7 +371,7 @@ QString DishContentDescriptor::toString() const
 
 void DishContentDescriptor::Init(DVBKind dvbkind)
 {
-    ContentDescriptor::Init(kKindDVB);
+    ContentDescriptor::Init(dvbkind);
 
     QMutexLocker locker(&categoryLock);
 

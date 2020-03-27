@@ -3,6 +3,7 @@
 
 // local headers
 #include "commandlineparser.h"
+#include "mpegdescriptors.h"
 
 MythUtilCommandLineParser::MythUtilCommandLineParser() :
     MythCommandLineParser(MYTH_APPNAME_MYTHUTIL)
@@ -37,7 +38,7 @@ void MythUtilCommandLineParser::LoadArguments(void)
                 ->SetGroup("MPEG-TS")
                 ->SetRequiredChild("infile")
                 ->SetChild("outfile")
-
+								
         // markuputils.cpp
         << add("--gencutlist", "gencutlist", false,
                 "Copy the commercial skip list to the cutlist.", "")
@@ -196,7 +197,13 @@ void MythUtilCommandLineParser::LoadArguments(void)
         ->SetChildOf("pidprinter");
     add("--xml", "xml", false, "Enables XML output of PSIP", "")
         ->SetChildOf("pidprinter");
-
+	
+    add("--is_dvb", "is_dvb", false, "Select wheather stream is DVB.", "")
+        ->SetChildOf("pidprinter");
+	
+    add("--is_isdb", "is_isdb", true, "Select wheather stream is ISDB-T/S.", "")
+        ->SetChildOf("pidprinter");
+	
     // messageutils.cpp
     add("--message_text", "message_text", "message", "(optional) message to send", "")
         ->SetChildOf("message")
