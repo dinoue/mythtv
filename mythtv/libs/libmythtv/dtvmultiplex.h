@@ -109,7 +109,7 @@ class MTV_PUBLIC DTVMultiplex
     // Optional additional info
     uint             m_mplex      {0};
     QString          m_sistandard;
-    IPTVTuningData   m_iptv_tuning;
+    IPTVTuningData   m_iptvTuning;
     uint             m_transportid;
 };
 

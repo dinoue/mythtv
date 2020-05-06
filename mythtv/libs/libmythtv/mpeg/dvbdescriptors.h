@@ -46,9 +46,9 @@ class DVBDescriptor : public MPEGDescriptor
         : MPEGDescriptor(data, len, tag), _dvbkind(dvbkind)
     {
         if ((len < 2) || (int(DescriptorLength()) + 2) > len)
-            _data = NULL;
+            m_data = NULL;
         else if (DescriptorTag() != tag)
-            _data = NULL;
+            m_data = NULL;
         if (_dvbkind == kKindISDB) {
             QDateTime dt1 = QDateTime::currentDateTime();
             QDateTime dt2 = dt1.toUTC();
@@ -1159,13 +1159,13 @@ class ExtendedEventDescriptor : public DVBDescriptor
            item = "";
            left = LengthOfItems();
            while (left > 0) {
-               ItemDescriptionLen = _data[p++];
+               ItemDescriptionLen = m_data[p++];
                p += ItemDescriptionLen;
-               ItemLength = _data[p++];
+               ItemLength = m_data[p++];
                if (ItemDescriptionLen > 0)
                        saved_text.clear();
                QByteArray item_byte =
-                   QByteArray::fromRawData((char *)&_data[p], ItemLength);
+                   QByteArray::fromRawData((char *)&m_data[p], ItemLength);
                left -= 2 + ItemDescriptionLen + ItemLength;
                p += ItemLength;
                if ((ItemLength == 200 || ItemLength == 220) && left == 0) {
@@ -1175,7 +1175,7 @@ class ExtendedEventDescriptor : public DVBDescriptor
                }
                // UNLIKELY
                // join intra-desciptor split items
-               if (left >= 2 && ItemDescriptionLen > 0 && _data[p] == 0) {
+               if (left >= 2 && ItemDescriptionLen > 0 && m_data[p] == 0) {
                        saved_text = item_byte;
                        continue;
                }
@@ -2370,7 +2370,7 @@ class FreesatCallsignDescriptor : public MPEGDescriptor
 
     QString Callsign(void) const
 	// Hack 20200324 K.O
-	{ return QString::fromLatin1((char *)(&_data[6]), _data[5]); }
+	{ return QString::fromLatin1((char *)(&m_data[6]), m_data[5]); }
 		
 	//        { return dvb_decode_short_name(&_data[6], _data[5]); }
 

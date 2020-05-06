@@ -2142,15 +2142,16 @@ bool MythMainWindow::eventFilter(QObject * /*watched*/, QEvent *e)
 		{
             ResetIdleTimer();
             QInputMethodEvent *ie = dynamic_cast<QInputMethodEvent*>(e);
-            if (currentWidget())
-            {
-                ie->accept();
-                QWidget *current = currentWidget();
-                if (current && current->isEnabled())
-                    qApp->notify(current, ie);
-
-                break;
-            }
+			// Q: Is It OK? 20200506 K.O
+//            if (currentWidget())
+//            {
+//                ie->accept();
+//                QWidget *current = currentWidget();
+//                if (current && current->isEnabled())
+//                    qApp->notify(current, ie);
+//
+//                break;
+//            }
             QVector<MythScreenStack *>::Iterator it;
             for (it = d->m_stackList.end()-1; it != d->m_stackList.begin()-1; --it)
             {

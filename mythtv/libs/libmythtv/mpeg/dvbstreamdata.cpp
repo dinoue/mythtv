@@ -21,9 +21,9 @@ using namespace std;
 DVBStreamData::DVBStreamData(uint desired_netid,  uint desired_tsid,
                              int desired_program, int cardnum, bool cacheTables, DVBKind dvbkind)
     : MPEGStreamData(desired_program, cardnum, cacheTables),
-      m_desiredNetId(desired_netid), m_desiredTsId(desired_tsid)
+      m_desiredNetId(desired_netid), m_desiredTsId(desired_tsid),
       _dvbkind(dvbkind),
-      _dvb_real_network_id(-1), _dvb_eit_dishnet_long(false)
+      m_dvbRealNetworkId(-1), m_dvbEitDishnetLong(false)
 {
     m_nitStatus.SetVersion(-1,0);
     m_nitoStatus.SetVersion(-1,0);
@@ -252,7 +252,7 @@ bool DVBStreamData::HandleTables(uint pid, const PSIPTable &psip)
             else
             {
                 NetworkInformationTable nit(psip, _dvbkind);
-                QMutexLocker locker(&m_listener_lock);
+                QMutexLocker locker(&m_listenerLock);
                 for (auto & listener : m_dvbMainListeners)
                     listener->HandleNIT(&nit);
 //                for (size_t i = 0; i < _dvb_main_listeners.size(); i++)

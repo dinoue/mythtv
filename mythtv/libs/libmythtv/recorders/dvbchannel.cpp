@@ -837,7 +837,7 @@ bool DVBChannel::Tune(const DTVMultiplex &tuning,
                 cmds->props[3].u.data   = 1;
                 cmds->num = 4;
 
-                int res = ioctl(m_fd_frontend, FE_SET_PROPERTY, cmds);
+                int res = ioctl(m_fdFrontend, FE_SET_PROPERTY, cmds);
 
                 free(cmds->props);
                 free(cmds);
@@ -853,7 +853,7 @@ bool DVBChannel::Tune(const DTVMultiplex &tuning,
 			{
                 struct dvb_frontend_parameters params = dtvmultiplex_to_dvbparams(
                     m_tunerType, tuning, intermediate_freq, can_fec_auto);
-                if (ioctl(m_fd_frontend, FE_SET_FRONTEND, &params) < 0)
+                if (ioctl(m_fdFrontend, FE_SET_FRONTEND, &params) < 0)
                 {
                     LOG(VB_GENERAL, LOG_ERR, LOC +
                         "Tune(): Setting Frontend tuning parameters failed." + ENO);

@@ -365,7 +365,7 @@ desc_list_t DVBDescriptor::FindBestMatches(
 }
 
 #define SET_STRING(DESC_NAME) do { \
-    if (IsValid()) { DESC_NAME d(_data, _dvbkind, DescriptorLength()+2); \
+    if (IsValid()) { DESC_NAME d(m_data, _dvbkind, DescriptorLength()+2); \
     if (d.IsValid()) str = d.toString(); } } while (0)
 
 QString DVBDescriptor::toString() const
