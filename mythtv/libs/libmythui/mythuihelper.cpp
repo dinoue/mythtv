@@ -39,7 +39,6 @@
 #include "themeinfo.h"
 #include "x11colors.h"
 #include "mythdisplay.h"
-#include "DisplayRes.h"
 
 #define LOC      QString("MythUIHelper: ")
 
@@ -95,16 +94,11 @@ public:
     explicit MythUIHelperPrivate(MythUIHelper *p)
     : m_cacheLock(new QMutex(QMutex::Recursive)),
       m_imageThreadPool(new MThreadPool("MythUIHelper")),
-      parent(p) {}
+      m_parent(p) {}
     ~MythUIHelperPrivate();
 
     void Init();
-
-    void GetScreenBounds(void);
     void StoreGUIsettings(void);
-
-    double GetPixelAspectRatio(void);
-    static void WaitForScreenChange(void) ;
 
     bool      m_themeloaded {false}; ///< Do we have a palette and pixmap to use?
     QString   m_menuthemepathname;
@@ -114,18 +108,9 @@ public:
 
     float m_wmult                            {1.0F};
     float m_hmult                            {1.0F};
-    float m_pixelAspectRatio                 {-1.0F};
-
-    // Drawable area of the full screen. May cover several screens,
-    // or exclude windowing system fixtures (like Mac menu bar)
-    int m_xbase                              {0};
-    int m_ybase                              {0};
-    int m_height                             {0};
-    int m_width                              {0};
 
     // Dimensions of the theme
-    int m_baseWidth                          {800};
-    int m_baseHeight                         {600};
+    QSize m_baseSize                         { 800, 600 };
     bool m_isWide                            {false};
 
     QMap<QString, MythImage *> m_imageCache;
@@ -147,14 +132,8 @@ public:
 #endif
 
     // The part of the screen(s) allocated for the GUI. Unless
-    // overridden by the user, defaults to drawable area above.
-    int m_screenxbase                        {0};
-    int m_screenybase                        {0};
-
-    // The part of the screen(s) allocated for the GUI. Unless
-    // overridden by the user, defaults to drawable area above.
-    int m_screenwidth                        {0};
-    int m_screenheight                       {0};
+    // overridden by the user, defaults to the full drawable area.
+    QRect m_screenRect                       { 0, 0, 0, 0};
 
     // Command-line GUI size, which overrides both the above sets of sizes
     static int x_override;
@@ -168,14 +147,14 @@ public:
     ScreenSaverControl *m_screensaver        {nullptr};
     bool                m_screensaverEnabled {false};
 
-    DisplayRes  *m_display_res               {nullptr};
+    MythDisplay *m_display                   {nullptr};
     bool         m_screenSetup               {false};
 
     MThreadPool *m_imageThreadPool           {nullptr};
 
-    MythUIMenuCallbacks callbacks            {nullptr,nullptr,nullptr,nullptr,nullptr};
+    MythUIMenuCallbacks m_callbacks          {nullptr,nullptr,nullptr,nullptr,nullptr};
 
-    MythUIHelper *parent                     {nullptr};
+    MythUIHelper *m_parent                   {nullptr};
 
     int m_fontStretch                        {100};
 
@@ -205,82 +184,25 @@ MythUIHelperPrivate::~MythUIHelperPrivate()
     delete m_imageThreadPool;
     delete m_screensaver;
 
-    if (m_display_res)
-        DisplayRes::SwitchToDesktop();
+    if (m_display)
+    {
+        // N.B. we always call this to ensure the desktop mode is restored
+        // in case the setting was changed
+        m_display->SwitchToDesktop();
+        MythDisplay::AcquireRelease(false);
+    }
 }
 
 void MythUIHelperPrivate::Init(void)
 {
+    if (!m_display)
+        m_display = MythDisplay::AcquireRelease();
     m_screensaver = new ScreenSaverControl();
-    GetScreenBounds();
     StoreGUIsettings();
     m_screenSetup = true;
 
     StorageGroup sgroup("Themes", gCoreContext->GetHostName());
     m_userThemeDir = sgroup.GetFirstDir(true);
-}
-
-/**
- * \brief Get screen size from Qt, respecting for user's multiple screen prefs
- *
- * If the windowing system environment has multiple screens, then use
- * QScreen::virtualSize() to get the size of the virtual desktop.
- * Otherwise QScreen::size() or QScreen::availableSize() will provide
- * the size of an individual screen.
- */
-void MythUIHelperPrivate::GetScreenBounds()
-{
-    foreach (QScreen *screen, qGuiApp->screens())
-    {
-        QRect dim = screen->geometry();
-        QString extra = MythDisplay::GetExtraScreenInfo(screen);
-        LOG(VB_GUI, LOG_INFO, LOC + QString("Screen %1 dim: %2x%3 %4")
-            .arg(screen->name())
-            .arg(dim.width()).arg(dim.height())
-            .arg(extra));
-    }
-
-    QScreen *primary = qGuiApp->primaryScreen();
-    LOG(VB_GUI, LOG_INFO, LOC +
-        QString("Primary screen: %1.").arg(primary->name()));
-
-    int numScreens = MythDisplay::GetNumberOfScreens();
-    QSize dim = primary->virtualSize();
-    LOG(VB_GUI, LOG_INFO, LOC +
-        QString("Total desktop dim: %1x%2, over %3 screen[s].")
-        .arg(dim.width()).arg(dim.height()).arg(numScreens));
-
-    if (MythDisplay::SpanAllScreens())
-    {
-        LOG(VB_GUI, LOG_INFO, LOC + QString("Using entire desktop."));
-        m_xbase  = 0;
-        m_ybase  = 0;
-        m_width  = dim.width();
-        m_height = dim.height();
-        return;
-    }
-
-    QRect bounds;
-    QScreen *screen = MythDisplay::GetScreen();
-    if (GetMythDB()->GetBoolSetting("RunFrontendInWindow", false))
-    {
-        LOG(VB_GUI, LOG_INFO, LOC + "Running in a window");
-        // This doesn't include the area occupied by the
-        // Windows taskbar, or the Mac OS X menu bar and Dock
-        bounds = screen->availableGeometry();
-    }
-    else
-    {
-        bounds = screen->geometry();
-    }
-    m_xbase  = bounds.x();
-    m_ybase  = bounds.y();
-    m_width  = bounds.width();
-    m_height = bounds.height();
-
-    LOG(VB_GUI, LOG_INFO, LOC + QString("Using screen %1, %2x%3 at %4,%5")
-        .arg(screen->name()).arg(m_width).arg(m_height)
-        .arg(m_xbase).arg(m_ybase));
 }
 
 /**
@@ -300,28 +222,23 @@ void MythUIHelperPrivate::StoreGUIsettings()
         GetMythDB()->OverrideSettingForSession("GuiHeight", QString::number(h_override));
     }
 
-    m_screenxbase  = GetMythDB()->GetNumSetting("GuiOffsetX");
-    m_screenybase  = GetMythDB()->GetNumSetting("GuiOffsetY");
+    int x = GetMythDB()->GetNumSetting("GuiOffsetX");
+    int y = GetMythDB()->GetNumSetting("GuiOffsetY");
+    int width = 0;
+    int height = 0;
+    GetMythDB()->GetResolutionSetting("Gui", width, height);
 
-    m_screenwidth = m_screenheight = 0;
-    GetMythDB()->GetResolutionSetting("Gui", m_screenwidth, m_screenheight);
+    if (!m_display)
+        m_display = MythDisplay::AcquireRelease();
+    QRect screenbounds = m_display->GetScreenBounds();
 
-    // If any of these was _not_ set by the user,
-    // (i.e. they are 0) use the whole-screen defaults
+    // As per MythMainWindow::Init, fullscreen is indicated by all zero's in settings
+    if (x == 0 && y == 0 && width == 0 && height == 0)
+        m_screenRect = screenbounds;
+    else
+        m_screenRect = QRect(x, y, width, height);
 
-    if (!m_screenxbase)
-        m_screenxbase = m_xbase;
-
-    if (!m_screenybase)
-        m_screenybase = m_ybase;
-
-    if (!m_screenwidth)
-        m_screenwidth = m_width;
-
-    if (!m_screenheight)
-        m_screenheight = m_height;
-
-    if (m_screenheight < 160 || m_screenwidth < 160)
+    if (m_screenRect.width() < 160 || m_screenRect.height() < 160)
     {
         LOG(VB_GENERAL, LOG_ERR, LOC +
             "Somehow, your screen size settings are bad.\n\t\t\t" +
@@ -331,16 +248,14 @@ void MythUIHelperPrivate::StoreGUIsettings()
             .arg(GetMythDB()->GetNumSetting("GuiWidth")) +
             QString("  old GuiHeight: %1\n\t\t\t")
             .arg(GetMythDB()->GetNumSetting("GuiHeight")) +
-            QString("m_width: %1").arg(m_width) +
-            QString("m_height: %1\n\t\t\t").arg(m_height) +
+            QString("width: %1 ").arg(m_screenRect.width()) +
+            QString("height: %1\n\t\t\t").arg(m_screenRect.height()) +
             "Falling back to 640x480");
-
-        m_screenwidth  = 640;
-        m_screenheight = 480;
+        m_screenRect.setSize(QSize(640, 480));
     }
 
-    m_wmult = m_screenwidth  / (float)m_baseWidth;
-    m_hmult = m_screenheight / (float)m_baseHeight;
+    m_wmult = m_screenRect.width()  / static_cast<float>(m_baseSize.width());
+    m_hmult = m_screenRect.height() / static_cast<float>(m_baseSize.height());
 
     // Default font, _ALL_ fonts inherit from this!
     // e.g All fonts will be 19 pixels unless a new size is explicitly defined.
@@ -350,50 +265,12 @@ void MythUIHelperPrivate::StoreGUIsettings()
         font = QFont();
 
     font.setStyleHint(QFont::SansSerif, QFont::PreferAntialias);
-    font.setPixelSize(lroundf(19.0F * m_hmult));
-    int stretch = (int)(100 / GetPixelAspectRatio());
+    font.setPixelSize(static_cast<int>(lroundf(19.0F * m_hmult)));
+    int stretch = static_cast<int>(100 / m_display->GetPixelAspectRatio());
     font.setStretch(stretch); // QT
     m_fontStretch = stretch; // MythUI
 
     QApplication::setFont(font);
-}
-
-double MythUIHelperPrivate::GetPixelAspectRatio(void)
-{
-    if (m_pixelAspectRatio < 0)
-    {
-        if (!m_display_res)
-        {
-            DisplayRes *dispRes = DisplayRes::GetDisplayRes(); // create singleton
-
-            if (dispRes)
-                m_pixelAspectRatio = dispRes->GetPixelAspectRatio();
-            else
-                m_pixelAspectRatio = 1.0;
-        }
-        else
-            m_pixelAspectRatio = m_display_res->GetPixelAspectRatio();
-    }
-
-    return m_pixelAspectRatio;
-}
-
-void MythUIHelperPrivate::WaitForScreenChange(void)
-{
-    // Wait for screen signal change, so we later get updated screen resolution
-    QEventLoop loop;
-    QTimer timer;
-    QScreen *screen = MythDisplay::GetScreen();
-
-    timer.setSingleShot(true);
-    QObject::connect(&timer, SIGNAL(timeout()),
-                     &loop, SLOT(quit()));
-    QObject::connect(screen, SIGNAL(geometryChanged(const QRect&)),
-                     &loop, SLOT(quit()));
-    QObject::connect(screen, SIGNAL(availableGeometryChanged(const QRect&)),
-                     &loop, SLOT(quit()));
-    timer.start(300); //300ms maximum wait
-    loop.exec();
 }
 
 MythUIHelper::MythUIHelper()
@@ -409,7 +286,7 @@ MythUIHelper::~MythUIHelper()
 void MythUIHelper::Init(MythUIMenuCallbacks &cbs)
 {
     d->Init();
-    d->callbacks = cbs;
+    d->m_callbacks = cbs;
 
     d->m_maxCacheSize.fetchAndStoreRelease(
         GetMythDB()->GetNumSetting("UIImageCacheSize", 30) * 1024 * 1024);
@@ -430,7 +307,7 @@ void MythUIHelper::Init(void)
 
 MythUIMenuCallbacks *MythUIHelper::GetMenuCBs(void)
 {
-    return &(d->callbacks);
+    return &(d->m_callbacks);
 }
 
 bool MythUIHelper::IsScreenSetup(void)
@@ -448,42 +325,27 @@ void MythUIHelper::LoadQtConfig(void)
     gCoreContext->ResetLanguage();
     d->m_themecachedir.clear();
 
-    if (GetMythDB()->GetBoolSetting("UseVideoModes", false))
-    {
-        DisplayRes *dispRes = DisplayRes::GetDisplayRes(); // create singleton
+    if (!d->m_display)
+        d->m_display = MythDisplay::AcquireRelease();
 
-        if (dispRes)
-        {
-            d->m_display_res = dispRes;
-            // Make sure DisplayRes has current context info
-            d->m_display_res->Initialize();
-            // Switch to desired GUI resolution
-            if (d->m_display_res->SwitchToGUI())
-            {
-                d->WaitForScreenChange();
-            }
-        }
-    }
-
-    // Note the possibly changed screen settings
-    d->GetScreenBounds();
+    // Switch to desired GUI resolution
+    if (d->m_display->UsingVideoModes())
+        d->m_display->SwitchToGUI(true);
 
     qApp->setStyle("Windows");
 
     QString themename = GetMythDB()->GetSetting("Theme", DEFAULT_UI_THEME);
     QString themedir = FindThemeDir(themename);
 
-    ThemeInfo *themeinfo = new ThemeInfo(themedir);
-
+    auto *themeinfo = new ThemeInfo(themedir);
     if (themeinfo)
     {
         d->m_isWide = themeinfo->IsWide();
-        d->m_baseWidth = themeinfo->GetBaseRes()->width();
-        d->m_baseHeight = themeinfo->GetBaseRes()->height();
+        d->m_baseSize = themeinfo->GetBaseRes();
         d->m_themename = themeinfo->GetName();
         LOG(VB_GUI, LOG_INFO, LOC +
             QString("Using theme base resolution of %1x%2")
-            .arg(d->m_baseWidth).arg(d->m_baseHeight));
+            .arg(d->m_baseSize.width()).arg(d->m_baseSize.height()));
         delete themeinfo;
     }
 
@@ -556,21 +418,25 @@ MythImage *MythUIHelper::GetImageFromCache(const QString &url)
 void MythUIHelper::IncludeInCacheSize(MythImage *im)
 {
     if (im)
+    {
 #if QT_VERSION < QT_VERSION_CHECK(5,10,0)
         d->m_cacheSize.fetchAndAddOrdered(im->byteCount());
 #else
         d->m_cacheSize.fetchAndAddOrdered(im->sizeInBytes());
 #endif
+    }
 }
 
 void MythUIHelper::ExcludeFromCacheSize(MythImage *im)
 {
     if (im)
+    {
 #if QT_VERSION < QT_VERSION_CHECK(5,10,0)
         d->m_cacheSize.fetchAndAddOrdered(-im->byteCount());
 #else
         d->m_cacheSize.fetchAndAddOrdered(-im->sizeInBytes());
 #endif
+    }
 }
 
 MythImage *MythUIHelper::CacheImage(const QString &url, MythImage *im,
@@ -729,10 +595,8 @@ void MythUIHelper::RemoveFromCacheByFile(const QString &fname)
     QDir dir(GetThemeCacheDir());
     QFileInfoList list = dir.entryInfoList();
 
-    for (int i = 0; i < list.size(); ++i)
+    for (const auto & fileInfo : list)
     {
-        const QFileInfo& fileInfo = list.at(i);
-
         if (fileInfo.fileName().contains(partialKey))
         {
             LOG(VB_GUI | VB_FILE, LOG_INFO, LOC +
@@ -740,9 +604,11 @@ void MythUIHelper::RemoveFromCacheByFile(const QString &fname)
                 .arg(fileInfo.fileName()));
 
             if (!dir.remove(fileInfo.fileName()))
+            {
                 LOG(VB_GENERAL, LOG_ERR, LOC +
                     QString("Failed to delete %1 from the theme cache")
                     .arg(fileInfo.fileName()));
+            }
         }
     }
 }
@@ -762,19 +628,19 @@ bool MythUIHelper::IsImageInCache(const QString &url)
 
 QString MythUIHelper::GetThemeCacheDir(void)
 {
-    static QString oldcachedir;
+    static QString s_oldcachedir;
     QString tmpcachedir = GetThemeBaseCacheDir() + "/" +
                           GetMythDB()->GetSetting("Theme", DEFAULT_UI_THEME) +
-                          "." + QString::number(d->m_screenwidth) +
-                          "." + QString::number(d->m_screenheight);
+                          "." + QString::number(d->m_screenRect.width()) +
+                          "." + QString::number(d->m_screenRect.height());
 
-    if (tmpcachedir != oldcachedir)
+    if (tmpcachedir != s_oldcachedir)
     {
         LOG(VB_GUI | VB_FILE, LOG_INFO, LOC +
             QString("Creating cache dir: %1").arg(tmpcachedir));
         QDir dir;
         dir.mkdir(tmpcachedir);
-        oldcachedir = tmpcachedir;
+        s_oldcachedir = tmpcachedir;
     }
     return tmpcachedir;
 }
@@ -834,12 +700,10 @@ void MythUIHelper::ClearOldImageCache(void)
         dirtimes.erase(dirtimes.begin());
     }
 
-    QMap<QDateTime, QString>::const_iterator dit = dirtimes.begin();
-
-    for (; dit != dirtimes.end(); ++dit)
+    foreach (const auto & dirtime, dirtimes)
     {
         LOG(VB_GUI | VB_FILE, LOG_INFO, LOC +
-            QString("Keeping cache dir: %1").arg(*dit));
+            QString("Keeping cache dir: %1").arg(dirtime));
     }
 }
 
@@ -908,7 +772,9 @@ void MythUIHelper::PruneCacheDir(const QString& dirname)
         QString("Removing files not accessed since %1")
         .arg(cutoff.toLocalTime().toString(Qt::ISODate)));
 
-    int kept = 0, deleted = 0, errcnt = 0;
+    int kept = 0;
+    int deleted = 0;
+    int errcnt = 0;
     QDir dir(dirname);
     dir.setFilter(QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
     dir.setSorting(QDir::NoSort);
@@ -955,43 +821,27 @@ void MythUIHelper::PruneCacheDir(const QString& dirname)
         .arg(kept).arg(deleted).arg(errcnt));
 }
 
-void MythUIHelper::GetScreenBounds(int &xbase, int &ybase,
-                                   int &width, int &height)
+void MythUIHelper::UpdateScreenSettings(void)
 {
-    xbase  = d->m_xbase;
-    ybase  = d->m_ybase;
-
-    width  = d->m_width;
-    height = d->m_height;
+    d->StoreGUIsettings();
 }
 
-void MythUIHelper::GetScreenSettings(float &wmult, float &hmult)
+QRect MythUIHelper::GetScreenSettings(void)
 {
-    wmult = d->m_wmult;
-    hmult = d->m_hmult;
+    return d->m_screenRect;
 }
 
-void MythUIHelper::GetScreenSettings(int &width, float &wmult,
-                                     int &height, float &hmult)
+void MythUIHelper::GetScreenSettings(float &XFactor, float &YFactor)
 {
-    height = d->m_screenheight;
-    width = d->m_screenwidth;
-
-    wmult = d->m_wmult;
-    hmult = d->m_hmult;
+    XFactor = d->m_wmult;
+    YFactor = d->m_hmult;
 }
 
-void MythUIHelper::GetScreenSettings(int &xbase, int &width, float &wmult,
-                                     int &ybase, int &height, float &hmult)
+void MythUIHelper::GetScreenSettings(QRect &Rect, float &XFactor, float &YFactor)
 {
-    xbase  = d->m_screenxbase;
-    ybase  = d->m_screenybase;
-
-    height = d->m_screenheight;
-    width = d->m_screenwidth;
-
-    wmult = d->m_wmult;
-    hmult = d->m_hmult;
+    XFactor = d->m_wmult;
+    YFactor = d->m_hmult;
+    Rect    = d->m_screenRect;
 }
 
 /**
@@ -1028,9 +878,8 @@ void MythUIHelper::ParseGeometryOverride(const QString &geometry)
     }
 
     bool parsed = false;
-    int tmp_w = 0, tmp_h = 0;
-
-    tmp_w = geo[1].toInt(&parsed);
+    int tmp_h = 0;
+    int tmp_w = geo[1].toInt(&parsed);
 
     if (!parsed)
     {
@@ -1096,6 +945,18 @@ bool MythUIHelper::IsGeometryOverridden(void)
             MythUIHelperPrivate::y_override >= 0 ||
             MythUIHelperPrivate::w_override >= 0 ||
             MythUIHelperPrivate::h_override >= 0);
+}
+
+/*! \brief Return the raw geometry override rectangle.
+ *
+ * Used before MythUIHelper has been otherwise initialised (and hence GetScreenSettings
+ * does not return a valid result).
+*/
+QRect MythUIHelper::GetGeometryOverride(void)
+{
+    // NB Call IsGeometryOverridden first to ensure this is valid
+    return QRect(MythUIHelperPrivate::x_override, MythUIHelperPrivate::y_override,
+                 MythUIHelperPrivate::w_override, MythUIHelperPrivate::h_override);
 }
 
 /**
@@ -1302,11 +1163,8 @@ QList<ThemeInfo> MythUIHelper::GetThemes(ThemeType type)
 
     fileList.append(themeDirs.entryInfoList());
 
-    for (QFileInfoList::iterator it =  fileList.begin();
-         it != fileList.end(); ++it)
+    foreach (auto & theme, fileList)
     {
-        QFileInfo  &theme = *it;
-
         if (theme.baseName() == "default" ||
             theme.baseName() == "default-wide" ||
             theme.baseName() == "Slave")
@@ -1336,16 +1194,15 @@ bool MythUIHelper::FindThemeFile(QString &path)
     bool foundit = false;
     const QStringList searchpath = GetThemeSearchPath();
 
-    for (QStringList::const_iterator ii = searchpath.begin();
-         ii != searchpath.end(); ++ii)
+    foreach (const auto & ii, searchpath)
     {
         if (fi.isRelative())
         {
-            file = *ii + fi.filePath();
+            file = ii + fi.filePath();
         }
         else if (fi.isAbsolute() && !fi.isRoot())
         {
-            file = *ii + fi.fileName();
+            file = ii + fi.fileName();
         }
 
         if (QFile::exists(file))
@@ -1682,14 +1539,9 @@ MThreadPool *MythUIHelper::GetImageThreadPool(void)
     return d->m_imageThreadPool;
 }
 
-double MythUIHelper::GetPixelAspectRatio(void) const
-{
-    return d->GetPixelAspectRatio();
-}
-
 QSize MythUIHelper::GetBaseSize(void) const
 {
-    return {d->m_baseWidth, d->m_baseHeight};
+    return d->m_baseSize;
 }
 
 void MythUIHelper::SetFontStretch(int stretch)

@@ -38,7 +38,7 @@
 #include "standardsettings.h"
 #include "cardutil.h"
 
-class VideoSourceSelector;
+class VideoSourceShow;
 class MultiplexID;
 
 /*
@@ -81,11 +81,11 @@ class MTV_PUBLIC TransportListEditor : public GroupSetting
     void NewTransport(void);
 
   private:
-    ~TransportListEditor() = default;
+    ~TransportListEditor() override = default;
     void Delete(TransportSetting *transport);
 
   private:
-    VideoSourceSelector *m_videosource {nullptr};
+    VideoSourceShow *m_videosource {nullptr};
     QVector<StandardSetting*> m_list;
     uint m_sourceid  {0};
     uint m_cardtype  {CardUtil::ERROR_PROBE};

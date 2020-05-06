@@ -52,8 +52,7 @@ class ThemeExtractThread : public QRunnable
     {
         extractZIP(m_srcFile, m_destDir);
 
-        MythEvent *me =
-             new MythEvent("THEME_INSTALLED", QStringList(m_srcFile));
+        auto *me = new MythEvent("THEME_INSTALLED", QStringList(m_srcFile));
         QCoreApplication::postEvent(m_parent, me);
     }
 
@@ -144,29 +143,25 @@ void ThemeChooser::Load(void)
 
     m_infoList = themes.entryInfoList();
 
-    for( QFileInfoList::iterator it =  m_infoList.begin();
-                                 it != m_infoList.end();
-                               ++it )
+    foreach (auto & theme, m_infoList)
     {
-        if (loadThemeInfo(*it))
+        if (loadThemeInfo(theme))
         {
-            themesSeen << (*it).fileName();
-            m_themeStatuses[(*it).fileName()] = "default";
+            themesSeen << theme.fileName();
+            m_themeStatuses[theme.fileName()] = "default";
         }
     }
 
     themes.setPath(GetThemesParentDir());
     QFileInfoList sharedThemes = themes.entryInfoList();
-    for( QFileInfoList::iterator it =  sharedThemes.begin();
-                                 it != sharedThemes.end();
-                               ++it )
+    foreach (auto & sharedTheme, sharedThemes)
     {
-        if ((!themesSeen.contains((*it).fileName())) &&
-            (loadThemeInfo(*it)))
+        if ((!themesSeen.contains(sharedTheme.fileName())) &&
+            (loadThemeInfo(sharedTheme)))
         {
-            m_infoList << *it;
-            themesSeen << (*it).fileName();
-            m_themeStatuses[(*it).fileName()] = "default";
+            m_infoList << sharedTheme;
+            themesSeen << sharedTheme.fileName();
+            m_themeStatuses[sharedTheme.fileName()] = "default";
         }
     }
 
@@ -205,8 +200,7 @@ void ThemeChooser::Load(void)
         if (pos > -1)
         {
             QString subversion;
-            int idx = subexp.cap(1).toInt();
-            for ( ; idx > 0; --idx)
+            for (int idx = subexp.cap(1).toInt(); idx > 0; --idx)
             {
                 subversion = MythVersion + "." + QString::number(idx);
                 LOG(VB_GUI, LOG_INFO, QString("Loading themes for %1").arg(subversion));
@@ -310,10 +304,12 @@ void ThemeChooser::LoadVersion(const QString &version,
             }
         }
         else
+        {
             LOG(VB_GUI, LOG_INFO, LOC +
                 QString("Unzipped '%1' to '%2'")
                 .arg(remoteThemesFile)
                 .arg(destdir));
+        }
     }
 
     QDir themes;
@@ -333,18 +329,16 @@ void ThemeChooser::LoadVersion(const QString &version,
         themes.setPath(themesPath);
 
         QFileInfoList downloadableThemes = themes.entryInfoList();
-        for( QFileInfoList::iterator it =  downloadableThemes.begin();
-                                     it != downloadableThemes.end();
-                                   ++it )
+        foreach (auto & dtheme, downloadableThemes)
         {
-            QString dirName = (*it).fileName();
+            QString dirName = dtheme.fileName();
             QString themeName = dirName;
             QString remoteDir = themeSite;
             remoteDir.append("/").append(dirName);
             QString localDir = themes.absolutePath();
             localDir.append("/").append(dirName);
 
-            ThemeInfo remoteTheme((*it).absoluteFilePath());
+            ThemeInfo remoteTheme(dtheme.absoluteFilePath());
 
             if (themesSeen.contains(dirName))
             {
@@ -361,14 +355,14 @@ void ThemeChooser::LoadVersion(const QString &version,
                     ((rmtMaj == locMaj) &&
                      (rmtMin > locMin)))
                 {
-                    if (loadThemeInfo(*it))
+                    if (loadThemeInfo(dtheme))
                     {
                         LOG(VB_GUI, LOG_DEBUG, LOC +
                             QString("'%1' old version %2.%3, new version %4.%5")
                             .arg(themeName).arg(locMaj).arg(locMin)
                             .arg(rmtMaj).arg(rmtMin));
 
-                        m_infoList << *it;
+                        m_infoList << dtheme;
                         m_themeStatuses[themeName] = "updateavailable";
 
                         QFileInfo finfo(remoteTheme.GetPreviewPath());
@@ -396,12 +390,12 @@ void ThemeChooser::LoadVersion(const QString &version,
                     .arg(remoteTheme.GetMajorVersion())
                     .arg(remoteTheme.GetMinorVersion()));
 
-                ThemeInfo *tmpTheme = loadThemeInfo(*it);
+                ThemeInfo *tmpTheme = loadThemeInfo(dtheme);
                 if (tmpTheme)
                 {
                     themeName = tmpTheme->GetName();
                     themesSeen << dirName;
-                    m_infoList << *it;
+                    m_infoList << dtheme;
                     m_themeStatuses[themeName] = "updateavailable";
 
                     QFileInfo finfo(tmpTheme->GetPreviewPath());
@@ -424,12 +418,8 @@ void ThemeChooser::Init(void)
     MythUIButtonListItem *item = nullptr;
 
     m_themes->Reset();
-    for( QFileInfoList::iterator it =  m_infoList.begin();
-                                 it != m_infoList.end();
-                               ++it )
+    foreach (auto & theme, m_infoList)
     {
-        QFileInfo  &theme = *it;
-
         if (!m_themeFileNameInfos.contains(theme.filePath()))
             continue;
 
@@ -457,7 +447,7 @@ void ThemeChooser::Init(void)
             InfoMap infomap;
             themeinfo->ToMap(infomap);
             item->SetTextFromMap(infomap);
-            item->SetData(qVariantFromValue(themeinfo));
+            item->SetData(QVariant::fromValue(themeinfo));
 
             QString thumbnail = themeinfo->GetPreviewPath();
             QFileInfo fInfo(thumbnail);
@@ -474,7 +464,7 @@ void ThemeChooser::Init(void)
     SetFocusWidget(m_themes);
 
     if (curThemeInfo)
-        m_themes->SetValueByData(qVariantFromValue(curThemeInfo));
+        m_themes->SetValueByData(QVariant::fromValue(curThemeInfo));
 
     MythUIButtonListItem *current = m_themes->GetItemCurrent();
     if (current)
@@ -491,7 +481,7 @@ void ThemeChooser::Init(void)
     }
 }
 
-ThemeInfo *ThemeChooser::loadThemeInfo(QFileInfo &theme)
+ThemeInfo *ThemeChooser::loadThemeInfo(const QFileInfo &theme)
 {
     if (theme.fileName() == "default" || theme.fileName() == "default-wide")
         return nullptr;
@@ -544,11 +534,15 @@ void ThemeChooser::showPopupMenu(void)
     if (m_fullPreviewStateType)
     {
         if (m_fullPreviewShowing)
+        {
             m_popupMenu->AddButton(tr("Hide Fullscreen Preview"),
                                    SLOT(toggleFullscreenPreview()));
+        }
         else
+        {
             m_popupMenu->AddButton(tr("Show Fullscreen Preview"),
                                    SLOT(toggleFullscreenPreview()));
+        }
     }
 
     m_popupMenu->AddButton(tr("Refresh Downloadable Themes"),
@@ -557,7 +551,7 @@ void ThemeChooser::showPopupMenu(void)
     MythUIButtonListItem *current = m_themes->GetItemCurrent();
     if (current)
     {
-        ThemeInfo *info = current->GetData().value<ThemeInfo *>();
+        auto *info = current->GetData().value<ThemeInfo *>();
 
         if (info)
         {
@@ -571,11 +565,15 @@ void ThemeChooser::showPopupMenu(void)
     }
 
     if (gCoreContext->GetBoolSetting("ThemeUpdateNofications", true))
+    {
         m_popupMenu->AddButton(tr("Disable Theme Update Notifications"),
                                SLOT(toggleThemeUpdateNotifications()));
+    }
     else
+    {
         m_popupMenu->AddButton(tr("Enable Theme Update Notifications"),
                                SLOT(toggleThemeUpdateNotifications()));
+    }
 }
 
 void ThemeChooser::popupClosed(const QString& which, int result)
@@ -636,7 +634,7 @@ void ThemeChooser::toggleFullscreenPreview(void)
         else
         {
             MythUIButtonListItem *item = m_themes->GetItemCurrent();
-            ThemeInfo *info = item->GetData().value<ThemeInfo*>();
+            auto *info = item->GetData().value<ThemeInfo*>();
             if (info)
             {
                 if (m_fullScreenPreview)
@@ -680,7 +678,7 @@ void ThemeChooser::saveAndReload(void)
 
 void ThemeChooser::saveAndReload(MythUIButtonListItem *item)
 {
-    ThemeInfo *info = item->GetData().value<ThemeInfo *>();
+    auto *info = item->GetData().value<ThemeInfo *>();
 
     if (!info)
         return;
@@ -736,7 +734,7 @@ void ThemeChooser::saveAndReload(MythUIButtonListItem *item)
 
 void ThemeChooser::itemChanged(MythUIButtonListItem *item)
 {
-    ThemeInfo *info = item->GetData().value<ThemeInfo*>();
+    auto *info = item->GetData().value<ThemeInfo*>();
 
     if (!info)
         return;
@@ -805,7 +803,10 @@ void ThemeChooser::customEvent(QEvent *e)
 {
     if (e->type() == MythEvent::MythEventMessage)
     {
-        MythEvent *me = static_cast<MythEvent *>(e);
+        auto *me = dynamic_cast<MythEvent *>(e);
+        if (me == nullptr)
+            return;
+
         QStringList tokens = me->Message().split(" ", QString::SkipEmptyParts);
 
         if (tokens.isEmpty())
@@ -876,7 +877,7 @@ void ThemeChooser::customEvent(QEvent *e)
                         (fileSize > 0))
                     {
                         m_downloadState = dsExtractingTheme;
-                        ThemeExtractThread *extractThread =
+                        auto *extractThread =
                             new ThemeExtractThread(this, m_downloadFile,
                                                    m_userThemeDir);
                         MThreadPool::globalInstance()->start(
@@ -913,7 +914,7 @@ void ThemeChooser::customEvent(QEvent *e)
             gCoreContext->SaveSetting("Theme", m_downloadTheme->GetDirectoryName());
 
             // Send a message to ourself so we trigger a reload our next chance
-            MythEvent *me2 = new MythEvent("THEME_RELOAD");
+            auto *me2 = new MythEvent("THEME_RELOAD");
             qApp->postEvent(this, me2);
         }
         else if ((me->Message() == "THEME_RELOAD") &&
@@ -933,7 +934,7 @@ void ThemeChooser::removeTheme(void)
         return;
     }
 
-    ThemeInfo *info = current->GetData().value<ThemeInfo *>();
+    auto *info = current->GetData().value<ThemeInfo *>();
     if (!info)
     {
         ShowOkPopup(tr("Error, unable to find current theme."));
@@ -993,8 +994,10 @@ ThemeUpdateChecker::ThemeUpdateChecker(void) :
     QString version = MYTH_SOURCE_PATH;
 
     if (!version.isEmpty() && !version.startsWith("fixes/"))
+    {
         // Treat devel branches as master
         m_mythVersions << "trunk";
+    }
     else
     {
         version = MYTH_BINARY_VERSION; // Example: 0.25.20101017-1
@@ -1006,8 +1009,7 @@ ThemeUpdateChecker::ThemeUpdateChecker(void) :
         if (pos > -1)
         {
             QString subversion;
-            int idx = subexp.cap(1).toInt();
-            for ( ; idx > 0; --idx)
+            for (int idx = subexp.cap(1).toInt(); idx > 0; --idx)
                 m_mythVersions << version + "." + QString::number(idx);
         }
         m_mythVersions << version;
@@ -1081,7 +1083,7 @@ void ThemeUpdateChecker::checkForUpdate(void)
                 int locMaj = 0;
                 int locMin = 0;
 
-                ThemeInfo *remoteTheme = new ThemeInfo(remoteThemeDir);
+                auto *remoteTheme = new ThemeInfo(remoteThemeDir);
                 if (!remoteTheme || remoteTheme->GetType() & THEME_UNKN)
                 {
                     LOG(VB_GENERAL, LOG_ERR,

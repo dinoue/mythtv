@@ -22,8 +22,7 @@
 TagLib::FLAC::File *MetaIOFLACVorbis::OpenFile(const QString &filename)
 {
     QByteArray fname = filename.toLocal8Bit();
-    TagLib::FLAC::File *flacfile =
-                            new TagLib::FLAC::File(fname.constData());
+    auto *flacfile = new TagLib::FLAC::File(fname.constData());
 
     if (!flacfile->isOpen())
     {
@@ -110,7 +109,7 @@ MusicMetadata* MetaIOFLACVorbis::read(const QString &filename)
         return nullptr;
     }
 
-    MusicMetadata *metadata = new MusicMetadata(filename);
+    auto *metadata = new MusicMetadata(filename);
 
     ReadGenericMetadata(tag, metadata);
 
@@ -154,7 +153,7 @@ MusicMetadata* MetaIOFLACVorbis::read(const QString &filename)
  */
 QImage* MetaIOFLACVorbis::getAlbumArt(const QString &filename, ImageType type)
 {
-    QImage *picture = new QImage();
+    auto *picture = new QImage();
     TagLib::FLAC::File * flacfile = OpenFile(filename);
 
     if (flacfile)
@@ -192,12 +191,12 @@ TagLib::FLAC::Picture *MetaIOFLACVorbis::getPictureFromFile(
         // From what I can tell, FLAC::File maintains ownership of the Picture pointers, so no need to delete
         const TagLib::List<Picture *>& picList = flacfile->pictureList();
 
-        for (auto it = picList.begin(); it != picList.end(); it++)
+        for (auto *entry : picList)
         {
-            if ((*it)->type() == artType)
+            if (entry->type() == artType)
             {
                 //found the type we were looking for
-                pic = *it;
+                pic = entry;
                 break;
             }
         }
@@ -252,10 +251,8 @@ AlbumArtList MetaIOFLACVorbis::getAlbumArtList(const QString &filename)
     {
         const TagLib::List<Picture *>& picList = flacfile->pictureList();
 
-        for(TagLib::List<Picture *>::ConstIterator it = picList.begin();
-            it != picList.end(); it++)
+        for (auto *pic : picList)
         {
-            Picture* pic = *it;
             // Assume a valid image would have at least
             // 100 bytes of data (1x1 indexed gif is 35 bytes)
             if (pic->data().size() < 100)
@@ -266,7 +263,7 @@ AlbumArtList MetaIOFLACVorbis::getAlbumArtList(const QString &filename)
                 continue;
             }
 
-            AlbumArtImage *art = new AlbumArtImage();
+            auto *art = new AlbumArtImage();
 
             if (pic->description().isEmpty())
                 art->m_description.clear();

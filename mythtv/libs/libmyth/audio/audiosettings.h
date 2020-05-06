@@ -9,17 +9,21 @@
 #ifndef _AUDIO_SETTINGS_H_
 #define _AUDIO_SETTINGS_H_
 
+#include <utility>
+
+// Qt headers
 #include <QString>
 
+// MythTV headers
 #include "mythexp.h"
 #include "audiooutputsettings.h"
 
-typedef enum {
+enum AudioOutputSource {
     AUDIOOUTPUT_UNKNOWN,
     AUDIOOUTPUT_VIDEO,
     AUDIOOUTPUT_MUSIC,
     AUDIOOUTPUT_TELEPHONY,
-} AudioOutputSource;
+};
 
 class MPUBLIC AudioSettings
 {
@@ -47,30 +51,30 @@ class MPUBLIC AudioSettings
                   int           upmixer_startup = 0,
                   int           codec_profile = 0);
 
-    AudioSettings(const QString    &main_device,
-                  const QString    &passthru_device = QString())
-        : m_main_device(main_device),
-          m_passthru_device(passthru_device) {}
+    explicit AudioSettings(QString main_device,
+                  QString passthru_device = QString())
+        : m_mainDevice(std::move(main_device)),
+          m_passthruDevice(std::move(passthru_device)) {}
 
     ~AudioSettings();
     void FixPassThrough(void);
     void TrimDeviceType(void);
 
     QString GetMainDevice(void) const
-        { return m_main_device; }
+        { return m_mainDevice; }
     QString GetPassthruDevice(void) const
-        { return m_passthru_device; }
+        { return m_passthruDevice; }
 
   public:
-    QString             m_main_device;
-    QString             m_passthru_device;
+    QString             m_mainDevice;
+    QString             m_passthruDevice;
     AudioFormat         m_format          {FORMAT_NONE};
     int                 m_channels        {-1};
     AVCodecID           m_codec           {AV_CODEC_ID_NONE};
-    int                 m_codec_profile   {-1};
-    int                 m_samplerate      {-1};
-    bool                m_set_initial_vol {false};
-    bool                m_use_passthru    {false};
+    int                 m_codecProfile    {-1};
+    int                 m_sampleRate      {-1};
+    bool                m_setInitialVol   {false};
+    bool                m_usePassthru     {false};
     AudioOutputSource   m_source          {AUDIOOUTPUT_UNKNOWN};
     int                 m_upmixer         {0};
     /**

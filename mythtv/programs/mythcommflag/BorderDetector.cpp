@@ -29,8 +29,8 @@ int
 BorderDetector::MythPlayerInited(const MythPlayer *player)
 {
     (void)player;  /* gcc */
-    m_time_reported = false;
-    memset(&m_analyze_time, 0, sizeof(m_analyze_time));
+    m_timeReported = false;
+    memset(&m_analyzeTime, 0, sizeof(m_analyzeTime));
     return 0;
 }
 
@@ -38,11 +38,11 @@ void
 BorderDetector::setLogoState(TemplateFinder *finder)
 {
     if ((m_logoFinder = finder) && (m_logo = m_logoFinder->getTemplate(
-                    &m_logorow, &m_logocol, &m_logowidth, &m_logoheight)))
+                    &m_logoRow, &m_logoCol, &m_logoWidth, &m_logoHeight)))
     {
         LOG(VB_COMMFLAG, LOG_INFO,
             QString("BorderDetector::setLogoState: %1x%2@(%3,%4)")
-                .arg(m_logowidth).arg(m_logoheight).arg(m_logocol).arg(m_logorow));
+                .arg(m_logoWidth).arg(m_logoHeight).arg(m_logoCol).arg(m_logoRow));
     }
 }
 
@@ -81,14 +81,14 @@ BorderDetector::getDimensions(const AVFrame *pgm, int pgmheight,
      * pillarboxing (when one is embedded inside the other) are different
      * colors.
      */
-    static const unsigned char  MAXRANGE = 32;
+    static constexpr unsigned char kMaxRange = 32;
 
     /*
      * TUNABLE: The maximum number of consecutive rows or columns with too many
      * outlier points that may be scanned before declaring the existence of a
      * border.
      */
-    static const int        MAXLINES = 2;
+    static constexpr int    kMaxLines = 2;
 
     const int               pgmwidth = pgm->linesize[0];
 
@@ -111,32 +111,28 @@ BorderDetector::getDimensions(const AVFrame *pgm, int pgmheight,
      * or noise between edges and content. (Really, a more general case of
      * VERTMARGIN and HORIZMARGIN, above.)
      */
-    const int               VERTSLOP = max(MAXLINES, pgmheight * 1 / 120);
-    const int               HORIZSLOP = max(MAXLINES, pgmwidth * 1 / 160);
+    const int               VERTSLOP = max(kMaxLines, pgmheight * 1 / 120);
+    const int               HORIZSLOP = max(kMaxLines, pgmwidth * 1 / 160);
 
-    struct timeval          start {}, end {}, elapsed {};
-    int                     minrow = 0, mincol = 0, maxrow1 = 0, maxcol1 = 0;
-    int                     newrow = 0, newcol = 0, newwidth = 0, newheight = 0;
-    bool                    top = false, bottom = false;
+    struct timeval start {};
+    struct timeval end {};
+    struct timeval elapsed {};
+
+    int minrow    = VERTMARGIN;
+    int mincol    = HORIZMARGIN;
+    int maxrow1   = pgmheight - VERTMARGIN;   /* maxrow + 1 */
+    int maxcol1   = pgmwidth - HORIZMARGIN;   /* maxcol + 1 */
+    int newrow    = minrow - 1;
+    int newcol    = mincol - 1;
+    int newwidth  = maxcol1 + 1 - mincol;
+    int newheight = maxrow1 + 1 - minrow;
+    bool top    = false;
+    bool bottom = false;
 
     (void)gettimeofday(&start, nullptr);
 
-    if (_frameno != UNCACHED && _frameno == m_frameno)
+    if (_frameno != kUncached && _frameno == m_frameNo)
         goto done;
-
-    top = false;
-    bottom = false;
-
-    minrow = VERTMARGIN;
-    maxrow1 = pgmheight - VERTMARGIN;   /* maxrow + 1 */
-
-    mincol = HORIZMARGIN;
-    maxcol1 = pgmwidth - HORIZMARGIN;   /* maxcol + 1 */
-
-    newrow = minrow - 1;
-    newcol = mincol - 1;
-    newwidth = maxcol1 + 1 - mincol;
-    newheight = maxrow1 + 1 - minrow;
 
     for (;;)
     {
@@ -152,18 +148,18 @@ BorderDetector::getDimensions(const AVFrame *pgm, int pgmheight,
             bool inrange = true;
             for (int rr = minrow; rr < maxrow1; rr++)
             {
-                if (m_logo && rrccinrect(rr, cc, m_logorow, m_logocol,
-                            m_logowidth, m_logoheight))
+                if (m_logo && rrccinrect(rr, cc, m_logoRow, m_logoCol,
+                            m_logoWidth, m_logoHeight))
                     continue;   /* Exclude logo area from analysis. */
 
                 uchar val = pgm->data[0][rr * pgmwidth + cc];
                 int range = max(maxval, val) - min(minval, val) + 1;
-                if (range > MAXRANGE)
+                if (range > kMaxRange)
                 {
                     if (outliers++ < MAXOUTLIERS)
                         continue;   /* Next row. */
                     inrange = false;
-                    if (lines++ < MAXLINES)
+                    if (lines++ < kMaxLines)
                         break;  /* Next column. */
                     goto found_left;
                 }
@@ -204,18 +200,18 @@ found_left:
             bool inrange = true;
             for (int rr = minrow; rr < maxrow1; rr++)
             {
-                if (m_logo && rrccinrect(rr, cc, m_logorow, m_logocol,
-                            m_logowidth, m_logoheight))
+                if (m_logo && rrccinrect(rr, cc, m_logoRow, m_logoCol,
+                            m_logoWidth, m_logoHeight))
                     continue;   /* Exclude logo area from analysis. */
 
                 uchar val = pgm->data[0][rr * pgmwidth + cc];
                 int range = max(maxval, val) - min(minval, val) + 1;
-                if (range > MAXRANGE)
+                if (range > kMaxRange)
                 {
                     if (outliers++ < MAXOUTLIERS)
                         continue;   /* Next row. */
                     inrange = false;
-                    if (lines++ < MAXLINES)
+                    if (lines++ < kMaxLines)
                         break;  /* Next column. */
                     goto found_right;
                 }
@@ -257,18 +253,18 @@ found_right:
             bool inrange = true;
             for (int cc = mincol; cc < maxcol1; cc++)
             {
-                if (m_logo && rrccinrect(rr, cc, m_logorow, m_logocol,
-                            m_logowidth, m_logoheight))
+                if (m_logo && rrccinrect(rr, cc, m_logoRow, m_logoCol,
+                            m_logoWidth, m_logoHeight))
                     continue;   /* Exclude logo area from analysis. */
 
                 uchar val = pgm->data[0][rr * pgmwidth + cc];
                 int range = max(maxval, val) - min(minval, val) + 1;
-                if (range > MAXRANGE)
+                if (range > kMaxRange)
                 {
                     if (outliers++ < MAXOUTLIERS)
                         continue;   /* Next column. */
                     inrange = false;
-                    if (lines++ < MAXLINES)
+                    if (lines++ < kMaxLines)
                         break;  /* Next row. */
                     goto found_top;
                 }
@@ -306,18 +302,18 @@ found_top:
             bool inrange = true;
             for (int cc = mincol; cc < maxcol1; cc++)
             {
-                if (m_logo && rrccinrect(rr, cc, m_logorow, m_logocol,
-                            m_logowidth, m_logoheight))
+                if (m_logo && rrccinrect(rr, cc, m_logoRow, m_logoCol,
+                            m_logoWidth, m_logoHeight))
                     continue;   /* Exclude logo area from analysis. */
 
                 uchar val = pgm->data[0][rr * pgmwidth + cc];
                 int range = max(maxval, val) - min(minval, val) + 1;
-                if (range > MAXRANGE)
+                if (range > kMaxRange)
                 {
                     if (outliers++ < MAXOUTLIERS)
                         continue;   /* Next column. */
                     inrange = false;
-                    if (lines++ < MAXLINES)
+                    if (lines++ < kMaxLines)
                         break;  /* Next row. */
                     goto found_bottom;
                 }
@@ -348,21 +344,21 @@ found_bottom:
         maxrow1 = minrow + newheight;
     }
 
-    m_frameno = _frameno;
+    m_frameNo = _frameno;
     m_row = newrow;
     m_col = newcol;
     m_width = newwidth;
     m_height = newheight;
-    m_ismonochromatic = false;
+    m_isMonochromatic = false;
     goto done;
 
 monochromatic_frame:
-    m_frameno = _frameno;
+    m_frameNo = _frameno;
     m_row = newrow;
     m_col = newcol;
     m_width = newwidth;
     m_height = newheight;
-    m_ismonochromatic = true;
+    m_isMonochromatic = true;
 
 done:
     *prow = m_row;
@@ -372,19 +368,19 @@ done:
 
     (void)gettimeofday(&end, nullptr);
     timersub(&end, &start, &elapsed);
-    timeradd(&m_analyze_time, &elapsed, &m_analyze_time);
+    timeradd(&m_analyzeTime, &elapsed, &m_analyzeTime);
 
-    return m_ismonochromatic ? -1 : 0;
+    return m_isMonochromatic ? -1 : 0;
 }
 
 int
 BorderDetector::reportTime(void)
 {
-    if (!m_time_reported)
+    if (!m_timeReported)
     {
         LOG(VB_COMMFLAG, LOG_INFO, QString("BD Time: analyze=%1s")
-                .arg(strftimeval(&m_analyze_time)));
-        m_time_reported = true;
+                .arg(strftimeval(&m_analyzeTime)));
+        m_timeReported = true;
     }
     return 0;
 }

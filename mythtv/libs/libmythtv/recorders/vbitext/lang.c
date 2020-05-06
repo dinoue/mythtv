@@ -17,7 +17,7 @@ static unsigned char lang_char[256];
 
 
 
-static struct mark { const char *g0, *latin1, *latin2; } marks[16] =
+static struct mark { const char *m_g0, *m_latin1, *m_latin2; } marks[16] =
 {
     /* none */         { "#",
                          "\xA4", /* ¤ */
@@ -92,7 +92,7 @@ static unsigned char g2map_latin2[] =
 void
 lang_init(void)
 {
-    int i;
+    int i = 0;
 
     memset(lang_char, 0, sizeof(lang_char));
     for (i = 1; i <= 13; i++)
@@ -107,7 +107,7 @@ conv2latin(unsigned char *p, int n, int lang)
 
     while (n--)
     {
-       int c;
+       int c = 0;
        if (lang_char[c = *p])
        {
            if (! gfx || (c & 0xa0) != 0x20)
@@ -143,12 +143,12 @@ void
 do_enhancements(struct enhance *eh, struct vt_page *vtp)
 {
     int row = 0;
-    unsigned int *p, *e;
 
     if (eh->next_des < 1)
        return;
 
-    for (p = eh->trip, e = p + eh->next_des * 13; p < e; p++)
+    for (unsigned int *p = eh->trip, *e = p + eh->next_des * 13; p < e; p++)
+    {
        if (*p % 2048 != 2047)
        {
            int adr = *p % 64;
@@ -174,14 +174,14 @@ do_enhancements(struct enhance *eh, struct vt_page *vtp)
                        if (adr < VT_WIDTH && row < VT_HEIGHT)
                        {
                            struct mark *mark = marks + (mode - 16);
-                           char *x;
+                           char *x = NULL;
 
-                           if ((x = strchr(mark->g0, data)))
+                           if ((x = strchr(mark->m_g0, data)))
                            {
                                if (latin1)
-                                   data = mark->latin1[x - mark->g0];
+                                   data = mark->m_latin1[x - mark->m_g0];
                                else
-                                   data = mark->latin2[x - mark->g0];
+                                   data = mark->m_latin2[x - mark->m_g0];
                            }
                            vtp->data[row][adr] = data;
                        }
@@ -197,8 +197,6 @@ do_enhancements(struct enhance *eh, struct vt_page *vtp)
                switch (mode)
                {
                    case 1: // full row color
-                       row = adr;
-                       break;
                    case 4: // set active position
                        row = adr;
                        break;
@@ -209,6 +207,7 @@ do_enhancements(struct enhance *eh, struct vt_page *vtp)
                }
            }
        }
+    }
     //printf("\n");
 }
 

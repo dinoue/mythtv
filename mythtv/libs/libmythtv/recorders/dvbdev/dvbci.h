@@ -46,7 +46,7 @@
 class cMutex {
   friend class cCondVar;
 private:
-  pthread_mutex_t m_mutex;
+  pthread_mutex_t m_mutex      {};
   pid_t           m_lockingPid {0};
   int             m_locked     {0};
 public:
@@ -128,7 +128,7 @@ private:
   int     m_infoLengthPos {0};
   uint8_t m_capmt[2048]   {0}; ///< XXX is there a specified maximum?
 public:
-  cCiCaPmt(int ProgramNumber, uint8_t cplm = CPLM_ONLY);
+  explicit cCiCaPmt(int ProgramNumber, uint8_t cplm = CPLM_ONLY);
   void AddElementaryStream(int type, int pid);
   void AddCaDescriptor(int ca_system_id, int ca_pid, int data_len,
                        const uint8_t *data);
@@ -168,7 +168,7 @@ private:
   cCiSession             *m_sessions[MAX_CI_SESSION] {};
   cCiTransportLayer      *m_tpl          {nullptr};
   cCiTransportConnection *m_tc           {nullptr};
-  int ResourceIdToInt(const uint8_t *Data);
+  static int ResourceIdToInt(const uint8_t *Data);
   bool Send(uint8_t Tag, int SessionId, int ResourceId = 0, int Status = -1);
   cCiSession *GetSessionBySessionId(int SessionId);
   cCiSession *GetSessionByResourceId(int ResourceId, int Slot);
@@ -177,10 +177,10 @@ private:
   bool CloseSession(int SessionId);
   int CloseAllSessions(int Slot);
   cLlCiHandler(int Fd, int NumSlots);
+public:
+  ~cLlCiHandler() override;
   cLlCiHandler(const cLlCiHandler &) = delete;            // not copyable
   cLlCiHandler &operator=(const cLlCiHandler &) = delete; // not copyable
-public:
-  virtual ~cLlCiHandler();
   int NumSlots(void) override // cCiHandler
       { return m_numSlots; }
   bool Process(void) override; // cCiHandler
@@ -196,7 +196,7 @@ public:
   bool SetCaPmt(cCiCaPmt &CaPmt, int Slot) override; // cCiHandler
   void SetTimeOffset(double offset_in_seconds) override; // cCiHandler
   bool Reset(int Slot);
-  bool connected() const;
+  static bool connected();
   };
 
 class cHlCiHandler : public cCiHandler {
@@ -213,7 +213,7 @@ class cHlCiHandler : public cCiHandler {
     int GetData(unsigned tag, struct ca_msg *msg);
     int SendData(unsigned tag, struct ca_msg *msg);
   public:
-    virtual ~cHlCiHandler();
+    ~cHlCiHandler() override;
     int NumSlots(void) override // cCiHandler
         { return m_numSlots; }
     bool Process(void) override; // cCiHandler
@@ -231,7 +231,7 @@ class cHlCiHandler : public cCiHandler {
 
 int tcp_listen(struct sockaddr_in *name,int sckt,unsigned long address=INADDR_ANY);
 int accept_tcp(int ip_sock,struct sockaddr_in *ip_name);
-int udp_listen(struct sockaddr_un *name,char const * const filename);
+int udp_listen(struct sockaddr_un *name,char const * filename);
 int accept_udp(int ip_sock,struct sockaddr_un *ip_name);
 
 #endif //__CI_H

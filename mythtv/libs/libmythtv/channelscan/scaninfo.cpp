@@ -1,5 +1,6 @@
 // C++ headers
 #include <cstdint>
+#include <utility>
 
 // Qt headers
 #include <QString>
@@ -12,9 +13,9 @@
 #include "mythlogging.h"
 
 ScanInfo::ScanInfo(uint scanid, uint cardid, uint sourceid,
-                   bool processed, const QDateTime &scandate) :
+                   bool processed, QDateTime scandate) :
     m_scanid(scanid), m_cardid(cardid), m_sourceid(sourceid),
-    m_processed(processed), m_scandate(scandate)
+    m_processed(processed), m_scandate(std::move(scandate))
 {
 }
 
@@ -27,17 +28,17 @@ uint SaveScan(const ScanDTVTransportList &scan)
     if (scan.empty() || scan[0].m_channels.empty())
         return scanid;
 
-    uint sourceid = scan[0].m_channels[0].m_source_id;
+    uint sourceid = scan[0].m_channels[0].m_sourceId;
     uint cardid   = scan[0].m_cardid;
 
     // Delete very old scans
     const vector<ScanInfo> list = LoadScanList();
-    for (size_t i = 0; i < list.size(); ++i)
+    for (const auto & si : list)
     {
-        if (list[i].m_scandate > MythDate::current().addDays(-14))
+        if (si.m_scandate > MythDate::current().addDays(-14))
             continue;
-        if ((list[i].m_cardid == cardid) && (list[i].m_sourceid == sourceid))
-            ScanInfo::DeleteScan(list[i].m_scanid);
+        if ((si.m_cardid == cardid) && (si.m_sourceid == sourceid))
+            ScanInfo::DeleteScan(si.m_scanid);
     }
 
     MSqlQuery query(MSqlQuery::InitCon());
@@ -63,8 +64,8 @@ uint SaveScan(const ScanDTVTransportList &scan)
     if (!scanid)
         return scanid;
 
-    for (size_t i = 0; i < scan.size(); ++i)
-        scan[i].SaveScan(scanid);
+    for (const auto & si : scan)
+        si.SaveScan(scanid);
 
     return scanid;
 }

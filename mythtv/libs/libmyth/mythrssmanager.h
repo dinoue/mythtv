@@ -27,7 +27,7 @@ class MPUBLIC RSSSite : public QObject
       public:
         void clear(void)
         {
-            while (size())
+            while (!empty())
             {
                 RSSSite *tmp = back();
                 pop_back();
@@ -46,9 +46,9 @@ class MPUBLIC RSSSite : public QObject
             const bool& download,
             QDateTime updated);
 
-    ~RSSSite() = default;
+    ~RSSSite() override = default;
 
-    typedef QList<RSSSite *> rssList;
+    using rssList = QList<RSSSite *>;
 
     const QString& GetTitle() const { return m_title; }
     const QString& GetSortTitle() const { return m_sortTitle; }
@@ -112,7 +112,7 @@ class MPUBLIC RSSManager : public QObject
 
   public:
     RSSManager();
-    ~RSSManager();
+    ~RSSManager() override;
     void startTimer();
     void stopTimer();
 
@@ -124,7 +124,7 @@ class MPUBLIC RSSManager : public QObject
 
   private slots:
     void slotRefreshRSS(void);
-    void slotRSSRetrieved(RSSSite*);
+    void slotRSSRetrieved(RSSSite *site);
 
   private:
     void processAndInsertRSS(RSSSite *site);

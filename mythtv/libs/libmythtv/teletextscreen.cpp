@@ -62,12 +62,8 @@ bool TeletextScreen::Create(void)
 void TeletextScreen::ClearScreen(void)
 {
     DeleteAllChildren();
-    QHash<int, QImage*>::iterator it = m_rowImages.begin();
-    for (; it != m_rowImages.end(); ++it)
-    {
-        if (*it)
-            delete (*it);
-    }
+    foreach (auto & img, m_rowImages)
+        delete img;
     m_rowImages.clear();
     SetRedraw();
 }
@@ -78,7 +74,7 @@ QImage* TeletextScreen::GetRowImage(int row, QRect &rect)
     rect.translate(0, -(y * m_rowHeight));
     if (!m_rowImages.contains(y))
     {
-        QImage* img = new QImage(m_safeArea.width(), m_rowHeight * 2,
+        auto* img = new QImage(m_safeArea.width(), m_rowHeight * 2,
                                  QImage::Format_ARGB32);
         if (img)
         {
@@ -93,7 +89,7 @@ QImage* TeletextScreen::GetRowImage(int row, QRect &rect)
 
 void TeletextScreen::OptimiseDisplayedArea(void)
 {
-    VideoOutput *vo = m_player->GetVideoOutput();
+    MythVideoOutput *vo = m_player->GetVideoOutput();
     if (!vo)
         return;
     MythPainter *osd_painter = vo->GetOSDPainter();
@@ -110,8 +106,7 @@ void TeletextScreen::OptimiseDisplayedArea(void)
 
         int row = it.key();
         image->Assign(*(it.value()));
-        MythUIImage *uiimage = new MythUIImage(this, QString("ttrow%1")
-                                                        .arg(row));
+        auto *uiimage = new MythUIImage(this, QString("ttrow%1").arg(row));
         if (uiimage)
         {
             uiimage->SetImage(image);
@@ -324,19 +319,7 @@ void TeletextScreen::SetBackgroundColor(int ttcolor)
 
 void TeletextScreen::DrawLine(const uint8_t *page, uint row, int lang)
 {
-    bool mosaic;
-    bool conceal;
-    bool seperation;
-    bool flash;
-    bool doubleheight;
-    bool blink;
-    bool hold;
-    bool endbox;
-    bool startbox;
-    bool withinbox;
-
     unsigned char last_ch = ' ';
-    unsigned char ch;
 
     uint fgcolor    = kTTColorWhite;
     uint bgcolor    = kTTColorBlack;
@@ -348,7 +331,7 @@ void TeletextScreen::DrawLine(const uint8_t *page, uint row, int lang)
         bool isBlank = true;
         for (uint i = (row == 1 ? 8 : 0); i < (uint) kTeletextColumns; i++)
         {
-            ch = page[i] & 0x7F;
+            unsigned char ch = page[i] & 0x7F;
             if (ch != ' ')
             {
                 isBlank = false;
@@ -363,16 +346,16 @@ void TeletextScreen::DrawLine(const uint8_t *page, uint row, int lang)
     SetForegroundColor(fgcolor);
     SetBackgroundColor(bgcolor);
 
-    mosaic = false;
-    seperation = false;
-    conceal = false;
-    flash = false;
-    doubleheight = false;
-    blink = false;
-    hold = false;
-    endbox = false;
-    startbox = false;
-    withinbox = false;
+    bool mosaic = false;
+    bool seperation = false;
+    bool conceal = false;
+    bool flash = false;
+    bool doubleheight = false;
+    bool blink = false;
+    bool hold = false;
+    bool endbox = false;
+    bool startbox = false;
+    bool withinbox = false;
     uint flof_link_count = 0;
     uint old_bgcolor = bgcolor;
 
@@ -403,7 +386,7 @@ void TeletextScreen::DrawLine(const uint8_t *page, uint row, int lang)
         SetForegroundColor(fgcolor);
         SetBackgroundColor(bgcolor);
 
-        ch = page[x] & 0x7F;
+        unsigned char ch = page[x] & 0x7F;
         switch (ch)
         {
             case 0x00: case 0x01: case 0x02: case 0x03:
@@ -683,9 +666,9 @@ void TeletextScreen::DrawStatus(void)
 
 bool TeletextScreen::InitialiseFont()
 {
-    static bool initialised = false;
+    static bool s_initialised = false;
     //QString font = gCoreContext->GetSetting("DefaultSubtitleFont", "FreeMono");
-    if (initialised)
+    if (s_initialised)
     {
         return true;
 #if 0
@@ -695,7 +678,7 @@ bool TeletextScreen::InitialiseFont()
 #endif // 0
     }
 
-    MythFontProperties *mythfont = new MythFontProperties();
+    auto *mythfont = new MythFontProperties();
     QString font = SubtitleScreen::GetTeletextFontName();
     if (mythfont)
     {
@@ -708,7 +691,7 @@ bool TeletextScreen::InitialiseFont()
 
     gTTBackgroundAlpha = SubtitleScreen::GetTeletextBackgroundAlpha();
 
-    initialised = true;
+    s_initialised = true;
     LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("Loaded main subtitle font '%1'")
         .arg(font));
     return true;

@@ -1,3 +1,4 @@
+// Qt
 #include <QCoreApplication>
 #include <QUrl>
 #include <QDir>
@@ -17,6 +18,7 @@
 #include <QDateTime>
 #include <QRunnable>
 
+// Std
 #include <algorithm>
 #include <cmath>
 #include <cstdarg>
@@ -31,6 +33,7 @@ using namespace std;
 #include <utility>
 #endif
 
+// MythTV
 #include "compat.h"
 #include "mythconfig.h"       // for CONFIG_DARWIN
 #include "mythdownloadmanager.h"
@@ -47,6 +50,7 @@ using namespace std;
 #include "mythdate.h"
 #include "mythplugin.h"
 #include "mythmiscutil.h"
+#include "mythpower.h"
 
 #define LOC      QString("MythCoreContext::%1(): ").arg(__func__)
 
@@ -64,8 +68,8 @@ class MythCoreContextPrivate : public QObject
 
   public:
     MythCoreContext *m_parent;
-    QObject         *m_GUIcontext;
-    QObject         *m_GUIobject;
+    QObject         *m_guiContext;
+    QObject         *m_guiObject;
     QString          m_appBinaryVersion;
 
     QMutex  m_localHostLock;        ///< Locking for m_localHostname
@@ -79,17 +83,17 @@ class MythCoreContextPrivate : public QObject
     MythSocket *m_serverSock;       ///< socket for sending MythProto requests
     MythSocket *m_eventSock;        ///< socket events arrive on
 
-    QMutex         m_WOLInProgressLock;
-    QWaitCondition m_WOLInProgressWaitCondition;
-    bool           m_WOLInProgress;
-    bool           m_IsWOLAllowed;
+    QMutex         m_wolInProgressLock;
+    QWaitCondition m_wolInProgressWaitCondition;
+    bool           m_wolInProgress;
+    bool           m_isWOLAllowed;
 
     bool m_backend;
     bool m_frontend;
 
     MythDB *m_database;
 
-    QThread *m_UIThread;
+    QThread *m_uiThread;
 
     MythLocale *m_locale;
     QString m_language;
@@ -116,22 +120,26 @@ class MythCoreContextPrivate : public QObject
 
     QList<QHostAddress> m_approvedIps;
     QList<QHostAddress> m_deniedIps;
+
+    MythPower *m_power;
 };
 
 MythCoreContextPrivate::MythCoreContextPrivate(MythCoreContext *lparent,
                                                QString binversion,
                                                QObject *guicontext)
     : m_parent(lparent),
-      m_GUIcontext(guicontext), m_GUIobject(nullptr),
+      m_guiContext(guicontext),
+      m_guiObject(nullptr),
       m_appBinaryVersion(std::move(binversion)),
       m_sockLock(QMutex::NonRecursive),
-      m_serverSock(nullptr), m_eventSock(nullptr),
-      m_WOLInProgress(false),
-      m_IsWOLAllowed(true),
+      m_serverSock(nullptr),
+      m_eventSock(nullptr),
+      m_wolInProgress(false),
+      m_isWOLAllowed(true),
       m_backend(false),
       m_frontend(false),
       m_database(GetMythDB()),
-      m_UIThread(QThread::currentThread()),
+      m_uiThread(QThread::currentThread()),
       m_locale(nullptr),
       m_scheduler(nullptr),
       m_blockingClient(true),
@@ -140,7 +148,8 @@ MythCoreContextPrivate::MythCoreContextPrivate(MythCoreContext *lparent,
       m_announcedProtocol(false),
       m_pluginmanager(nullptr),
       m_isexiting(false),
-      m_sessionManager(nullptr)
+      m_sessionManager(nullptr),
+      m_power(nullptr)
 {
     MThread::ThreadSetup("CoreContext");
 #if QT_VERSION < QT_VERSION_CHECK(5,8,0)
@@ -164,6 +173,9 @@ static void delete_sock(QMutexLocker &locker, MythSocket **s)
 
 MythCoreContextPrivate::~MythCoreContextPrivate()
 {
+    if (m_power)
+        MythPower::AcquireRelease(this, false);
+
     MThreadPool::StopAllPools();
 
     {
@@ -206,17 +218,17 @@ MythCoreContextPrivate::~MythCoreContextPrivate()
 bool MythCoreContextPrivate::WaitForWOL(int timeout_in_ms)
 {
     int timeout_remaining = timeout_in_ms;
-    while (m_WOLInProgress && (timeout_remaining > 0))
+    while (m_wolInProgress && (timeout_remaining > 0))
     {
         LOG(VB_GENERAL, LOG_INFO, LOC + "Wake-On-LAN in progress, waiting...");
 
         int max_wait = min(1000, timeout_remaining);
-        m_WOLInProgressWaitCondition.wait(
-            &m_WOLInProgressLock, max_wait);
+        m_wolInProgressWaitCondition.wait(
+            &m_wolInProgressLock, max_wait);
         timeout_remaining -= max_wait;
     }
 
-    return !m_WOLInProgress;
+    return !m_wolInProgress;
 }
 
 MythCoreContext::MythCoreContext(const QString &binversion,
@@ -272,12 +284,14 @@ bool MythCoreContext::Init(void)
     LOG(VB_GENERAL, LOG_INFO, QString("Assumed character encoding: %1")
                                      .arg(lc_value));
     if (!lang_variables.isEmpty())
+    {
         LOG(VB_GENERAL, LOG_WARNING, QString("This application expects to "
             "be running a locale that specifies a UTF-8 codeset, and many "
             "features may behave improperly with your current language "
             "settings. Please set the %1 variable(s) in the environment "
             "in which this program is executed to include a UTF-8 codeset "
             "(such as 'en_US.UTF-8').").arg(lang_variables));
+    }
 #endif
 
     return true;
@@ -319,11 +333,15 @@ bool MythCoreContext::SetupCommandSocket(MythSocket *serverSock,
         strlist.empty() || (strlist[0] == "ERROR"))
     {
         if (!strlist.empty())
+        {
             LOG(VB_GENERAL, LOG_ERR, LOC + "Problem connecting "
                                            "server socket to master backend");
+        }
         else
+        {
             LOG(VB_GENERAL, LOG_ERR, LOC + "Timeout connecting "
                                            "server socket to master backend");
+        }
         return false;
     }
 
@@ -404,7 +422,7 @@ bool MythCoreContext::ConnectToMasterServer(bool blockingClient,
             d->m_serverSock = nullptr;
 
             QCoreApplication::postEvent(
-                d->m_GUIcontext, new MythEvent("CONNECTION_FAILURE"));
+                d->m_guiContext, new MythEvent("CONNECTION_FAILURE"));
 
             return false;
         }
@@ -420,7 +438,7 @@ MythSocket *MythCoreContext::ConnectCommandSocket(
     MythSocket *serverSock = nullptr;
 
     {
-        QMutexLocker locker(&d->m_WOLInProgressLock);
+        QMutexLocker locker(&d->m_wolInProgressLock);
         d->WaitForWOL();
     }
 
@@ -431,7 +449,8 @@ MythSocket *MythCoreContext::ConnectCommandSocket(
     if (maxConnTry < 1)
         maxConnTry = max(GetNumSetting("BackendConnectRetry", 1), 1);
 
-    int WOLsleepTime = 0, WOLmaxConnTry = 0;
+    int WOLsleepTime = 0;
+    int WOLmaxConnTry = 0;
     if (!WOLcmd.isEmpty())
     {
         WOLsleepTime  = GetNumSetting("WOLbackendReconnectWaitTime", 0);
@@ -478,14 +497,14 @@ MythSocket *MythCoreContext::ConnectCommandSocket(
         {
             if (!we_attempted_wol)
             {
-                QMutexLocker locker(&d->m_WOLInProgressLock);
-                if (d->m_WOLInProgress)
+                QMutexLocker locker(&d->m_wolInProgressLock);
+                if (d->m_wolInProgress)
                 {
                     d->WaitForWOL();
                     continue;
                 }
 
-                d->m_WOLInProgress = we_attempted_wol = true;
+                d->m_wolInProgress = we_attempted_wol = true;
             }
 
             MythWakeup(WOLcmd, kMSDontDisableDrawing | kMSDontBlockInputDevs |
@@ -499,7 +518,7 @@ MythSocket *MythCoreContext::ConnectCommandSocket(
         if (cnt == 1)
         {
             QCoreApplication::postEvent(
-                d->m_GUIcontext, new MythEvent("CONNECTION_FAILURE"));
+                d->m_guiContext, new MythEvent("CONNECTION_FAILURE"));
         }
 
         if (sleepms)
@@ -508,9 +527,9 @@ MythSocket *MythCoreContext::ConnectCommandSocket(
 
     if (we_attempted_wol)
     {
-        QMutexLocker locker(&d->m_WOLInProgressLock);
-        d->m_WOLInProgress = false;
-        d->m_WOLInProgressWaitCondition.wakeAll();
+        QMutexLocker locker(&d->m_wolInProgressLock);
+        d->m_wolInProgress = false;
+        d->m_wolInProgressWaitCondition.wakeAll();
     }
 
     if (!serverSock && !proto_mismatch)
@@ -524,7 +543,7 @@ MythSocket *MythCoreContext::ConnectCommandSocket(
     else
     {
         QCoreApplication::postEvent(
-            d->m_GUIcontext, new MythEvent("CONNECTION_RESTABLISHED"));
+            d->m_guiContext, new MythEvent("CONNECTION_RESTABLISHED"));
     }
 
     return serverSock;
@@ -533,7 +552,7 @@ MythSocket *MythCoreContext::ConnectCommandSocket(
 MythSocket *MythCoreContext::ConnectEventSocket(const QString &hostname,
                                                 int port)
 {
-    MythSocket *eventSock = new MythSocket(-1, this);
+    auto *eventSock = new MythSocket(-1, this);
 
     // Assume that since we _just_ connected the command socket,
     // this one won't need multiple retries to work...
@@ -616,12 +635,12 @@ bool MythCoreContext::IsBlockingClient(void) const
 
 void MythCoreContext::SetWOLAllowed(bool allow)
 {
-    d->m_IsWOLAllowed = allow;
+    d->m_isWOLAllowed = allow;
 }
 
 bool MythCoreContext::IsWOLAllowed() const
 {
-    return d->m_IsWOLAllowed;
+    return d->m_isWOLAllowed;
 }
 
 void MythCoreContext::SetAsBackend(bool backend)
@@ -1170,12 +1189,13 @@ QString MythCoreContext::resolveAddress(const QString &host, ResolveType type,
                 QString("Can't resolve hostname:'%1', using localhost").arg(host));
             return type == ResolveIPv4 ? "127.0.0.1" : "::1";
         }
-        QHostAddress v4, v6;
+        QHostAddress v4;
+        QHostAddress v6;
 
         // Return the first address fitting the type critera
-        for (int i=0; i < list.size(); i++)
+        foreach (const auto & item, list)
         {
-            addr = list[i];
+            addr = item;
             QAbstractSocket::NetworkLayerProtocol prot = addr.protocol();
 
             if (prot == QAbstractSocket::IPv4Protocol)
@@ -1247,7 +1267,7 @@ bool MythCoreContext::CheckSubnet(const QAbstractSocket *socket)
 
 bool MythCoreContext::CheckSubnet(const QHostAddress &peer)
 {
-    static const QHostAddress linklocal("fe80::");
+    static const QHostAddress kLinkLocal("fe80::");
     if (GetBoolSetting("AllowConnFromAll",false))
         return true;
     if (d->m_approvedIps.contains(peer))
@@ -1261,7 +1281,7 @@ bool MythCoreContext::CheckSubnet(const QHostAddress &peer)
     }
 
     // allow all link-local
-    if (peer.isInSubnet(linklocal,10))
+    if (peer.isInSubnet(kLinkLocal,10))
     {
         d->m_approvedIps.append(peer);
         return true;
@@ -1312,7 +1332,7 @@ void MythCoreContext::ClearOverrideSettingForSession(const QString &key)
 
 bool MythCoreContext::IsUIThread(void)
 {
-    return is_current_thread(d->m_UIThread);
+    return is_current_thread(d->m_uiThread);
 }
 
 /**
@@ -1418,7 +1438,7 @@ bool MythCoreContext::SendReceiveStringList(
             LOG(VB_GENERAL, LOG_CRIT, LOC +
                 QString("Reconnection to backend server failed"));
 
-            QCoreApplication::postEvent(d->m_GUIcontext,
+            QCoreApplication::postEvent(d->m_guiContext,
                                 new MythEvent("PERSISTENT_CONNECTION_FAILURE"));
         }
     }
@@ -1430,13 +1450,17 @@ bool MythCoreContext::SendReceiveStringList(
         else if (strlist[0] == "ERROR")
         {
             if (strlist.size() == 2)
+            {
                 LOG(VB_GENERAL, LOG_INFO, LOC +
                     QString("Protocol query '%1' responded with the error '%2'")
                         .arg(query_type).arg(strlist[1]));
+            }
             else
+            {
                 LOG(VB_GENERAL, LOG_INFO, LOC +
                     QString("Protocol query '%1' responded with an error, but "
                             "no error message.") .arg(query_type));
+            }
 
             ok = false;
         }
@@ -1650,11 +1674,11 @@ bool MythCoreContext::CheckProtoVersion(MythSocket *socket, uint timeout_ms,
                                       .arg(QString::fromUtf8(MYTH_PROTO_TOKEN))
                                       .arg(strlist[1]));
 
-        if (error_dialog_desired && d->m_GUIcontext)
+        if (error_dialog_desired && d->m_guiContext)
         {
             QStringList list(strlist[1]);
             QCoreApplication::postEvent(
-                d->m_GUIcontext, new MythEvent("VERSION_MISMATCH", list));
+                d->m_guiContext, new MythEvent("VERSION_MISMATCH", list));
         }
 
         return false;
@@ -1695,22 +1719,22 @@ void MythCoreContext::SetLocalHostname(const QString &hostname)
 
 void MythCoreContext::SetGUIObject(QObject *gui)
 {
-    d->m_GUIobject = gui;
+    d->m_guiObject = gui;
 }
 
 bool MythCoreContext::HasGUI(void) const
 {
-    return d->m_GUIobject;
+    return d->m_guiObject;
 }
 
 QObject *MythCoreContext::GetGUIObject(void)
 {
-    return d->m_GUIobject;
+    return d->m_guiObject;
 }
 
 QObject *MythCoreContext::GetGUIContext(void)
 {
-    return d->m_GUIcontext;
+    return d->m_guiContext;
 }
 
 MythDB *MythCoreContext::GetDB(void)
@@ -1763,7 +1787,20 @@ void MythCoreContext::ResetSockets(void)
     dispatch(MythEvent("BACKEND_SOCKETS_CLOSED"));
 }
 
-void MythCoreContext::InitLocale(void )
+void MythCoreContext::InitPower(bool Create)
+{
+    if (Create && !d->m_power)
+    {
+        d->m_power = MythPower::AcquireRelease(d, true);
+    }
+    else if (!Create && d->m_power)
+    {
+        MythPower::AcquireRelease(d, false);
+        d->m_power = nullptr;
+    }
+}
+
+void MythCoreContext::InitLocale(void)
 {
     if (!d->m_locale)
         d->m_locale = new MythLocale();

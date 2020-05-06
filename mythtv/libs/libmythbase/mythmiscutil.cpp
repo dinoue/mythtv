@@ -121,7 +121,7 @@ bool getMemStats(int &totalMB, int &freeMB, int &totalVM, int &freeVM)
     freeMB  = (int)((sinfo.freeram   * sinfo.mem_unit)/MB);
     totalVM = (int)((sinfo.totalswap * sinfo.mem_unit)/MB);
     freeVM  = (int)((sinfo.freeswap  * sinfo.mem_unit)/MB);
-
+    return true;
 #elif CONFIG_DARWIN
     mach_port_t             mp;
     mach_msg_type_number_t  count;
@@ -156,18 +156,14 @@ bool getMemStats(int &totalMB, int &freeMB, int &totalVM, int &freeVM)
     free = getDiskSpace("/private/var/vm", total, used);
     totalVM = (int)(total >> 10);
     freeVM = (int)(free >> 10);
-
+    return true;
 #else
     Q_UNUSED(totalMB);
     Q_UNUSED(freeMB);
     Q_UNUSED(totalVM);
     Q_UNUSED(freeVM);
-    LOG(VB_GENERAL, LOG_NOTICE, "getMemStats(): Unknown platform. "
-        "How do I get the memory stats?");
     return false;
 #endif
-
-    return true;
 }
 
 /**
@@ -262,7 +258,7 @@ bool ping(const QString &host, int timeout)
  */
 bool telnet(const QString &host, int port)
 {
-    MythSocket *s = new MythSocket();
+    auto *s = new MythSocket();
 
     bool connected = s->ConnectToHost(host, port);
     s->DecrRef();
@@ -295,15 +291,18 @@ long long copy(QFile &dst, QFile &src, uint block_size)
 {
     uint buflen = (block_size < 1024) ? (16 * 1024) : block_size;
     char *buf = new char[buflen];
-    bool odst = false, osrc = false;
+    bool odst = false;
+    bool osrc = false;
 
     if (!buf)
         return -1LL;
 
     if (!dst.isWritable() && !dst.isOpen())
+    {
         odst = dst.open(QIODevice::Unbuffered |
                         QIODevice::WriteOnly  |
                         QIODevice::Truncate);
+    }
 
     if (!src.isReadable() && !src.isOpen())
         osrc = src.open(QIODevice::Unbuffered|QIODevice::ReadOnly);
@@ -642,8 +641,8 @@ bool WakeOnLAN(const QString& MAC)
     }
 
     for (int x = 0; x < 16; x++)
-        for (int y = 0; y < 6; y++)
-            msg[msglen++] = macaddr[y];
+        for (int y : macaddr)
+            msg[msglen++] = y;
 
     LOG(VB_NETWORK, LOG_INFO,
             QString("WakeOnLan(): Sending WOL packet to %1").arg(MAC));
@@ -866,13 +865,17 @@ void setHttpProxy(void)
             url.setPort(port);
         }
         else if (!ping(host, 1))
+        {
             LOG(VB_GENERAL, LOG_ERR, LOC +
                 QString("cannot locate host %1").arg(host) +
                 "\n\t\t\tPlease check HTTP_PROXY environment variable!");
+        }
         else if (!telnet(host,port))
+        {
             LOG(VB_GENERAL, LOG_ERR, LOC +
                 QString("%1:%2 - cannot connect!").arg(host).arg(port) +
                 "\n\t\t\tPlease check HTTP_PROXY environment variable!");
+        }
 
 #if 0
         LOG(VB_NETWORK, LOG_DEBUG, LOC + QString("using http://%1:%2@%3:%4")
@@ -918,10 +921,14 @@ void setHttpProxy(void)
         QString url;
 
         if (!p.user().isEmpty())
+        {
             url = "http://%1:%2@%3:%4",
             url = url.arg(p.user()).arg(p.password());
+        }
         else
+        {
             url = "http://%1:%2";
+        }
 
         url = url.arg(p.hostName()).arg(p.port());
         setenv("HTTP_PROXY", url.toLatin1(), 1);
@@ -981,26 +988,26 @@ void wrapList(QStringList &list, int width)
 
 QString xml_indent(uint level)
 {
-    static QReadWriteLock rw_lock;
-    static QMap<uint,QString> cache;
+    static QReadWriteLock s_rwLock;
+    static QMap<uint,QString> s_cache;
 
-    rw_lock.lockForRead();
-    QMap<uint,QString>::const_iterator it = cache.find(level);
-    if (it != cache.end())
+    s_rwLock.lockForRead();
+    QMap<uint,QString>::const_iterator it = s_cache.find(level);
+    if (it != s_cache.end())
     {
         QString tmp = *it;
-        rw_lock.unlock();
+        s_rwLock.unlock();
         return tmp;
     }
-    rw_lock.unlock();
+    s_rwLock.unlock();
 
     QString ret = "";
     for (uint i = 0; i < level; i++)
         ret += "    ";
 
-    rw_lock.lockForWrite();
-    cache[level] = ret;
-    rw_lock.unlock();
+    s_rwLock.lockForWrite();
+    s_cache[level] = ret;
+    s_rwLock.unlock();
 
     return ret;
 }

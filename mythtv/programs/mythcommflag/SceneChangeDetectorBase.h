@@ -2,8 +2,7 @@
 #define _SCENECHANGEDETECTORBASE_H_
 
 #include <QObject>
-
-typedef struct VideoFrame_ VideoFrame;
+#include "mythframe.h"
 
 class SceneChangeDetectorBase : public QObject
 {
@@ -20,7 +19,7 @@ class SceneChangeDetectorBase : public QObject
                             float debugValue = 0.0);
 
   protected:
-    virtual ~SceneChangeDetectorBase() = default;
+    ~SceneChangeDetectorBase() override = default;
 
   protected:
     unsigned int m_width, m_height;

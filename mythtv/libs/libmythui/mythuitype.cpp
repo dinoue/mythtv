@@ -101,10 +101,8 @@ static QObject *qChildHelper(const char *objName, const char *inheritsClass,
                         && qstrcmp(inheritsClass, "QWidget") == 0);
     const QLatin1String oName(objName);
 
-    for (int i = 0; i < children.size(); ++i)
+    foreach (auto obj, children)
     {
-        QObject *obj = children.at(i);
-
         if (onlyWidgets)
         {
             if (obj->isWidgetType() && (!objName || obj->objectName() == oName))
@@ -499,10 +497,10 @@ void MythUIType::Draw(MythPainter *p, int xoffset, int yoffset, int alphaMod,
 
     if (p->ShowBorders())
     {
-        static const QBrush nullbrush(Qt::NoBrush);
+        static const QBrush kNullBrush(Qt::NoBrush);
         QPen pen(m_BorderColor);
         pen.setWidth(1);
-        p->DrawRect(realArea, nullbrush, pen, 255);
+        p->DrawRect(realArea, kNullBrush, pen, 255);
 
         if (p->ShowTypeNames())
         {
@@ -689,7 +687,10 @@ void MythUIType::VanishSibling(void)
 void MythUIType::SetMinAreaParent(MythRect actual_area, MythRect allowed_area,
                                   MythUIType *calling_child)
 {
-    int delta_x = 0, delta_y = 0, delta_w = 0, delta_h = 0;
+    int delta_x = 0;
+    int delta_y = 0;
+    int delta_w = 0;
+    int delta_h = 0;
     MythRect area;
 
     // If a minsize is not set, don't use MinArea
@@ -983,8 +984,9 @@ bool MythUIType::inputMethodEvent(QInputMethodEvent * /*event*/)
 	return false;
 }
 
-void MythUIType::customEvent(QEvent * /*event*/)
+void MythUIType::customEvent(QEvent *event)
 {
+    QObject::customEvent(event);
 }
 
 /** \brief Mouse click/movement handler, receives mouse gesture events from the
@@ -1043,6 +1045,7 @@ void MythUIType::UpdateDependState(MythUIType *dependee, bool isDefault)
     {
         bool reverse = m_ReverseDepend[dependee];
         visible = reverse ? !isDefault : isDefault;
+        // NOLINTNEXTLINE(modernize-loop-convert)
         for (int i = 0; i < m_dependsValue.size(); i++)
         {
             if (m_dependsValue[i].first != dependee)
@@ -1078,7 +1081,7 @@ void MythUIType::UpdateDependState(MythUIType *dependee, bool isDefault)
 
 void MythUIType::UpdateDependState(bool isDefault)
 {
-    MythUIType *dependee = static_cast<MythUIType*>(sender());
+    auto *dependee = static_cast<MythUIType*>(sender());
 
     UpdateDependState(dependee, isDefault);
 }
@@ -1180,7 +1183,7 @@ void MythUIType::CopyFrom(MythUIType *base)
     QList<MythUIAnimation*>::Iterator i;
     for (i = base->m_animations.begin(); i != base->m_animations.end(); ++i)
     {
-        MythUIAnimation* animation = new MythUIAnimation(this);
+        auto* animation = new MythUIAnimation(this);
         animation->CopyFrom(*i);
         m_animations.push_back(animation);
     }

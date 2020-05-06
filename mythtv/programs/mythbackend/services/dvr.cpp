@@ -95,7 +95,7 @@ DTC::ProgramList* Dvr::GetRecordedList( bool           bDescending,
     // Build Response
     // ----------------------------------------------------------------------
 
-    DTC::ProgramList *pPrograms = new DTC::ProgramList();
+    auto *pPrograms = new DTC::ProgramList();
     int nAvailable = 0;
 
     int nMax      = (nCount > 0) ? nCount : progList.size();
@@ -105,10 +105,8 @@ DTC::ProgramList* Dvr::GetRecordedList( bool           bDescending,
 
     QRegExp rTitleRegEx        = QRegExp(sTitleRegEx, Qt::CaseInsensitive);
 
-    for(size_t n = 0; n < progList.size(); n++)
+    for (auto *pInfo : progList)
     {
-        ProgramInfo *pInfo = progList[ n ];
-
         if (pInfo->IsDeletePending() ||
             (!sTitleRegEx.isEmpty() && !pInfo->GetTitle().contains(rTitleRegEx)) ||
             (!sRecGroup.isEmpty() && sRecGroup != pInfo->GetRecordingGroup()) ||
@@ -215,7 +213,7 @@ DTC::ProgramList* Dvr::GetOldRecordedList( bool             bDescending,
     }
 
     if (sSort == "starttime")
-        sSQL += "ORDER BY starttime ";
+        sSQL += "ORDER BY starttime ";    // NOLINT(bugprone-branch-clone)
     else if (sSort == "title")
         sSQL += "ORDER BY title ";
     else
@@ -234,7 +232,7 @@ DTC::ProgramList* Dvr::GetOldRecordedList( bool             bDescending,
     // Build Response
     // ----------------------------------------------------------------------
 
-    DTC::ProgramList *pPrograms = new DTC::ProgramList();
+    auto *pPrograms = new DTC::ProgramList();
 
     nCount        = (int)progList.size();
     int nEndIndex = (int)progList.size();
@@ -278,7 +276,7 @@ DTC::Program* Dvr::GetRecorded(int RecordedId,
     else
         pi = ProgramInfo(chanid, recstarttsRaw.toUTC());
 
-    DTC::Program *pProgram = new DTC::Program();
+    auto *pProgram = new DTC::Program();
     FillProgramInfo( pProgram, &pi, true );
 
     return pProgram;
@@ -484,9 +482,8 @@ long Dvr::GetSavedBookmark( int RecordedId,
     if (offsettype.toLower() == "duration"){
         if (ri.QueryKeyFrameDuration(&offset, position, isend))
             return offset;
-        else
-            // If bookmark cannot be converted to a duration return -1
-            return -1;
+        // If bookmark cannot be converted to a duration return -1
+        return -1;
     }
     return position;
 }
@@ -549,7 +546,7 @@ DTC::CutList* Dvr::GetRecordedCutList ( int RecordedId,
     else
         ri = RecordingInfo(chanid, recstarttsRaw.toUTC());
 
-    DTC::CutList* pCutList = new DTC::CutList();
+    auto* pCutList = new DTC::CutList();
     if (offsettype == "Position")
         marktype = 1;
     else if (offsettype == "Duration")
@@ -582,7 +579,7 @@ DTC::CutList* Dvr::GetRecordedCommBreak ( int RecordedId,
     else
         ri = RecordingInfo(chanid, recstarttsRaw.toUTC());
 
-    DTC::CutList* pCutList = new DTC::CutList();
+    auto* pCutList = new DTC::CutList();
     if (offsettype == "Position")
         marktype = 1;
     else if (offsettype == "Duration")
@@ -609,7 +606,7 @@ DTC::CutList* Dvr::GetRecordedSeek ( int RecordedId,
     RecordingInfo ri;
     ri = RecordingInfo(RecordedId);
 
-    DTC::CutList* pCutList = new DTC::CutList();
+    auto* pCutList = new DTC::CutList();
     if (offsettype == "BYTES")
         marktype = MARK_GOP_BYFRAME;
     else if (offsettype == "DURATION")
@@ -641,7 +638,7 @@ DTC::ProgramList* Dvr::GetExpiringList( int nStartIndex,
     // Build Response
     // ----------------------------------------------------------------------
 
-    DTC::ProgramList *pPrograms = new DTC::ProgramList();
+    auto *pPrograms = new DTC::ProgramList();
 
     nStartIndex   = (nStartIndex > 0) ? min( nStartIndex, (int)infoList.size() ) : 0;
     nCount        = (nCount > 0) ? min( nCount, (int)infoList.size() ) : infoList.size();
@@ -679,16 +676,12 @@ DTC::ProgramList* Dvr::GetExpiringList( int nStartIndex,
 
 DTC::EncoderList* Dvr::GetEncoderList()
 {
-    DTC::EncoderList* pList = new DTC::EncoderList();
+    auto* pList = new DTC::EncoderList();
 
     QReadLocker tvlocker(&TVRec::s_inputsLock);
     QList<InputInfo> inputInfoList = CardUtil::GetAllInputInfo();
-    QMap<int, EncoderLink *>::Iterator iter = tvList.begin();
-
-    for (; iter != tvList.end(); ++iter)
+    foreach (auto elink, tvList)
     {
-        EncoderLink *elink = *iter;
-
         if (elink != nullptr)
         {
             DTC::Encoder *pEncoder = pList->AddNewEncoder();
@@ -705,11 +698,9 @@ DTC::EncoderList* Dvr::GetEncoderList()
             else
                 pEncoder->setHostName( elink->GetHostName() );
 
-            QList<InputInfo>::iterator it = inputInfoList.begin();
-            for (; it < inputInfoList.end(); ++it)
+            foreach (auto inputInfo, inputInfoList)
             {
-                InputInfo inputInfo = *it;
-                if (inputInfo.m_inputid == static_cast<uint>(elink->GetInputID()))
+                if (inputInfo.m_inputId == static_cast<uint>(elink->GetInputID()))
                 {
                     DTC::Input *input = pEncoder->AddNewInput();
                     FillInputInfo(input, inputInfo);
@@ -750,13 +741,11 @@ DTC::EncoderList* Dvr::GetEncoderList()
 
 DTC::InputList* Dvr::GetInputList()
 {
-    DTC::InputList *pList = new DTC::InputList();
+    auto *pList = new DTC::InputList();
 
     QList<InputInfo> inputInfoList = CardUtil::GetAllInputInfo();
-    QList<InputInfo>::iterator it = inputInfoList.begin();
-    for (; it < inputInfoList.end(); ++it)
+    foreach (auto inputInfo, inputInfoList)
     {
-        InputInfo inputInfo = *it;
         DTC::Input *input = pList->AddNewInput();
         FillInputInfo(input, inputInfo);
     }
@@ -837,7 +826,7 @@ QStringList Dvr::GetPlayGroupList()
 
 DTC::RecRuleFilterList* Dvr::GetRecRuleFilterList()
 {
-    DTC::RecRuleFilterList* filterList = new DTC::RecRuleFilterList();
+    auto* filterList = new DTC::RecRuleFilterList();
 
     MSqlQuery query(MSqlQuery::InitCon());
 
@@ -913,7 +902,7 @@ DTC::TitleInfoList* Dvr::GetTitleInfoList()
 
     query.prepare(querystr);
 
-    DTC::TitleInfoList *pTitleInfos = new DTC::TitleInfoList();
+    auto *pTitleInfos = new DTC::TitleInfoList();
     if (!query.exec())
     {
         MythDB::DBError("GetTitleList recorded", query);
@@ -950,13 +939,13 @@ DTC::ProgramList* Dvr::GetUpcomingList( int  nStartIndex,
 
     // NOTE: Fetching this information directly from the schedule is
     //       significantly faster than using ProgramInfo::LoadFromScheduler()
-    Scheduler *scheduler = dynamic_cast<Scheduler*>(gCoreContext->GetScheduler());
+    auto *scheduler = dynamic_cast<Scheduler*>(gCoreContext->GetScheduler());
     if (scheduler)
         scheduler->GetAllPending(tmpList, nRecordId);
 
     // Sort the upcoming into only those which will record
-    RecList::iterator it = tmpList.begin();
-    for(; it < tmpList.end(); ++it)
+    // NOLINTNEXTLINE(modernize-loop-convert)
+    for (auto it = tmpList.begin(); it < tmpList.end(); ++it)
     {
         if ((nRecStatus != 0) &&
             ((*it)->GetRecordingStatus() != nRecStatus))
@@ -971,7 +960,7 @@ DTC::ProgramList* Dvr::GetUpcomingList( int  nStartIndex,
                           ((*it)->GetRecordingStatus() == RecStatus::Recorded) ||
                           ((*it)->GetRecordingStatus() == RecStatus::Conflict)) &&
             ((*it)->GetRecordingEndTime() > MythDate::current()))
-        {
+        {   // NOLINT(bugprone-branch-clone)
             recordingList.push_back(new RecordingInfo(**it));
         }
         else if (bShowAll &&
@@ -988,7 +977,7 @@ DTC::ProgramList* Dvr::GetUpcomingList( int  nStartIndex,
     // Build Response
     // ----------------------------------------------------------------------
 
-    DTC::ProgramList *pPrograms = new DTC::ProgramList();
+    auto *pPrograms = new DTC::ProgramList();
 
     nStartIndex   = (nStartIndex > 0) ? min( nStartIndex, (int)recordingList.size() ) : 0;
     nCount        = (nCount > 0) ? min( nCount, (int)recordingList.size() ) : recordingList.size();
@@ -1031,13 +1020,13 @@ DTC::ProgramList* Dvr::GetConflictList( int  nStartIndex,
 
     // NOTE: Fetching this information directly from the schedule is
     //       significantly faster than using ProgramInfo::LoadFromScheduler()
-    Scheduler *scheduler = dynamic_cast<Scheduler*>(gCoreContext->GetScheduler());
+    auto *scheduler = dynamic_cast<Scheduler*>(gCoreContext->GetScheduler());
     if (scheduler)
         scheduler->GetAllPending(tmpList, nRecordId);
 
     // Sort the upcoming into only those which are conflicts
-    RecList::iterator it = tmpList.begin();
-    for(; it < tmpList.end(); ++it)
+    // NOLINTNEXTLINE(modernize-loop-convert)
+    for (auto it = tmpList.begin(); it < tmpList.end(); ++it)
     {
         if (((*it)->GetRecordingStatus() == RecStatus::Conflict) &&
             ((*it)->GetRecordingStartTime() >= MythDate::current()))
@@ -1052,7 +1041,7 @@ DTC::ProgramList* Dvr::GetConflictList( int  nStartIndex,
     // Build Response
     // ----------------------------------------------------------------------
 
-    DTC::ProgramList *pPrograms = new DTC::ProgramList();
+    auto *pPrograms = new DTC::ProgramList();
 
     nStartIndex   = (nStartIndex > 0) ? min( nStartIndex, (int)recordingList.size() ) : 0;
     nCount        = (nCount > 0) ? min( nCount, (int)recordingList.size() ) : recordingList.size();
@@ -1103,6 +1092,7 @@ uint Dvr::AddRecordSchedule   (
                                uint      nPreferredInput,
                                int       nStartOffset,
                                int       nEndOffset,
+                               QDateTime lastrectsRaw,
                                QString   sDupMethod,
                                QString   sDupIn,
                                uint      nFilter,
@@ -1124,6 +1114,7 @@ uint Dvr::AddRecordSchedule   (
 {
     QDateTime recstartts = recstarttsRaw.toUTC();
     QDateTime recendts = recendtsRaw.toUTC();
+    QDateTime lastrects = lastrectsRaw.toUTC();
     RecordingRule rule;
     rule.LoadTemplate("Default");
 
@@ -1209,6 +1200,8 @@ uint Dvr::AddRecordSchedule   (
     rule.m_autoUserJob4 = bAutoUserJob4;
 
     rule.m_transcoder = nTranscoder;
+
+    rule.m_lastRecorded = lastrects;
 
     QString msg;
     if (!rule.IsValid(msg))
@@ -1434,7 +1427,7 @@ DTC::RecRuleList* Dvr::GetRecordScheduleList( int nStartIndex,
     else if (Sort.toLower() == "nextrecording")
         sortingColumn = Scheduler::kSortNextRecording;
     else if (Sort.toLower() == "title")
-        sortingColumn = Scheduler::kSortTitle;
+        sortingColumn = Scheduler::kSortTitle;    // NOLINT(bugprone-branch-clone)
     else if (Sort.toLower() == "priority")
         sortingColumn = Scheduler::kSortPriority;
     else if (Sort.toLower() == "type")
@@ -1449,7 +1442,7 @@ DTC::RecRuleList* Dvr::GetRecordScheduleList( int nStartIndex,
     // Build Response
     // ----------------------------------------------------------------------
 
-    DTC::RecRuleList *pRecRules = new DTC::RecRuleList();
+    auto *pRecRules = new DTC::RecRuleList();
 
     nStartIndex   = (nStartIndex > 0) ? min( nStartIndex, (int)recList.size() ) : 0;
     nCount        = (nCount > 0) ? min( nCount, (int)recList.size() ) : recList.size();
@@ -1532,7 +1525,7 @@ DTC::RecRule* Dvr::GetRecordSchedule( uint      nRecordId,
         throw QString("Invalid request.");
     }
 
-    DTC::RecRule *pRecRule = new DTC::RecRule();
+    auto *pRecRule = new DTC::RecRule();
     FillRecRuleInfo( pRecRule, &rule );
 
     return pRecRule;
@@ -1601,7 +1594,7 @@ int Dvr::RecordedIdForPathname(const QString & pathname)
 
 QString Dvr::RecStatusToString(int RecStatus)
 {
-    RecStatus::Type type = static_cast<RecStatus::Type>(RecStatus);
+    auto type = static_cast<RecStatus::Type>(RecStatus);
     return RecStatus::toString(type);
 }
 
@@ -1610,15 +1603,15 @@ QString Dvr::RecStatusToDescription(int RecStatus, int recType,
 {
     //if (!StartTime.isValid())
     //    throw QString("StartTime appears invalid.");
-    RecStatus::Type rsType = static_cast<RecStatus::Type>(RecStatus);
-    RecordingType recordingType = static_cast<RecordingType>(recType);
+    auto rsType = static_cast<RecStatus::Type>(RecStatus);
+    auto recordingType = static_cast<RecordingType>(recType);
     return RecStatus::toDescription(rsType, recordingType, StartTime);
 }
 
 QString Dvr::RecTypeToString(QString recType)
 {
     bool ok = false;
-    RecordingType enumType = static_cast<RecordingType>(recType.toInt(&ok, 10));
+    auto enumType = static_cast<RecordingType>(recType.toInt(&ok, 10));
     if (ok)
         return toString(enumType);
     // RecordingType type = static_cast<RecordingType>(recType);
@@ -1628,7 +1621,7 @@ QString Dvr::RecTypeToString(QString recType)
 QString Dvr::RecTypeToDescription(QString recType)
 {
     bool ok = false;
-    RecordingType enumType = static_cast<RecordingType>(recType.toInt(&ok, 10));
+    auto enumType = static_cast<RecordingType>(recType.toInt(&ok, 10));
     if (ok)
         return toDescription(enumType);
     // RecordingType type = static_cast<RecordingType>(recType);

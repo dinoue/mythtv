@@ -24,7 +24,7 @@ class UPnpCDSMusic : public UPnpCDSExtension
     public:
 
         UPnpCDSMusic();
-        virtual ~UPnpCDSMusic() = default;
+        ~UPnpCDSMusic() override = default;
 
     protected:
 
@@ -44,18 +44,18 @@ class UPnpCDSMusic : public UPnpCDSExtension
 
     private:
 
-        QUrl             m_URIBase;
+        QUrl             m_uriBase;
 
         void             PopulateArtworkURIS( CDSObject *pItem,
                                               int songID );
 
-        bool             LoadArtists(const UPnpCDSRequest *pRequest,
+        static bool      LoadArtists(const UPnpCDSRequest *pRequest,
                                      UPnpCDSExtensionResults *pResults,
                                      const IDTokenMap& tokens);
         bool             LoadAlbums(const UPnpCDSRequest *pRequest,
                                     UPnpCDSExtensionResults *pResults,
                                     const IDTokenMap& tokens);
-        bool             LoadGenres(const UPnpCDSRequest *pRequest,
+        static bool      LoadGenres(const UPnpCDSRequest *pRequest,
                                     UPnpCDSExtensionResults *pResults,
                                     const IDTokenMap& tokens);
         bool             LoadTracks(const UPnpCDSRequest *pRequest,

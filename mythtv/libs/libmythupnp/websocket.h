@@ -40,7 +40,7 @@ class UPNP_PUBLIC WebSocketServer : public ServerPool
 
   public:
     WebSocketServer();
-    virtual ~WebSocketServer();
+    ~WebSocketServer() override;
 
     bool IsRunning(void) const
     {
@@ -98,7 +98,7 @@ class WebSocketFrame
         m_fragmented = false;
     }
 
-    typedef enum OpCodes
+    enum OpCode
     {
         kOpContinuation = 0x0,
         kOpTextFrame    = 0x1,
@@ -108,7 +108,7 @@ class WebSocketFrame
         kOpPing         = 0x9,
         kOpPong         = 0xA
         // Reserved
-    } OpCode;
+    };
 
     bool       m_finalFrame  {false};
     QByteArray m_payload;
@@ -138,8 +138,8 @@ class WebSocketExtension : public QObject
   Q_OBJECT
 
   public:
-    WebSocketExtension() : QObject() { };
-    virtual ~WebSocketExtension() = default;
+    WebSocketExtension() = default;;
+    ~WebSocketExtension() override = default;
 
     virtual bool HandleTextFrame(const WebSocketFrame &/*frame*/) { return false; }
     virtual bool HandleBinaryFrame(const WebSocketFrame &/*frame*/) { return false; }
@@ -163,7 +163,7 @@ class WebSocketWorkerThread : public QRunnable
                           , const QSslConfiguration& sslConfig
 #endif
                         );
-    virtual ~WebSocketWorkerThread() = default;
+    ~WebSocketWorkerThread() override = default;
 
     void run(void) override; // QRunnable
 
@@ -212,11 +212,11 @@ class WebSocketWorker : public QObject
                     , const QSslConfiguration& sslConfig
 #endif
                     );
-    virtual ~WebSocketWorker();
+    ~WebSocketWorker() override;
 
     void Exec();
 
-    typedef enum ErrorCodes
+    enum ErrorCode
     {
         kCloseNormal        = 1000,
         kCloseGoingAway     = 1001,
@@ -237,7 +237,7 @@ class WebSocketWorker : public QObject
         // Reserved - 1012-1014
         kCloseNoTLS         = 1012  // Connection closed because it must use TLS
         // Reserved
-    } ErrorCode;
+    };
 
   public slots:
     void doRead();
@@ -249,8 +249,8 @@ class WebSocketWorker : public QObject
     bool SendBinary(const QByteArray &data);
 
   protected:
-    bool ProcessHandshake(QTcpSocket *); /// Returns false if an error occurs
-    void ProcessFrames(QTcpSocket *); /// Returns false if an error occurs
+    bool ProcessHandshake(QTcpSocket *socket); /// Returns false if an error occurs
+    void ProcessFrames(QTcpSocket *socket); /// Returns false if an error occurs
 
     void HandleControlFrame(const WebSocketFrame &frame);
     void HandleDataFrame(const WebSocketFrame &frame);

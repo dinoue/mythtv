@@ -25,9 +25,9 @@ class ScriptInfo
     QStringList types;
     QString program;
     QString path;
-    unsigned int scriptTimeout;
-    unsigned int updateTimeout;
-    int id;
+    unsigned int scriptTimeout {DEFAULT_SCRIPT_TIMEOUT};
+    unsigned int updateTimeout {DEFAULT_UPDATE_TIMEOUT};
+    int id                     {0};
 };
 
 class WeatherSource : public QObject
@@ -45,7 +45,7 @@ class WeatherSource : public QObject
     static bool ProbeInfo(ScriptInfo &scriptInfo);
 
     explicit WeatherSource(ScriptInfo *info);
-    ~WeatherSource();
+    ~WeatherSource() override;
 
     bool isReady() { return m_ready; }
     QString getVersion() { return m_info->version; }

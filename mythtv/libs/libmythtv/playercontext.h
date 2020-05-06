@@ -36,19 +36,19 @@ struct osdInfo
     QHash<QString,int>  values;
 };
 
-typedef enum
+enum PseudoState
 {
     kPseudoNormalLiveTV  = 0,
     kPseudoChangeChannel = 1,
     kPseudoRecording     = 2,
-} PseudoState;
+};
 
-typedef deque<QString>         StringDeque;
+using StringDeque = deque<QString>;
 
 class MTV_PUBLIC PlayerContext
 {
   public:
-    explicit PlayerContext(const QString &inUseID = QString("Unknown"));
+    explicit PlayerContext(QString inUseID = QString("Unknown"));
     ~PlayerContext();
 
     // Actions
@@ -61,13 +61,13 @@ class MTV_PUBLIC PlayerContext
     void StopPlaying(void);
     void UpdateTVChain(const QStringList &data = QStringList());
     bool ReloadTVChain(void);
-    void CreatePIPWindow(const QRect&, int pos = -1, 
+    void CreatePIPWindow(const QRect &rect, int pos = -1,
                         QWidget *widget = nullptr);
-    void ResizePIPWindow(const QRect&);
+    void ResizePIPWindow(const QRect &rect);
     bool StartPIPPlayer(TV *tv, TVState desiredState);
     void PIPTeardown(void);
     void SetNullVideo(bool setting) { m_useNullVideo = setting; }
-    bool StartEmbedding(const QRect&);
+    bool StartEmbedding(const QRect &rect);
     void StopEmbedding(void);
     void    PushPreviousChannel(void);
     QString PopPreviousChannel(void);
@@ -105,7 +105,7 @@ class MTV_PUBLIC PlayerContext
     void SetPIPLocation(int loc) { m_pipLocation = loc; }
     void SetPIPState(PIPState change) { m_pipState = change; }
     void SetPlayerChangingBuffers(bool val) { m_playerUnsafe = val; }
-    void SetNoHardwareDecoders(void) { m_nohardwaredecoders = true; }
+    void SetNoHardwareDecoders(bool Disallow = true) { m_nohardwaredecoders = Disallow; }
 
     // Gets
     QRect    GetStandAlonePIPRect(void);
@@ -130,13 +130,13 @@ class MTV_PUBLIC PlayerContext
         { return (kPBPLeft == m_pipState); }
     bool IsAudioNeeded(void) const
         { return (kPIPOff  == m_pipState) || (kPBPLeft       == m_pipState); }
+    bool IsPiPOrSecondaryPBP(void) const
+        { return IsPIP() || (IsPBP() && !IsPrimaryPBP()); }
     bool IsNullVideoDesired(void)   const { return m_useNullVideo; }
     bool IsPlayerChangingBuffers(void) const { return m_playerUnsafe; }
     bool IsEmbedding(void) const;
     bool HasPlayer(void) const;
     bool IsPlayerErrored(void) const;
-    bool IsPlayerRecoverable(void) const;
-    bool IsPlayerDecoderErrored(void) const;
     bool IsPlayerPlaying(void) const;
     bool IsRecorderErrored(void) const;
     bool InStateChange(void) const;

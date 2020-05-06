@@ -195,9 +195,11 @@ bool HardwareProfile::SubmitProfile(bool updateTime)
         Enable();
 
     if (!m_hardwareProfile.isEmpty())
+    {
         LOG(VB_GENERAL, LOG_INFO,
                  QString("Submitting the following hardware profile:  %1")
                          .arg(m_hardwareProfile));
+    }
 
     QString cmd = GetShareDir() + "hardwareprofile/sendProfile.py";
     QStringList args;
@@ -271,7 +273,7 @@ QString HardwareProfile::GetHardwareProfile()
     return system.ReadAll();
 }
 
-bool HardwareProfileTask::DoCheckRun(QDateTime now)
+bool HardwareProfileTask::DoCheckRun(const QDateTime& now)
 {
     if (gCoreContext->GetNumSetting("HardwareProfileEnabled", 0) == 0)
         // global disable, we don't want to run

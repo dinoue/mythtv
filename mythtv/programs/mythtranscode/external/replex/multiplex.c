@@ -8,9 +8,8 @@
 
 static int buffers_filled(multiplex_t *mx)
 {
-	int vavail=0, aavail=0;
-
-	vavail = ring_avail(mx->index_vrbuffer)/sizeof(index_unit);
+	int aavail=0;
+	int vavail = ring_avail(mx->index_vrbuffer)/sizeof(index_unit);
 	
 	for (int i=0; i<mx->extcnt;i++) {
 		aavail += ring_avail(&mx->index_extrbuffer[i])/
@@ -33,7 +32,7 @@ static int which_ext(extdata_t *ext, const int *aok, int n)
 	int started = 0;
 	int pos = -1;
 	uint64_t tmppts = 0;
-	for (int i=0; i < n; i++)
+	for (int i=0; i < n; i++) {
 		if(aok[i]){
 			if(! started){
 				started=1;
@@ -44,6 +43,7 @@ static int which_ext(extdata_t *ext, const int *aok, int n)
 				pos = i;
 			}
 		}
+	}
 	return pos;
 }
 
@@ -51,12 +51,13 @@ static int peek_next_video_unit(multiplex_t *mx, index_unit *viu)
 {
 	if (!ring_avail(mx->index_vrbuffer) && mx->finish) return 0;
 
-	while (ring_avail(mx->index_vrbuffer) < sizeof(index_unit))
+	while (ring_avail(mx->index_vrbuffer) < sizeof(index_unit)) {
 		if (mx->fill_buffers(mx->priv, mx->finish)< 0) {
 			LOG(VB_GENERAL, LOG_ERR,
                             "error in peek next video unit");
 			return 0;
 		}
+	}
 
 	ring_peek(mx->index_vrbuffer, (uint8_t *)viu, sizeof(index_unit),0);
 #ifdef OUT_DEBUG
@@ -74,12 +75,13 @@ static int get_next_video_unit(multiplex_t *mx, index_unit *viu)
 	index_unit nviu;
 	if (!ring_avail(mx->index_vrbuffer) && mx->finish) return 0;
 
-	while (ring_avail(mx->index_vrbuffer) < sizeof(index_unit))
+	while (ring_avail(mx->index_vrbuffer) < sizeof(index_unit)) {
 		if (mx->fill_buffers(mx->priv, mx->finish)< 0) {
 			LOG(VB_GENERAL, LOG_ERR,
 			    "error in get next video unit");
 			return 0;
 		}
+	}
 
 	ring_read(mx->index_vrbuffer, (uint8_t *)viu, sizeof(index_unit));
 #ifdef OUT_DEBUG
@@ -99,12 +101,13 @@ static int peek_next_ext_unit(multiplex_t *mx, index_unit *extiu, int i)
 {
 	if (!ring_avail(&mx->index_extrbuffer[i]) && mx->finish) return 0;
 
-	while (ring_avail(&mx->index_extrbuffer[i]) < sizeof(index_unit))
+	while (ring_avail(&mx->index_extrbuffer[i]) < sizeof(index_unit)) {
 		if (mx->fill_buffers(mx->priv, mx->finish)< 0) {
 			LOG(VB_GENERAL, LOG_ERR,
 			    "error in peek next video unit");
 			return 0;
 		}
+	}
 
 	ring_peek(&mx->index_extrbuffer[i], (uint8_t *)extiu,
 		  sizeof(index_unit),0);
@@ -120,19 +123,21 @@ static int peek_next_ext_unit(multiplex_t *mx, index_unit *extiu, int i)
 	
 static int get_next_ext_unit(multiplex_t *mx, index_unit *extiu, int i)
 {
-	index_unit niu, *piu = extiu;
+	index_unit niu;
+	index_unit *piu = extiu;
 	int length = 0;
 	int j = 0;
 	for(j = 0; j < mx->ext[i].frmperpkt; j++) {
 		if (!ring_avail(&mx->index_extrbuffer[i]) && mx->finish)
 			break;
 
-		while(ring_avail(&mx->index_extrbuffer[i]) < sizeof(index_unit))
+		while(ring_avail(&mx->index_extrbuffer[i]) < sizeof(index_unit)) {
 			if (mx->fill_buffers(mx->priv, mx->finish)< 0) {
 				LOG(VB_GENERAL, LOG_ERR,
 				    "error in get next ext unit");
 				break;
 			}
+		}
 	
 		ring_read(&mx->index_extrbuffer[i], (uint8_t *)piu,
 			  sizeof(index_unit));
@@ -268,17 +273,18 @@ static void writeout_video(multiplex_t *mx)
 
 
 	int nlength = length;
-	if (mx->is_ts)
+	if (mx->is_ts) {
 		written = write_video_ts(  viu->pts+mx->video_delay, 
 					   viu->dts+mx->video_delay, 
 					   mx->SCR, outbuf, &nlength,
 					   ptsdts, mx->vrbuffer);
-	else
+	} else {
 		written = write_video_pes( mx->pack_size, mx->extcnt, 
 					   viu->pts+mx->video_delay, 
 					   viu->dts+mx->video_delay, 
 					   mx->SCR, mx->muxr, outbuf, &nlength,
 					   ptsdts, mx->vrbuffer);
+	}
 
 	// something bad happened with the PES or TS write, bail
 	if (written == -1)
@@ -404,27 +410,29 @@ static void writeout_ext(multiplex_t *mx, int n)
 
 	switch (type) {
 	case MPEG_AUDIO:
-		if(mx->is_ts)
+		if(mx->is_ts) {
 			written = write_audio_ts( mx->ext[n].strmnum, pts,
 					outbuf, &nlength, newpts ? 0 : PTS_ONLY,
 					&mx->extrbuffer[n]);
-		else
+		} else {
 			written = write_audio_pes( mx->pack_size, mx->extcnt,
 					mx->ext[n].strmnum, pts, mx->SCR,
 					mx->muxr, outbuf, &nlength, PTS_ONLY,
 					&mx->extrbuffer[n]);
+		}
 		break;
 	case AC3:
-		if(mx->is_ts)
+		if(mx->is_ts) {
 			written = write_ac3_ts(mx->ext[n].strmnum, pts,
 					outbuf, &nlength, newpts ? 0 : PTS_ONLY,
 					mx->ext[n].frmperpkt, &mx->extrbuffer[n]);
-		else
+		} else {
 			written = write_ac3_pes( mx->pack_size, mx->extcnt,
 					mx->ext[n].strmnum, pts, mx->SCR,
 					mx->muxr, outbuf, &nlength, PTS_ONLY,
 					nframes, ac3_off,
 					&mx->extrbuffer[n]);
+		}
 		break;
 	}
 
@@ -538,7 +546,7 @@ void check_times( multiplex_t *mx, int *video_ok, int *ext_ok, int *start)
 	    (ptscmp(mx->viu.dts + mx->video_delay, 500*CLOCK_MS +mx->oldSCR)<0)
 	    && ring_avail(mx->index_vrbuffer)){
 		*video_ok = 1;
-                set_ok = 1;
+                set_ok = 1; //NOLINT(clang-analyzer-deadcode.DeadStores)
 	}
 	
 	for (int i = 0; i < mx->extcnt; i++){
@@ -547,7 +555,7 @@ void check_times( multiplex_t *mx, int *video_ok, int *ext_ok, int *start)
 		    ptscmp(mx->ext[i].pts, 500*CLOCK_MS + mx->oldSCR) < 0
 		    && ring_avail(&mx->index_extrbuffer[i])){
 			ext_ok[i] = 1;
-                        set_ok = 1;
+                        set_ok = 1; //NOLINT(clang-analyzer-deadcode.DeadStores)
 		}
 	}
 #ifdef OUT_DEBUG
@@ -828,13 +836,14 @@ void setup_multiplex(multiplex_t *mx)
 	for (int i=0; i < mx->extcnt; i++)
         {
 		get_next_ext_unit(mx, &mx->ext[i].iu, i);
-		if (mx->ext[i].type == MPEG_AUDIO || mx->ext[i].type == AC3)
+		if (mx->ext[i].type == MPEG_AUDIO || mx->ext[i].type == AC3) {
 			mx->ext[i].pts = uptsdiff(
 					mx->ext[i].iu.pts + mx->audio_delay, 
 					mx->ext[i].pts_off);
-		else
+		} else {
 			mx->ext[i].pts = uptsdiff(
 					mx->ext[i].iu.pts, mx->ext[i].pts_off);
+		}
 	}
 
 	mx->SCR = 0;

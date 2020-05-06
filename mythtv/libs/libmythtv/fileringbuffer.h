@@ -10,7 +10,7 @@ class MTV_PUBLIC FileRingBuffer : public RingBuffer
 
     friend class RingBuffer;
   public:
-    ~FileRingBuffer();
+    ~FileRingBuffer() override;
 
     // Gets
     bool      IsOpen(void)          const override; // RingBuffer
@@ -19,7 +19,7 @@ class MTV_PUBLIC FileRingBuffer : public RingBuffer
     // General Commands
     bool OpenFile(const QString &lfilename,
                   uint retry_ms = kDefaultOpenTimeout) override; // RingBuffer
-    bool ReOpen(QString newFilename = "") override; // RingBuffer
+    bool ReOpen(const QString& newFilename = "") override; // RingBuffer
 
   protected:
     FileRingBuffer(const QString &lfilename,
@@ -29,7 +29,7 @@ class MTV_PUBLIC FileRingBuffer : public RingBuffer
     {
         if (m_remotefile)
             return safe_read(m_remotefile, data, sz);
-        else if (m_fd2 >= 0)
+        if (m_fd2 >= 0)
             return safe_read(m_fd2, data, sz);
 
         errno = EBADF;

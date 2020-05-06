@@ -2,9 +2,12 @@
 #define CC608READER_H
 
 #include <cstdint>
+#include <utility>
 
+// Qt headers
 #include <QMutex>
 
+// MythTV headers
 #include "cc608decoder.h"
 
 #include "mythtvexp.h"
@@ -15,13 +18,12 @@
 class CC608Text
 {
   public:
-    CC608Text(const QString &T, int X, int Y) :
-        text(T), x(X), y(Y) {}
-    CC608Text(const CC608Text &other) :
-        text(other.text), x(other.x), y(other.y) {}
-    QString text;
-    int x;
-    int y;
+    CC608Text(QString T, int X, int Y) :
+        m_text(std::move(T)), m_x(X), m_y(Y) {}
+    CC608Text(const CC608Text &other)  = default;
+    QString m_text;
+    int     m_x;
+    int     m_y;
 };
 
 struct TextContainer
@@ -38,20 +40,15 @@ class CC608Buffer
    ~CC608Buffer(void) { Clear(); }
     void Clear(void)
     {
-        lock.lock();
-        vector<CC608Text*>::iterator i = buffers.begin();
-        for (; i != buffers.end(); ++i)
-        {
-            CC608Text *cc = (*i);
-            if (cc)
-                delete cc;
-        }
-        buffers.clear();
-        lock.unlock();
+        m_lock.lock();
+        for (auto *cc : m_buffers)
+            delete cc;
+        m_buffers.clear();
+        m_lock.unlock();
     }
 
-    QMutex lock;
-    vector<CC608Text*> buffers;
+    QMutex             m_lock;
+    vector<CC608Text*> m_buffers;
 };
 
 class CC608StateTracker
@@ -81,7 +78,7 @@ class MTV_PUBLIC CC608Reader : public CC608Input
 {
   public:
     explicit CC608Reader(MythPlayer *parent);
-   ~CC608Reader();
+   ~CC608Reader() override;
 
     void SetTTPageNum(int page)  { m_ccPageNum = page; }
     void SetEnabled(bool enable) { m_enabled = enable; }

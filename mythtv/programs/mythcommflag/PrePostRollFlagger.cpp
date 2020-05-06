@@ -75,7 +75,7 @@ bool PrePostRollFlagger::go()
     if (m_bStop)
         return false;
 
-    QTime flagTime;
+    QElapsedTimer flagTime;
     flagTime.start();
 
     if (m_recordingStopsAt < MythDate::current() )
@@ -189,8 +189,7 @@ bool PrePostRollFlagger::go()
         LOG(VB_COMMFLAG, LOG_INFO, QString("Closest before postroll: %1")
                 .arg(m_closestBeforePost));
 
-        // cppcheck-suppress unreadVariable
-        framesToProcess = framesProcessed;
+//      framesToProcess = framesProcessed;
     }
 
     if (m_showProgress)
@@ -215,7 +214,7 @@ long long PrePostRollFlagger::findBreakInrange(long long startFrame,
                                                long long stopFrame,
                                                long long totalFrames,
                                                long long &framesProcessed,
-                                             QTime &flagTime, bool findLast)
+                                               QElapsedTimer&flagTime, bool findLast)
 {
     int requiredBuffer = 30;
     int prevpercent = -1;
@@ -323,13 +322,17 @@ long long PrePostRollFlagger::findBreakInrange(long long startFrame,
             }
 
             if (stopFrame)
+            {
                 emit statusUpdate(QCoreApplication::translate("(mythcommflag)",
                     "%1% Completed @ %2 fps.")
                         .arg(percentage).arg(flagFPS));
+            }
             else
+            {
                 emit statusUpdate(QCoreApplication::translate("(mythcommflag)",
                     "%1 Frames Completed @ %2 fps.")
                         .arg((long)currentFrameNumber).arg(flagFPS));
+            }
 
             if (percentage % 10 == 0 && prevpercent != percentage)
             {
@@ -341,7 +344,7 @@ long long PrePostRollFlagger::findBreakInrange(long long startFrame,
 
         ProcessFrame(currentFrame, currentFrameNumber);
 
-        if(frameInfo[currentFrameNumber].flagMask &
+        if (m_frameInfo[currentFrameNumber].flagMask &
            (COMM_FRAME_SCENE_CHANGE | COMM_FRAME_BLANK))
         {
             foundFrame = currentFrameNumber;

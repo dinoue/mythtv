@@ -1,11 +1,14 @@
 #ifndef ENCODERLINK_H_
 #define ENCODERLINK_H_
 
+// C++ headers
+#include <utility>
+#include <vector>                       // for vector
+
+// QT headers
 #include <QDateTime>                    // for QDateTime
 #include <QMutex>                       // for QMutex
 #include <QString>                      // for QString
-
-#include <vector>                       // for vector
 
 #include "enums/recStatus.h"
 #include "tv.h"                         // for SleepStatus, etc
@@ -38,7 +41,7 @@ class EncoderLink
     /// \brief Get the last time the encoder was put to sleep
     QDateTime GetLastSleepTime(void) const { return m_lastSleepTime; }
     /// \brief Used to set the last wake time of an encoder
-    void SetLastWakeTime(QDateTime newTime) { m_lastWakeTime = newTime; }
+    void SetLastWakeTime(QDateTime newTime) { m_lastWakeTime = std::move(newTime); }
     /// \brief Get the last time the encoder was awakened
     QDateTime GetLastWakeTime(void) const { return m_lastWakeTime; }
 
@@ -97,7 +100,7 @@ class EncoderLink
     void StopRecording(bool killFile = false);
     void FinishRecording(void);
     void FrontendReady(void);
-    void CancelNextRecording(bool);
+    void CancelNextRecording(bool cancel);
     bool WouldConflict(const ProgramInfo *rec);
 
     bool IsReallyRecording(void);
@@ -106,17 +109,17 @@ class EncoderLink
     long long GetFramesWritten(void);
     long long GetFilePosition(void);
     int64_t GetKeyframePosition(uint64_t desired);
-    bool GetKeyframePositions(int64_t start, int64_t end, frm_pos_map_t&);
-    bool GetKeyframeDurations(int64_t start, int64_t end, frm_pos_map_t&);
+    bool GetKeyframePositions(int64_t start, int64_t end, frm_pos_map_t &map);
+    bool GetKeyframeDurations(int64_t start, int64_t end, frm_pos_map_t &map);
     void SpawnLiveTV(LiveTVChain *chain, bool pip, QString startchan);
     QString GetChainID(void);
     void StopLiveTV(void);
     void PauseRecorder(void);
-    void SetLiveRecording(int);
+    void SetLiveRecording(int recording);
     void SetNextLiveTVDir(const QString& dir);
     QString GetInput(void) const;
-    QString SetInput(QString);
-    void ToggleChannelFavorite(const QString&);
+    QString SetInput(QString input);
+    void ToggleChannelFavorite(const QString &changroup);
     void ChangeChannel(ChannelChangeDirection channeldirection);
     void SetChannel(const QString &name);
     int  GetPictureAttribute(PictureAttribute attr);
@@ -125,7 +128,8 @@ class EncoderLink
                                 bool              direction);
     bool CheckChannel(const QString &name);
     bool ShouldSwitchToAnotherInput(const QString &channelid);
-    bool CheckChannelPrefix(const QString&,uint&,bool&,QString&);
+    bool CheckChannelPrefix(const QString &prefix, uint &complete_valid_channel_on_rec,
+                            bool &is_extra_char_useful, QString &needed_spacer);
     void GetNextProgram(BrowseDirection direction,
                         QString &title, QString &subtitle, QString &desc,
                         QString &category, QString &starttime,

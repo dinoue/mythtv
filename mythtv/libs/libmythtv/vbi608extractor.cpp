@@ -35,19 +35,21 @@ static void print(
     const QList<uint>  &raw_minimas, const QList<uint>  &raw_maximas,
     const QList<float> &minimas,     const QList<float> &maximas)
 {
-    QString raw_mins, raw_maxs;
-    for (uint i = 0; i < uint(raw_minimas.size()); i++)
-        raw_mins += QString("%1,").arg(raw_minimas[i]);
-    for (uint i = 0; i < uint(raw_maximas.size()); i++)
-        raw_maxs += QString("%1,").arg(raw_maximas[i]);
+    QString raw_mins;
+    QString raw_maxs;
+    foreach (uint minima, raw_minimas)
+        raw_mins += QString("%1,").arg(minima);
+    foreach (uint maxima, raw_maximas)
+        raw_maxs += QString("%1,").arg(maxima);
     LOG(VB_VBI, LOG_DEBUG, QString("raw mins: %1").arg(raw_mins));
     LOG(VB_VBI, LOG_DEBUG, QString("raw maxs: %1").arg(raw_maxs));
 
-    QString mins, maxs;
-    for (uint i = 0; i < uint(minimas.size()); i++)
-        mins += QString("%1,").arg(minimas[i]);
-    for (uint i = 0; i < uint(maximas.size()); i++)
-        maxs += QString("%1,").arg(maximas[i]);
+    QString mins;
+    QString maxs;
+    foreach (float minima, minimas)
+        mins += QString("%1,").arg(minima);
+    foreach (float maxima, maximas)
+        maxs += QString("%1,").arg(maxima);
     LOG(VB_VBI, LOG_DEBUG, QString("mins: %1 maxs: %2")
             .arg(mins).arg(maxs));
 }
@@ -104,7 +106,8 @@ bool VBI608Extractor::FindClocks(const unsigned char *buf, uint width)
     // get the raw minima and maxima list
     uint noise_flr_sm = max(uint(0.003 * width), 2U);
     uint noise_flr_lg = max(uint(0.007 * width), noise_flr_sm+1);
-    int last_max = -1, last_min = -1;
+    int last_max = -1;
+    int last_min = -1;
     for (uint i = 0; i < (width/3); i++)
     {
         if (buf[i] > avgv+10)

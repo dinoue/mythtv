@@ -25,21 +25,21 @@ using namespace std;
 class NewsSiteItem
 {
   public:
-    typedef vector<NewsSiteItem> List;
+    using List = vector<NewsSiteItem>;
 
     QString m_name;
     QString m_category;
     QString m_url;
     QString m_ico;
-    bool    m_inDB;
-    bool    m_podcast;
+    bool    m_inDB    { false };
+    bool    m_podcast { false };
 };
 Q_DECLARE_METATYPE(NewsSiteItem*)
 
 class NewsCategory
 {
   public:
-    typedef vector<NewsCategory> List;
+    using List = vector<NewsCategory>;
 
     QString             m_name;
     NewsSiteItem::List  m_siteList;
@@ -67,7 +67,7 @@ class NewsSite : public QObject
       public:
         void clear(void)
         {
-            while (size())
+            while (!empty())
             {
                 NewsSite *tmp = back();
                 pop_back();
@@ -77,7 +77,7 @@ class NewsSite : public QObject
     };
 
     NewsSite(QString   name,    const QString &url,
-             QDateTime updated, const bool     podcast);
+             QDateTime updated, bool     podcast);
     virtual void deleteLater();
 
     void customEvent(QEvent *event) override; // QObject
@@ -108,7 +108,7 @@ class NewsSite : public QObject
     QString  errorMsg(void) const;
 
   private:
-    ~NewsSite();
+    ~NewsSite() override;
 
     mutable QMutex m_lock {QMutex::Recursive};
     QString    m_name;

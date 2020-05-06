@@ -148,7 +148,6 @@ static QString StaticPage =
       "<BODY><H1>%2.</H1></BODY>"
     "</HTML>";
 
-static const int g_nMIMELength = sizeof( g_MIMETypes) / sizeof( MIMETypes );
 #ifdef USE_SETSOCKOPT
 //static const int g_on          = 1;
 //static const int g_off         = 0;
@@ -429,10 +428,12 @@ qint64 HTTPRequest::SendResponse( void )
     nBytes  = WriteBlock( sHeader.constData(), sHeader.length() );
 
     if (nBytes < sHeader.length())
+    {
         LOG( VB_HTTP, LOG_ERR, QString("HttpRequest::SendResponse(): "
                                        "Incomplete write of header, "
                                        "%1 written of %2")
                                         .arg(nBytes).arg(sHeader.length()));
+    }
 
     // ----------------------------------------------------------------------
     // Write out Response buffer.
@@ -590,10 +591,12 @@ qint64 HTTPRequest::SendResponseFile( const QString& sFileName )
     nBytes = WriteBlock( sHeader.constData(), sHeader.length() );
 
     if (nBytes < sHeader.length())
+    {
         LOG( VB_HTTP, LOG_ERR, QString("HttpRequest::SendResponseFile(): "
                                        "Incomplete write of header, "
                                        "%1 written of %2")
                                         .arg(nBytes).arg(sHeader.length()));
+    }
 
     // ----------------------------------------------------------------------
     // Write out File.
@@ -668,7 +671,6 @@ qint64 HTTPRequest::SendData( QIODevice *pDevice, qint64 llStart, qint64 llBytes
     qint64 llBytesRemaining = llBytes;
     qint64 llBytesToRead    = 0;
     qint64 llBytesRead      = 0;
-    qint64 llBytesWritten   = 0;
 
     memset (aBuffer, 0, sizeof(aBuffer));
 
@@ -678,7 +680,7 @@ qint64 HTTPRequest::SendData( QIODevice *pDevice, qint64 llStart, qint64 llBytes
 
         if (( llBytesRead = pDevice->read( aBuffer, llBytesToRead )) != -1 )
         {
-            if (( llBytesWritten = WriteBlock( aBuffer, llBytesRead )) == -1)
+            if ( WriteBlock( aBuffer, llBytesRead ) == -1)
                 return -1;
 
             // -=>TODO: We don't handle the situation where we read more than was sent.
@@ -783,29 +785,27 @@ void HTTPRequest::FormatActionResponse(const NameValues &args)
     else
         stream << "<" << m_sMethod << "Response>\r\n";
 
-    NameValues::const_iterator nit = args.begin();
-    for (; nit != args.end(); ++nit)
+    foreach (const auto & arg, args)
     {
-        stream << "<" << (*nit).m_sName;
+        stream << "<" << arg.m_sName;
 
-        if ((*nit).m_pAttributes)
+        if (arg.m_pAttributes)
         {
-            NameValues::const_iterator nit2 = (*nit).m_pAttributes->begin();
-            for (; nit2 != (*nit).m_pAttributes->end(); ++nit2)
+            foreach (const auto & attr, *arg.m_pAttributes)
             {
-                stream << " " << (*nit2).m_sName << "='"
-                       << Encode( (*nit2).m_sValue ) << "'";
+                stream << " " << attr.m_sName << "='"
+                       << Encode( attr.m_sValue ) << "'";
             }
         }
 
         stream << ">";
 
         if (m_bSOAPRequest)
-            stream << Encode( (*nit).m_sValue );
+            stream << Encode( arg.m_sValue );
         else
-            stream << (*nit).m_sValue;
+            stream << arg.m_sValue;
 
-        stream << "</" << (*nit).m_sName << ">\r\n";
+        stream << "</" << arg.m_sName << ">\r\n";
     }
 
     if (m_bSOAPRequest)
@@ -1028,12 +1028,12 @@ QString HTTPRequest::GetMimeType( const QString &sFileExtension )
 {
     QString ext;
 
-    for (int i = 0; i < g_nMIMELength; i++)
+    for (auto & type : g_MIMETypes)
     {
-        ext = g_MIMETypes[i].pszExtension;
+        ext = type.pszExtension;
 
         if ( sFileExtension.toUpper() == ext.toUpper() )
-            return( g_MIMETypes[i].pszType );
+            return( type.pszType );
     }
 
     return( "text/plain" );
@@ -1047,10 +1047,10 @@ QStringList HTTPRequest::GetSupportedMimeTypes()
 {
     QStringList mimeTypes;
 
-    for (int i = 0; i < g_nMIMELength; i++)
+    for (auto & type : g_MIMETypes)
     {
-        if (!mimeTypes.contains( g_MIMETypes[i].pszType ))
-            mimeTypes.append( g_MIMETypes[i].pszType );
+        if (!mimeTypes.contains( type.pszType ))
+            mimeTypes.append( type.pszType );
     }
 
     return mimeTypes;
@@ -1126,11 +1126,10 @@ long HTTPRequest::GetParameters( QString sParams, QStringMap &mapParams  )
     {
         QStringList params = sParams.split('&', QString::SkipEmptyParts);
 
-        for ( QStringList::Iterator it  = params.begin();
-                                    it != params.end();  ++it )
+        foreach (auto & param, params)
         {
-            QString sName  = (*it).section( '=', 0, 0 );
-            QString sValue = (*it).section( '=', 1 );
+            QString sName  = param.section( '=', 0, 0 );
+            QString sValue = param.section( '=', 1 );
             sValue.replace("+"," ");
 
             if (!sName.isEmpty())
@@ -1687,9 +1686,11 @@ bool HTTPRequest::ProcessSOAPPayload( const QString &sSOAPAction )
     QDomNodeList oNodeList = doc.elementsByTagNameNS( m_sNameSpace, m_sMethod );
 
     if (oNodeList.count() == 0)
+    {
         oNodeList =
             doc.elementsByTagNameNS("http://schemas.xmlsoap.org/soap/envelope/",
                                     "Body");
+    }
 
     if (oNodeList.count() > 0)
     {
@@ -1737,20 +1738,24 @@ Serializer *HTTPRequest::GetSerializer()
     Serializer *pSerializer = nullptr;
 
     if (m_bSOAPRequest)
+    {
         pSerializer = (Serializer *)new SoapSerializer(&m_response,
                                                        m_sNameSpace, m_sMethod);
+    }
     else
     {
         QString sAccept = GetRequestHeader( "Accept", "*/*" );
 
-        if (sAccept.contains( "application/json", Qt::CaseInsensitive ))
+        if (sAccept.contains( "application/json", Qt::CaseInsensitive ) ||
+            sAccept.contains( "text/javascript", Qt::CaseInsensitive ))
+        {
             pSerializer = (Serializer *)new JSONSerializer(&m_response,
                                                            m_sMethod);
-        else if (sAccept.contains( "text/javascript", Qt::CaseInsensitive ))
-            pSerializer = (Serializer *)new JSONSerializer(&m_response,
-                                                           m_sMethod);
+        }
         else if (sAccept.contains( "text/x-apple-plist+xml", Qt::CaseInsensitive ))
+        {
             pSerializer = (Serializer *)new XmlPListSerializer(&m_response);
+        }
     }
 
     // Default to XML
@@ -2307,17 +2312,23 @@ void HTTPRequest::AddCORSHeaders( const QString &sOrigin )
 
         if (*it == "*" || (!(*it).startsWith("http://") &&
             !(*it).startsWith("https://")))
+        {
             LOG(VB_GENERAL, LOG_ERR, QString("Illegal AllowedOriginsList"
                 " entry '%1'. Must start with http[s]:// and not be *")
                 .arg(*it));
+        }
         else
+        {
             allowedOrigins << *it;
+        }
     }
 
     if (VERBOSE_LEVEL_CHECK(VB_HTTP, LOG_DEBUG))
+    {
         for (QStringList::const_iterator it = allowedOrigins.begin();
                                          it != allowedOrigins.end(); it++)
             LOG(VB_HTTP, LOG_DEBUG, QString("Will allow Origin: %1").arg(*it));
+    }
 
     if (allowedOrigins.contains(sOrigin))
     {
@@ -2327,9 +2338,11 @@ void HTTPRequest::AddCORSHeaders( const QString &sOrigin )
         LOG(VB_HTTP, LOG_DEBUG, QString("Allow-Origin: %1)").arg(sOrigin));
     }
     else
+    {
         LOG(VB_GENERAL, LOG_CRIT, QString("HTTPRequest: Cross-origin request "
                                           "received with origin (%1)")
                                           .arg(sOrigin));
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////

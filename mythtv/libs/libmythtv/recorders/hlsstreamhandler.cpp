@@ -13,7 +13,7 @@
 #include "mythlogging.h"
 #include "recorders/HLS/HLSReader.h"
 
-#define LOC QString("HLSSH[%1](%2): ").arg(m_inputid).arg(m_device)
+#define LOC QString("HLSSH[%1](%2): ").arg(m_inputId).arg(m_device)
 
 // BUFFER_SIZE is a multiple of TS_SIZE
 #define TS_SIZE     188
@@ -33,7 +33,7 @@ HLSStreamHandler* HLSStreamHandler::Get(const IPTVTuningData& tuning, int inputi
 
     if (it == s_hlshandlers.end())
     {
-        HLSStreamHandler* newhandler = new HLSStreamHandler(tuning, inputid);
+        auto* newhandler = new HLSStreamHandler(tuning, inputid);
         newhandler->Start();
         s_hlshandlers[devkey] = newhandler;
         s_hlshandlers_refcnt[devkey] = 1;
@@ -131,7 +131,7 @@ void HLSStreamHandler::run(void)
     m_hls->Throttle(false);
 
     int remainder = 0;
-    while (m_running_desired)
+    while (m_runningDesired)
     {
         if (!m_hls->IsOpen(url))
         {
@@ -181,15 +181,13 @@ void HLSStreamHandler::run(void)
         {
             LOG(VB_RECORD, LOG_INFO, LOC +
                 QString("Packet not starting with SYNC Byte (got 0x%1)")
-                .arg((char)m_readbuffer[0], 2, QLatin1Char('0')));
+                .arg((char)m_readbuffer[0], 2, 16, QLatin1Char('0')));
             continue;
         }
 
         {
-            QMutexLocker locker(&m_listener_lock);
-            HLSStreamHandler::StreamDataList::const_iterator sit;
-            sit = m_stream_data_list.begin();
-            for (; sit != m_stream_data_list.end(); ++sit)
+            QMutexLocker locker(&m_listenerLock);
+            for (auto sit = m_streamDataList.cbegin(); sit != m_streamDataList.cend(); ++sit)
                 remainder = sit.key()->ProcessData(m_readbuffer, size);
         }
 

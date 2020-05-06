@@ -161,12 +161,15 @@ void CleanupTask::CleanupOrphanedLiveTV(void)
         return;
     }
 
-    QString msg, keepChains;
+    QString msg;
+    QString keepChains;
     while (query.next())
+    {
         if (keepChains.isEmpty())
             keepChains = "'" + query.value(0).toString() + "'";
         else
             keepChains += ", '" + query.value(0).toString() + "'";
+    }
 
     if (keepChains.isEmpty())
         msg = "DELETE FROM tvchain WHERE endtime < now();";
@@ -395,7 +398,7 @@ void CleanupTask::CleanupProgramListings(void)
         MythDB::DBError("HouseKeeper Cleaning Program Listings", query);
 }
 
-bool ThemeUpdateTask::DoCheckRun(QDateTime now)
+bool ThemeUpdateTask::DoCheckRun(const QDateTime& now)
 {
     return gCoreContext->GetBoolSetting("ThemeUpdateNofications", true) &&
             PeriodicHouseKeeperTask::DoCheckRun(now);
@@ -498,9 +501,8 @@ void ThemeUpdateTask::Terminate(void)
     m_running = false;
 }
 
-RadioStreamUpdateTask::RadioStreamUpdateTask(void) : DailyHouseKeeperTask("UpdateRadioStreams",
-                                                       kHKGlobal, kHKRunOnStartup),
-    m_msMU(nullptr)
+RadioStreamUpdateTask::RadioStreamUpdateTask(void)
+    : DailyHouseKeeperTask("UpdateRadioStreams", kHKGlobal, kHKRunOnStartup)
 {
 }
 
@@ -548,7 +550,7 @@ RadioStreamUpdateTask::~RadioStreamUpdateTask(void)
     m_msMU = nullptr;
 }
 
-bool RadioStreamUpdateTask::DoCheckRun(QDateTime now)
+bool RadioStreamUpdateTask::DoCheckRun(const QDateTime& now)
 {
     // we are only interested in the global setting so remove any local host setting just in case
     GetMythDB()->ClearSetting("MusicStreamListModified");
@@ -565,9 +567,8 @@ void RadioStreamUpdateTask::Terminate(void)
         m_msMU->Term(true);
 }
 
-ArtworkTask::ArtworkTask(void) : DailyHouseKeeperTask("RecordedArtworkUpdate",
-                                         kHKGlobal, kHKRunOnStartup),
-    m_msMML(nullptr)
+ArtworkTask::ArtworkTask(void)
+    : DailyHouseKeeperTask("RecordedArtworkUpdate", kHKGlobal, kHKRunOnStartup)
 {
 }
 
@@ -614,7 +615,7 @@ ArtworkTask::~ArtworkTask(void)
     m_msMML = nullptr;
 }
 
-bool ArtworkTask::DoCheckRun(QDateTime now)
+bool ArtworkTask::DoCheckRun(const QDateTime& now)
 {
     return gCoreContext->GetBoolSetting("DailyArtworkUpdates", false) &&
             PeriodicHouseKeeperTask::DoCheckRun(now);
@@ -634,7 +635,7 @@ bool JobQueueRecoverTask::DoRun(void)
 }
 
 MythFillDatabaseTask::MythFillDatabaseTask(void) :
-    DailyHouseKeeperTask("MythFillDB"), m_msMFD(nullptr)
+    DailyHouseKeeperTask("MythFillDB")
 {
     SetHourWindowFromDB();
 }
@@ -684,7 +685,7 @@ bool MythFillDatabaseTask::UseSuggestedTime(void)
     return gCoreContext->GetBoolSetting("MythFillGrabberSuggestsTime", true);
 }
 
-bool MythFillDatabaseTask::DoCheckRun(QDateTime now)
+bool MythFillDatabaseTask::DoCheckRun(const QDateTime& now)
 {
     if (!gCoreContext->GetBoolSetting("MythFillEnabled", true))
     {

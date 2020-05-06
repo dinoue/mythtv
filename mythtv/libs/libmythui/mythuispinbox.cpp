@@ -60,17 +60,21 @@ void MythUISpinBox::SetRange(int low, int high, int step, uint pageMultiple)
             if (!temp.isEmpty())
             {
                 if (temp.contains("%n"))
+                {
                     text = qApp->translate("ThemeUI", temp.toUtf8(), nullptr,
                                            qAbs(value));
+                }
                 else
+                {
                     text = qApp->translate("ThemeUI", temp.toUtf8());
+                }
             }
         }
 
         if (text.isEmpty())
             text = QString::number(value);
 
-        new MythUIButtonListItem(this, text, qVariantFromValue(value));
+        new MythUIButtonListItem(this, text, QVariant::fromValue(value));
 
         if (reverse)
             value = value - step;
@@ -113,7 +117,7 @@ void MythUISpinBox::AddSelection(int value, const QString &label)
     }
 
     new MythUIButtonListItem(this, label.isEmpty() ? QString(value) : label,
-                                    qVariantFromValue(value), insertPos);
+                                    QVariant::fromValue(value), insertPos);
 }
 
 /**
@@ -178,7 +182,7 @@ bool MythUISpinBox::MoveUp(MovementUnit unit, uint amount)
  */
 void MythUISpinBox::CreateCopy(MythUIType *parent)
 {
-    MythUISpinBox *spinbox = new MythUISpinBox(parent, objectName());
+    auto *spinbox = new MythUISpinBox(parent, objectName());
     spinbox->CopyFrom(this);
 }
 
@@ -187,7 +191,7 @@ void MythUISpinBox::CreateCopy(MythUIType *parent)
  */
 void MythUISpinBox::CopyFrom(MythUIType *base)
 {
-    MythUISpinBox *spinbox = dynamic_cast<MythUISpinBox *>(base);
+    auto *spinbox = dynamic_cast<MythUISpinBox *>(base);
 
     if (!spinbox)
         return;
@@ -265,7 +269,7 @@ void MythUISpinBox::ShowEntryDialog(QString initialEntry)
 {
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
 
-    SpinBoxEntryDialog *dlg = new SpinBoxEntryDialog(popupStack, "SpinBoxEntryDialog",
+    auto *dlg = new SpinBoxEntryDialog(popupStack, "SpinBoxEntryDialog",
         this, std::move(initialEntry), m_low, m_high, m_step);
 
     if (dlg->Create())

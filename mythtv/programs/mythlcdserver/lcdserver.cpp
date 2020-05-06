@@ -119,7 +119,7 @@ void LCDServer::newConnection(QTcpSocket *socket)
 
 void LCDServer::endConnection(void)
 {
-    QTcpSocket *socket = dynamic_cast<QTcpSocket*>(sender());
+    auto *socket = dynamic_cast<QTcpSocket*>(sender());
     if (socket)
     {
         socket->close();
@@ -134,8 +134,7 @@ void LCDServer::endConnection(void)
 
 void LCDServer::readSocket()
 {
-    QTcpSocket *socket = dynamic_cast<QTcpSocket*>(sender());
-
+    auto *socket = dynamic_cast<QTcpSocket*>(sender());
     if (socket)
     {
         m_lastSocket = socket;
@@ -159,9 +158,9 @@ QStringList LCDServer::parseCommand(QString &command)
     QChar c;
     bool bInString = false;
 
-    for (int x = 0; x < command.length(); x++)
+    foreach (auto && x, command)
     {
-        c = command[x];
+        c = x;
         if (!bInString && c == '"')
             bInString = true;
         else if (bInString && c == '"')
@@ -304,8 +303,10 @@ void LCDServer::sendKeyPress(const QString& key_pressed)
 
 void LCDServer::sendConnected(QTcpSocket *socket)
 {
-    QString sWidth, sHeight;
-    int nWidth = 0, nHeight = 0;
+    QString sWidth;
+    QString sHeight;
+    int nWidth = 0;
+    int nHeight = 0;
 
     if (m_lcd)
     {

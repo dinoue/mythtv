@@ -12,6 +12,7 @@
 #include "loggingserver.h"
 #include "mythlogging.h"
 #include "signalhandling.h"
+#include "mythdisplay.h"
 
 // libmythui
 #include "mythmainwindow.h"
@@ -43,10 +44,6 @@ int main(int argc, char **argv)
 {
     bool bShowSettings = false;
 
-#if CONFIG_OMX_RPI
-    setenv("QT_XCB_GL_INTEGRATION","none",0);
-#endif
-
     MythWelcomeCommandLineParser cmdline;
     if (!cmdline.Parse(argc, argv))
     {
@@ -66,6 +63,7 @@ int main(int argc, char **argv)
         return GENERIC_EXIT_OK;
     }
 
+    MythDisplay::ConfigureQtGUI();
     QApplication a(argc, argv);
     QCoreApplication::setApplicationName(MYTH_APPNAME_MYTHWELCOME);
 
@@ -129,10 +127,14 @@ int main(int argc, char **argv)
 
     MythScreenType *screen = nullptr;
     if (bShowSettings)
+    {
         screen = new StandardSettingDialog(mainStack, "shutdown",
                                            new MythShutdownSettings());
+    }
     else
+    {
         screen = new WelcomeDialog(mainStack, "mythwelcome");
+    }
 
     bool ok = screen->Create();
     if (ok)

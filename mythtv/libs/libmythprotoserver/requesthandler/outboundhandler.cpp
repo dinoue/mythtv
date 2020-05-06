@@ -12,8 +12,7 @@
 
 #include "requesthandler/outboundhandler.h"
 
-OutboundRequestHandler::OutboundRequestHandler(void) :
-    m_socket(nullptr)
+OutboundRequestHandler::OutboundRequestHandler(void) 
 {
     m_timer.setSingleShot(true);
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(ConnectToMaster()));
@@ -63,7 +62,7 @@ bool OutboundRequestHandler::DoConnectToMaster(void)
         return false;
     }
 
-    SocketHandler *handler = new SocketHandler(m_socket, m_parent, hostname);
+    auto *handler = new SocketHandler(m_socket, m_parent, hostname);
     handler->BlockShutdown(true);
     handler->AllowStandardEvents(true);
     handler->AllowSystemEvents(true);

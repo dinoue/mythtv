@@ -95,9 +95,11 @@ static bool checkLockFile(const QString &lockFile)
                 "Found a lock file but the owning process isn't running!\n"
                 "Removing stale lock file."));
             if (!file.remove())
+            {
                 LOG(VB_GENERAL, LOG_ERR,
                     QString("Failed to remove stale lock file - %1")
                         .arg(lockFile));
+            }
         }
         else
         {
@@ -131,7 +133,7 @@ static void runCreateDVD(void)
     }
 
     // show the select destination dialog
-    SelectDestination *dest = new SelectDestination(mainStack, false, "SelectDestination");
+    auto *dest = new SelectDestination(mainStack, false, "SelectDestination");
 
     if (dest->Create())
         mainStack->AddScreen(dest);
@@ -160,7 +162,7 @@ static void runCreateArchive(void)
     }
 
     // show the select destination dialog
-    SelectDestination *dest = new SelectDestination(mainStack, true, "SelectDestination");
+    auto *dest = new SelectDestination(mainStack, true, "SelectDestination");
 
     if (dest->Create())
         mainStack->AddScreen(dest);
@@ -195,7 +197,7 @@ static void runImportVideo(void)
 
     // show the find archive screen
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
-    ArchiveFileSelector *selector = new ArchiveFileSelector(mainStack);
+    auto *selector = new ArchiveFileSelector(mainStack);
 
     if (selector->Create())
         mainStack->AddScreen(selector);
@@ -246,7 +248,7 @@ static void runTestDVD(void)
 
 static void runBurnDVD(void)
 {
-    BurnMenu *menu = new BurnMenu();
+    auto *menu = new BurnMenu();
     menu->start();
 }
 
@@ -300,9 +302,9 @@ static int runMenu(const QString& which_menu)
     }
 
     QString themedir = GetMythUI()->GetThemeDir();
-    MythThemedMenu *diag = new MythThemedMenu(
-        themedir, which_menu, GetMythMainWindow()->GetMainStack(),
-        "archive menu");
+    auto *diag = new MythThemedMenu(themedir, which_menu,
+                                    GetMythMainWindow()->GetMainStack(),
+                                    "archive menu");
 
     // save the callback from the main menu
     if (mainMenu)
@@ -382,9 +384,8 @@ int mythplugin_run(void)
 int mythplugin_config(void)
 {
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
-    StandardSettingDialog *ssd =
-        new StandardSettingDialog(mainStack, "archivesettings",
-                                  new ArchiveSettings());
+    auto *ssd = new StandardSettingDialog(mainStack, "archivesettings",
+                                          new ArchiveSettings());
 
     if (ssd->Create())
     {

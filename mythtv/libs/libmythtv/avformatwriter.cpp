@@ -120,8 +120,10 @@ bool AVFormatWriter::Init(void)
     if (m_container == "mpegts")
         m_ctx->packet_size = 2324;
 
-    snprintf(m_ctx->filename, sizeof(m_ctx->filename), "%s",
-             m_filename.toLatin1().constData());
+    QByteArray filename = m_filename.toLatin1();
+    auto size = static_cast<size_t>(filename.size());
+    m_ctx->url = static_cast<char*>(av_malloc(size));
+    memcpy(m_ctx->url, filename.constData(), size);
 
     if (m_fmt.video_codec != AV_CODEC_ID_NONE)
         m_videoStream = AddVideoStream();
@@ -167,7 +169,7 @@ bool AVFormatWriter::OpenFile(void)
     }
 
     m_avfRingBuffer     = new AVFRingBuffer(m_ringBuffer);
-    URLContext *uc      = (URLContext *)m_ctx->pb->opaque;
+    auto *uc            = (URLContext *)m_ctx->pb->opaque;
     uc->prot            = AVFRingBuffer::GetRingBufferURLProtocol();
     uc->priv_data       = (void *)m_avfRingBuffer;
 
@@ -436,11 +438,7 @@ bool AVFormatWriter::ReOpen(const QString& filename)
 
 AVStream* AVFormatWriter::AddVideoStream(void)
 {
-    AVCodecContext *c;
-    AVStream *st;
-    AVCodec *codec;
-
-    st = avformat_new_stream(m_ctx, nullptr);
+    AVStream *st = avformat_new_stream(m_ctx, nullptr);
     if (!st)
     {
         LOG(VB_RECORD, LOG_ERR,
@@ -449,8 +447,7 @@ AVStream* AVFormatWriter::AddVideoStream(void)
     }
     st->id = 0;
 
-
-    codec = avcodec_find_encoder(m_ctx->oformat->video_codec);
+    AVCodec *codec = avcodec_find_encoder(m_ctx->oformat->video_codec);
     if (!codec)
     {
         LOG(VB_RECORD, LOG_ERR,
@@ -459,7 +456,7 @@ AVStream* AVFormatWriter::AddVideoStream(void)
     }
 
     gCodecMap->freeCodecContext(st);
-    c = gCodecMap->getCodecContext(st, codec);
+    AVCodecContext *c = gCodecMap->getCodecContext(st, codec);
 
     c->codec                      = codec;
     c->codec_id                   = m_ctx->oformat->video_codec;
@@ -568,9 +565,7 @@ AVStream* AVFormatWriter::AddVideoStream(void)
 
 bool AVFormatWriter::OpenVideo(void)
 {
-    AVCodecContext *c;
-
-    c = gCodecMap->getCodecContext(m_videoStream);
+    AVCodecContext *c = gCodecMap->getCodecContext(m_videoStream);
 
     if (!m_width || !m_height)
         return false;
@@ -602,10 +597,7 @@ bool AVFormatWriter::OpenVideo(void)
 
 AVStream* AVFormatWriter::AddAudioStream(void)
 {
-    AVCodecContext *c;
-    AVStream *st;
-
-    st = avformat_new_stream(m_ctx, nullptr);
+    AVStream *st = avformat_new_stream(m_ctx, nullptr);
     if (!st)
     {
         LOG(VB_RECORD, LOG_ERR,
@@ -614,13 +606,14 @@ AVStream* AVFormatWriter::AddAudioStream(void)
     }
     st->id = 1;
 
-    c = gCodecMap->getCodecContext(st, nullptr, true);
+    AVCodecContext *c = gCodecMap->getCodecContext(st, nullptr, true);
 
     c->codec_id     = m_ctx->oformat->audio_codec;
     c->codec_type   = AVMEDIA_TYPE_AUDIO;
     c->bit_rate     = m_audioBitrate;
     c->sample_rate  = m_audioFrameRate;
     c->channels     = m_audioChannels;
+    c->channel_layout = static_cast<uint64_t>(av_get_default_channel_layout(m_audioChannels));
 
     // c->flags |= CODEC_FLAG_QSCALE; // VBR
     // c->global_quality = blah;
@@ -656,14 +649,11 @@ bool AVFormatWriter::FindAudioFormat(AVCodecContext *ctx, AVCodec *c, AVSampleFo
 
 bool AVFormatWriter::OpenAudio(void)
 {
-    AVCodecContext *c;
-    AVCodec *codec;
-
-    c = gCodecMap->getCodecContext(m_audioStream);
+    AVCodecContext *c = gCodecMap->getCodecContext(m_audioStream);
 
     c->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
 
-    codec = avcodec_find_encoder(c->codec_id);
+    AVCodec *codec = avcodec_find_encoder(c->codec_id);
     if (!codec)
     {
         LOG(VB_RECORD, LOG_ERR,
@@ -715,19 +705,15 @@ bool AVFormatWriter::OpenAudio(void)
 
 AVFrame* AVFormatWriter::AllocPicture(enum AVPixelFormat pix_fmt)
 {
-    AVFrame *picture;
-    unsigned char *picture_buf;
-    int size;
-
-    picture = av_frame_alloc();
+    AVFrame *picture = av_frame_alloc();
     if (!picture)
     {
         LOG(VB_RECORD, LOG_ERR,
             LOC + "AllocPicture(): avcodec_alloc_frame() failed");
         return nullptr;
     }
-    size = av_image_get_buffer_size(pix_fmt, m_width, m_height, IMAGE_ALIGN);
-    picture_buf = (unsigned char *)av_malloc(size);
+    int size = av_image_get_buffer_size(pix_fmt, m_width, m_height, IMAGE_ALIGN);
+    auto *picture_buf = (unsigned char *)av_malloc(size);
     if (!picture_buf)
     {
         LOG(VB_RECORD, LOG_ERR, LOC + "AllocPicture(): av_malloc() failed");

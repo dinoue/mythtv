@@ -13,9 +13,13 @@
 #ifndef __UPNPUTIL_H__
 #define __UPNPUTIL_H__
 
-#include <QStringList>
-#include <QMap>
+#include <utility>
 
+// Qt headers
+#include <QMap>
+#include <QStringList>
+
+// MythTV headers
 #include "upnpexp.h"
 #include "compat.h"     // for suseconds_t
 
@@ -36,8 +40,8 @@ template <class T> inline const T& Max( const T &x, const T &y )
 // Typedefs
 //////////////////////////////////////////////////////////////////////////////
 
-typedef struct timeval              TaskTime;
-typedef QMap< QString, QString >    QStringMap;
+using TaskTime   = struct timeval;
+using QStringMap = QMap< QString, QString >;
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -55,24 +59,24 @@ class NameValue
 
   public:
     NameValue() = default;
-    NameValue(const QString &name, const QString &value, bool required = false) :
-        m_sName(name), m_sValue(value), m_bRequired(required) { }
-    NameValue(const QString &name, const char *value, bool required = false) :
-        m_sName(name), m_sValue(value), m_bRequired(required) { }
-    NameValue(const QString &name, int value, bool required = false) :
-        m_sName(name), m_sValue(QString::number(value)), m_bRequired(required) { }
-    NameValue(const QString &name, long value, bool required = false) :
-        m_sName(name), m_sValue(QString::number(value)), m_bRequired(required) { }
-    NameValue(const QString &name, qlonglong value, bool required = false) :
-        m_sName(name), m_sValue(QString::number(value)), m_bRequired(required) { }
-    NameValue(const QString &name, uint value, bool required = false) :
-        m_sName(name), m_sValue(QString::number(value)), m_bRequired(required) { }
-    NameValue(const QString &name, ulong value, bool required = false) :
-        m_sName(name), m_sValue(QString::number(value)), m_bRequired(required) { }
-    NameValue(const QString &name, qulonglong value, bool required = false) :
-        m_sName(name), m_sValue(QString::number(value)), m_bRequired(required) { }
-    NameValue(const QString &name, bool value, bool required = false) :
-        m_sName(name), m_sValue((value) ? "1" : "0"), m_bRequired(required) { }
+    NameValue(QString name, QString value, bool required = false) :
+        m_sName(std::move(name)), m_sValue(std::move(value)), m_bRequired(required) { }
+    NameValue(QString name, const char *value, bool required = false) :
+        m_sName(std::move(name)), m_sValue(value), m_bRequired(required) { }
+    NameValue(QString name, int value, bool required = false) :
+        m_sName(std::move(name)), m_sValue(QString::number(value)), m_bRequired(required) { }
+    NameValue(QString name, long value, bool required = false) :
+        m_sName(std::move(name)), m_sValue(QString::number(value)), m_bRequired(required) { }
+    NameValue(QString name, qlonglong value, bool required = false) :
+        m_sName(std::move(name)), m_sValue(QString::number(value)), m_bRequired(required) { }
+    NameValue(QString name, uint value, bool required = false) :
+        m_sName(std::move(name)), m_sValue(QString::number(value)), m_bRequired(required) { }
+    NameValue(QString name, ulong value, bool required = false) :
+        m_sName(std::move(name)), m_sValue(QString::number(value)), m_bRequired(required) { }
+    NameValue(QString name, qulonglong value, bool required = false) :
+        m_sName(std::move(name)), m_sValue(QString::number(value)), m_bRequired(required) { }
+    NameValue(QString name, bool value, bool required = false) :
+        m_sName(std::move(name)), m_sValue((value) ? "1" : "0"), m_bRequired(required) { }
     inline NameValue(const NameValue &nv);
     inline NameValue& operator=(const NameValue &nv);
 
@@ -117,11 +121,8 @@ inline NameValue& NameValue::operator=(const NameValue &nv)
 
 inline NameValue::~NameValue()
 {
-    if (m_pAttributes)
-    {
-        delete m_pAttributes;
-        m_pAttributes = nullptr;
-    }
+    delete m_pAttributes;
+    m_pAttributes = nullptr;
 }
 
 inline void NameValue::AddAttribute(const QString &name, const QString &value,

@@ -34,7 +34,7 @@ class MTV_PUBLIC RecordingRule
     Q_DECLARE_TR_FUNCTIONS(RecordingRule);
 
   public:
-    static const int kNumFilters = 12;
+    static const int kNumFilters = 16;
 
     RecordingRule();
    ~RecordingRule() = default;
@@ -65,7 +65,7 @@ class MTV_PUBLIC RecordingRule
 
     bool IsValid(QString &msg);
 
-    static QString SearchTypeToString(const RecSearchType searchType);
+    static QString SearchTypeToString(RecSearchType searchType);
     static QStringList GetTemplateNames(void);
 
     /// Unique Recording Rule ID

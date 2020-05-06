@@ -73,16 +73,16 @@ void FillData::SetRefresh(int day, bool set)
 {
     if (kRefreshClear == day)
     {
-        m_refresh_all = set;
-        m_refresh_day.clear();
+        m_refreshAll = set;
+        m_refreshDay.clear();
     }
     else if (kRefreshAll == day)
     {
-        m_refresh_all = set;
+        m_refreshAll = set;
     }
     else
     {
-        m_refresh_day[(uint)day] = set;
+        m_refreshDay[(uint)day] = set;
     }
 }
 
@@ -92,15 +92,14 @@ bool FillData::GrabDataFromFile(int id, QString &filename)
     ChannelInfoList chanlist;
     QMap<QString, QList<ProgInfo> > proglist;
 
-    m_xmltv_parser.lateInit();
-    if (!m_xmltv_parser.parseFile(filename, &chanlist, &proglist))
+    if (!m_xmltvParser.parseFile(filename, &chanlist, &proglist))
         return false;
 
-    m_chan_data.handleChannels(id, &chanlist);
+    m_chanData.handleChannels(id, &chanlist);
     if (proglist.count() == 0)
     {
         LOG(VB_GENERAL, LOG_INFO, "No programs found in data.");
-        m_endofdata = true;
+        m_endOfData = true;
     }
     else
     {
@@ -148,7 +147,7 @@ bool FillData::GrabData(const Source& source, int offset)
         .arg(xmltv_grabber).arg(configfile).arg(filename);
 
 
-    if (source.xmltvgrabber_prefmethod != "allatonce"  || m_no_allatonce)
+    if (source.xmltvgrabber_prefmethod != "allatonce"  || m_noAllAtOnce)
     {
         // XMLTV Docs don't recommend grabbing one day at a
         // time but the current MythTV code is heavily geared
@@ -162,11 +161,11 @@ bool FillData::GrabData(const Source& source, int offset)
 
     // Append additional arguments passed to mythfilldatabase
     // using --graboptions
-    if (!m_graboptions.isEmpty())
+    if (!m_grabOptions.isEmpty())
     {
-        command += m_graboptions;
+        command += m_grabOptions;
         LOG(VB_XMLTV, LOG_INFO,
-            QString("Using graboptions: %1").arg(m_graboptions));
+            QString("Using graboptions: %1").arg(m_grabOptions));
     }
 
     QString status = QObject::tr("currently running.");
@@ -225,9 +224,11 @@ bool FillData::Run(SourceList &sourcelist)
 {
     SourceList::iterator it;
 
-    QString status, querystr;
+    QString status;
+    QString querystr;
     MSqlQuery query(MSqlQuery::InitCon());
-    QDateTime GuideDataBefore, GuideDataAfter;
+    QDateTime GuideDataBefore;
+    QDateTime GuideDataAfter;
     int failures = 0;
     int externally_handled = 0;
     int total_sources = sourcelist.size();
@@ -235,7 +236,7 @@ bool FillData::Run(SourceList &sourcelist)
 
     QString sidStr = QString("Updating source #%1 (%2) with grabber %3");
 
-    m_need_post_grab_proc = false;
+    m_needPostGrabProc = false;
     int nonewdata = 0;
 
     for (it = sourcelist.begin(); it != sourcelist.end(); ++it)
@@ -272,8 +273,8 @@ bool FillData::Run(SourceList &sourcelist)
                     MythDate::fromString(query.value(0).toString());
         }
 
-        m_channel_update_run = false;
-        m_endofdata = false;
+        m_channelUpdateRun = false;
+        m_endOfData = false;
 
         if (xmltv_grabber == "eitonly")
         {
@@ -343,10 +344,12 @@ bool FillData::Run(SourceList &sourcelist)
                                                  flags);
             grabber_capabilities_proc.Run(25);
             if (grabber_capabilities_proc.Wait() != GENERIC_EXIT_OK)
+            {
                 LOG(VB_GENERAL, LOG_ERR,
                     QString("%1  --capabilities failed or we timed out waiting."                            
                     " You may need to upgrade your xmltv grabber")
                         .arg(xmltv_grabber));
+            }
             else
             {
                 QByteArray result = grabber_capabilities_proc.ReadAll();
@@ -387,10 +390,12 @@ bool FillData::Run(SourceList &sourcelist)
                                            flags);
             grabber_method_proc.Run(15);
             if (grabber_method_proc.Wait() != GENERIC_EXIT_OK)
+            {
                 LOG(VB_GENERAL, LOG_ERR,
                     QString("%1 --preferredmethod failed or we timed out "
                             "waiting. You may need to upgrade your xmltv "
                             "grabber").arg(xmltv_grabber));
+            }
             else
             {
                 QTextStream ostream(grabber_method_proc.ReadAll());
@@ -402,9 +407,9 @@ bool FillData::Run(SourceList &sourcelist)
             }
         }
 
-        m_need_post_grab_proc |= true;
+        m_needPostGrabProc |= true;
 
-        if ((*it).xmltvgrabber_prefmethod == "allatonce" && !m_no_allatonce)
+        if ((*it).xmltvgrabber_prefmethod == "allatonce" && !m_noAllAtOnce)
         {
             if (!GrabData(*it, 0))
                 ++failures;
@@ -419,16 +424,18 @@ bool FillData::Run(SourceList &sourcelist)
             int grabdays = REFRESH_MAX;
 
             grabdays = (m_maxDays > 0)          ? m_maxDays : grabdays;
-            grabdays = (m_only_update_channels) ? 1         : grabdays;
+            grabdays = (m_onlyUpdateChannels)   ? 1         : grabdays;
 
             vector<bool> refresh_request;
-            refresh_request.resize(grabdays, m_refresh_all);
-            if (!m_refresh_all)
+            refresh_request.resize(grabdays, m_refreshAll);
+            if (!m_refreshAll)
+            {
                 // Set up days to grab if all is not specified
                 // If all was specified the vector was initialized
                 // with true in all occurrences.
                 for (int i = 0; i < grabdays; i++)
-                    refresh_request[i] = m_refresh_day[i];
+                    refresh_request[i] = m_refreshDay[i];
+            }
 
             for (int i = 0; i < grabdays; i++)
             {
@@ -620,7 +627,7 @@ bool FillData::Run(SourceList &sourcelist)
                         }
                     }
 
-                    if (m_endofdata)
+                    if (m_endOfData)
                     {
                         LOG(VB_GENERAL, LOG_INFO,
                             "Grabber is no longer returning program data, "
@@ -679,21 +686,25 @@ bool FillData::Run(SourceList &sourcelist)
         return false;
     }
 
-    if (m_only_update_channels && !m_need_post_grab_proc)
+    if (m_onlyUpdateChannels && !m_needPostGrabProc)
         return true;
 
     if (failures == 0)
     {
         if (nonewdata > 0 &&
             (total_sources != externally_handled))
+        {
             status = QObject::tr(
                      "mythfilldatabase ran, but did not insert "
                      "any new data into the Guide for %1 of %2 sources. "
                      "This can indicate a potential grabber failure.")
                      .arg(nonewdata)
                      .arg(total_sources);
+        }
         else
+        {
             status = QObject::tr("Successful.");
+        }
 
         updateLastRunStatus(status);
     }

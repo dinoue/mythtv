@@ -34,6 +34,9 @@ AVCInfo::AVCInfo(const AVCInfo &o) :
 
 AVCInfo &AVCInfo::operator=(const AVCInfo &o)
 {
+    if (this == &o)
+        return *this;
+
     m_port     = o.m_port;
     m_node     = o.m_node;
     m_guid     = o.m_guid;
@@ -83,9 +86,8 @@ bool AVCInfo::GetSubunitInfo(void)
 
 bool AVCInfo::IsSubunitType(int subunit_type) const
 {
-    for (uint i = 0; i < 32; i++)
+    for (int subunit : m_unit_table)
     {
-        int subunit = m_unit_table[i];
         if ((subunit != 0xff) &&
             (subunit & FirewireDevice::kAVCSubunitTypeUnit) == subunit_type)
         {

@@ -54,7 +54,7 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
     Q_OBJECT
   public:
     MythCoreContext(const QString &binversion, QObject *guiContext);
-    virtual ~MythCoreContext();
+    ~MythCoreContext() override;
 
     bool Init(void);
 
@@ -161,13 +161,13 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
     QString GetSettingOnHost(const QString &key, const QString &host,
                              const QString &defaultval = "");
     bool GetBoolSettingOnHost(const QString &key, const QString &host,
-                             bool defaultval = 0);
+                             bool defaultval = false);
     int GetNumSettingOnHost(const QString &key, const QString &host,
                             int defaultval = 0);
     int GetBoolSettingOnHost(const QString &key, const QString &host,
                              int defaultval) = delete;
     bool GetNumSettingOnHost(const QString &key, const QString &host,
-                            bool defaultval = 0) = delete;
+                            bool defaultval = false) = delete;
     double GetFloatSettingOnHost(const QString &key, const QString &host,
                                  double defaultval = 0.0);
 
@@ -194,7 +194,7 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
                                   ResolveType type = ResolveAny,
                                   bool keepscope = false);
     static QString resolveAddress(const QString &host,
-                                  ResolveType = ResolveAny,
+                                  ResolveType type = ResolveAny,
                                   bool keepscope = false) ;
     bool CheckSubnet(const QAbstractSocket *socket);
     bool CheckSubnet(const QHostAddress &peer);
@@ -206,6 +206,7 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
 
     void dispatch(const MythEvent &event);
 
+    void InitPower(bool Create = true);
     void InitLocale(void);
     void ReInitLocale(void);
     MythLocale *GetLocale(void) const;
@@ -264,7 +265,7 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
 
   private:
     Q_DISABLE_COPY(MythCoreContext)
-    MythCoreContextPrivate *d {nullptr};
+    MythCoreContextPrivate *d {nullptr}; // NOLINT(readability-identifier-naming)
 
     void connected(MythSocket *sock) override { (void)sock; } //MythSocketCBs
     void connectionFailed(MythSocket *sock) override { (void)sock; } //MythSocketCBs

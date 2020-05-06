@@ -36,10 +36,8 @@
 #include "mythmainwindow.h"
 #include "mythuihelper.h"
 #include "mythcorecontext.h"
-#if CONFIG_DARWIN
-#include "mythuidefines.h"
-#endif
 #include "cleanupguard.h"
+#include "mythdisplay.h"
 
 #define LOC      QString("MythScreenWizard: ")
 #define LOC_WARN QString("MythScreenWizard, Warning: ")
@@ -83,11 +81,7 @@ static bool resetTheme(QString themedir, const QString badtheme)
 
     MythTranslation::reload();
     GetMythUI()->LoadQtConfig();
-#if CONFIG_DARWIN
-    GetMythMainWindow()->Init(QT_PAINTER);
-#else
     GetMythMainWindow()->Init();
-#endif
     GetMythMainWindow()->ReinitDone();
 
     return RunMenu(themedir, themename);
@@ -97,8 +91,7 @@ static void startAppearWiz(int _x, int _y, int _w, int _h)
 {
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
 
-    ScreenWizard *screenwizard = new ScreenWizard(mainStack,
-                                                        "screenwizard");
+    auto *screenwizard = new ScreenWizard(mainStack, "screenwizard");
     screenwizard->SetInitialSettings(_x, _y, _w, _h);
 
     if (screenwizard->Create())
@@ -109,11 +102,6 @@ static void startAppearWiz(int _x, int _y, int _w, int _h)
 
 int main(int argc, char **argv)
 {
-
-#if CONFIG_OMX_RPI
-    setenv("QT_XCB_GL_INTEGRATION","none",0);
-#endif
-
     MythScreenWizardCommandLineParser cmdline;
     if (!cmdline.Parse(argc, argv))
     {
@@ -133,12 +121,7 @@ int main(int argc, char **argv)
         return GENERIC_EXIT_OK;
     }
 
-
-#ifdef Q_OS_MAC
-    // Without this, we can't set focus to any of the CheckBoxSetting, and most
-    // of the MythPushButton widgets, and they don't use the themed background.
-    QApplication::setDesktopSettingsAware(false);
-#endif
+    MythDisplay::ConfigureQtGUI();
     new QApplication(argc, argv);
     QCoreApplication::setApplicationName(MYTH_APPNAME_MYTHSCREENWIZARD);
 
@@ -207,11 +190,7 @@ int main(int argc, char **argv)
     }
 
     MythMainWindow *mainWindow = GetMythMainWindow();
-#if CONFIG_DARWIN
-    mainWindow->Init(OPENGL2_PAINTER);
-#else
     mainWindow->Init();
-#endif
     mainWindow->setWindowTitle(QObject::tr("MythTV Screen Setup Wizard"));
 
     // We must reload the translation after a language change and this

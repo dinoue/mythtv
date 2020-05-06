@@ -41,8 +41,8 @@
  */
 MythNews::MythNews(MythScreenStack *parent, const QString &name) :
     MythScreenType(parent, name),
-    m_RetrieveTimer(new QTimer(this)),
-    m_UpdateFreq(gCoreContext->GetNumSetting("NewsUpdateFrequency", 30)),
+    m_retrieveTimer(new QTimer(this)),
+    m_updateFreq(gCoreContext->GetNumSetting("NewsUpdateFrequency", 30)),
     m_zoom(gCoreContext->GetSetting("WebBrowserZoomLevel", "1.0")),
     m_browser(gCoreContext->GetSetting("WebBrowserCommand", ""))
 {
@@ -58,12 +58,12 @@ MythNews::MythNews(MythScreenStack *parent, const QString &name) :
     if (!dir.exists())
         dir.mkdir(fileprefix);
 
-    connect(m_RetrieveTimer, SIGNAL(timeout()),
+    connect(m_retrieveTimer, SIGNAL(timeout()),
             this, SLOT(slotRetrieveNews()));
 
-    m_RetrieveTimer->stop();
-    m_RetrieveTimer->setSingleShot(false);
-    m_RetrieveTimer->start(m_TimerTimeout);
+    m_retrieveTimer->stop();
+    m_retrieveTimer->setSingleShot(false);
+    m_retrieveTimer->start(m_timerTimeout);
 }
 
 MythNews::~MythNews()
@@ -125,7 +125,7 @@ bool MythNews::Create(void)
 
 void MythNews::clearSites(void)
 {
-    m_NewsSites.clear();
+    m_newsSites.clear();
     m_sitesList->Reset();
     m_articles.clear();
     m_articlesList->Reset();
@@ -178,18 +178,16 @@ void MythNews::loadSites(void)
         QDateTime time = MythDate::fromSecsSinceEpoch(query.value(3).toLongLong());
 #endif
         bool podcast = query.value(4).toBool();
-        m_NewsSites.push_back(new NewsSite(name, url, time, podcast));
+        m_newsSites.push_back(new NewsSite(name, url, time, podcast));
     }
-    std::sort(m_NewsSites.begin(), m_NewsSites.end(), NewsSite::sortByName);
+    std::sort(m_newsSites.begin(), m_newsSites.end(), NewsSite::sortByName);
 
-    NewsSite::List::iterator it = m_NewsSites.begin();
-    for (; it != m_NewsSites.end(); ++it)
+    for (auto & site : m_newsSites)
     {
-        MythUIButtonListItem *item =
-            new MythUIButtonListItem(m_sitesList, (*it)->name());
-        item->SetData(qVariantFromValue(*it));
+        auto *item = new MythUIButtonListItem(m_sitesList, site->name());
+        item->SetData(QVariant::fromValue(site));
 
-        connect(*it, SIGNAL(finished(NewsSite*)),
+        connect(site, SIGNAL(finished(NewsSite*)),
                 this, SLOT(slotNewsRetrieved(NewsSite*)));
     }
 
@@ -197,7 +195,7 @@ void MythNews::loadSites(void)
 
     if (m_nositesText)
     {
-        if (m_NewsSites.empty())
+        if (m_newsSites.empty())
             m_nositesText->Show();
         else
             m_nositesText->Hide();
@@ -451,23 +449,22 @@ void MythNews::slotRetrieveNews(void)
 {
     QMutexLocker locker(&m_lock);
 
-    if (m_NewsSites.empty())
+    if (m_newsSites.empty())
         return;
 
-    m_RetrieveTimer->stop();
+    m_retrieveTimer->stop();
 
-    NewsSite::List::iterator it = m_NewsSites.begin();
-    for (; it != m_NewsSites.end(); ++it)
+    for (auto & site : m_newsSites)
     {
-        if ((*it)->timeSinceLastUpdate() > m_UpdateFreq)
-            (*it)->retrieve();
+        if (site->timeSinceLastUpdate() > m_updateFreq)
+            site->retrieve();
         else
-            processAndShowNews(*it);
+            processAndShowNews(site);
     }
 
-    m_RetrieveTimer->stop();
-    m_RetrieveTimer->setSingleShot(false);
-    m_RetrieveTimer->start(m_TimerTimeout);
+    m_retrieveTimer->stop();
+    m_retrieveTimer->setSingleShot(false);
+    m_retrieveTimer->start(m_timerTimeout);
 }
 
 void MythNews::slotNewsRetrieved(NewsSite *site)
@@ -493,11 +490,10 @@ void MythNews::cancelRetrieve(void)
 {
     QMutexLocker locker(&m_lock);
 
-    NewsSite::List::iterator it = m_NewsSites.begin();
-    for (; it != m_NewsSites.end(); ++it)
+    for (auto & site : m_newsSites)
     {
-        (*it)->stop();
-        processAndShowNews(*it);
+        site->stop();
+        processAndShowNews(site);
     }
 }
 
@@ -524,12 +520,11 @@ void MythNews::processAndShowNews(NewsSite *site)
     m_articles.clear();
 
     NewsArticle::List articles = site->GetArticleList();
-    NewsArticle::List::iterator it = articles.begin();
-    for (; it != articles.end(); ++it)
+    for (auto & article : articles)
     {
-        MythUIButtonListItem *item =
-            new MythUIButtonListItem(m_articlesList, (*it).title());
-        m_articles[item] = *it;
+        auto *item =
+            new MythUIButtonListItem(m_articlesList, article.title());
+        m_articles[item] = article;
     }
 
     if (m_articlesList->MoveToNamedPosition(currItem))
@@ -543,7 +538,7 @@ void MythNews::slotSiteSelected(MythUIButtonListItem *item)
     if (!item || item->GetData().isNull())
         return;
 
-    NewsSite *site = item->GetData().value<NewsSite*>();
+    auto *site = item->GetData().value<NewsSite*>();
     if (!site)
         return;
 
@@ -551,12 +546,10 @@ void MythNews::slotSiteSelected(MythUIButtonListItem *item)
     m_articles.clear();
 
     NewsArticle::List articles = site->GetArticleList();
-    NewsArticle::List::iterator it = articles.begin();
-    for (; it != articles.end(); ++it)
+    for (auto & article : articles)
     {
-        MythUIButtonListItem *blitem =
-            new MythUIButtonListItem(m_articlesList, (*it).title());
-        m_articles[blitem] = *it;
+        auto *blitem = new MythUIButtonListItem(m_articlesList, article.title());
+        m_articles[blitem] = article;
     }
 
     updateInfoView(item);
@@ -628,8 +621,8 @@ void MythNews::ShowEditDialog(bool edit)
 
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
 
-    MythNewsEditor *mythnewseditor = new MythNewsEditor(site, edit, mainStack,
-                                                        "mythnewseditor");
+    auto *mythnewseditor = new MythNewsEditor(site, edit, mainStack,
+                                              "mythnewseditor");
 
     if (mythnewseditor->Create())
     {
@@ -644,8 +637,7 @@ void MythNews::ShowFeedManager()
 {
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
 
-    MythNewsConfig *mythnewsconfig = new MythNewsConfig(mainStack,
-                                                        "mythnewsconfig");
+    auto *mythnewsconfig = new MythNewsConfig(mainStack, "mythnewsconfig");
 
     if (mythnewsconfig->Create())
     {
@@ -675,7 +667,7 @@ void MythNews::ShowMenu(void)
 
         m_menuPopup->AddButton(tr("Manage Feeds"));
         m_menuPopup->AddButton(tr("Add Feed"));
-        if (!m_NewsSites.empty())
+        if (!m_newsSites.empty())
         {
             m_menuPopup->AddButton(tr("Edit Feed"));
             m_menuPopup->AddButton(tr("Delete Feed"));
@@ -696,7 +688,7 @@ void MythNews::deleteNewsSite(void)
 
     if (siteUIItem && !siteUIItem->GetData().isNull())
     {
-        NewsSite *site = siteUIItem->GetData().value<NewsSite*>();
+        auto *site = siteUIItem->GetData().value<NewsSite*>();
         if (site)
         {
             removeFromDB(site->name());
@@ -717,7 +709,7 @@ void MythNews::customEvent(QEvent *event)
 {
     if (event->type() == DialogCompletionEvent::kEventType)
     {
-        auto dce = dynamic_cast<DialogCompletionEvent*>(event);
+        auto *dce = dynamic_cast<DialogCompletionEvent*>(event);
         if (dce == nullptr)
             return;
 

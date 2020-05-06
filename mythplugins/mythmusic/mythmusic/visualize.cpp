@@ -94,8 +94,8 @@ void LogScale::setMax(int maxscale, int maxrange)
 
     delete [] m_indices;
 
-    long double domain = (long double) maxscale;
-    long double range  = (long double) maxrange;
+    auto domain = (long double) maxscale;
+    auto range  = (long double) maxrange;
     long double x  = 1.0;
     long double dx = 1.0;
     long double e4 = 1.0E-8;
@@ -159,11 +159,12 @@ bool StereoScope::process( VisualNode *node )
         double const step = (double)SAMPLES_DEFAULT_SIZE / m_size.width();
         for ( int i = 0; i < m_size.width(); i++)
         {
-            unsigned long indexTo = (unsigned long)(index + step);
+            auto indexTo = (unsigned long)(index + step);
             if (indexTo == (unsigned long)(index))
                 indexTo = (unsigned long)(index + 1);
 
-            double valL = 0, valR = 0;
+            double valL = 0;
+            double valR = 0;
 #if RUBBERBAND
             if ( m_rubberband ) {
                 valL = m_magnitudes[ i ];
@@ -193,7 +194,7 @@ bool StereoScope::process( VisualNode *node )
                 }
             }
 #endif
-            for (unsigned long s = (unsigned long)index; s < indexTo && s < node->m_length; s++)
+            for (auto s = (unsigned long)index; s < indexTo && s < node->m_length; s++)
             {
                 double adjHeight = static_cast<double>(m_size.height()) / 4.0;
                 double tmpL = ( ( node->m_left ? static_cast<double>(node->m_left[s]) : 0.) *
@@ -375,7 +376,7 @@ bool MonoScope::process( VisualNode *node )
         double const step = (double)SAMPLES_DEFAULT_SIZE / m_size.width();
         for (int i = 0; i < m_size.width(); i++)
         {
-            unsigned long indexTo = (unsigned long)(index + step);
+            auto indexTo = (unsigned long)(index + step);
             if (indexTo == (unsigned long)index)
                 indexTo = (unsigned long)(index + 1);
 
@@ -402,7 +403,7 @@ bool MonoScope::process( VisualNode *node )
                 }
             }
 #endif
-            for (unsigned long s = (unsigned long)index; s < indexTo && s < node->m_length; s++)
+            for (auto s = (unsigned long)index; s < indexTo && s < node->m_length; s++)
             {
                 double tmp = ( static_cast<double>(node->m_left[s]) +
                                (node->m_right ? static_cast<double>(node->m_right[s]) : 0.0) *
@@ -515,9 +516,9 @@ static class StereoScopeFactory : public VisFactory
   public:
     const QString &name(void) const override // VisFactory
     {
-        static QString name = QCoreApplication::translate("Visualizers",
-                                                          "StereoScope");
-        return name;
+        static QString s_name = QCoreApplication::translate("Visualizers",
+                                                            "StereoScope");
+        return s_name;
     }
 
     uint plugins(QStringList *list) const override // VisFactory
@@ -541,9 +542,9 @@ static class MonoScopeFactory : public VisFactory
   public:
     const QString &name(void) const override // VisFactory
     {
-        static QString name = QCoreApplication::translate("Visualizers",
-                                                          "MonoScope");
-        return name;
+        static QString s_name = QCoreApplication::translate("Visualizers",
+                                                            "MonoScope");
+        return s_name;
     }
 
     uint plugins(QStringList *list) const override // VisFactory
@@ -612,16 +613,16 @@ void Spectrum::resize(const QSize &newsize)
     m_scale.setMax(192, m_size.width() / m_analyzerBarWidth);
 
     m_rects.resize( m_scale.range() );
-    unsigned int i = 0;
     int w = 0;
-    for (; i < (uint)m_rects.size(); i++, w += m_analyzerBarWidth)
+    // NOLINTNEXTLINE(modernize-loop-convert)
+    for (uint i = 0; i < (uint)m_rects.size(); i++, w += m_analyzerBarWidth)
     {
         m_rects[i].setRect(w, m_size.height() / 2, m_analyzerBarWidth - 1, 1);
     }
 
-    unsigned int os = m_magnitudes.size();
     m_magnitudes.resize( m_scale.range() * 2 );
-    for (; os < (uint)m_magnitudes.size(); os++)
+    // NOLINTNEXTLINE(modernize-loop-convert)
+    for (uint os = m_magnitudes.size(); os < (uint)m_magnitudes.size(); os++)
     {
         m_magnitudes[os] = 0.0;
     }
@@ -776,9 +777,9 @@ static class SpectrumFactory : public VisFactory
   public:
     const QString &name(void) const override // VisFactory
     {
-        static QString name = QCoreApplication::translate("Visualizers",
-                                                          "Spectrum");
-        return name;
+        static QString s_name = QCoreApplication::translate("Visualizers",
+                                                            "Spectrum");
+        return s_name;
     }
 
     uint plugins(QStringList *list) const override // VisFactory
@@ -800,12 +801,12 @@ static class SpectrumFactory : public VisFactory
 
 Squares::Squares()
 {
-    m_fake_height = m_number_of_squares * m_analyzerBarWidth;
+    m_fakeHeight = m_numberOfSquares * m_analyzerBarWidth;
 }
 
 void Squares::resize (const QSize &newsize) {
     // Trick the spectrum analyzer into calculating 16 rectangles
-    Spectrum::resize (QSize (m_fake_height, m_fake_height));
+    Spectrum::resize (QSize (m_fakeHeight, m_fakeHeight));
     // We have our own copy, Spectrum has it's own...
     m_actualSize = newsize;
 }
@@ -820,12 +821,12 @@ void Squares::drawRect(QPainter *p, QRect *rect, int i, int c, int w, int h)
     if (i % 2 == 0)
     {
         y = c - h;
-        per = double(m_fake_height - rect->top()) / double(m_fake_height);
+        per = double(m_fakeHeight - rect->top()) / double(m_fakeHeight);
     }
     else
     {
         y = c;
-        per = double(rect->bottom()) / double(m_fake_height);
+        per = double(rect->bottom()) / double(m_fakeHeight);
     }
 
     per = clamp(per, 1.0, 0.0);
@@ -863,9 +864,9 @@ static class SquaresFactory : public VisFactory
   public:
     const QString &name(void) const override // VisFactory
     {
-        static QString name = QCoreApplication::translate("Visualizers",
-                                                          "Squares");
-        return name;
+        static QString s_name = QCoreApplication::translate("Visualizers",
+                                                            "Squares");
+        return s_name;
     }
 
     uint plugins(QStringList *list) const override // VisFactory
@@ -1028,10 +1029,8 @@ void Piano::resize(const QSize &newsize)
     }
 
     m_magnitude.resize(PIANO_N);
-    for (uint key = 0; key < (uint)m_magnitude.size(); key++)
-    {
-        m_magnitude[key] = 0.0;
-    }
+    for (double & key : m_magnitude)
+        key = 0.0;
 }
 
 unsigned long Piano::getDesiredSamples(void)
@@ -1310,9 +1309,9 @@ static class PianoFactory : public VisFactory
   public:
     const QString &name(void) const override // VisFactory
     {
-        static QString name = QCoreApplication::translate("Visualizers",
-                                                          "Piano");
-        return name;
+        static QString s_name = QCoreApplication::translate("Visualizers",
+                                                            "Piano");
+        return s_name;
     }
 
     uint plugins(QStringList *list) const override // VisFactory
@@ -1455,7 +1454,7 @@ bool AlbumArt::draw(QPainter *p, const QColor &back)
 
         if (imageFilename.startsWith("myth://"))
         {
-            RemoteFile *rf = new RemoteFile(imageFilename, false, false, 0);
+            auto *rf = new RemoteFile(imageFilename, false, false, 0);
 
             QByteArray data;
             bool ret = rf->SaveAs(data);
@@ -1503,9 +1502,9 @@ static class AlbumArtFactory : public VisFactory
   public:
     const QString &name(void) const override // VisFactory
     {
-        static QString name = QCoreApplication::translate("Visualizers",
-                                                          "AlbumArt");
-        return name;
+        static QString s_name = QCoreApplication::translate("Visualizers",
+                                                            "AlbumArt");
+        return s_name;
     }
 
     uint plugins(QStringList *list) const override // VisFactory
@@ -1549,9 +1548,9 @@ static class BlankFactory : public VisFactory
   public:
     const QString &name(void) const override // VisFactory
     {
-        static QString name = QCoreApplication::translate("Visualizers",
-                                                          "Blank");
-        return name;
+        static QString s_name = QCoreApplication::translate("Visualizers",
+                                                            "Blank");
+        return s_name;
     }
 
     uint plugins(QStringList *list) const override // VisFactory

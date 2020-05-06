@@ -10,8 +10,8 @@ ScanStreamData::ScanStreamData(bool no_default_pid, DVBKind dvbkind) :
     DVBStreamData(0, 0, -1, -1, true, dvbkind),
     m_no_default_pid(no_default_pid)
 {
-    if (m_no_default_pid)
-        _pids_listening.clear();
+    if (m_noDefaultPid)
+        m_pidsListening.clear();
 }
 
 ScanStreamData::~ScanStreamData() { ; }
@@ -35,24 +35,52 @@ bool ScanStreamData::HandleTables(uint pid, const PSIPTable &psip)
     return h0 || h1;
 }
 
+void ScanStreamData::AddAllListeningPIDs(void)
+{
+    // MPEG
+    AddListeningPID(MPEG_PAT_PID);
+    AddListeningPID(MPEG_CAT_PID);
+
+    // ATSC
+    AddListeningPID(ATSC_PSIP_PID);
+    AddListeningPID(SCTE_PSIP_PID);
+
+    // DVB
+    AddListeningPID(DVB_NIT_PID);
+    AddListeningPID(DVB_SDT_PID);
+    AddListeningPID(DVB_TDT_PID);
+
+    // Extra
+    if (m_dvbUkFreesatSi)
+        AddListeningPID(FREESAT_SI_PID);
+}
+
 void ScanStreamData::Reset(void)
 {
     MPEGStreamData::Reset(-1);
     ATSCStreamData::Reset(-1,-1);
     DVBStreamData::Reset(0,0,-1);
 
-    if (m_no_default_pid)
+    if (m_noDefaultPid)
     {
-        _pids_listening.clear();
+        m_pidsListening.clear();
         return;
     }
 
-    AddListeningPID(MPEG_PAT_PID);
-    AddListeningPID(ATSC_PSIP_PID);
-    AddListeningPID(DVB_NIT_PID);
-    AddListeningPID(DVB_SDT_PID);
-    if (m_dvb_uk_freesat_si)
-        AddListeningPID(FREESAT_SI_PID);
+    AddAllListeningPIDs();
+}
+
+void ScanStreamData::Reset(uint desired_netid, uint desired_tsid, int desired_serviceid)
+{
+    DVBStreamData::Reset(desired_netid,  desired_tsid, desired_serviceid);
+
+    if (m_noDefaultPid)
+    {
+        m_pidsListening.clear();
+        return;
+    }
+
+    AddAllListeningPIDs();
 }
 
 QString ScanStreamData::GetSIStandard(const QString& guess) const
@@ -63,13 +91,10 @@ QString ScanStreamData::GetSIStandard(const QString& guess) const
     if (HasCachedAnyNIT())
         return "dvb";
 
-    QMutexLocker locker(&_cache_lock);
+    QMutexLocker locker(&m_cacheLock);
 
-    pmt_cache_t::const_iterator it = _cached_pmts.begin();
-    for (; it != _cached_pmts.end(); ++it)
+    foreach (auto pmt, m_cachedPmts)
     {
-        ProgramMapTable *pmt = *it;
-
         for (uint i = 0; (guess != "dvb") && (i < pmt->StreamCount()); i++)
         {
             if (StreamID::OpenCableVideo == pmt->StreamType(i))
@@ -80,9 +105,9 @@ QString ScanStreamData::GetSIStandard(const QString& guess) const
             pmt->ProgramInfo(), pmt->ProgramInfoLength(),
             DescriptorID::registration);
 
-        for (size_t i = 0; i < descs.size(); i++)
+        for (auto & desc : descs)
         {
-            RegistrationDescriptor reg(descs[i]);
+            RegistrationDescriptor reg(desc);
             if (!reg.IsValid())
                 continue;
             if (reg.FormatIdentifierString() == "SCTE")
@@ -94,7 +119,7 @@ QString ScanStreamData::GetSIStandard(const QString& guess) const
 }
 
 
-bool ScanStreamData::DeleteCachedTable(PSIPTable *psip) const
+bool ScanStreamData::DeleteCachedTable(const PSIPTable *psip) const
 {
     if (!psip)
         return false;

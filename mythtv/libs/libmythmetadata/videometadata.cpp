@@ -26,9 +26,9 @@ using namespace std;
 class VideoMetadataImp
 {
   public:
-    typedef VideoMetadata::genre_list genre_list;
-    typedef VideoMetadata::country_list country_list;
-    typedef VideoMetadata::cast_list cast_list;
+    using genre_list = VideoMetadata::genre_list;
+    using country_list = VideoMetadata::country_list;
+    using cast_list = VideoMetadata::cast_list;
 
   public:
     VideoMetadataImp(QString filename, QString sortFilename,
@@ -418,17 +418,17 @@ bool VideoMetadataImp::removeDir(const QString &dirName)
         return d.rmdir(dirName);
     }
 
-    for (QFileInfoList::iterator p = contents.begin(); p != contents.end(); ++p)
+    foreach (auto & entry, contents)
     {
-        if (p->isDir())
+        if (entry.isDir())
         {
-            QString fileName = p->fileName();
+            QString fileName = entry.fileName();
             if (!removeDir(fileName))
                 return false;
         }
         else
         {
-            if (!QFile(p->fileName()).remove())
+            if (!QFile(entry.fileName()).remove())
                 return false;
         }
     }
@@ -499,13 +499,12 @@ void VideoMetadataImp::fillGenres()
     if (vgm.get(m_id, genres))
     {
         VideoGenre &vg = VideoGenre::getGenre();
-        for (VideoGenreMap::entry::values_type::const_iterator p =
-             genres.values.begin(); p != genres.values.end(); ++p)
+        for (long value : genres.values)
         {
             // Just add empty string for no-name genres
             QString name;
-            vg.get(*p, name);
-            m_genres.push_back(genre_list::value_type(*p, name));
+            vg.get(value, name);
+            m_genres.push_back(genre_list::value_type(value, name));
         }
     }
 }
@@ -518,13 +517,12 @@ void VideoMetadataImp::fillCountries()
     if (vcm.get(m_id, countries))
     {
         VideoCountry &vc = VideoCountry::getCountry();
-        for (VideoCountryMap::entry::values_type::const_iterator p =
-             countries.values.begin(); p != countries.values.end(); ++p)
+        for (long value : countries.values)
         {
             // Just add empty string for no-name countries
             QString name;
-            vc.get(*p, name);
-            m_countries.push_back(country_list::value_type(*p, name));
+            vc.get(value, name);
+            m_countries.push_back(country_list::value_type(value, name));
         }
     }
 }
@@ -537,13 +535,12 @@ void VideoMetadataImp::fillCast()
     if (vcm.get(m_id, cast))
     {
         VideoCast &vc = VideoCast::GetCast();
-        for (VideoCastMap::entry::values_type::const_iterator p =
-             cast.values.begin(); p != cast.values.end(); ++p)
+        for (long value : cast.values)
         {
             // Just add empty string for no-name cast
             QString name;
-            vc.get(*p, name);
-            m_cast.push_back(cast_list::value_type(*p, name));
+            vc.get(value, name);
+            m_cast.push_back(cast_list::value_type(value, name));
         }
     }
 }
@@ -827,7 +824,7 @@ void VideoMetadataImp::updateGenres()
     VideoGenreMap::getGenreMap().remove(m_id);
 
     // ensure that all genres we have are in the DB
-    genre_list::iterator genre = m_genres.begin();
+    auto genre = m_genres.begin();
     while (genre != m_genres.end())
     {
         if (!genre->second.trimmed().isEmpty())
@@ -848,7 +845,7 @@ void VideoMetadataImp::updateCountries()
     // remove countries for this video
     VideoCountryMap::getCountryMap().remove(m_id);
 
-    country_list::iterator country = m_countries.begin();
+    auto country = m_countries.begin();
     while (country != m_countries.end())
     {
         if (!country->second.trimmed().isEmpty())
@@ -869,7 +866,7 @@ void VideoMetadataImp::updateCast()
     VideoCastMap::getCastMap().remove(m_id);
 
     // ensure that all cast we have are in the DB
-    cast_list::iterator cast = m_cast.begin();
+    auto cast = m_cast.begin();
     while (cast != m_cast.end())
     {
         if (!cast->second.trimmed().isEmpty())

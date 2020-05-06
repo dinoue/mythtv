@@ -198,7 +198,7 @@ RingBuffer *RingBuffer::Create(
     if (!mythurl && lower.endsWith(".vob") && lfilename.contains("/VIDEO_TS/"))
     {
         LOG(VB_PLAYBACK, LOG_INFO, "DVD VOB at " + lfilename);
-        DVDStream *s = new DVDStream(lfilename);
+        auto *s = new DVDStream(lfilename);
         if (s && s->IsOpen())
             return s;
 
@@ -344,7 +344,7 @@ void RingBuffer::UpdatePlaySpeed(float play_speed)
 }
 
 /** \fn RingBuffer::SetBufferSizeFactors(bool, bool)
- *  \brief Tells RingBuffer that the raw bitrate may be innacurate and the
+ *  \brief Tells RingBuffer that the raw bitrate may be inaccurate and the
  *         underlying container is matroska, both of which may require a larger
  *         buffer size.
  */
@@ -519,7 +519,7 @@ long long RingBuffer::Seek(long long pos, int whence, bool has_lock)
         m_rwLock.lockForWrite();
     }
 
-    long long ret;
+    long long ret = 0;
 
     if (m_readInternalMode)
     {
@@ -882,7 +882,8 @@ void RingBuffer::run(void)
     RunProlog();
 
     // These variables are used to adjust the read block size
-    struct timeval lastread {}, now {};
+    struct timeval lastread {};
+    struct timeval now {};
     int readtimeavg = 300;
     bool ignore_for_read_timing = true;
     int eofreads = 0;
@@ -1532,7 +1533,7 @@ int RingBuffer::ReadPriv(void *buf, int count, bool peek)
 
     LOG(VB_FILE, LOG_DEBUG, LOC + loc_desc + " -- copying data");
 
-    int rpos;
+    int rpos = 0;
     if (m_rbrPos + m_readOffset > (int) m_bufferSize)
     {
         rpos = (m_rbrPos + m_readOffset) - m_bufferSize;
@@ -1599,7 +1600,7 @@ int RingBuffer::Read(void *buf, int count)
 QString RingBuffer::BitrateToString(uint64_t rate, bool hz)
 {
     QString msg;
-    float bitrate;
+    float bitrate = NAN;
     int range = 0;
     if (rate < 1)
     {
@@ -1655,9 +1656,9 @@ uint64_t RingBuffer::UpdateDecoderRate(uint64_t latest)
         return 0;
 
     // TODO use QDateTime once we've moved to Qt 4.7
-    static QTime midnight = QTime(0, 0, 0);
+    static QTime s_midnight = QTime(0, 0, 0);
     QTime now = QTime::currentTime();
-    qint64 age = midnight.msecsTo(now);
+    qint64 age = s_midnight.msecsTo(now);
     qint64 oldest = age - 1000;
 
     m_decoderReadLock.lock();
@@ -1675,7 +1676,7 @@ uint64_t RingBuffer::UpdateDecoderRate(uint64_t latest)
             total += it.value();
     }
 
-    uint64_t average = (uint64_t)((double)total * 8.0);
+    auto average = (uint64_t)((double)total * 8.0);
     m_decoderReadLock.unlock();
 
     LOG(VB_FILE, LOG_INFO, LOC + QString("Decoder read speed: %1 %2")
@@ -1689,9 +1690,9 @@ uint64_t RingBuffer::UpdateStorageRate(uint64_t latest)
         return 0;
 
     // TODO use QDateTime once we've moved to Qt 4.7
-    static QTime midnight = QTime(0, 0, 0);
+    static QTime s_midnight = QTime(0, 0, 0);
     QTime now = QTime::currentTime();
-    qint64 age = midnight.msecsTo(now);
+    qint64 age = s_midnight.msecsTo(now);
     qint64 oldest = age - 1000;
 
     m_storageReadLock.lock();

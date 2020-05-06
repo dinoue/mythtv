@@ -27,6 +27,21 @@ const double DEFAULT_WEIGHT = std::pow(0.5, TRAILING_BETA_SHAPE - 1) *
 //! The edges of the distribution get clipped to avoid a singularity.
 const qint64 BETA_CLIP = 60 * 60 * 24;
 
+void MarkedFiles::Add(const ImageIdList& newIds)
+{
+    for (int newid : newIds)
+        insert(newid);
+}
+
+void MarkedFiles::Invert(const ImageIdList &all)
+{
+    QSet tmp;
+    for (int tmpint : all)
+        tmp.insert(tmpint);
+    for (int tmpint : *this)
+        tmp.remove(tmpint);
+    swap(tmp);
+}
 
 /*!
  \brief Get all images/dirs in view
@@ -74,7 +89,8 @@ bool FlatView::Update(int id)
         return false;
 
     // Get updated image
-    ImageList files, dirs;
+    ImageList files;
+    ImageList dirs;
     ImageIdList ids = ImageIdList() << id;
     if (m_mgr.GetImages(ids, files, dirs) != 1 || files.size() != 1)
         return false;
@@ -258,7 +274,7 @@ void FlatView::Populate(ImageList &files)
             double     maxWeight = weights.last();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5,10,0)
-            auto randgen = QRandomGenerator::global();
+            auto *randgen = QRandomGenerator::global();
 #else
             qsrand(QTime::currentTime().msec());
 #endif
@@ -358,7 +374,8 @@ bool FlatView::LoadFromDb(int parentId)
     m_parentId = parentId;
 
     // Load child images of the parent
-    ImageList files, dirs;
+    ImageList files;
+    ImageList dirs;
     m_mgr.GetChildren(m_parentId, files, dirs);
 
     // Load gallery datastore with current dir
@@ -445,8 +462,8 @@ void FlatView::Cache(int id, int parent, const QString &url, const QString &thum
 QString DirCacheEntry::ToString(int id) const
 {
     QStringList ids;
-    for (int i = 0; i < m_thumbs.size(); ++i)
-        ids << QString::number(m_thumbs.at(i).first);
+    foreach (const auto & thumb, m_thumbs)
+        ids << QString::number(thumb.first);
     return QString("Dir %1 (%2, %3) Thumbs %4 (%5) Parent %6")
             .arg(id).arg(m_fileCount).arg(m_dirCount).arg(ids.join(","))
             .arg(m_thumbCount).arg(m_parent);
@@ -486,7 +503,8 @@ subtree.
 bool DirectoryView::LoadFromDb(int parentId)
 {
     // Determine parent (defaulting to ancestor) & get initial children
-    ImageList files, dirs;
+    ImageList files;
+    ImageList dirs;
     ImagePtr parent;
     int count = 0;
     // Root is guaranteed to return at least 1 item
@@ -561,7 +579,8 @@ void DirectoryView::LoadDirThumbs(ImageItem &parent, int thumbsNeeded, int level
         return;
 
     // Load child images & dirs
-    ImageList files, dirs;
+    ImageList files;
+    ImageList dirs;
     m_mgr.GetChildren(parent.m_id, files, dirs);
 
     PopulateThumbs(parent, thumbsNeeded, files, dirs, level);
@@ -601,7 +620,8 @@ void DirectoryView::PopulateThumbs(ImageItem &parent, int thumbsNeeded,
     }
 
     // Children to use as thumbnails
-    ImageList thumbFiles, thumbDirs;
+    ImageList thumbFiles;
+    ImageList thumbDirs;
 
     if (!userIm)
     {
@@ -631,8 +651,10 @@ void DirectoryView::PopulateThumbs(ImageItem &parent, int thumbsNeeded,
         // Prevent lengthy/infinite recursion due to deep/cyclic folder
         // structures
         if (++level > 10)
+        {
             LOG(VB_GENERAL, LOG_NOTICE, LOC +
                 "Directory thumbnails are more than 10 levels deep");
+        }
         else
         {
             // Recursively load subdir thumbs to try to get 1 thumb from each

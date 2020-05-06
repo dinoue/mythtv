@@ -173,6 +173,7 @@ class Dvr : public DvrServices
                                                 uint      PreferredInput,
                                                 int       StartOffset,
                                                 int       EndOffset,
+                                                QDateTime lastrectsRaw,
                                                 QString   DupMethod,
                                                 QString   DupIn,
                                                 uint      Filter,
@@ -316,7 +317,7 @@ class ScriptableDvr : public QObject
 
     public:
 
-        Q_INVOKABLE ScriptableDvr( QScriptEngine *pEngine, QObject *parent = nullptr ) : QObject( parent )
+        Q_INVOKABLE explicit ScriptableDvr( QScriptEngine *pEngine, QObject *parent = nullptr ) : QObject( parent )
         {
             m_pEngine = pEngine;
         }
@@ -491,7 +492,8 @@ class ScriptableDvr : public QObject
                                     rule->Inetref(),        rule->Type(),
                                     rule->SearchType(),     rule->RecPriority(),
                                     rule->PreferredInput(), rule->StartOffset(),
-                                    rule->EndOffset(),      rule->DupMethod(),
+                                    rule->EndOffset(),      rule->LastRecorded(),
+                                    rule->DupMethod(),
                                     rule->DupIn(),          rule->Filter(),
                                     rule->RecProfile(),     rule->RecGroup(),
                                     rule->StorageGroup(),   rule->PlayGroup(),
@@ -672,6 +674,7 @@ class ScriptableDvr : public QObject
 
 };
 
+// NOLINTNEXTLINE(modernize-use-auto)
 Q_SCRIPT_DECLARE_QMETAOBJECT_MYTHTV( ScriptableDvr, QObject*)
 
 #endif

@@ -39,14 +39,40 @@ using std::max;
 QEvent::Type MetadataFactoryNoResult::kEventType =
     (QEvent::Type) QEvent::registerEventType();
 
+MetadataFactoryNoResult::~MetadataFactoryNoResult()
+{
+    if (m_result)
+    {
+        m_result->DecrRef();
+        m_result = nullptr;
+    }
+}
+
 QEvent::Type MetadataFactorySingleResult::kEventType =
     (QEvent::Type) QEvent::registerEventType();
+
+MetadataFactorySingleResult::~MetadataFactorySingleResult()
+{
+    if (m_result)
+    {
+        m_result->DecrRef();
+        m_result = nullptr;
+    }
+}
 
 QEvent::Type MetadataFactoryMultiResult::kEventType =
     (QEvent::Type) QEvent::registerEventType();
 
+MetadataFactoryMultiResult::~MetadataFactoryMultiResult()
+{
+}
+
 QEvent::Type MetadataFactoryVideoChanges::kEventType =
     (QEvent::Type) QEvent::registerEventType();
+
+MetadataFactoryVideoChanges::~MetadataFactoryVideoChanges()
+{
+}
 
 MetadataFactory::MetadataFactory(QObject *parent) :
     QObject(parent)
@@ -87,12 +113,12 @@ void MetadataFactory::Lookup(RecordingRule *recrule, bool automatic,
     if (!recrule)
         return;
 
-    MetadataLookup *lookup = new MetadataLookup();
+    auto *lookup = new MetadataLookup();
 
     lookup->SetStep(kLookupSearch);
     lookup->SetType(kMetadataRecording);
     lookup->SetSubtype(GuessLookupType(recrule));
-    lookup->SetData(qVariantFromValue(recrule));
+    lookup->SetData(QVariant::fromValue(recrule));
     lookup->SetAutomatic(automatic);
     lookup->SetHandleImages(getimages);
     lookup->SetAllowGeneric(allowgeneric);
@@ -115,12 +141,12 @@ void MetadataFactory::Lookup(ProgramInfo *pginfo, bool automatic,
     if (!pginfo)
         return;
 
-    MetadataLookup *lookup = new MetadataLookup();
+    auto *lookup = new MetadataLookup();
 
     lookup->SetStep(kLookupSearch);
     lookup->SetType(kMetadataRecording);
     lookup->SetSubtype(GuessLookupType(pginfo));
-    lookup->SetData(qVariantFromValue(pginfo));
+    lookup->SetData(QVariant::fromValue(pginfo));
     lookup->SetAutomatic(automatic);
     lookup->SetHandleImages(getimages);
     lookup->SetAllowGeneric(allowgeneric);
@@ -143,12 +169,12 @@ void MetadataFactory::Lookup(VideoMetadata *metadata, bool automatic,
     if (!metadata)
         return;
 
-    MetadataLookup *lookup = new MetadataLookup();
+    auto *lookup = new MetadataLookup();
 
     lookup->SetStep(kLookupSearch);
     lookup->SetType(kMetadataVideo);
     lookup->SetSubtype(GuessLookupType(metadata));
-    lookup->SetData(qVariantFromValue(metadata));
+    lookup->SetData(QVariant::fromValue(metadata));
     lookup->SetAutomatic(automatic);
     lookup->SetHandleImages(getimages);
     lookup->SetAllowGeneric(allowgeneric);
@@ -186,7 +212,7 @@ META_PUBLIC MetadataLookupList MetadataFactory::SynchronousLookup(const QString&
                                                       const QString& grabber,
                                                       bool allowgeneric)
 {
-    MetadataLookup *lookup = new MetadataLookup();
+    auto *lookup = new MetadataLookup();
 
     lookup->SetStep(kLookupSearch);
     lookup->SetType(kMetadataRecording);
@@ -362,7 +388,7 @@ void MetadataFactory::OnVideoResult(MetadataLookup *lookup)
     if (!lookup)
        return;
 
-    VideoMetadata *metadata = lookup->GetData().value<VideoMetadata *>();
+    auto *metadata = lookup->GetData().value<VideoMetadata *>();
 
     if (!metadata)
         return;
@@ -508,7 +534,7 @@ void MetadataFactory::customEvent(QEvent *levent)
 {
     if (levent->type() == MetadataLookupEvent::kEventType)
     {
-        auto lue = dynamic_cast<MetadataLookupEvent *>(levent);
+        auto *lue = dynamic_cast<MetadataLookupEvent *>(levent);
         if (lue == nullptr)
             return;
 
@@ -531,7 +557,7 @@ void MetadataFactory::customEvent(QEvent *levent)
     }
     else if (levent->type() == MetadataLookupFailure::kEventType)
     {
-        auto luf = dynamic_cast<MetadataLookupFailure *>(levent);
+        auto *luf = dynamic_cast<MetadataLookupFailure *>(levent);
         if (luf == nullptr)
             return;
 
@@ -551,7 +577,7 @@ void MetadataFactory::customEvent(QEvent *levent)
     }
     else if (levent->type() == ImageDLEvent::kEventType)
     {
-        ImageDLEvent *ide = dynamic_cast<ImageDLEvent *>(levent);
+        auto *ide = dynamic_cast<ImageDLEvent *>(levent);
         if (ide == nullptr)
             return;
 
@@ -566,7 +592,7 @@ void MetadataFactory::customEvent(QEvent *levent)
     }
     else if (levent->type() == ImageDLFailureEvent::kEventType)
     {
-        ImageDLFailureEvent *ide = dynamic_cast<ImageDLFailureEvent *>(levent);
+        auto *ide = dynamic_cast<ImageDLFailureEvent *>(levent);
         if (ide == nullptr)
             return;
 
@@ -581,7 +607,7 @@ void MetadataFactory::customEvent(QEvent *levent)
     }
     else if (levent->type() == VideoScanChanges::kEventType)
     {
-        VideoScanChanges *vsc = dynamic_cast<VideoScanChanges *>(levent);
+        auto *vsc = dynamic_cast<VideoScanChanges *>(levent);
         if (!vsc)
             return;
 
@@ -597,9 +623,11 @@ void MetadataFactory::customEvent(QEvent *levent)
                 .arg(deletions.count()));
 
             if (parent())
+            {
                 QCoreApplication::postEvent(parent(),
                     new MetadataFactoryVideoChanges(additions, moves,
                                                     deletions));
+            }
         }
         else
         {
@@ -642,7 +670,7 @@ LookupType GuessLookupType(ProgramInfo *pginfo)
     if ((!pginfo->GetSubtitle().isEmpty() || pginfo->GetEpisode() > 0) &&
        (catType == ProgramInfo::kCategorySeries ||
         catType == ProgramInfo::kCategoryTVShow))
-        ret = kProbableTelevision;
+        ret = kProbableTelevision; // NOLINT(bugprone-branch-clone)
     else if (catType == ProgramInfo::kCategoryMovie)
         ret = kProbableMovie;
     else if (pginfo->GetSeason() > 0 || pginfo->GetEpisode() > 0 ||
@@ -658,7 +686,7 @@ LookupType GuessLookupType(ProgramInfo *pginfo)
         // recording have an inetref, season, episode, or
         // subtitle, it's *probably* a movie.  If it's some
         // weird combination of both, we've got to try everything.
-        RecordingRule *rule = new RecordingRule();
+        auto *rule = new RecordingRule();
         rule->m_recordID = pginfo->GetRecordingRuleID();
         rule->Load();
         int ruleepisode = rule->m_episode;

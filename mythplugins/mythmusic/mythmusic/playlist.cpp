@@ -164,6 +164,8 @@ void Playlist::shuffleTracks(MusicPlayer::ShuffleMode shuffleMode)
 
             for (int x = 0; x < m_songs.count(); x++)
             {
+                // Pseudo-random is good enough. Don't need a true random.
+                // NOLINTNEXTLINE(cert-msc30-c,cert-msc50-cpp)
                 songMap.insert(rand(), m_songs.at(x));
             }
 
@@ -252,7 +254,8 @@ void Playlist::shuffleTracks(MusicPlayer::ShuffleMode shuffleMode)
                     double lastplaydbl = mdata->LastPlay().toSecsSinceEpoch();
 #endif
                     double ratingValue = (double)(rating) / 10;
-                    double playcountValue = NAN, lastplayValue = NAN;
+                    double playcountValue = NAN;
+                    double lastplayValue = NAN;
 
                     if (playcountMax == playcountMin)
                         playcountValue = 0;
@@ -276,8 +279,8 @@ void Playlist::shuffleTracks(MusicPlayer::ShuffleMode shuffleMode)
             // then we divide weights with the number of songs in the rating class
             // (more songs in a class ==> lower weight, without affecting other classes)
             double totalWeights = 0;
-            std::map<int,double>::iterator weightsIt, weightsEnd = weights.end();
-            for (weightsIt = weights.begin() ; weightsIt != weightsEnd ; ++weightsIt)
+            auto weightsEnd = weights.end();
+            for (auto weightsIt = weights.begin() ; weightsIt != weightsEnd ; ++weightsIt)
             {
                 weightsIt->second /= ratingCounts[ratings[weightsIt->first]];
                 totalWeights += weightsIt->second;
@@ -286,12 +289,13 @@ void Playlist::shuffleTracks(MusicPlayer::ShuffleMode shuffleMode)
             // then we get a random order, balanced with relative weights of remaining songs
             std::map<int,uint32_t> order;
             uint32_t orderCpt = 1;
-            std::map<int,double>::iterator weightIt, weightEnd;
             while (!weights.empty())
             {
+                // Pseudo-random is good enough. Don't need a true random.
+                // NOLINTNEXTLINE(cert-msc30-c,cert-msc50-cpp)
                 double hit = totalWeights * (double)rand() / (double)RAND_MAX;
-                weightEnd = weights.end();
-                weightIt = weights.begin();
+                auto weightEnd = weights.end();
+                auto weightIt = weights.begin();
                 double pos = 0;
                 while (weightIt != weightEnd)
                 {
@@ -337,7 +341,7 @@ void Playlist::shuffleTracks(MusicPlayer::ShuffleMode shuffleMode)
         {
             // "intellegent/album" order
 
-            typedef map<QString, uint32_t> AlbumMap;
+            using AlbumMap = map<QString, uint32_t>;
             AlbumMap                       album_map;
             AlbumMap::iterator             Ialbum;
             QString                        album;
@@ -405,7 +409,7 @@ void Playlist::shuffleTracks(MusicPlayer::ShuffleMode shuffleMode)
         {
             // "intellegent/album" order
 
-            typedef map<QString, uint32_t> ArtistMap;
+            using ArtistMap = map<QString, uint32_t>;
             ArtistMap                      artist_map;
             ArtistMap::iterator            Iartist;
             QString                        artist;
@@ -472,11 +476,9 @@ void Playlist::shuffleTracks(MusicPlayer::ShuffleMode shuffleMode)
         default:
         {
             // copy the raw song list to the shuffled track list
-            SongList::const_iterator it = m_songs.begin();
-            for (; it != m_songs.end(); ++it)
-            {
+            // NOLINTNEXTLINE(modernize-loop-convert)
+            for (auto it = m_songs.begin(); it != m_songs.end(); ++it)
                 m_shuffledSongs.append(*it);
-            }
 
             break;
         }
@@ -505,7 +507,8 @@ void Playlist::describeYourself(void) const
 
 void Playlist::getStats(uint *trackCount, uint *totalLength, uint currenttrack, uint *playedLength) const
 {
-    uint64_t total = 0, played = 0;
+    uint64_t total = 0;
+    uint64_t played = 0;
 
     *trackCount = m_shuffledSongs.size();
 
@@ -647,10 +650,9 @@ void Playlist::fillSongsFromSonglist(const QString& songList)
     bool badTrack = false;
 
     QStringList list = songList.split(",", QString::SkipEmptyParts);
-    QStringList::iterator it = list.begin();
-    for (; it != list.end(); ++it)
+    foreach (auto & song, list)
     {
-        MusicMetadata::IdType id = (*it).toUInt();
+        MusicMetadata::IdType id = song.toUInt();
         int repo = ID_TO_REPO(id);
         if (repo == RT_Radio)
         {
@@ -752,13 +754,12 @@ void Playlist::fillSonglistFromQuery(const QString& whereClause,
         case PL_INSERTAFTERCURRENT:
         {
             QStringList list = orig_songlist.split(",", QString::SkipEmptyParts);
-            QStringList::iterator it = list.begin();
             bool bFound = false;
             QString tempList;
-            for (; it != list.end(); ++it)
+            foreach (auto & song, list)
             {
-                int an_int = (*it).toInt();
-                tempList += "," + *it;
+                int an_int = song.toInt();
+                tempList += "," + song;
                 if (!bFound && an_int == currentTrackID)
                 {
                     bFound = true;
@@ -822,13 +823,12 @@ void Playlist::fillSonglistFromList(const QList<int> &songList,
         case PL_INSERTAFTERCURRENT:
         {
             QStringList list = orig_songlist.split(",", QString::SkipEmptyParts);
-            QStringList::iterator it = list.begin();
             bool bFound = false;
             QString tempList;
-            for (; it != list.end(); ++it)
+            foreach (auto & song, list)
             {
-                int an_int = (*it).toInt();
-                tempList += "," + *it;
+                int an_int = song.toInt();
+                tempList += "," + song;
                 if (!bFound && an_int == currentTrackID)
                 {
                     bFound = true;
@@ -962,8 +962,10 @@ void Playlist::fillSonglistFromSmartPlaylist(const QString& category, const QStr
             QString value1 = query.value(2).toString();
             QString value2 = query.value(3).toString();
             if (!bFirst)
+            {
                 whereClause += matchType + getCriteriaSQL(fieldName,
                                            operatorName, value1, value2);
+            }
             else
             {
                bFirst = false;
@@ -1014,7 +1016,8 @@ void Playlist::savePlaylist(const QString& a_name, const QString& a_host)
     QString rawSonglist = toRawSonglist(true, true);
 
     MSqlQuery query(MSqlQuery::InitCon());
-    uint songcount = 0, playtime = 0;
+    uint songcount = 0;
+    uint playtime = 0;
 
     getStats(&songcount, &playtime);
 
@@ -1069,13 +1072,12 @@ QString Playlist::removeDuplicateTracks(const QString &orig_songlist, const QStr
 {
     QStringList curList = orig_songlist.split(",", QString::SkipEmptyParts);
     QStringList newList = new_songlist.split(",", QString::SkipEmptyParts);
-    QStringList::iterator it = newList.begin();
     QString songlist;
 
-    for (; it != newList.end(); ++it)
+    foreach (auto & song, newList)
     {
-        if (curList.indexOf(*it) == -1)
-            songlist += "," + *it;
+        if (curList.indexOf(song) == -1)
+            songlist += "," + song;
     }
     songlist.remove(0, 1);
     return songlist;

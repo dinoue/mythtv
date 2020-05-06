@@ -205,7 +205,9 @@ static bool doUpgradeMusicDatabaseSchema(QString &dbver)
                        "filename NOT LIKE ('%://%');"))
         {
             int i = 0;
-            QString intid, name, newname;
+            QString intid;
+            QString name;
+            QString newname;
 
             MSqlQuery modify(MSqlQuery::InitCon());
             while (query.next())
@@ -733,7 +735,7 @@ static bool doUpgradeMusicDatabaseSchema(QString &dbver)
         const QString updates[] =
         {
             QString("ALTER DATABASE %1 DEFAULT CHARACTER SET latin1;")
-                    .arg(gContext->GetDatabaseParams().dbName),
+                    .arg(gContext->GetDatabaseParams().m_dbName),
             // NOLINTNEXTLINE(bugprone-suspicious-missing-comma)
             "ALTER TABLE music_albumart"
             "  MODIFY filename varbinary(255) NOT NULL default '';",
@@ -783,7 +785,7 @@ static bool doUpgradeMusicDatabaseSchema(QString &dbver)
         const QString updates[] =
         {
             QString("ALTER DATABASE %1 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;")
-                    .arg(gContext->GetDatabaseParams().dbName),
+                    .arg(gContext->GetDatabaseParams().m_dbName),
             // NOLINTNEXTLINE(bugprone-suspicious-missing-comma)
             "ALTER TABLE music_albumart"
             "  DEFAULT CHARACTER SET default,"

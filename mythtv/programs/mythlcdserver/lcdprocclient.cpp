@@ -307,7 +307,8 @@ void LCDProcClient::checkConnections()
 
 void LCDProcClient::serverSendingData()
 {
-    QString lineFromServer, tempString;
+    QString lineFromServer;
+    QString tempString;
     QStringList aList;
     QStringList::Iterator it;
 
@@ -328,10 +329,12 @@ void LCDProcClient::serverSendingData()
         lineFromServer = lineFromServer.replace( QRegExp("\r"), "" );
 
         if (debug_level > 0)
+        {
         // Make debugging be less noisy
             if (lineFromServer != "success")
                 LOG(VB_NETWORK, LOG_INFO,
                     "LCDProcClient: Received from server: " + lineFromServer);
+        }
 
         aList = lineFromServer.split(" ");
         if (aList.first() == "connect")
@@ -522,9 +525,9 @@ QString LCDProcClient::expandString(const QString &aString)
     QString bString;
 
     // if version 5 then white space seperate the list of characters
-    for (int x = 0; x < aString.length(); x++)
+    foreach (auto x, aString)
     {
-        bString += aString.at(x) + QString(" ");
+        bString += x + QString(" ");
     }
 
     return bString;
@@ -829,8 +832,10 @@ void LCDProcClient::outputText(QList<LCDTextItem> *textItems)
         num.setNum(curItem->getRow());
 
         if (curItem->getScroll())
+        {
             assignScrollingWidgets(curItem->getText(), curItem->getScreen(),
                                 "textWidget" + num, curItem->getRow());
+        }
         else
         {
             switch (curItem->getAlignment())
@@ -949,25 +954,24 @@ void LCDProcClient::formatScrollingWidgets()
         return; // Weird...
 
     int max_len = 0;
-    QList<LCDTextItem>::iterator it = m_lcdTextItems->begin();
 
     // Get the length of the longest item to scroll
-    for(; it != m_lcdTextItems->end(); ++it)
+    foreach (auto item, *m_lcdTextItems)
     {
-        LCDTextItem *curItem = &(*it);
-        if (curItem->getText().length() > max_len)
-            max_len = curItem->getText().length();
+        if (item.getText().length() > max_len)
+            max_len = item.getText().length();
     }
 
     // Make all scrollable items the same lenght and do the initial output
-    it = m_lcdTextItems->begin();
+    auto it = m_lcdTextItems->begin();
     while (it != m_lcdTextItems->end())
     {
         LCDTextItem *curItem = &(*it);
         ++it;
         if (curItem->getText().length() > (int) m_lcdWidth )
         {
-            QString temp, temp2;
+            QString temp;
+            QString temp2;
             temp = temp.fill(QChar(' '), max_len - curItem->getText().length());
             temp2 = temp2.fill(QChar(' '), m_lcdWidth );
             curItem->setText(temp2 + curItem->getText() + temp);
@@ -1005,20 +1009,17 @@ void LCDProcClient::scrollWidgets()
     if ( m_lcdTextItems->isEmpty())
         return; // Weird...
 
-    QList<LCDTextItem>::iterator it = m_lcdTextItems->begin();
-
     unsigned int len = 0;
-    for(; it != m_lcdTextItems->end(); ++it)
+    foreach (auto item, *m_lcdTextItems)
     {
-        LCDTextItem *curItem = &(*it);
-        if (curItem->getScroll())
+        if (item.getScroll())
         {
-            // Note that all scrollable items have the same lenght!
-            len = curItem->getText().length();
+            // Note that all scrollable items have the same length!
+            len = item.getText().length();
 
             outputLeftText( m_scrollScreen,
-                        curItem->getText().mid( m_scrollPosition, m_lcdWidth ),
-                        curItem->getWidget(), curItem->getRow());
+                        item.getText().mid( m_scrollPosition, m_lcdWidth ),
+                        item.getWidget(), item.getRow());
         }
     }
 
@@ -1059,9 +1060,8 @@ void LCDProcClient::startMusic(QString artist, const QString& album, const QStri
     sendToServer("widget_set Music timeWidget 1 1 \"\"");
     m_lcdTextItems->clear();
 
-    QString aString;
     m_musicProgress = 0.0F;
-    aString = std::move(artist);
+    QString aString = std::move(artist);
     if ( m_lcdShowMusicItems == "ArtistAlbumTitle")
     {
         aString += " [";
@@ -1283,17 +1283,7 @@ void LCDProcClient::startMenu(QList<LCDMenuItem> *menuItems, QString app_name,
                     aString  = "widget_set Menu menuWidget1 1 1 \"";
                 }
 
-                if (lcdStartCol == 1)  // small display -> don't waste space for additional spaces
-                {
-                    switch (curItem->isChecked())
-                    {
-                        case CHECKED: aString += "X "; break;
-                        case UNCHECKED: aString += "O "; break;
-                        case NOTCHECKABLE: aString += "  "; break;
-                        default: break;
-                    }
-                }
-                else if (lcdStartCol != 0)
+                if (lcdStartCol != 0)
                 {
                     switch (curItem->isChecked())
                     {
@@ -1429,7 +1419,8 @@ void LCDProcClient::scrollMenuText()
     if (!m_lcdMenuItems )
         return;
 
-    QString aString, bString;
+    QString aString;
+    QString bString;
     QList<LCDMenuItem>::iterator it = m_lcdMenuItems->begin();
 
     ++m_menuScrollPosition;
@@ -1884,7 +1875,8 @@ void LCDProcClient::dostdclock()
     }
 
     QString aString;
-    int x = 0, y = 0;
+    int x = 0;
+    int y = 0;
 
     if ( m_lcdHeight < 3)
         y = m_lcdHeight;
@@ -1955,7 +1947,8 @@ void LCDProcClient::outputRecStatus(void)
         return;
     }  
 
-    QString aString, status;
+    QString aString;
+    QString status;
     QStringList list;
     int listTime = 0;
 
@@ -2063,13 +2056,13 @@ QStringList LCDProcClient::formatScrollerText(const QString &text)
     int lastSplit = 0;
     QString line = "";
 
-    for (int x = 0; x < text.length(); x++)
+    foreach (auto x, text)
     {
-        if (separators.contains(text[x]))
+        if (separators.contains(x))
             lastSplit = line.length();
 
-        line += text[x];
-        if (line.length() > (int) m_lcdWidth || text[x] == '|')
+        line += x;
+        if (line.length() > (int) m_lcdWidth || x == '|')
         {
             QString formatedLine;
             formatedLine.fill(' ', m_lcdWidth );
@@ -2379,9 +2372,11 @@ void LCDProcClient::removeWidgets()
 LCDProcClient::~LCDProcClient()
 {
     if (debug_level > 1)
+    {
         LOG(VB_GENERAL, LOG_INFO,
             "LCDProcClient: An LCD device is being snuffed out"
             "of existence (~LCDProcClient() was called)");
+    }
 
     if (m_socket)
     {
@@ -2398,7 +2393,9 @@ void LCDProcClient::customEvent(QEvent *e)
 {
     if (e->type() == MythEvent::MythEventMessage)
     {
-        MythEvent *me = static_cast<MythEvent *>(e);
+        auto *me = dynamic_cast<MythEvent *>(e);
+        if (me == nullptr)
+            return;
 
         if (me->Message().startsWith("RECORDING_LIST_CHANGE") ||
             me->Message() == "UPDATE_PROG_INFO")

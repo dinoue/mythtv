@@ -70,10 +70,10 @@ class ClassicCommDetector : public CommDetectorBase
         friend class ClassicLogoDetector;
 
     protected:
-        virtual ~ClassicCommDetector() = default;
+        ~ClassicCommDetector() override = default;
 
     private:
-        typedef struct frameblock
+        struct FrameBlock
         {
             long start;
             long end;
@@ -87,8 +87,7 @@ class ClassicCommDetector : public CommDetectorBase
             int formatMatch;
             int aspectMatch;
             int score;
-        }
-        FrameBlock;
+        };
 
         void ClearAllMaps(void);
         void GetBlankCommMap(frm_dir_map_t &comms);
@@ -112,7 +111,7 @@ class ClassicCommDetector : public CommDetectorBase
         void CleanupFrameInfo(void);
         void GetLogoCommBreakMap(show_map_t &map);
 
-        enum SkipTypes m_commDetectMethod;
+        SkipType m_commDetectMethod;
         frm_dir_map_t m_lastSentCommBreakMap;
         bool m_commBreakMapUpdateRequested {false};
         bool m_sendCommBreakMapUpdates     {false};
@@ -182,7 +181,7 @@ protected:
         void Init();
         void SetVideoParams(float aspect);
         void ProcessFrame(VideoFrame *frame, long long frame_number);
-        QMap<long long, FrameInfoEntry> frameInfo;
+        QMap<long long, FrameInfoEntry> m_frameInfo;
 
 public slots:
         void sceneChangeDetectorHasNewInformation(unsigned int framenum, bool isSceneChange,float debugValue);

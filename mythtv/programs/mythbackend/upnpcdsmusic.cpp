@@ -61,9 +61,9 @@ UPnpCDSMusic::UPnpCDSMusic()
 {
     QString sServerIp   = gCoreContext->GetBackendServerIP();
     int sPort           = gCoreContext->GetBackendStatusPort();
-    m_URIBase.setScheme("http");
-    m_URIBase.setHost(sServerIp);
-    m_URIBase.setPort(sPort);
+    m_uriBase.setScheme("http");
+    m_uriBase.setHost(sServerIp);
+    m_uriBase.setPort(sPort);
 
     // ShortCuts
     m_shortcuts.insert(UPnPShortcutFeature::MUSIC, "Music");
@@ -91,9 +91,9 @@ void UPnpCDSMusic::CreateRoot()
     // HACK: I'm not entirely happy with this solution, but it's at least
     // tidier than passing through half a dozen extra args to Load[Foo]
     // or having yet more methods just to load the counts
-    UPnpCDSRequest *pRequest = new UPnpCDSRequest();
+    auto *pRequest = new UPnpCDSRequest();
     pRequest->m_nRequestedCount = 0; // We don't want to load any results, we just want the TotalCount
-    UPnpCDSExtensionResults *pResult = new UPnpCDSExtensionResults();
+    auto *pResult = new UPnpCDSExtensionResults();
     IDTokenMap tokens;
     // END HACK
 
@@ -367,7 +367,7 @@ bool UPnpCDSMusic::LoadChildren(const UPnpCDSRequest* pRequest,
 
 void UPnpCDSMusic::PopulateArtworkURIS(CDSObject* pItem, int nSongID)
 {
-    QUrl artURI = m_URIBase;
+    QUrl artURI = m_uriBase;
     artURI.setPath("/Content/GetAlbumArt");
     QUrlQuery artQuery;
     artQuery.addQueryItem("Id", QString::number(nSongID));
@@ -443,11 +443,13 @@ void UPnpCDSMusic::PopulateArtworkURIS(CDSObject* pItem, int nSongID)
         }
     }
     else
+    {
         LOG(VB_GENERAL, LOG_ERR, QString("Unable to designate album artwork "
                                          "for '%1' with class '%2' and id '%3'")
                                             .arg(pItem->m_sId)
                                             .arg(pItem->m_sClass)
                                             .arg(nSongID));
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -801,7 +803,7 @@ bool UPnpCDSMusic::LoadTracks(const UPnpCDSRequest *pRequest,
 
         QFileInfo fInfo( sFileName );
 
-        QUrl    resURI    = m_URIBase;
+        QUrl    resURI    = m_uriBase;
         QUrlQuery resQuery;
         resURI.setPath("/Content/GetMusic");
         resQuery.addQueryItem("Id", QString::number(nId));

@@ -34,8 +34,8 @@ class SystemEventThread : public QRunnable
      *  \param cmd       Command line to run for this System Event
      *  \param eventName Optional System Event name for this command
      */
-    SystemEventThread(const QString &cmd, QString eventName = "")
-      : m_command(cmd), m_event(std::move(eventName)) {};
+    explicit SystemEventThread(QString cmd, QString eventName = "")
+      : m_command(std::move(cmd)), m_event(std::move(eventName)) {};
 
     /** \fn SystemEventThread::run()
      *  \brief Runs the System Event handler command
@@ -193,7 +193,7 @@ void MythSystemEventHandler::SubstituteMatches(const QStringList &tokens,
     else
     {
         // 2rd Try searching for RecordingInfo
-        RecordingInfo::LoadStatus status;
+        RecordingInfo::LoadStatus status = RecordingInfo::kNoProgram;
         RecordingInfo recinfo2(chanid, recstartts, false, 0, &status);
         if (status == RecordingInfo::kFoundProgram)
             recinfo2.SubstituteMatches(command);
@@ -261,7 +261,7 @@ void MythSystemEventHandler::customEvent(QEvent *e)
 {
     if (e->type() == MythEvent::MythEventMessage)
     {
-        MythEvent *me = dynamic_cast<MythEvent *>(e);
+        auto *me = dynamic_cast<MythEvent *>(e);
         if (me == nullptr)
             return;
         QString msg = me->Message().simplified();
@@ -298,7 +298,7 @@ void MythSystemEventHandler::customEvent(QEvent *e)
         {
             SubstituteMatches(tokens, cmd);
 
-            SystemEventThread *eventThread = new SystemEventThread(cmd);
+            auto *eventThread = new SystemEventThread(cmd);
             MThreadPool::globalInstance()->startReserved(
                 eventThread, "SystemEvent");
         }
@@ -312,8 +312,7 @@ void MythSystemEventHandler::customEvent(QEvent *e)
             LOG(VB_GENERAL, LOG_INFO, LOC +
                 QString("Starting thread for command '%1'").arg(cmd));
 
-            SystemEventThread *eventThread =
-                new SystemEventThread(cmd, tokens[1]);
+            auto *eventThread = new SystemEventThread(cmd, tokens[1]);
             MThreadPool::globalInstance()->startReserved(
                 eventThread, "SystemEvent");
         }
@@ -359,14 +358,18 @@ void SendMythSystemRecEvent(const QString &msg, const RecordingInfo *pginfo)
 void SendMythSystemPlayEvent(const QString &msg, const ProgramInfo *pginfo)
 {
     if (pginfo)
+    {
         gCoreContext->SendSystemEvent(
             QString("%1 HOSTNAME %2 CHANID %3 STARTTIME %4")
                     .arg(msg).arg(gCoreContext->GetHostName())
                     .arg(pginfo->GetChanID())
                     .arg(pginfo->GetRecordingStartTime(MythDate::ISODate)));
+    }
     else
+    {
         LOG(VB_GENERAL, LOG_ERR, LOC + "SendMythSystemPlayEvent() called with "
                                        "empty ProgramInfo");
+    }
 }
 
 /****************************************************************************/

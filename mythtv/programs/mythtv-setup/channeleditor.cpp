@@ -45,12 +45,10 @@ ChannelWizard::ChannelWizard(int id, int default_sourceid)
         all_asi &= cardtypes[i] == "ASI";
     }
 
-    ChannelOptionsCommon *common =
-        new ChannelOptionsCommon(*m_cid, default_sourceid,!all_v4l);
+    auto *common = new ChannelOptionsCommon(*m_cid, default_sourceid,!all_v4l);
     addChild(common);
 
-    ChannelOptionsFilters *filters =
-        new ChannelOptionsFilters(*m_cid);
+    auto *filters = new ChannelOptionsFilters(*m_cid);
     addChild(filters);
 
     if (all_v4l)
@@ -114,7 +112,7 @@ bool ChannelEditor::Create()
 
     // Source List
     new MythUIButtonListItem(m_sourceList,tr("All"),
-                             qVariantFromValue((int)FILTER_ALL));
+                             QVariant::fromValue((int)FILTER_ALL));
     MSqlQuery query(MSqlQuery::InitCon());
     query.prepare("SELECT name, sourceid FROM videosource");
     if (query.exec())
@@ -126,7 +124,7 @@ bool ChannelEditor::Create()
         }
     }
     new MythUIButtonListItem(m_sourceList,tr("(Unassigned)"),
-                             qVariantFromValue((int)FILTER_UNASSIGNED));
+                             QVariant::fromValue((int)FILTER_UNASSIGNED));
     connect(sortList, SIGNAL(itemSelected(MythUIButtonListItem *)),
             SLOT(setSortMode(MythUIButtonListItem *)));
 
@@ -240,7 +238,7 @@ void ChannelEditor::fillList(void)
     uint    currentIndex = qMax(m_channelList->GetCurrentPos(), 0);
     m_channelList->Reset();
     QString newchanlabel = tr("(Add New Channel)");
-    MythUIButtonListItem *item = new MythUIButtonListItem(m_channelList, "");
+    auto *item = new MythUIButtonListItem(m_channelList, "");
     item->SetText(newchanlabel, "compoundname");
     item->SetText(newchanlabel, "name");
 
@@ -272,7 +270,7 @@ void ChannelEditor::fillList(void)
     }
     else if (m_currentSortMode == tr("Channel Number"))
     {
-        querystr += " ORDER BY channum + 0";
+        querystr += " ORDER BY channum + 0, SUBSTRING_INDEX(channum, '_', -1) + 0";
     }
     else if (m_currentSortMode == tr("Multiplex Frequency"))
     {
@@ -282,7 +280,8 @@ void ChannelEditor::fillList(void)
     MSqlQuery query(MSqlQuery::InitCon());
     query.prepare(querystr);
 
-    uint selidx = 0, idx = 1;
+    uint selidx = 0;
+    uint idx = 1;
     if (query.exec() && query.size() > 0)
     {
         for (; query.next() ; idx++)
@@ -336,7 +335,7 @@ void ChannelEditor::fillList(void)
             bool sel = (chanid == currentValue);
             selidx = (sel) ? idx : selidx;
             item = new MythUIButtonListItem(m_channelList, "",
-                                                     qVariantFromValue(chanid));
+                                                     QVariant::fromValue(chanid));
             item->SetText(compoundname, "compoundname");
             item->SetText(name, "name");
             item->SetText(channum, "channum");
@@ -408,11 +407,11 @@ void ChannelEditor::del()
     QString message = tr("Delete channel '%1'?").arg(item->GetText("name"));
 
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
-    MythConfirmationDialog *dialog = new MythConfirmationDialog(popupStack, message, true);
+    auto *dialog = new MythConfirmationDialog(popupStack, message, true);
 
     if (dialog->Create())
     {
-        dialog->SetData(qVariantFromValue(item));
+        dialog->SetData(QVariant::fromValue(item));
         dialog->SetReturnEvent(this, "delsingle");
         popupStack->AddScreen(dialog);
     }
@@ -434,7 +433,7 @@ void ChannelEditor::deleteChannels(void)
             tr("Delete all channels on %1?").arg(currentLabel));
 
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
-    MythConfirmationDialog *dialog = new MythConfirmationDialog(popupStack, message, true);
+    auto *dialog = new MythConfirmationDialog(popupStack, message, true);
 
     if (dialog->Create())
     {
@@ -456,9 +455,8 @@ void ChannelEditor::edit(MythUIButtonListItem *item)
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
 
     int chanid = item->GetData().toInt();
-    ChannelWizard *cw = new ChannelWizard(chanid, m_sourceFilter);
-    StandardSettingDialog *ssd = new StandardSettingDialog(mainStack,
-                                                           "channelwizard", cw);
+    auto *cw = new ChannelWizard(chanid, m_sourceFilter);
+    auto *ssd = new StandardSettingDialog(mainStack, "channelwizard", cw);
     if (ssd->Create())
     {
         connect(ssd, SIGNAL(Exiting()), SLOT(fillList()));
@@ -484,7 +482,7 @@ void ChannelEditor::menu()
 
         MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
 
-        MythDialogBox *menu = new MythDialogBox(label, popupStack, "chanoptmenu");
+        auto *menu = new MythDialogBox(label, popupStack, "chanoptmenu");
 
         if (menu->Create())
         {
@@ -554,6 +552,18 @@ static bool check_cardsource(int sourceid, QString &sourcename)
         return false;
     }
 
+    // At least one capture card connected to the video source
+    // must be able to do channel scanning
+    if (SourceUtil::IsUnscanable(sourceid))
+    {
+        MythConfirmationDialog *md = ShowOkPopup(QObject::tr(
+            "The capture card(s) connected to video source '%1' "
+            "cannot be used for channel scanning.")
+            .arg(sourcename));
+        WaitFor(md);
+        return false;
+    }
+
     return true;
 }
 
@@ -565,9 +575,8 @@ void ChannelEditor::scan(void)
  
     // Create the dialog now that we have a video source and a capture card
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
-    StandardSettingDialog *ssd =
-        new StandardSettingDialog(mainStack, "scanwizard",
-                                  new ScanWizard(m_sourceFilter));
+    auto *ssd = new StandardSettingDialog(mainStack, "scanwizard",
+                                          new ScanWizard(m_sourceFilter));
     if (ssd->Create())
     {
         connect(ssd, SIGNAL(Exiting()), SLOT(fillList()));
@@ -585,8 +594,7 @@ void ChannelEditor::transportEditor(void)
  
     // Create the dialog now that we have a video source and a capture card
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
-    StandardSettingDialog *ssd =
-        new StandardSettingDialog(mainStack, "transporteditor",
+    auto *ssd = new StandardSettingDialog(mainStack, "transporteditor",
                                   new TransportListEditor(m_sourceFilter));
     if (ssd->Create())
     {
@@ -626,7 +634,7 @@ void ChannelEditor::channelIconImport(void)
 
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
 
-    MythDialogBox *menu = new MythDialogBox(label, popupStack, "iconoptmenu");
+    auto *menu = new MythDialogBox(label, popupStack, "iconoptmenu");
 
     if (menu->Create())
     {
@@ -651,7 +659,7 @@ void ChannelEditor::customEvent(QEvent *event)
 {
     if (event->type() == DialogCompletionEvent::kEventType)
     {
-        DialogCompletionEvent *dce = (DialogCompletionEvent*)(event);
+        auto *dce = (DialogCompletionEvent*)(event);
 
         QString resultid= dce->GetId();
         int buttonnum  = dce->GetResult();
@@ -670,8 +678,7 @@ void ChannelEditor::customEvent(QEvent *event)
         }
         else if (resultid == "delsingle" && buttonnum == 1)
         {
-            MythUIButtonListItem *item =
-                    dce->GetData().value<MythUIButtonListItem *>();
+            auto *item = dce->GetData().value<MythUIButtonListItem *>();
             if (!item)
                 return;
             uint chanid = item->GetData().toUInt();

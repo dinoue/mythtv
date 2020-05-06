@@ -20,6 +20,7 @@ using namespace std;
 #include "recordingprofile.h"
 #include "recordinginfo.h"
 #include "cardutil.h"
+#include "videodisplayprofile.h"
 
 // TODO convert all dates to UTC
 
@@ -587,7 +588,7 @@ static bool doUpgradeTVDatabaseSchema(void)
         MSqlQuery query(MSqlQuery::InitCon());
         if (!query.exec(QString("ALTER DATABASE %1 DEFAULT "
                                 "CHARACTER SET utf8 COLLATE utf8_general_ci;")
-                        .arg(gCoreContext->GetDatabaseParams().dbName)))
+                        .arg(gCoreContext->GetDatabaseParams().m_dbName)))
         {
             MythDB::DBError("UpgradeTVDatabaseSchema -- alter charset", query);
         }
@@ -798,9 +799,11 @@ nullptr
                                    " DROP INDEX recgroup");
 
                     if (!update.exec())
+                    {
                          MythDB::DBError("Unable to drop duplicate index on "
                                          "recgrouppassword. Ignoring.",
                                          update);
+                    }
                     break;
                 }
             }
@@ -1903,7 +1906,8 @@ nullptr
             return false;
         }
 
-        MSqlQuery update(MSqlQuery::InitCon()), insert(MSqlQuery::InitCon());
+        MSqlQuery update(MSqlQuery::InitCon());
+        MSqlQuery insert(MSqlQuery::InitCon());
         update.prepare("UPDATE settings "
                           "SET data=:IP4ADDY "
                        "WHERE value='BackendServerIP' "
@@ -2075,7 +2079,7 @@ nullptr
             gCoreContext->GetBoolSetting("AutoTranscode", false);
         record.m_transcoder =
             gCoreContext->GetNumSetting(
-                "DefaultTranscoder", static_cast<int>(RecordingProfile::TranscoderAutodetect));
+                "DefaultTranscoder", static_cast<int>(RecordingProfile::kTranscoderAutodetect));
         record.m_autoUserJob1 =
             gCoreContext->GetBoolSetting("AutoRunUserJob1", false);
         record.m_autoUserJob2 =
@@ -2110,8 +2114,8 @@ nullptr
             "       CONCAT(startdate, ' ', starttime), "
             "       CONCAT(enddate, ' ', endtime) FROM record",
         };
-        for (size_t i = 0; i < sizeof(pre_sql)/sizeof(char*); i++)
-            updates_ba.push_back(QByteArray(pre_sql[i]));
+        for (auto & pre : pre_sql)
+            updates_ba.push_back(QByteArray(pre));
 
         // Convert various DATETIME fields from local time to UTC
         if (0 != utc_offset)
@@ -2125,7 +2129,7 @@ nullptr
             };
             QString order = (utc_offset > 0) ? "-starttime" : "starttime";
 
-            for (size_t i = 0; i < sizeof(with_endtime)/sizeof(char*); i++)
+            for (auto & field : with_endtime)
             {
                 updates_ba.push_back(
                          QString("UPDATE %1 "
@@ -2134,18 +2138,18 @@ nullptr
                                  "    endtime   = "
                                  "    CONVERT_TZ(endtime, 'SYSTEM', 'Etc/UTC') "
                                  "ORDER BY %4")
-                         .arg(with_endtime[i])
+                         .arg(field)
                          .arg(order).toLocal8Bit());
             }
 
-            for (size_t i = 0; i < sizeof(without_endtime)/sizeof(char*); i++)
+            for (auto & field : without_endtime)
             {
                 updates_ba.push_back(
                           QString("UPDATE %1 "
                                   "SET starttime = "
                                   "    CONVERT_TZ(starttime, 'SYSTEM', 'Etc/UTC') "
                                   "ORDER BY %3")
-                          .arg(without_endtime[i]).arg(order)
+                          .arg(field).arg(order)
                           .toLocal8Bit());
             }
 
@@ -2181,14 +2185,13 @@ nullptr
             "DROP TABLE recordupdate",
         };
 
-        for (size_t i = 0; i < sizeof(post_sql)/sizeof(char*); i++)
-            updates_ba.push_back(QByteArray(post_sql[i]));
+        for (auto & post : post_sql)
+            updates_ba.push_back(QByteArray(post));
 
         // Convert update ByteArrays to NULL terminated char**
-        QList<QByteArray>::const_iterator it = updates_ba.begin();
         vector<const char*> updates;
-        for (; it != updates_ba.end(); ++it)
-            updates.push_back((*it).constData());
+        foreach (auto item, updates_ba)
+            updates.push_back(item.constData());
         updates.push_back(nullptr);
 
         // do the actual update
@@ -2217,31 +2220,30 @@ nullptr
             };
             QString order = (utc_offset > 0) ? "-starttime" : "starttime";
 
-            for (size_t i = 0; i < sizeof(with_endtime)/sizeof(char*); i++)
+            for (auto & field : with_endtime)
             {
                 updates_ba.push_back(
                      QString("UPDATE %1 "
                      "SET starttime = CONVERT_TZ(starttime, 'SYSTEM', 'Etc/UTC'), "
                      "    endtime   = CONVERT_TZ(endtime, 'SYSTEM', 'Etc/UTC') "
                      "ORDER BY %4")
-                     .arg(with_endtime[i]).arg(order).toLocal8Bit());
+                     .arg(field).arg(order).toLocal8Bit());
             }
 
-            for (size_t i = 0; i < sizeof(without_endtime)/sizeof(char*); i++)
+            for (auto & field : without_endtime)
             {
                 updates_ba.push_back(
                       QString("UPDATE %1 "
                       "SET starttime = CONVERT_TZ(starttime, 'SYSTEM', 'Etc/UTC') "
                       "ORDER BY %3")
-                      .arg(without_endtime[i]).arg(order).toLocal8Bit());
+                      .arg(field).arg(order).toLocal8Bit());
             }
         }
 
         // Convert update ByteArrays to NULL terminated char**
-        QList<QByteArray>::const_iterator it = updates_ba.begin();
         vector<const char*> updates;
-        for (; it != updates_ba.end(); ++it)
-            updates.push_back((*it).constData());
+        foreach (auto item, updates_ba)
+            updates.push_back(item.constData());
         updates.push_back(nullptr);
 
         // do the actual update
@@ -2272,10 +2274,9 @@ nullptr
                              .toLocal8Bit());
 
         // Convert update ByteArrays to NULL terminated char**
-        QList<QByteArray>::const_iterator it = updates_ba.begin();
         vector<const char*> updates;
-        for (; it != updates_ba.end(); ++it)
-            updates.push_back((*it).constData());
+        foreach (auto item, updates_ba)
+            updates.push_back(item.constData());
         updates.push_back(nullptr);
 
         if (!performActualUpdate(&updates[0], "1305", dbver))
@@ -2301,10 +2302,9 @@ nullptr
 "                    'Etc/UTC', 'SYSTEM')) ").toLocal8Bit());
 
         // Convert update ByteArrays to NULL terminated char**
-        QList<QByteArray>::const_iterator it = updates_ba.begin();
         vector<const char*> updates;
-        for (; it != updates_ba.end(); ++it)
-            updates.push_back((*it).constData());
+        foreach (auto item, updates_ba)
+            updates.push_back(item.constData());
         updates.push_back(nullptr);
 
         if (!performActualUpdate(&updates[0], "1306", dbver))
@@ -2822,7 +2822,7 @@ nullptr
         while (query.next())
         {
             int recordingID = query.value(0).toInt();
-            RecordingInfo *recInfo = new RecordingInfo(recordingID);
+            auto *recInfo = new RecordingInfo(recordingID);
             RecordingFile *recFile = recInfo->GetRecordingFile();
             recFile->m_fileName = recInfo->GetBasename();
             recFile->m_fileSize = recInfo->GetFilesize();
@@ -3359,11 +3359,14 @@ nullptr
         QString master;
         // Create new MasterServerName setting
         if (gCoreContext->IsMasterHost())
+        {
             master =
             "insert into settings (value,data,hostname) "
             "values('MasterServerName','"
                 + gCoreContext->GetHostName() + "', null);";
+        }
         else
+        {
             master =
             "insert into settings (value,data,hostname) "
             "select 'MasterServerName', b.hostname, null "
@@ -3371,6 +3374,7 @@ nullptr
             "where a.value = 'MasterServerIP' "
             "and b.value in ('BackendServerIP','BackendServerIP6')"
             "and a.data = b.data;";
+        }
 
         const char *updates[] = {
             // Create new MasterServerName setting
@@ -3485,6 +3489,300 @@ nullptr
             nullptr
         };
         if (!performActualUpdate(updates, "1354", dbver))
+            return false;
+    }
+
+    if (dbver == "1354")
+    {
+        const char *updates[] = {
+            "ALTER TABLE videosource ADD COLUMN scanfrequency INT UNSIGNED DEFAULT 0;",
+            nullptr
+        };
+        if (!performActualUpdate(updates, "1355", dbver))
+            return false;
+    }
+
+    if (dbver == "1355")
+    {
+        const char *updates[] = {
+            "UPDATE capturecard "
+            "SET displayname = CONCAT('Input ', cardid) "
+            "WHERE displayname = ''",
+            nullptr
+        };
+        if (!performActualUpdate(updates, "1356", dbver))
+            return false;
+    }
+
+    if (dbver == "1356")
+    {
+        const char *updates[] = {
+            "REPLACE INTO recordfilter (filterid, description, clause, "
+            "                          newruledefault) "
+            "  VALUES (12, 'Priority channel', 'channel.recpriority > 0', 0)",
+            nullptr
+        };
+        if (!performActualUpdate(updates, "1357", dbver))
+            return false;
+    }
+
+    if (dbver == "1357")
+    {
+        // convert old VideoDisplayProfile settings to new format
+        ProfileItem temp;
+        vector<ProfileItem> profiles;
+
+        MSqlQuery query(MSqlQuery::InitCon());
+        query.prepare("SELECT profileid, value, data FROM displayprofiles "
+                      "ORDER BY profileid");
+
+        for (;;)
+        {
+            if (!query.exec())
+                break;
+
+            uint currentprofile = 0;
+            while (query.next())
+            {
+                if (query.value(0).toUInt() != currentprofile)
+                {
+                    if (currentprofile)
+                    {
+                        temp.SetProfileID(currentprofile);
+                        profiles.push_back(temp);
+                    }
+                    temp.Clear();
+                    currentprofile = query.value(0).toUInt();
+                }
+                temp.Set(query.value(1).toString(), query.value(2).toString());
+            }
+
+            if (currentprofile)
+            {
+                temp.SetProfileID(currentprofile);
+                profiles.push_back(temp);
+            }
+
+            foreach(ProfileItem profile, profiles)
+            {
+                QString newdecoder;
+                QString newrender;
+                QString newdeint0;
+                QString newdeint1;
+
+                QString olddecoder = profile.Get("pref_decoder");
+                QString oldrender  = profile.Get("pref_videorenderer");
+                QString olddeint0  = profile.Get("pref_deint0");
+                QString olddeint1  = profile.Get("pref_deint1");
+
+                if (oldrender == "xv-blit")
+                {
+                    newdecoder = "ffmpeg";
+                    newrender  = "opengl-yv12";
+                }
+                if (olddecoder == "openmax" || oldrender == "openmax")
+                {
+                    newdecoder = "mmal-dec";
+                    newrender  = "opengl-yv12";
+                }
+                if ((olddecoder == "mediacodec") || (olddecoder == "nvdec") ||
+                    (olddecoder == "vda") || (olddecoder == "vaapi2") ||
+                    (olddecoder == "vaapi" && oldrender == "openglvaapi") ||
+                    (olddecoder == "vdpau" && oldrender == "vdpau"))
+                {
+                    if (oldrender != "opengl-hw")
+                        newrender = "opengl-hw";
+                }
+                if (olddecoder == "vda")
+                    newdecoder = "vtb";
+                if (olddecoder == "vaapi2")
+                    newdecoder = "vaapi";
+
+                auto UpdateDeinterlacer = [](const QString &Olddeint, QString &Newdeint, const QString &Decoder)
+                {
+                    if (Olddeint.isEmpty())
+                    {
+                        Newdeint = "none";
+                    }
+                    else if (Olddeint == "none" ||
+                             Olddeint.contains(DEINT_QUALITY_SHADER) ||
+                             Olddeint.contains(DEINT_QUALITY_DRIVER) ||
+                             Olddeint.contains(DEINT_QUALITY_LOW) ||
+                             Olddeint.contains(DEINT_QUALITY_MEDIUM) ||
+                             Olddeint.contains(DEINT_QUALITY_HIGH))
+                    {
+                        return;
+                    }
+
+                    QStringList newsettings;
+                    bool driver = (Decoder != "ffmpeg") &&
+                        (Olddeint.contains("vaapi") || Olddeint.contains("vdpau") ||
+                         Olddeint.contains("nvdec"));
+                    if (driver)
+                        newsettings << DEINT_QUALITY_DRIVER;
+                    if (Olddeint.contains("opengl") || driver)
+                        newsettings << DEINT_QUALITY_SHADER;
+
+                    if (Olddeint.contains("greedy") || Olddeint.contains("yadif") ||
+                        Olddeint.contains("kernel") || Olddeint.contains("advanced") ||
+                        Olddeint.contains("compensated") || Olddeint.contains("adaptive"))
+                    {
+                        newsettings << DEINT_QUALITY_HIGH;
+                    }
+                    else if (Olddeint.contains("bob") || Olddeint.contains("onefield") ||
+                             Olddeint.contains("linedouble"))
+                    {
+                        newsettings << DEINT_QUALITY_LOW;
+                    }
+                    else
+                    {
+                        newsettings << DEINT_QUALITY_MEDIUM;
+                    }
+                    Newdeint = newsettings.join(":");
+                };
+
+                QString decoder = newdecoder.isEmpty() ? olddecoder : newdecoder;
+                UpdateDeinterlacer(olddeint0, newdeint0, decoder);
+                UpdateDeinterlacer(olddeint1, newdeint1, decoder);
+
+                auto UpdateData = [](uint ProfileID, const QString &Value, const QString &Data)
+                {
+                    MSqlQuery update(MSqlQuery::InitCon());
+                    update.prepare(
+                        "UPDATE displayprofiles SET data = :DATA "
+                        "WHERE profileid = :PROFILEID AND value = :VALUE");
+                    update.bindValue(":PROFILEID", ProfileID);
+                    update.bindValue(":VALUE",     Value);
+                    update.bindValue(":DATA",      Data);
+                    if (!update.exec())
+                        LOG(VB_GENERAL, LOG_ERR,
+                            QString("Error updating display profile id %1").arg(ProfileID));
+                };
+
+                uint id = profile.GetProfileID();
+                if (!newdecoder.isEmpty())
+                    UpdateData(id, "pref_decoder", newdecoder);
+                if (!newrender.isEmpty())
+                    UpdateData(id, "pref_videorenderer", newrender);
+                if (!newdeint0.isEmpty())
+                    UpdateData(id, "pref_deint0", newdeint0);
+                if (!newdeint1.isEmpty())
+                    UpdateData(id, "pref_deint1", newdeint1);
+            }
+            break;
+        }
+
+        // remove old studio levels keybinding
+        const char *updates[] = {
+            "DELETE FROM keybindings WHERE action='TOGGLESTUDIOLEVELS'",
+            nullptr
+        };
+
+        if (!performActualUpdate(&updates[0], "1358", dbver))
+            return false;
+    }
+
+    if (dbver == "1358")
+    {
+        const char *updates[] = {
+            // Allow videosouce.userid to be NULL as originally intended.
+            "ALTER TABLE videosource "
+            "  CHANGE COLUMN userid userid VARCHAR(128) NULL DEFAULT NULL",
+            // And fix any leftover, empty values.
+            "UPDATE videosource "
+            "  SET userid = NULL "
+            "  WHERE userid = ''",
+            // Remove potential clear text credentials no longer usable
+            "UPDATE videosource "
+            "  SET userid = NULL, password = NULL "
+            "  WHERE xmltvgrabber IN ('schedulesdirect1', 'datadirect')",
+            nullptr
+        };
+        if (!performActualUpdate(updates, "1359", dbver))
+            return false;
+    }
+
+    if (dbver == "1359")
+    {
+        // XineramaMonitorAspectRatio was previously ignored for single screen
+        // setups but now acts as an override for the display aspect ratio.
+        // 0.0 indicates 'Auto' - which should be the default.
+        const char *updates[] = {
+            "UPDATE settings SET data='0.0' WHERE value='XineramaMonitorAspectRatio'",
+            nullptr
+        };
+        if (!performActualUpdate(updates, "1360", dbver))
+            return false;
+    }
+
+    if (dbver == "1360")
+    {
+        // missed in 1357 - convert old vdpau and openglvaapi renderers to opengl
+        // convert ancient quartz-blit to opengl as well
+        ProfileItem temp;
+        vector<ProfileItem> profiles;
+
+        MSqlQuery query(MSqlQuery::InitCon());
+        query.prepare("SELECT profileid, value, data FROM displayprofiles "
+                      "ORDER BY profileid");
+
+        for (;;)
+        {
+            if (!query.exec())
+                break;
+
+            uint currentprofile = 0;
+            while (query.next())
+            {
+                if (query.value(0).toUInt() != currentprofile)
+                {
+                    if (currentprofile)
+                    {
+                        temp.SetProfileID(currentprofile);
+                        profiles.push_back(temp);
+                    }
+                    temp.Clear();
+                    currentprofile = query.value(0).toUInt();
+                }
+                temp.Set(query.value(1).toString(), query.value(2).toString());
+            }
+
+            if (currentprofile)
+            {
+                temp.SetProfileID(currentprofile);
+                profiles.push_back(temp);
+            }
+
+            foreach(ProfileItem profile, profiles)
+            {
+                // the old deinterlacers will have been converted already
+                QString oldrender  = profile.Get("pref_videorenderer");
+                if (oldrender == "quartz-blit" || oldrender == "openglvaapi" ||
+                    oldrender == "vdpau")
+                {
+                    auto UpdateData = [](uint ProfileID, const QString &Value, const QString &Data)
+                    {
+                        MSqlQuery update(MSqlQuery::InitCon());
+                        update.prepare(
+                            "UPDATE displayprofiles SET data = :DATA "
+                            "WHERE profileid = :PROFILEID AND value = :VALUE");
+                        update.bindValue(":PROFILEID", ProfileID);
+                        update.bindValue(":VALUE",     Value);
+                        update.bindValue(":DATA",      Data);
+                        if (!update.exec())
+                            LOG(VB_GENERAL, LOG_ERR,
+                                QString("Error updating display profile id %1").arg(ProfileID));
+                    };
+
+                    uint id = profile.GetProfileID();
+                    UpdateData(id, "pref_decoder", "ffmpeg");
+                    UpdateData(id, "pref_videorenderer", "opengl-yv12");
+                }
+            }
+            break;
+        }
+
+        if (!UpdateDBVersionNumber("1361", dbver))
             return false;
     }
 
@@ -4164,10 +4462,10 @@ bool InitializeMythSchema(void)
 "CREATE TABLE programrating ("
 "  chanid int(10) unsigned NOT NULL DEFAULT '0',"
 "  starttime datetime NOT NULL DEFAULT '0000-00-00 00:00:00',"
-"  system varchar(8) DEFAULT NULL,"
+"  `system` varchar(8) DEFAULT NULL,"
 "  rating varchar(16) DEFAULT NULL,"
-"  UNIQUE KEY chanid (chanid,starttime,system,rating),"
-"  KEY starttime (starttime,system)"
+"  UNIQUE KEY chanid (chanid,starttime,`system`,rating),"
+"  KEY starttime (starttime,`system`)"
 ") ENGINE=MyISAM DEFAULT CHARSET=utf8;",
 "CREATE TABLE recgrouppassword ("
 "  recgroup varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',"
@@ -4374,10 +4672,10 @@ bool InitializeMythSchema(void)
 "CREATE TABLE recordedrating ("
 "  chanid int(10) unsigned NOT NULL DEFAULT '0',"
 "  starttime datetime NOT NULL DEFAULT '0000-00-00 00:00:00',"
-"  system varchar(8) DEFAULT NULL,"
+"  `system` varchar(8) DEFAULT NULL,"
 "  rating varchar(16) DEFAULT NULL,"
-"  UNIQUE KEY chanid (chanid,starttime,system,rating),"
-"  KEY starttime (starttime,system)"
+"  UNIQUE KEY chanid (chanid,starttime,`system`,rating),"
+"  KEY starttime (starttime,`system`)"
 ") ENGINE=MyISAM DEFAULT CHARSET=utf8;",
 "CREATE TABLE recordedseek ("
 "  chanid int(10) unsigned NOT NULL DEFAULT '0',"

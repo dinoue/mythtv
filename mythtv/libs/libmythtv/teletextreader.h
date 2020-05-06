@@ -11,7 +11,7 @@
 
 using namespace std;
 
-typedef enum
+enum TTColor
 {
     kTTColorBlack       = 0,
     kTTColorRed         = 1,
@@ -22,7 +22,7 @@ typedef enum
     kTTColorCyan        = 6,
     kTTColorWhite       = 7,
     kTTColorTransparent = 8,
-} TTColor;
+};
 
 #define TP_SUPPRESS_HEADER  0x01
 #define TP_UPDATE_INDICATOR 0x02
@@ -47,24 +47,26 @@ class TeletextSubPage
     bool active;              ///< data has arrived since page last cleared
 };
 
-typedef map<int, TeletextSubPage> int_to_subpage_t;
+using int_to_subpage_t = map<int, TeletextSubPage>;
 
 class TeletextPage
 {
   public:
-    int               pagenum;
-    int               current_subpage;
+    int               pagenum         {0};
+    int               current_subpage {0};
     int_to_subpage_t  subpages;
 };
-typedef map<int, TeletextPage> int_to_page_t;
+using int_to_page_t = map<int, TeletextPage>;
 
 class TeletextMagazine
 {
   public:
-    mutable QMutex    lock;
-    int               current_page;
-    int               current_subpage;
-    TeletextSubPage   loadingpage;
+    TeletextMagazine() = default;
+   ~TeletextMagazine() { delete lock; }
+    QMutex*           lock            { new QMutex };
+    int               current_page    {0};
+    int               current_subpage {0};
+    TeletextSubPage   loadingpage     {};
     int_to_page_t     pages;
 };
 
@@ -100,7 +102,6 @@ class TeletextReader
                          const uint8_t* buf, int vbimode);
 
   protected:
-    void NewsFlash(void) {};
     virtual void PageUpdated(int page, int subpage);
     virtual void HeaderUpdated(
         int page, int subpage, uint8_t *page_ptr, int lang);
@@ -120,8 +121,8 @@ class TeletextReader
     TeletextPage *FindPage(int page, int dir = 0)
         { return const_cast<TeletextPage*>(FindPageInternal(page, dir)); }
 
-    const TeletextSubPage *FindSubPageInternal(int,int,int) const;
-    const TeletextPage    *FindPageInternal(int,int) const;
+    const TeletextSubPage *FindSubPageInternal(int page, int subpage, int direction) const;
+    const TeletextPage    *FindPageInternal(int page, int direction) const;
 
     int              m_curpage            {0x100};
     int              m_cursubpage         {-1};
@@ -133,8 +134,8 @@ class TeletextReader
     uint8_t          m_header[40]         {0};
     bool             m_header_changed     {false};
     bool             m_page_changed       {false};
-    TeletextMagazine m_magazines[8];
-    unsigned char    m_bitswap[256];
+    TeletextMagazine m_magazines[8]       { };
+    unsigned char    m_bitswap[256]       {};
     int              m_fetchpage          {0};
     int              m_fetchsubpage       {0};
 };

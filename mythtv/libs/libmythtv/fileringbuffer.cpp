@@ -156,9 +156,8 @@ static QString local_sub_filename(QFileInfo &fileInfo)
             .replace(")", "?");
 
         QMutexLocker locker(&RingBuffer::s_subExtLock);
-        QStringList::const_iterator eit = RingBuffer::s_subExt.begin();
-        for (; eit != RingBuffer::s_subExt.end(); ++eit)
-            el += findBaseName + *eit;
+        for (const auto & ext : RingBuffer::s_subExt)
+            el += findBaseName + ext;
     }
 
     // Some Qt versions do not accept paths in the search string of
@@ -168,10 +167,9 @@ static QString local_sub_filename(QFileInfo &fileInfo)
 
     const QStringList candidates = dir.entryList(el);
 
-    QStringList::const_iterator cit = candidates.begin();
-    for (; cit != candidates.end(); ++cit)
+    for (const auto & candidate : candidates)
     {
-        QFileInfo fi(dirName + "/" + *cit);
+        QFileInfo fi(dirName + "/" + candidate);
         if (fi.exists() && (fi.size() >= kReadTestSize))
             return fi.absoluteFilePath();
     }
@@ -258,14 +256,14 @@ bool FileRingBuffer::OpenFile(const QString &lfilename, uint retry_ms)
                     {
 #ifndef _MSC_VER
                         if (posix_fadvise(m_fd2, 0, 0,
-                                          POSIX_FADV_SEQUENTIAL) < 0)
+                                          POSIX_FADV_SEQUENTIAL) != 0)
                         {
                             LOG(VB_FILE, LOG_DEBUG, LOC +
                                 QString("OpenFile(): fadvise sequential "
                                         "failed: ") + ENO);
                         }
                         if (posix_fadvise(m_fd2, 0, 128*1024,
-                                          POSIX_FADV_WILLNEED) < 0)
+                                          POSIX_FADV_WILLNEED) != 0)
                         {
                             LOG(VB_FILE, LOG_DEBUG, LOC +
                                 QString("OpenFile(): fadvise willneed "
@@ -355,9 +353,8 @@ bool FileRingBuffer::OpenFile(const QString &lfilename, uint retry_ms)
             if (is_subtitle_possible(extension))
             {
                 QMutexLocker locker(&s_subExtLock);
-                QStringList::const_iterator eit = s_subExt.begin();
-                for (; eit != s_subExt.end(); ++eit)
-                    auxFiles += baseName + *eit;
+                for (const auto & ext : s_subExt)
+                    auxFiles += baseName + ext;
             }
         }
 
@@ -396,7 +393,7 @@ bool FileRingBuffer::OpenFile(const QString &lfilename, uint retry_ms)
     return ok;
 }
 
-bool FileRingBuffer::ReOpen(QString newFilename)
+bool FileRingBuffer::ReOpen(const QString& newFilename)
 {
     if (!m_writeMode)
     {
@@ -408,9 +405,8 @@ bool FileRingBuffer::ReOpen(QString newFilename)
 
     m_rwLock.lockForWrite();
 
-    if (m_tfw && m_tfw->ReOpen(newFilename))
-        result = true;
-    else if (m_remotefile && m_remotefile->ReOpen(newFilename))
+    if ((m_tfw && m_tfw->ReOpen(newFilename)) ||
+        (m_remotefile && m_remotefile->ReOpen(newFilename)))
         result = true;
 
     if (result)
@@ -712,7 +708,7 @@ long long FileRingBuffer::SeekInternal(long long pos, int whence)
                     ret = lseek64(m_fd2, m_internalReadPos, SEEK_SET);
 #ifndef _MSC_VER
                     if (posix_fadvise(m_fd2, m_internalReadPos,
-                                  128*1024, POSIX_FADV_WILLNEED) < 0)
+                                  128*1024, POSIX_FADV_WILLNEED) != 0)
                     {
                         LOG(VB_FILE, LOG_DEBUG, LOC +
                             QString("Seek(): fadvise willneed "

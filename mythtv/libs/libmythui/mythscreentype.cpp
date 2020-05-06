@@ -311,7 +311,7 @@ void MythScreenType::LoadInBackground(const QString& message)
 
     OpenBusyPopup(message);
 
-    ScreenLoadTask *loadTask = new ScreenLoadTask(*this);
+    auto *loadTask = new ScreenLoadTask(*this);
     MThreadPool::globalInstance()->start(loadTask, "ScreenLoad");
 }
 
@@ -531,7 +531,7 @@ bool MythScreenType::ParseElement(
  */
 void MythScreenType::CopyFrom(MythUIType *base)
 {
-    MythScreenType *st = dynamic_cast<MythScreenType *>(base);
+    auto *st = dynamic_cast<MythScreenType *>(base);
     if (!st)
     {
         LOG(VB_GENERAL, LOG_ERR, "ERROR, bad parsing");

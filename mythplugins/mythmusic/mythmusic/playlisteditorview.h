@@ -1,6 +1,9 @@
 #ifndef PLAYLISTEDITORVIEW_H_
 #define PLAYLISTEDITORVIEW_H_
 
+// c++
+#include <utility>
+
 // qt
 #include <QEvent>
 #include <QVector>
@@ -28,7 +31,7 @@ class MPUBLIC MusicButtonItem : public MythUIButtonListItem, public QObject
         MythUIButtonListItem(lbtype, text, image, checkable, state, showArrow, listPosition) {}
 
     MusicButtonItem(MythUIButtonList *lbtype, const QString& text, QVariant data, int listPosition = -1) :
-        MythUIButtonListItem(lbtype, text, data, listPosition) {}
+        MythUIButtonListItem(lbtype, text, std::move(data), listPosition) {}
 };
 
 class MPUBLIC MusicGenericTree : public MythGenericTree
@@ -38,7 +41,7 @@ class MPUBLIC MusicGenericTree : public MythGenericTree
                      const QString &action = "",
                      MythUIButtonListItem::CheckState check = MythUIButtonListItem::CantCheck,
                      bool showArrow = true);
-    virtual ~MusicGenericTree() = default;
+    ~MusicGenericTree() override = default;
 
     QString getAction(void) const { return m_action; }
 
@@ -64,10 +67,10 @@ class PlaylistEditorView : public MusicCommon
   public:
     PlaylistEditorView(MythScreenStack *parent, MythScreenType *parentScreen,
                        const QString &layout, bool restorePosition = false);
-    ~PlaylistEditorView(void);
+    ~PlaylistEditorView(void) override;
 
     bool Create(void) override; // MythScreenType
-    bool keyPressEvent(QKeyEvent *) override; // MusicCommon
+    bool keyPressEvent(QKeyEvent *event) override; // MusicCommon
 
     void saveTreePosition(void);
 

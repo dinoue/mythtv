@@ -3,6 +3,7 @@
 #include "videosource.h"
 #include "cardutil.h"
 #include "frequencytablesetting.h"
+#include "channelutil.h"
 
 #include "channelscanmiscsettings.h"
 #include "inputselectorsetting.h"
@@ -34,6 +35,7 @@ void ScanWizard::SetupConfig(
     m_lcnOnly = new ChannelNumbersOnly();
     m_completeOnly = new CompleteChannelsOnly();
     m_fullSearch = new FullChannelSearch();
+    m_removeDuplicates = new RemoveDuplicates();
     m_addFullTS = new AddFullTS();
     m_trustEncSI = new TrustEncSISetting();
 
@@ -44,6 +46,7 @@ void ScanWizard::SetupConfig(
     addChild(m_lcnOnly);
     addChild(m_completeOnly);
     addChild(m_fullSearch);
+    addChild(m_removeDuplicates);
     addChild(m_addFullTS);
     addChild(m_trustEncSI);
 
@@ -63,6 +66,10 @@ void ScanWizard::SetupConfig(
 
     connect(m_input,       SIGNAL(valueChanged(const QString&)),
             this,          SLOT(  SetInput(    const QString&)));
+
+    connect(m_input,       SIGNAL(valueChanged(const QString&)),
+            this,          SLOT(  SetPaneDefaults(const QString)));
+
 }
 
 uint ScanWizard::GetSourceID(void) const
@@ -95,6 +102,11 @@ bool ScanWizard::DoFullChannelSearch(void) const
     return m_fullSearch->boolValue();
 }
 
+bool ScanWizard::DoRemoveDuplicates(void) const
+{
+    return m_removeDuplicates->boolValue();
+}
+
 bool ScanWizard::DoAddFullTS(void) const
 {
     return m_addFullTS->boolValue();
@@ -103,6 +115,81 @@ bool ScanWizard::DoAddFullTS(void) const
 bool ScanWizard::DoTestDecryption(void) const
 {
     return m_trustEncSI->boolValue();
+}
+
+void ScanWizard::SetPaneDefaults(const QString &cardid_inputname)
+{
+    const int sourceid = m_videoSource->getValue().toInt();
+    uint scanfrequency = 0;
+    QString freqtable;
+
+    MSqlQuery query(MSqlQuery::InitCon());
+    query.prepare(
+            "SELECT scanfrequency, freqtable "
+            "FROM videosource "
+            "WHERE videosource.sourceid = :SOURCEID ;");
+    query.bindValue(":SOURCEID", sourceid);
+    if (!query.exec() || !query.isActive())
+    {
+        MythDB::DBError("ScanOptionalConfig::SetPaneDefaults", query);
+        return;
+    }
+    else if (query.next())
+    {
+        scanfrequency = query.value(0).toUInt();
+        freqtable = query.value(1).toString();
+        LOG(VB_CHANSCAN, LOG_DEBUG,
+            QString("SetPaneDefaults cardid_inputname:%1 sourceid:%2 scanfrequency:%3 freqtable:%4")
+                .arg(cardid_inputname).arg(sourceid).arg(scanfrequency).arg(freqtable));
+    }
+
+    // Channel Frequency Table for ATSC
+    // Use general setting if not defined in the videosource
+    {
+        if (freqtable == "default")
+        {
+            freqtable = gCoreContext->GetSetting("FreqTable");
+        }
+        QString table;
+        table = (freqtable == "us-bcast"    ) ? "us"      : table;
+        table = (freqtable == "us-cable"    ) ? "uscable" : table;
+        table = (freqtable == "us-cable-hrc") ? "ushrc"   : table;
+        table = (freqtable == "us-cable-irc") ? "usirc"   : table;
+        if (!table.isEmpty())
+        {
+            LOG(VB_CHANSCAN, LOG_DEBUG,
+                QString("SetPaneDefaults ATSC frequency table:'%1'").arg(table));
+            m_scanConfig->SetTuningPaneValuesATSC(table);
+        }
+    }
+
+    // Set "Full Scan (Tuned)" defaults only when a frequency has been entered.
+    if (scanfrequency == 0)
+        return;
+
+    // If we have only a frequency set that as default; if there is a multiplex
+    // already at that frequency then use the values of that multiplex as
+    // default values for scanning.
+    int mplexid = 0;
+    mplexid = ChannelUtil::GetMplexID(sourceid, scanfrequency);
+    LOG(VB_CHANSCAN, LOG_DEBUG,
+        QString("SetPaneDefaults sourceid:%1 frequency:%2 mplexid:%3")
+            .arg(sourceid).arg(scanfrequency).arg(mplexid));
+
+    DTVMultiplex mpx;
+    if (mplexid > 0)
+    {
+        DTVTunerType tuner_type = CardUtil::GetTunerTypeFromMultiplex(mplexid);
+
+        mpx.FillFromDB(tuner_type, mplexid);
+
+        LOG(VB_CHANSCAN, LOG_DEBUG,
+            QString("SetPaneDefaults sourceid:%1 frequency:%2 mplexid:%3 tuner_type:%4 mpx:%5")
+                .arg(sourceid).arg(scanfrequency).arg(mplexid)
+                .arg(tuner_type.toString()).arg(mpx.toString()));
+    }
+
+    m_scanConfig->SetTuningPaneValues(scanfrequency, mpx);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -492,4 +579,102 @@ QMap<QString,QString> ScanOptionalConfig::GetStartChan(void) const
     }
 
     return startChan;
+}
+
+void ScanOptionalConfig::SetTuningPaneValues(uint frequency, const DTVMultiplex &mpx)
+{
+    const int st =  m_scanType->getValue().toInt();
+
+    if (st == ScanTypeSetting::FullScan_DVBT  ||
+        st == ScanTypeSetting::NITAddScan_DVBT )
+    {
+        PaneDVBT *pane = m_paneDVBT;
+
+        pane->setFrequency(frequency);
+        if (frequency == mpx.m_frequency)
+        {
+            pane->setInversion(mpx.m_inversion.toString());
+            pane->setBandwidth(mpx.m_bandwidth.toString());
+            pane->setCodeRateHP(mpx.m_hpCodeRate.toString());
+            pane->setCodeRateLP(mpx.m_lpCodeRate.toString());
+            pane->setConstellation(mpx.m_modulation.toString());
+            pane->setTransmode(mpx.m_transMode.toString());
+            pane->setGuardInterval(mpx.m_guardInterval.toString());
+            pane->setHierarchy(mpx.m_hierarchy.toString());
+        }
+    }
+    else if (st == ScanTypeSetting::FullScan_DVBT2  ||
+             st == ScanTypeSetting::NITAddScan_DVBT2 )
+    {
+        PaneDVBT2 *pane = m_paneDVBT2;
+
+        pane->setFrequency(frequency);
+        if (frequency == mpx.m_frequency)
+        {
+            pane->setInversion(mpx.m_inversion.toString());
+            pane->setBandwidth(mpx.m_bandwidth.toString());
+            pane->setCodeRateHP(mpx.m_hpCodeRate.toString());
+            pane->setCodeRateLP(mpx.m_lpCodeRate.toString());
+            pane->setConstellation(mpx.m_modulation.toString());
+            pane->setTransmode(mpx.m_transMode.toString());
+            pane->setGuardInterval(mpx.m_guardInterval.toString());
+            pane->setHierarchy(mpx.m_hierarchy.toString());
+            pane->setModsys(mpx.m_modSys.toString());
+        }
+    }
+    else if (st == ScanTypeSetting::FullScan_DVBC  ||
+             st == ScanTypeSetting::NITAddScan_DVBC )
+    {
+        PaneDVBC *pane = m_paneDVBC;
+
+        pane->setFrequency(frequency);
+        if (frequency == mpx.m_frequency)
+        {
+            pane->setInversion(mpx.m_inversion.toString());
+            pane->setSymbolrate(QString("%1").arg(mpx.m_symbolRate));
+            pane->setFec(mpx.m_fec.toString());
+            pane->setModulation(mpx.m_modulation.toString());
+        }
+    }
+    else if (st == ScanTypeSetting::NITAddScan_DVBS)
+    {
+        PaneDVBS *pane = m_paneDVBS;
+
+        pane->setFrequency(frequency);
+        if (frequency == mpx.m_frequency)
+        {
+            pane->setSymbolrate(QString("%1").arg(mpx.m_symbolRate));
+            pane->setInversion(mpx.m_inversion.toString());
+            pane->setFec(mpx.m_fec.toString());
+            pane->setPolarity(mpx.m_polarity.toString());
+        }
+    }
+    else if (st == ScanTypeSetting::NITAddScan_DVBS2)
+    {
+        PaneDVBS2 *pane = m_paneDVBS2;
+
+        pane->setFrequency(frequency);
+        if (frequency == mpx.m_frequency)
+        {
+            pane->setSymbolrate(QString("%1").arg(mpx.m_symbolRate));
+            pane->setInversion(mpx.m_inversion.toString());
+            pane->setFec(mpx.m_fec.toString());
+            pane->setPolarity(mpx.m_polarity.toString());
+            pane->setModulation(mpx.m_modulation.toString());
+            pane->setModsys(mpx.m_modSys.toString());
+            pane->setRolloff(mpx.m_rolloff.toString());
+        }
+    }
+}
+
+void ScanOptionalConfig::SetTuningPaneValuesATSC(const QString &freqtable)
+{
+    const int st =  m_scanType->getValue().toInt();
+
+    if (st == ScanTypeSetting::FullScan_ATSC)
+    {
+        PaneATSC *pane = m_paneATSC;
+
+        pane->SetFrequencyTable(freqtable);
+    }
 }

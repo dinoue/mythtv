@@ -63,7 +63,9 @@ computeBlankMap(FrameAnalyzer::FrameMap *blankMap, long long nframes,
     const float             MEDIANPCTILE = 0.95;
     const float             STDDEVPCTILE = 0.85;
 
-    long long       frameno = 1, segb = 0, sege = 0;
+    long long frameno = 1;
+    long long segb = 0;
+    long long sege = 0;
 
     /* Count and select for monochromatic frames. */
 
@@ -85,8 +87,8 @@ computeBlankMap(FrameAnalyzer::FrameMap *blankMap, long long nframes,
 
     /* Select percentile values from monochromatic frames. */
 
-    uchar *blankmedian = new unsigned char[nblanks];
-    float *blankstddev = new float[nblanks];
+    auto *blankmedian = new unsigned char[nblanks];
+    auto *blankstddev = new float[nblanks];
     long long blankno = 0;
     for (frameno = 0; frameno < nframes; frameno++)
     {
@@ -208,18 +210,16 @@ computeBreakMap(FrameAnalyzer::FrameMap *breakMap,
      *
      * Common commercial-break lengths.
      */
-    static const struct {
-        int     len;    /* seconds */
-        int     delta;  /* seconds */
-    } breaktype[] = {
+    static constexpr struct {
+        int     m_len;    /* seconds */
+        int     m_delta;  /* seconds */
+    } kBreakType[] = {
         /* Sort by "len". */
         { 15,   2 },
         { 20,   2 },
         { 30,   5 },
         { 60,   5 },
     };
-    static const unsigned int   nbreaktypes =
-        sizeof(breaktype)/sizeof(*breaktype);
 
     /*
      * TUNABLE:
@@ -227,7 +227,7 @@ computeBreakMap(FrameAnalyzer::FrameMap *breakMap,
      * Shortest non-commercial length, used to coalesce consecutive commercial
      * breaks that are usually identified due to in-commercial cuts.
      */
-    static const int MINCONTENTLEN = (int)roundf(10 * fps);
+    static const int kMinContentLen = (int)roundf(10 * fps);
 
     breakMap->clear();
     for (FrameAnalyzer::FrameMap::const_iterator iiblank = blankMap->begin();
@@ -238,7 +238,7 @@ computeBreakMap(FrameAnalyzer::FrameMap *breakMap,
         long long iilen = *iiblank;
         long long start = brkb + iilen / 2;
 
-        for (unsigned int ii = 0; ii < nbreaktypes; ii++)
+        for (auto type : kBreakType)
         {
             /* Look for next blank frame that is an acceptable distance away. */
             FrameAnalyzer::FrameMap::const_iterator jjblank = iiblank;
@@ -248,15 +248,15 @@ computeBreakMap(FrameAnalyzer::FrameMap *breakMap,
                 long long jjlen = *jjblank;
                 long long end = brke + jjlen / 2;
 
-                long long testlen = (long long)roundf((end - start) / fps);
-                if (testlen > breaktype[ii].len + breaktype[ii].delta)
+                auto testlen = (long long)roundf((end - start) / fps);
+                if (testlen > type.m_len + type.m_delta)
                     break;      /* Too far ahead; break to next break length. */
 
-                long long delta = testlen - breaktype[ii].len;
+                long long delta = testlen - type.m_len;
                 if (delta < 0)
                     delta = 0 - delta;
 
-                if (delta > breaktype[ii].delta)
+                if (delta > type.m_delta)
                     continue;   /* Outside delta range; try next end-blank. */
 
                 /* Mark this commercial break. */
@@ -319,7 +319,7 @@ computeBreakMap(FrameAnalyzer::FrameMap *breakMap,
                 continue;
             }
 
-            if (iie + MINCONTENTLEN < jjb)
+            if (iie + kMinContentLen < jjb)
             {
                 /* (jjb,jje) is too far ahead. */
                 ++iibreak;
@@ -407,7 +407,7 @@ enum FrameAnalyzer::analyzeFrameResult
 BlankFrameDetector::analyzeFrame(const VideoFrame *frame, long long frameno,
         long long *pNextFrame)
 {
-    *pNextFrame = NEXTFRAME;
+    *pNextFrame = kNextFrame;
 
     if (m_histogramAnalyzer->analyzeFrame(frame, frameno) ==
             FrameAnalyzer::ANALYZE_OK)

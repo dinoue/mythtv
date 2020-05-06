@@ -31,9 +31,7 @@ lighten (unsigned char value, float power)
 static void
 lightencolor (int *col, float power)
 {
-	unsigned char *color;
-
-	color = (unsigned char *) col;
+	unsigned char *color = (unsigned char *) col;
 	*color = lighten (*color, power);
 	color++;
 	*color = lighten (*color, power);
@@ -46,30 +44,26 @@ lightencolor (int *col, float power)
 static void
 genline (int id, float param, GMUnitPointer * l, int rx, int ry)
 {
-	int     i;
-
 	switch (id) {
 	case GML_HLINE:
-		for (i = 0; i < 512; i++) {
+		for (int i = 0; i < 512; i++) {
 			l[i].x = ((float) i * rx) / 512.0F;
 			l[i].y = param;
 			l[i].angle = M_PI_F / 2.0F;
 		}
 		return;
 	case GML_VLINE:
-		for (i = 0; i < 512; i++) {
+		for (int i = 0; i < 512; i++) {
 			l[i].y = ((float) i * ry) / 512.0F;
 			l[i].x = param;
 			l[i].angle = 0.0F;
 		}
 		return;
 	case GML_CIRCLE:
-		for (i = 0; i < 512; i++) {
-			float   cosa, sina;
-
+		for (int i = 0; i < 512; i++) {
 			l[i].angle = 2.0F * M_PI_F * (float) i / 512.0F;
-			cosa = param * cosf (l[i].angle);
-			sina = param * sinf (l[i].angle);
+			float cosa = param * cosf (l[i].angle);
+			float sina = param * sinf (l[i].angle);
 			l[i].x = ((float) rx / 2.0F) + cosa;
 			l[i].y = (float) ry / 2.0F + sina;
 		}
@@ -115,23 +109,18 @@ goom_lines_set_res (GMLine * gml, int rx, int ry)
 static void
 goom_lines_move (GMLine * l)
 {
-	int     i;
-	unsigned char *c1, *c2;
-
-	for (i = 0; i < 512; i++) {
+	for (int i = 0; i < 512; i++) {
 		l->points[i].x = (l->points2[i].x + 39.0F * l->points[i].x) / 40.0F;
 		l->points[i].y = (l->points2[i].y + 39.0F * l->points[i].y) / 40.0F;
 		l->points[i].angle =
 			(l->points2[i].angle + 39.0F * l->points[i].angle) / 40.0F;
 	}
 
-	c1 = (unsigned char *) &l->color;
-	c2 = (unsigned char *) &l->color2;
-	for (i = 0; i < 4; i++) {
-		int     cc1, cc2;
-
-		cc1 = *c1;
-		cc2 = *c2;
+	unsigned char *c1 = (unsigned char *) &l->color;
+	unsigned char *c2 = (unsigned char *) &l->color2;
+	for (int i = 0; i < 4; i++) {
+		int cc1 = *c1;
+		int cc2 = *c2;
 		*c1 = (unsigned char) ((cc1 * 63 + cc2) >> 6);
 		++c1;
 		++c2;
@@ -212,7 +201,6 @@ void
 goom_lines_draw (GMLine * line, const gint16 data[512], unsigned int *p)
 {
 	if (line != NULL) {
-		int     i, x1, y1;
 		guint32 color = line->color;
 		GMUnitPointer *pt = &(line->points[0]);
 
@@ -221,10 +209,10 @@ goom_lines_draw (GMLine * line, const gint16 data[512], unsigned int *p)
 
 		lightencolor ((int *)&color, line->power);
 
-		x1 = (int) (pt->x + cosa * line->amplitude * data[0]);
-		y1 = (int) (pt->y + sina * line->amplitude * data[0]);
+		int x1 = (int) (pt->x + cosa * line->amplitude * data[0]);
+		int y1 = (int) (pt->y + sina * line->amplitude * data[0]);
 
-		for (i = 1; i < 512; i++) {
+		for (int i = 1; i < 512; i++) {
 			pt = &(line->points[i]);
 
 			cosa = cosf (pt->angle) / 1000.0F;

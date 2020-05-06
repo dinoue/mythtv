@@ -105,21 +105,21 @@ void BDOverlay::wipe(int x, int y, int width, int height)
 
 static void HandleOverlayCallback(void *data, const bd_overlay_s *const overlay)
 {
-    BDRingBuffer *bdrb = (BDRingBuffer*) data;
+    auto *bdrb = (BDRingBuffer*) data;
     if (bdrb)
         bdrb->SubmitOverlay(overlay);
 }
 
 static void HandleARGBOverlayCallback(void *data, const bd_argb_overlay_s *const overlay)
 {
-    BDRingBuffer *bdrb = (BDRingBuffer*) data;
+    auto *bdrb = (BDRingBuffer*) data;
     if (bdrb)
         bdrb->SubmitARGBOverlay(overlay);
 }
 
 static void file_opened_callback(void* bdr)
 {
-    BDRingBuffer *obj = (BDRingBuffer*)bdr;
+    auto *obj = (BDRingBuffer*)bdr;
     if (obj)
         obj->ProgressUpdate();
 }
@@ -146,12 +146,12 @@ BDInfo::BDInfo(const QString &filename)
     LOG(VB_PLAYBACK, LOG_INFO, QString("BDInfo: Trying %1").arg(filename));
     QString name = filename;
 
-    if (name.startsWith("bd://"))
-        name.remove(0,4);
-    else if (name.startsWith("bd:/"))
+    if (name.startsWith("bd:"))
+    {
         name.remove(0,3);
-    else if (name.startsWith("bd:"))
-        name.remove(0,3);
+        while (name.startsWith("//"))
+            name.remove(0,1);
+    }
 
     // clean path filename
     name = QDir(QDir::cleanPath(name)).canonicalPath();
@@ -722,7 +722,7 @@ bool BDRingBuffer::OpenFile(const QString &lfilename, uint /*retry_ms*/)
     m_currentPGTextSTStream = 0;
     m_currentSecondaryAudioStream = 0;
     m_currentSecondaryVideoStream = 0;
-    m_PGTextSTEnabled = false;
+    m_pgTextSTEnabled = false;
     m_secondaryAudioEnabled = false;
     m_secondaryVideoEnabled = false;
     m_secondaryVideoIsFullscreen = false;
@@ -946,9 +946,9 @@ bool BDRingBuffer::UpdateTitleInfo(void)
     int minutes = ((int)total_secs / 60) - (hours * 60);
     double secs = (double)total_secs - (double)(hours * 60 * 60 + minutes * 60);
     QString duration = QString("%1:%2:%3")
-                        .arg(QString().sprintf("%02d", hours))
-                        .arg(QString().sprintf("%02d", minutes))
-                        .arg(QString().sprintf("%02.1f", secs));
+        .arg(hours,   2,10,QChar('0'))
+        .arg(minutes, 2,10,QChar('0'))
+        .arg(secs,    2,'f',1,QChar('0'));
     LOG(VB_GENERAL, LOG_INFO, LOC +
         QString("New title info: Index %1 Playlist: %2 Duration: %3 "
                 "Chapters: %5")
@@ -973,11 +973,11 @@ bool BDRingBuffer::UpdateTitleInfo(void)
                           (double)(hours * 60 * 60 + minutes * 60);
             LOG(VB_PLAYBACK, LOG_INFO, LOC +
                 QString("Chapter %1 found @ [%2:%3:%4]->%5")
-                    .arg(QString().sprintf("%02d", i + 1))
-                    .arg(QString().sprintf("%02d", hours))
-                    .arg(QString().sprintf("%02d", minutes))
-                    .arg(QString().sprintf("%06.3f", secs))
-                    .arg(framenum));
+                .arg(i + 1,   2,10,QChar('0'))
+                .arg(hours,   2,10,QChar('0'))
+                .arg(minutes, 2,10,QChar('0'))
+                .arg(secs,    6,'f',3,QChar('0'))
+                .arg(framenum));
         }
     }
 
@@ -1001,9 +1001,11 @@ bool BDRingBuffer::UpdateTitleInfo(void)
     }
 
     if (m_currentTitleInfo->clip_count > 1 && still != BLURAY_STILL_NONE)
+    {
         LOG(VB_GENERAL, LOG_WARNING, LOC +
             "Warning: more than 1 clip, following still "
             "frame analysis may be wrong");
+    }
 
     if (still == BLURAY_STILL_TIME)
     {
@@ -1414,7 +1416,7 @@ void BDRingBuffer::HandleBDEvent(BD_EVENT &ev)
         case BD_EVENT_PG_TEXTST:
             LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("EVENT_PG_TEXTST %1")
                                 .arg(ev.param ? "enable" : "disable"));
-            m_PGTextSTEnabled = (ev.param != 0U);
+            m_pgTextSTEnabled = (ev.param != 0U);
             break;
         case BD_EVENT_SECONDARY_AUDIO:
             LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("EVENT_SECONDARY_AUDIO %1")
@@ -1481,7 +1483,7 @@ bool BDRingBuffer::IsInStillFrame(void) const
  * \param streamCount   Number of streams in the array
  * \return Pointer to the matching stream if found, otherwise nullptr.
  */
-const BLURAY_STREAM_INFO* BDRingBuffer::FindStream(int streamid, BLURAY_STREAM_INFO* streams, int streamCount) const
+const BLURAY_STREAM_INFO* BDRingBuffer::FindStream(int streamid, BLURAY_STREAM_INFO* streams, int streamCount)
 {
     const BLURAY_STREAM_INFO* stream = nullptr;
 
@@ -1636,6 +1638,7 @@ void BDRingBuffer::ClearOverlays(void)
         overlay = nullptr;
     }
 
+    // NOLINTNEXTLINE(modernize-loop-convert)
     for (int i = 0; i < m_overlayPlanes.size(); i++)
     {
         BDOverlay*& osd = m_overlayPlanes[i];
@@ -1728,7 +1731,7 @@ void BDRingBuffer::SubmitOverlay(const bd_overlay_s * const overlay)
         case BD_OVERLAY_FLUSH:   /* all changes have been done, flush overlay to display at given pts */
             if (osd)
             {
-                BDOverlay* newOverlay = new BDOverlay(*osd);
+                auto* newOverlay = new BDOverlay(*osd);
                 newOverlay->m_image =
                     osd->m_image.convertToFormat(QImage::Format_ARGB32);
                 newOverlay->m_pts = overlay->pts;
@@ -1811,7 +1814,7 @@ void BDRingBuffer::SubmitARGBOverlay(const bd_argb_overlay_s * const overlay)
             if (osd)
             {
                 QMutexLocker lock(&m_overlayLock);
-                BDOverlay* newOverlay = new BDOverlay(*osd);
+                auto* newOverlay = new BDOverlay(*osd);
                 newOverlay->m_pts = overlay->pts;
                 m_overlayImages.append(newOverlay);
             }

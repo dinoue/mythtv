@@ -87,7 +87,7 @@ void MythGenericTree::ensureSortFields(void)
 MythGenericTree* MythGenericTree::addNode(const QString &a_string, int an_int,
                                   bool selectable_flag, bool visible)
 {
-    MythGenericTree *new_node = new MythGenericTree(a_string.simplified(),
+    auto *new_node = new MythGenericTree(a_string.simplified(),
                                                     an_int, selectable_flag);
     new_node->SetVisible(visible);
     return addNode(new_node);
@@ -97,7 +97,7 @@ MythGenericTree* MythGenericTree::addNode(const QString &a_string,
                                   const QString &sortText, int an_int, bool
                                   selectable_flag, bool visible)
 {
-    MythGenericTree *new_node = new MythGenericTree(a_string.simplified(),
+    auto *new_node = new MythGenericTree(a_string.simplified(),
                                                     an_int, selectable_flag);
     new_node->SetVisible(visible);
     new_node->SetSortText(sortText);
@@ -296,9 +296,8 @@ MythGenericTree* MythGenericTree::getVisibleChildAt(uint reference) const
     QList<MythGenericTree*> *list = m_subnodes;
 
     uint n = 0;
-    for (int i = 0; i < list->size(); ++i)
+    foreach (auto child, *list)
     {
-        MythGenericTree *child = list->at(i);
         if (child->IsVisible())
         {
             if (n == reference)
@@ -502,8 +501,8 @@ void MythGenericTree::SetVisible(bool visible)
 
 MythUIButtonListItem *MythGenericTree::CreateListButton(MythUIButtonList *list)
 {
-    MythUIButtonListItem *item = new MythUIButtonListItem(list, GetText());
-    item->SetData(qVariantFromValue(this));
+    auto *item = new MythUIButtonListItem(list, GetText());
+    item->SetData(QVariant::fromValue(this));
     item->SetTextFromMap(m_strings);
     item->SetImageFromMap(m_imageFilenames);
     item->SetStatesFromMap(m_states);

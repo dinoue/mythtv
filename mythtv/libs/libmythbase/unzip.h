@@ -112,6 +112,9 @@ public:
 	UnZip();
 	virtual ~UnZip();
 
+	UnZip(const UnZip &) = delete;		  // not copyable
+	UnZip &operator=(const UnZip &) = delete; // not copyable
+
 	bool isOpen() const;
 
 	ErrorCode openArchive(const QString& filename);
@@ -140,10 +143,7 @@ public:
 	void setPassword(const QString& pwd);
 
 private:
-        UnZip(const UnZip &) = delete;            // not copyable
-        UnZip &operator=(const UnZip &) = delete; // not copyable
-
-	UnzipPrivate* d;
+	UnzipPrivate* d;  // NOLINT(readability-identifier-naming)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(UnZip::ExtractionOptions)

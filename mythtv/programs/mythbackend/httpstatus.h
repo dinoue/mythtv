@@ -18,13 +18,13 @@
 #include "httpserver.h"
 #include "programinfo.h"
 
-typedef enum 
+enum HttpStatusMethod
 {
     HSM_Unknown         =  0,
     HSM_GetStatusHTML   =  1,
     HSM_GetStatusXML    =  2
 
-} HttpStatusMethod;
+};
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ class HttpStatus : public HttpServerExtension
     public:
                  HttpStatus( QMap<int, EncoderLink *> *tvList, Scheduler *sched,
                              AutoExpire *expirer, bool bIsMaster );
-        virtual ~HttpStatus() = default;
+        ~HttpStatus() override = default;
 
         void     SetMainServer(MainServer *mainServer)
                     { m_pMainServer = mainServer; }

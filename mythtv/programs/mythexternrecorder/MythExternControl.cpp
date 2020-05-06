@@ -38,13 +38,6 @@ const QString VERSION = "0.6";
 MythExternControl::MythExternControl(void)
     : m_buffer(this)
     , m_commands(this)
-    , m_run(true)
-    , m_commands_running(true)
-    , m_buffer_running(true)
-    , m_fatal(false)
-    , m_streaming(false)
-    , m_xon(false)
-    , m_ready(false)
 {
     setObjectName("Control");
 
@@ -180,6 +173,11 @@ void Commands::TuneChannel(const QString & serial, const QString & channum)
     emit m_parent->TuneChannel(serial, channum);
 }
 
+void Commands::TuneStatus(const QString & serial)
+{
+    emit m_parent->TuneStatus(serial);
+}
+
 void Commands::LoadChannels(const QString & serial)
 {
     emit m_parent->LoadChannels(serial);
@@ -193,6 +191,11 @@ void Commands::FirstChannel(const QString & serial)
 void Commands::NextChannel(const QString & serial)
 {
     emit m_parent->NextChannel(serial);
+}
+
+void Commands::Cleanup(void)
+{
+    emit m_parent->Cleanup();
 }
 
 bool Commands::SendStatus(const QString & command, const QString & status)
@@ -316,7 +319,7 @@ bool Commands::ProcessCommand(const QString & cmd)
         else
             SendStatus(cmd, tokens[0], "OK:20");
     }
-    else if (tokens[1].startsWith("LockTimeout"))
+    else if (tokens[1].startsWith("LockTimeout?"))
     {
         LockTimeout(tokens[0]);
     }
@@ -359,10 +362,14 @@ bool Commands::ProcessCommand(const QString & cmd)
     }
     else if (tokens[1].startsWith("TuneChannel"))
     {
-        if (tokens.size() > 1)
+        if (tokens.size() > 2)
             TuneChannel(tokens[0], tokens[2]);
         else
             SendStatus(cmd, tokens[0], "ERR:Missing channum");
+    }
+    else if (tokens[1].startsWith("TuneStatus?"))
+    {
+        TuneStatus(tokens[0]);
     }
     else if (tokens[1].startsWith("LoadChannels"))
     {
@@ -392,6 +399,7 @@ bool Commands::ProcessCommand(const QString & cmd)
             StopStreaming(tokens[0], true);
         m_parent->Terminate();
         SendStatus(cmd, tokens[0], "OK:Terminating");
+        Cleanup();
     }
     else if (tokens[1].startsWith("FlowControl?"))
     {
@@ -501,8 +509,8 @@ bool Buffer::Fill(const QByteArray & buffer)
     if (buffer.size() < 1)
         return false;
 
-    static int dropped = 0;
-    static int dropped_bytes = 0;
+    static int s_dropped = 0;
+    static int s_droppedBytes = 0;
 
     m_parent->m_flow_mutex.lock();
     if (m_data.size() < MAX_QUEUE)
@@ -512,17 +520,17 @@ bool Buffer::Fill(const QByteArray & buffer)
                     + buffer.size());
 
         m_data.push(blk);
-        dropped = 0;
+        s_dropped = 0;
 
         LOG(VB_GENERAL, LOG_DEBUG, LOC +
             QString("Adding %1 bytes").arg(buffer.size()));
     }
     else
     {
-        dropped_bytes += buffer.size();
+        s_droppedBytes += buffer.size();
         LOG(VB_RECORD, LOG_WARNING, LOC +
             QString("Packet queue overrun. Dropped %1 packets, %2 bytes.")
-            .arg(++dropped).arg(dropped_bytes));
+            .arg(++s_dropped).arg(s_droppedBytes));
 
         std::this_thread::sleep_for(std::chrono::microseconds(250));
     }
@@ -565,12 +573,16 @@ void Buffer::Run(void)
             send_time = time (nullptr) + (60 * 5);
             write_total += written;
             if (m_parent->m_streaming)
+            {
                 LOG(VB_RECORD, LOG_NOTICE, LOC +
                     QString("Count: %1, Empty cnt %2, Written %3, Total %4")
                     .arg(write_cnt).arg(empty_cnt)
                     .arg(written).arg(write_total));
+            }
             else
+            {
                 LOG(VB_GENERAL, LOG_NOTICE, LOC + "Not streaming.");
+            }
 
             write_cnt = empty_cnt = written = 0;
         }

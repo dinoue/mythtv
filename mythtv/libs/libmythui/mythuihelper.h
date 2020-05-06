@@ -21,13 +21,13 @@ class QWidget;
 class QPixmap;
 class QSize;
 
-typedef enum ImageCacheMode
+enum ImageCacheMode
 {
     kCacheNormal          = 0x0,
     kCacheIgnoreDisk      = 0x1,
     kCacheCheckMemoryOnly = 0x2,
     kCacheForceStat       = 0x4,
-} ImageCacheMode;
+};
 
 struct MUI_PUBLIC MythUIMenuCallbacks
 {
@@ -66,19 +66,16 @@ class MUI_PUBLIC MythUIHelper
     bool IsScreenSetup(void);
     static bool IsTopScreenInitialized(void);
 
+    void UpdateScreenSettings(void);
     // which the user may have set to be different from the raw screen size
-    void GetScreenSettings(float &wmult, float &hmult);
-    void GetScreenSettings(int &width, float &wmult,
-                           int &height, float &hmult);
-    void GetScreenSettings(int &xbase, int &width, float &wmult,
-                           int &ybase, int &height, float &hmult);
-
-    // This returns the raw (drawable) screen size
-    void GetScreenBounds(int &xbase, int &ybase, int &width, int &height);
+    QRect GetScreenSettings(void);
+    void GetScreenSettings(QRect &Rect, float &XFactor, float &YFactor);
+    void GetScreenSettings(float &XFactor, float &YFactor);
 
     // Parse an X11 style command line (-geometry) string
     static void ParseGeometryOverride(const QString &geometry);
     static bool IsGeometryOverridden(void);
+    static QRect GetGeometryOverride(void);
 
     /// Returns a reference counted image from the cache.
     /// \note The reference count is set for one use call DecrRef() to delete.
@@ -129,8 +126,6 @@ class MUI_PUBLIC MythUIHelper
     QString GetCurrentLocation(bool fullPath = false, bool mainStackOnly = true);
 
     MThreadPool *GetImageThreadPool(void);
-
-    double GetPixelAspectRatio(void) const;
     QSize GetBaseSize(void) const;
 
     void SetFontStretch(int stretch);
@@ -147,7 +142,7 @@ class MUI_PUBLIC MythUIHelper
     void RemoveCacheDir(const QString &dirname);
     static void PruneCacheDir(const QString& dirname);
 
-    MythUIHelperPrivate *d {nullptr};
+    MythUIHelperPrivate *d {nullptr}; // NOLINT(readability-identifier-naming)
 
     QMutex m_locationLock;
     QStringList m_currentLocation;

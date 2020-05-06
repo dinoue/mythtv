@@ -1,3 +1,5 @@
+#include <utility>
+
 #include <QMutex>
 
 #include "frequencies.h"
@@ -20,10 +22,10 @@ TransportScanItem::TransportScanItem()
 
 TransportScanItem::TransportScanItem(uint           sourceid,
                                      const QString &_si_std,
-                                     const QString &_name,
+                                     QString        _name,
                                      uint           _mplexid,
                                      uint           _timeoutTune)
-    : m_mplexid(_mplexid),  m_friendlyName(_name),
+    : m_mplexid(_mplexid),  m_friendlyName(std::move(_name)),
       m_sourceID(sourceid),
       m_timeoutTune(_timeoutTune)
 {
@@ -38,11 +40,11 @@ TransportScanItem::TransportScanItem(uint           sourceid,
 }
 
 TransportScanItem::TransportScanItem(uint           _sourceid,
-                                     const QString &_name,
+                                     QString        _name,
                                      DTVMultiplex  &_tuning,
                                      uint           _timeoutTune)
     : m_mplexid(0),
-      m_friendlyName(_name),
+      m_friendlyName(std::move(_name)),
       m_sourceID(_sourceid),
       m_timeoutTune(_timeoutTune)
 {
@@ -50,12 +52,12 @@ TransportScanItem::TransportScanItem(uint           _sourceid,
 }
 
 TransportScanItem::TransportScanItem(uint                _sourceid,
-                                     const QString      &_name,
+                                     QString             _name,
                                      DTVTunerType        _tuner_type,
                                      const DTVTransport &_tuning,
                                      uint                _timeoutTune)
     : m_mplexid(0),
-      m_friendlyName(_name),
+      m_friendlyName(std::move(_name)),
       m_sourceID(_sourceid),
       m_timeoutTune(_timeoutTune)
 {
@@ -66,23 +68,23 @@ TransportScanItem::TransportScanItem(uint                _sourceid,
     m_tuning.ParseTuningParams(
         _tuner_type,
         QString::number(_tuning.m_frequency),  _tuning.m_inversion.toString(),
-        QString::number(_tuning.m_symbolrate), _tuning.m_fec.toString(),
-        _tuning.m_polarity.toString(),         _tuning.m_hp_code_rate.toString(),
-        _tuning.m_lp_code_rate.toString(),     _tuning.m_modulation.toString(),
-        _tuning.m_trans_mode.toString(),       _tuning.m_guard_interval.toString(),
+        QString::number(_tuning.m_symbolRate), _tuning.m_fec.toString(),
+        _tuning.m_polarity.toString(),         _tuning.m_hpCodeRate.toString(),
+        _tuning.m_lpCodeRate.toString(),       _tuning.m_modulation.toString(),
+        _tuning.m_transMode.toString(),        _tuning.m_guardInterval.toString(),
         _tuning.m_hierarchy.toString(),        _tuning.m_modulation.toString(),
-        _tuning.m_bandwidth.toString(),        _tuning.m_mod_sys.toString(),
+        _tuning.m_bandwidth.toString(),        _tuning.m_modSys.toString(),
         _tuning.m_rolloff.toString());
 }
 
 TransportScanItem::TransportScanItem(uint sourceid,
                                      const QString &std,
-                                     const QString &strFmt,
+                                     QString strFmt,
                                      uint freqNum,
                                      uint freq,
                                      const FrequencyTable &ft,
                                      uint timeoutTune)
-    : m_mplexid(0),           m_friendlyName(strFmt),
+    : m_mplexid(0),           m_friendlyName(std::move(strFmt)),
       m_friendlyNum(freqNum), m_sourceID(sourceid),
       m_timeoutTune(timeoutTune)
 {
@@ -108,15 +110,15 @@ TransportScanItem::TransportScanItem(uint sourceid,
     {
         m_tuning.m_inversion      = ft.m_inversion;
         m_tuning.m_bandwidth      = ft.m_bandwidth;
-        m_tuning.m_hp_code_rate   = ft.m_coderateHp;
-        m_tuning.m_lp_code_rate   = ft.m_coderateLp;
-        m_tuning.m_trans_mode     = ft.m_transMode;
-        m_tuning.m_guard_interval = ft.m_guardInterval;
+        m_tuning.m_hpCodeRate     = ft.m_coderateHp;
+        m_tuning.m_lpCodeRate     = ft.m_coderateLp;
+        m_tuning.m_transMode      = ft.m_transMode;
+        m_tuning.m_guardInterval  = ft.m_guardInterval;
         m_tuning.m_hierarchy      = ft.m_hierarchy;
     }
     else if (std == "dvbc" || std == "dvbs")
     {
-        m_tuning.m_symbolrate     = ft.m_symbolRate;
+        m_tuning.m_symbolRate     = ft.m_symbolRate;
         m_tuning.m_fec            = ft.m_fecInner;
     }
 
@@ -124,15 +126,15 @@ TransportScanItem::TransportScanItem(uint sourceid,
 }
 
 TransportScanItem::TransportScanItem(uint _sourceid,
-                                     const QString &_name,
-                                     const IPTVTuningData &_tuning,
-                                     const QString &_channel,
+                                     QString _name,
+                                     IPTVTuningData _tuning,
+                                     QString _channel,
                                      uint _timeoutTune) :
     m_mplexid(0),
-    m_friendlyName(_name),
+    m_friendlyName(std::move(_name)),
     m_sourceID(_sourceid),
     m_timeoutTune(_timeoutTune),
-    m_iptvTuning(_tuning), m_iptvChannel(_channel)
+    m_iptvTuning(std::move(_tuning)), m_iptvChannel(std::move(_channel))
 {
     m_tuning.Clear();
     m_tuning.m_sistandard = "MPEG";
@@ -153,7 +155,7 @@ uint TransportScanItem::GetMultiplexIdFromDB(void) const
 
 uint64_t TransportScanItem::freq_offset(uint i) const
 {
-    int64_t freq = (int64_t) m_tuning.m_frequency;
+    auto freq = (int64_t) m_tuning.m_frequency;
 
     return (uint64_t) (freq + m_freqOffsets[i]);
 }
@@ -186,14 +188,17 @@ QString TransportScanItem::toString() const
         str += QString("\t  inv(%1) bandwidth(%2) hp(%3) lp(%4)\n")
             .arg(m_tuning.m_inversion)
             .arg(m_tuning.m_bandwidth)
-            .arg(m_tuning.m_hp_code_rate)
-            .arg(m_tuning.m_lp_code_rate);
+            .arg(m_tuning.m_hpCodeRate)
+            .arg(m_tuning.m_lpCodeRate);
         str += QString("\t  trans_mode(%1) guard_int(%2) hierarchy(%3)\n")
-            .arg(m_tuning.m_trans_mode)
-            .arg(m_tuning.m_guard_interval)
+            .arg(m_tuning.m_transMode)
+            .arg(m_tuning.m_guardInterval)
             .arg(m_tuning.m_hierarchy);
+        str += QString("\t  symbol_rate(%1) fec(%2)\n")
+            .arg(m_tuning.m_symbolRate)
+            .arg(m_tuning.m_fec);
     }
-    str += QString("\t offset[0..2]: %1 %2 %3")
+    str += QString("\toffset[0..2]: %1 %2 %3")
         .arg(m_freqOffsets[0]).arg(m_freqOffsets[1]).arg(m_freqOffsets[2]);
     return str;
 }
@@ -250,8 +255,8 @@ freq_table_list_t get_matching_freq_tables(
         get_matching_freq_tables_internal(format, modulation, country);
 
     freq_table_list_t new_list;
-    for (size_t i = 0; i < list.size(); i++)
-        new_list.push_back(new FrequencyTable(*list[i]));
+    for (auto & ft : list)
+        new_list.push_back(new FrequencyTable(*ft));
 
     return new_list;
 }
@@ -265,16 +270,16 @@ long long get_center_frequency(
     freq_table_list_t list =
         get_matching_freq_tables_internal(format, modulation, country);
 
-    for (size_t i = 0; i < list.size(); ++i)
+    for (auto & ft : list)
     {
-        int min_freqid = list[i]->m_nameOffset;
+        int min_freqid = ft->m_nameOffset;
         int max_freqid = min_freqid +
-            ((list[i]->m_frequencyEnd - list[i]->m_frequencyStart) /
-             list[i]->m_frequencyStep);
+            ((ft->m_frequencyEnd - ft->m_frequencyStart) /
+             ft->m_frequencyStep);
 
         if ((min_freqid <= freqid) && (freqid <= max_freqid))
-            return list[i]->m_frequencyStart +
-                list[i]->m_frequencyStep * (freqid - min_freqid);
+            return ft->m_frequencyStart +
+                ft->m_frequencyStep * (freqid - min_freqid);
     }
     return -1;
 }
@@ -287,15 +292,15 @@ int get_closest_freqid(
     freq_table_list_t list =
         get_matching_freq_tables_internal(format, modulation, country);
 
-    for (size_t i = 0; i < list.size(); ++i)
+    for (auto & ft : list)
     {
-        int min_freqid = list[i]->m_nameOffset;
+        int min_freqid = ft->m_nameOffset;
         int max_freqid = min_freqid +
-            ((list[i]->m_frequencyEnd - list[i]->m_frequencyStart) /
-             list[i]->m_frequencyStep);
+            ((ft->m_frequencyEnd - ft->m_frequencyStart) /
+             ft->m_frequencyStep);
         int freqid =
-            ((centerfreq - list[i]->m_frequencyStart) /
-             list[i]->m_frequencyStep) + min_freqid;
+            ((centerfreq - ft->m_frequencyStart) /
+             ft->m_frequencyStep) + min_freqid;
 
         if ((min_freqid <= freqid) && (freqid <= max_freqid))
             return freqid;
@@ -534,6 +539,13 @@ static void init_freq_tables(freq_table_map_t &fmap)
         DTVCodeRate::kFECAuto, DTVModulation::kModulationQAMAuto,
         6900000, 0, 0);
 
+    // DVB-C Netherlands
+    fmap["dvbc_qam_nl0"] = new FrequencyTable(
+         474000000,  474000000, 8000000, "Channel %1", 21,
+        DTVCodeRate::kFECAuto, DTVModulation::kModulationQAM64,
+        6875000, 0, 0);
+
+    // DVB-C United Kingdom
     fmap["dvbc_qam_gb0"] = new FrequencyTable(
         12324000, 12324000+1, 10, "Channel %1", 1,
         DTVCodeRate::kFEC_3_4, DTVModulation::kModulationQAMAuto,
@@ -543,6 +555,7 @@ static void init_freq_tables(freq_table_map_t &fmap)
         DTVCodeRate::kFEC_3_4, DTVModulation::kModulationQAM64,
         6952000, 0, 0);
 
+    // DVB-C Unknown (British Forces ?)
     fmap["dvbc_qam_bf0"] = new FrequencyTable(
         203000000, 795000000, 100000, "BF Channel %1", 1,
         DTVCodeRate::kFECAuto, DTVModulation::kModulationQAMAuto,
@@ -702,7 +715,7 @@ static void init_freq_tables(freq_table_map_t &fmap)
     }
 
     // create old school frequency tables...
-    for (struct CHANLISTS *ptr = chanlists; ptr->name ; ptr++)
+    for (CHANLISTS *ptr = chanlists; ptr->name ; ptr++)
     {
         QString tbl_name = ptr->name;
         for (uint i = 0; i < (uint)ptr->count; i++)

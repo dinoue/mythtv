@@ -61,7 +61,7 @@
             VB_LAST_ITEM \
         };
     #define VERBOSE_MAP(name,mask,additive,help) \
-        name = mask,
+        name = (mask),
 #else
     // msvc can't have 64bit enums
     #define VERBOSE_PREAMBLE
@@ -71,7 +71,7 @@
 #endif
 
 #define LOGLEVEL_PREAMBLE \
-    typedef enum {
+    typedef enum { //NOLINT(modernize-use-using) included from C code
 #define LOGLEVEL_POSTAMBLE \
     } LogLevel_t;
 #define LOGLEVEL_MAP(name,value,shortname) \
@@ -171,11 +171,11 @@ VERBOSE_MAP(VB_STDIO,     0x2000000000ULL, true,
    programs that have debugging enabled.
  */
 VERBOSE_MAP(VB_GPU,       0x4000000000ULL, true,
-            "GPU Commercial Flagging messages")
+            "GPU OpenGL driver messages")
 VERBOSE_MAP(VB_GPUAUDIO,  0x8000000000ULL, true,
             "GPU Audio Processing messages")
 VERBOSE_MAP(VB_GPUVIDEO,  0x10000000000ULL, true,
-            "GPU Video Processing messages")
+            "GPU video rendering messages")
 VERBOSE_MAP(VB_REFCOUNT,  0x20000000000ULL, true,
             "Reference Count messages")
 VERBOSE_MAP(VB_HTTP,  0x40000000000ULL, true,
@@ -200,21 +200,21 @@ LOGLEVEL_POSTAMBLE
 
 #ifndef _IMPLEMENT_VERBOSE
 #ifdef __cplusplus
-typedef struct {
-    uint64_t    mask;
+struct VerboseDef {
+    uint64_t    mask     {0};
     QString     name;
-    bool        additive;
+    bool        additive {false};
     QString     helpText;
-} VerboseDef;
-typedef QMap<QString, VerboseDef *> VerboseMap;
+};
+using VerboseMap = QMap<QString, VerboseDef *>;
 
-typedef struct {
-    int         value;
+struct LoglevelDef {
+    int         value     {LOG_UNKNOWN};
     QString     name;
-    char        shortname;
-} LoglevelDef;
-typedef QMap<int, LoglevelDef *> LoglevelMap;
-typedef QMap<uint64_t, LogLevel_t> ComponentLogLevelMap;
+    char        shortname {'-'};
+};
+using LoglevelMap = QMap<int, LoglevelDef *>;
+using ComponentLogLevelMap = QMap<uint64_t, LogLevel_t>;
 
 extern VerboseMap verboseMap;
 extern QMutex verboseMapMutex;

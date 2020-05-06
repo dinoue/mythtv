@@ -2,9 +2,9 @@
 #define _LOGODETECTORBASE_H_
 
 #include <QObject>
+#include "mythframe.h"
 
 class MythPlayer;
-typedef struct VideoFrame_ VideoFrame;
 
 class LogoDetectorBase : public QObject
 {
@@ -24,7 +24,7 @@ class LogoDetectorBase : public QObject
                             float debugValue = 0.0);
 
   protected:
-    virtual ~LogoDetectorBase() = default;
+    ~LogoDetectorBase() override = default;
 
   protected:
     bool m_foundLogo {false};

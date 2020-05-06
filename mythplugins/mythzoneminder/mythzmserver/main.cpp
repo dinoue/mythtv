@@ -259,8 +259,8 @@ int main(int argc, char **argv)
     connectToDatabase();
 
     // clear the master and temp sets
-    FD_ZERO(&master);
-    FD_ZERO(&read_fds);
+    FD_ZERO(&master);   // NOLINT(readability-isolate-declaration)
+    FD_ZERO(&read_fds); // NOLINT(readability-isolate-declaration)
 
     // get the listener
     if ((listener = socket(AF_INET, SOCK_STREAM, 0)) == -1)
@@ -351,7 +351,7 @@ int main(int argc, char **argv)
                         }
 
                         // create new ZMServer and add to map
-                        ZMServer *server = new ZMServer(newfd, debug);
+                        auto *server = new ZMServer(newfd, debug);
                         serverList[newfd] = server;
 
                         printf("new connection from %s on socket %d\n",
@@ -396,11 +396,8 @@ int main(int argc, char **argv)
     }
 
     // cleanly remove all the ZMServer's
-    for (std::map<int, ZMServer*>::iterator it = serverList.begin();
-         it != serverList.end(); ++it)
-    {
-        delete it->second;
-    }
+    for (auto & server : serverList)
+        delete server.second;
 
     mysql_close(&g_dbConn);
 

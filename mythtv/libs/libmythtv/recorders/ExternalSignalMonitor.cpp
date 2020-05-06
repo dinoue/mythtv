@@ -41,7 +41,7 @@ ExternalSignalMonitor::ExternalSignalMonitor(int db_cardnum,
                                              ExternalChannel *_channel,
                                              bool _release_stream,
                                              uint64_t _flags)
-    : DTVSignalMonitor(db_cardnum, _channel, _flags, _release_stream)
+    : DTVSignalMonitor(db_cardnum, _channel, _release_stream, _flags)
 {
     QString result;
 
@@ -53,6 +53,9 @@ ExternalSignalMonitor::ExternalSignalMonitor(int db_cardnum,
         LOG(VB_GENERAL, LOG_ERR, LOC + "Open failed");
     else
         m_lock_timeout = GetLockTimeout() * 1000;
+
+    if (GetExternalChannel()->IsBackgroundTuning())
+        m_scriptStatus.SetValue(1);
 }
 
 /** \fn ExternalSignalMonitor::~ExternalSignalMonitor()
@@ -101,6 +104,16 @@ void ExternalSignalMonitor::UpdateValues(void)
         SignalMonitor::UpdateValues();
 
         QMutexLocker locker(&m_statusLock);
+        if (!m_scriptStatus.IsGood())
+            return;
+    }
+
+    if (GetExternalChannel()->IsBackgroundTuning())
+    {
+        QMutexLocker locker(&m_statusLock);
+        if (m_scriptStatus.GetValue() < 2)
+            m_scriptStatus.SetValue(GetExternalChannel()->GetTuneStatus());
+
         if (!m_scriptStatus.IsGood())
             return;
     }
@@ -180,7 +193,7 @@ int ExternalSignalMonitor::GetSignalStrengthPercent(void)
     m_stream_handler->ProcessCommand("SignalStrengthPercent?", result);
     if (result.startsWith("OK:"))
     {
-        bool ok;
+        bool ok = false;
         int percent = result.mid(3).toInt(&ok);
         if (!ok)
         {
@@ -206,7 +219,7 @@ int ExternalSignalMonitor::GetLockTimeout(void)
     m_stream_handler->ProcessCommand("LockTimeout?", result, 10000);
     if (result.startsWith("OK:"))
     {
-        bool ok;
+        bool ok = false;
         int timeout = result.mid(3).toInt(&ok);
         if (!ok)
         {

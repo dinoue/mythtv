@@ -92,10 +92,10 @@ ThumbFinder::ThumbFinder(MythScreenStack *parent, ArchiveItem *archiveItem,
 {
     // copy thumbList so we can abandon changes if required
     m_thumbList.clear();
-    for (int x = 0; x < m_archiveItem->thumbList.size(); x++)
+    foreach (auto item, m_archiveItem->thumbList)
     {
-        ThumbImage *thumb = new ThumbImage;
-        *thumb = *m_archiveItem->thumbList.at(x);
+        auto *thumb = new ThumbImage;
+        *thumb = *item;
         m_thumbList.append(thumb);
     }
 }
@@ -288,10 +288,10 @@ void ThumbFinder::savePressed()
          delete m_archiveItem->thumbList.takeFirst();
     m_archiveItem->thumbList.clear();
 
-    for (int x = 0; x < m_thumbList.size(); x++)
+    foreach (auto item, m_thumbList)
     {
-        ThumbImage *thumb = new ThumbImage;
-        *thumb = *m_thumbList.at(x);
+        auto *thumb = new ThumbImage;
+        *thumb = *item;
         m_archiveItem->thumbList.append(thumb);
     }
 
@@ -500,7 +500,7 @@ bool ThumbFinder::getThumbImages()
             int sec = chapter % 60;
             QString time = QString::asprintf("%02d:%02d:%02d", hour, min, sec);
 
-            int64_t frame = (int64_t) (chapter * ceil(m_fps));
+            auto frame = (int64_t) (chapter * ceil(m_fps));
 
             // no thumb available create a new one
             thumb = new ThumbImage;
@@ -865,7 +865,7 @@ void ThumbFinder::closeAVCodec()
 void ThumbFinder::ShowMenu()
 {
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
-    MythDialogBox *menuPopup = new MythDialogBox(tr("Menu"), popupStack, "actionmenu");
+    auto *menuPopup = new MythDialogBox(tr("Menu"), popupStack, "actionmenu");
 
     if (menuPopup->Create())
         popupStack->AddScreen(menuPopup);
@@ -882,7 +882,7 @@ void ThumbFinder::updatePositionBar(int64_t frame)
         return;
 
     QSize size = m_positionImage->GetArea().size();
-    QPixmap *pixmap = new QPixmap(size.width(), size.height());
+    auto *pixmap = new QPixmap(size.width(), size.height());
 
     QPainter p(pixmap);
     QBrush brush(Qt::green);

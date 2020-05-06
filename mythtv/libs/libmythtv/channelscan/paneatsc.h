@@ -31,7 +31,7 @@ class PaneATSC : public GroupSetting
         connect(m_atsc_modulation, SIGNAL(valueChanged(     const QString&)),
                 this,            SLOT(  ModulationChanged(const QString&)));
 
-        GroupSetting *range = new GroupSetting();
+        auto *range = new GroupSetting();
         m_transport_start = new TransMythUIComboBoxSetting();
         m_transport_end   = new TransMythUIComboBoxSetting();
         m_transport_count = new TransTextEditSetting();
@@ -51,7 +51,7 @@ class PaneATSC : public GroupSetting
         ResetTransportRange();
     }
 
-    ~PaneATSC()
+    ~PaneATSC() override
     {
         while (!m_tables.empty())
         {
@@ -59,6 +59,9 @@ class PaneATSC : public GroupSetting
             m_tables.pop_back();
         }
     }
+
+    void SetFrequencyTable(const QString &atsc_table)
+        { m_atsc_table->setValue(atsc_table); }
 
     QString GetFrequencyTable(void) const
         { return m_atsc_table->getValue(); }
@@ -92,7 +95,7 @@ class PaneATSC : public GroupSetting
         ResetTransportRange();
     }
 
-    void TransportRangeChanged(const QString&)
+    void TransportRangeChanged(const QString &/*range*/)
     {
         int a = m_transport_start->getValueIndex(m_transport_start->getValue());
         int b = m_transport_end->getValueIndex(m_transport_end->getValue());
@@ -116,10 +119,9 @@ class PaneATSC : public GroupSetting
         FetchFrequencyTables();
 
         bool first = true;
-        freq_table_list_t::iterator it = m_tables.begin();
-        for (; it != m_tables.end(); ++it)
+        for (auto it = m_tables.begin(); it != m_tables.end(); ++it)
         {
-            freq_table_list_t::iterator next = it;
+            auto next = it;
             ++next;
 
             const FrequencyTable &ft = **it;

@@ -37,12 +37,12 @@ class MUI_PUBLIC MythUITextEdit : public MythUIType, public StorageUser
 
   public:
     MythUITextEdit(MythUIType *parent, const QString &name);
-   ~MythUITextEdit() = default;
+   ~MythUITextEdit() override = default;
 
     void Pulse(void) override; // MythUIType
-    bool keyPressEvent(QKeyEvent *) override; // MythUIType
+    bool keyPressEvent(QKeyEvent *event) override; // MythUIType
+    bool gestureEvent(MythGestureEvent *event) override; // MythUIType
 	bool inputMethodEvent(QInputMethodEvent *event) override; // MythUIType
-    bool gestureEvent(MythGestureEvent *) override; // MythUIType
     void Reset(void) override; // MythUIType
 
     void SetText(const QString &text, bool moveCursor = true);
@@ -51,10 +51,10 @@ class MUI_PUBLIC MythUITextEdit : public MythUIType, public StorageUser
 
     void SetFilter(InputFilter filter) { m_Filter = filter; }
     void SetPassword(bool isPassword)  { m_isPassword = isPassword; }
-    void SetMaxLength(const int length);
+    void SetMaxLength(int length);
 
     enum MoveDirection { MoveLeft, MoveRight, MoveUp, MoveDown, MovePageUp, MovePageDown, MoveEnd };
-    bool MoveCursor(MoveDirection);
+    bool MoveCursor(MoveDirection moveDir);
 
     void SetKeyboardPosition(PopupPosition pos) { m_keyboardPosition = pos; }
     PopupPosition GetKeyboardPosition(void)  { return m_keyboardPosition; }

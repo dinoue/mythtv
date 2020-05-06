@@ -197,10 +197,8 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
 
     TVRec::s_inputsLock.lockForRead();
 
-    for (auto iter = m_pEncoders->begin(); iter != m_pEncoders->end(); ++iter)
+    foreach (auto elink, *m_pEncoders)
     {
-        EncoderLink *elink = *iter;
-
         if (elink != nullptr)
         {
             TVState state = elink->GetState();
@@ -303,14 +301,14 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
         fes = nullptr;
 
         frontends.setAttribute( "count", map.size() );
-        for (EntryMap::iterator it = map.begin(); it != map.end(); ++it)
+        foreach (auto & entry, map)
         {
             QDomElement fe = pDoc->createElement("Frontend");
             frontends.appendChild(fe);
-            QUrl url((*it)->m_sLocation);
+            QUrl url(entry->m_sLocation);
             fe.setAttribute("name", url.host());
             fe.setAttribute("url",  url.toString(QUrl::RemovePath));
-            (*it)->DecrRef();
+            entry->DecrRef();
         }
     }
 
@@ -348,9 +346,9 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
         sbes->DecrRef();
         sbes = nullptr;
 
-        for (EntryMap::iterator it = map.begin(); it != map.end(); ++it)
+        foreach (auto & entry, map)
         {
-            QUrl url((*it)->m_sLocation);
+            QUrl url(entry->m_sLocation);
             if (url.host() != ipaddress)
             {
                 numbes++;
@@ -360,7 +358,7 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
                 mbe.setAttribute("name", url.host());
                 mbe.setAttribute("url" , url.toString(QUrl::RemovePath));
             }
-            (*it)->DecrRef();
+            entry->DecrRef();
         }
     }
 
@@ -475,7 +473,9 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
 
         if (fsID == "total")
         {
-            long long iLiveTV = -1, iDeleted = -1, iExpirable = -1;
+            long long iLiveTV = -1;
+            long long iDeleted = -1;
+            long long iExpirable = -1;
             MSqlQuery query(MSqlQuery::InitCon());
             query.prepare("SELECT SUM(filesize) FROM recorded "
                           " WHERE recgroup = :RECGROUP;");
@@ -585,11 +585,11 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
         QStringList output = QString(input).split('\n',
                                                   QString::SkipEmptyParts);
 
-        for (auto iter = output.begin(); iter != output.end(); ++iter)
+        foreach (auto & line, output)
         {
             QDomElement info = pDoc->createElement("Information");
 
-            QStringList list = (*iter).split("[]:[]");
+            QStringList list = line.split("[]:[]");
             unsigned int size = list.size();
             unsigned int hasAttributes = 0;
 
@@ -953,10 +953,12 @@ int HttpStatus::PrintScheduled( QTextStream &os, const QDomElement& scheduled )
                     os << "<em>" << sSubTitle << "</em><br /><br />";
 
                 if ( airDate.isValid())
+                {
                     os << "Orig. Airdate: "
                        << MythDate::toString(airDate, MythDate::kDateFull |
                                                       MythDate::kAddYear)
                        << "<br /><br />";
+                }
 
                 os << sDesc << "<br /><br />"
                    << "This recording will start "  << sTimeToStart
@@ -1154,11 +1156,13 @@ int HttpStatus::PrintJobQueue( QTextStream &os, const QDomElement& jobs )
                     os << "Job: " << JobQueue::JobText( nType ) << "<br />";
 
                     if (schedRunTime > MythDate::current())
+                    {
                         os << "Scheduled Run Time: "
                            << MythDate::toString(schedRunTime,
                                                  MythDate::kDateFull |
                                                  MythDate::kTime)
                            << "<br />";
+                    }
 
                     os << "Status: <font" << statusColor << ">"
                        << JobQueue::StatusText( nStatus )
@@ -1450,7 +1454,8 @@ int HttpStatus::PrintMiscellaneousInfo( QTextStream &os, const QDomElement& info
     uint count = nodes.count();
     if (count > 0)
     {
-        QString display, linebreak;
+        QString display;
+        QString linebreak;
         //QString name, value;
         os << "<div class=\"content\">\r\n"
            << "    <h2 class=\"status\">Miscellaneous</h2>\r\n";

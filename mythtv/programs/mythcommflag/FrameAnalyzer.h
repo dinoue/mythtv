@@ -10,8 +10,8 @@
 /* Base class for commercial flagging video frame analyzers. */
 
 #include <climits>
-
 #include <QMap>
+#include "mythframe.h"
 
 /*  
  * At least FreeBSD doesn't define LONG_LONG_MAX, but it does define  
@@ -21,7 +21,6 @@
 #define LONG_LONG_MAX  __LONG_LONG_MAX__  
 #endif
 
-typedef struct VideoFrame_ VideoFrame;
 class MythPlayer;
 
 class FrameAnalyzer
@@ -41,7 +40,7 @@ public:
 
 
     /* 0-based frameno => nframes */
-    typedef QMap<long long, long long> FrameMap;
+    using FrameMap = QMap<long long, long long>;
 
     virtual enum analyzeFrameResult MythPlayerInited(
             MythPlayer *player, long long nframes) {
@@ -54,8 +53,8 @@ public:
      * Populate *pNextFrame with the next frame number desired by this
      * analyzer.
      */
-    static const long long ANYFRAME = LLONG_MAX;
-    static const long long NEXTFRAME = -1;
+    static const long long kAnyFrame = LLONG_MAX;
+    static const long long kNextFrame = -1;
     virtual enum analyzeFrameResult analyzeFrame(const VideoFrame *frame,
             long long frameno, long long *pNextFrame /* [out] */) = 0;
 

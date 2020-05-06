@@ -28,8 +28,8 @@ template <class DBFS>
 class META_PUBLIC ImageScanThread : public MThread
 {
 public:
-    ImageScanThread(DBFS *const dbfs, ImageThumb<DBFS> *thumbGen);
-    ~ImageScanThread();
+    ImageScanThread(DBFS *dbfs, ImageThumb<DBFS> *thumbGen);
+    ~ImageScanThread() override;
 
     void        cancel();
     bool        IsScanning();
@@ -61,7 +61,7 @@ private:
     void CountFiles(const QStringList &paths);
     void Broadcast(int progress);
 
-    typedef QPair<int, QString> ClearTask;
+    using ClearTask = QPair<int, QString>;
 
     bool              m_scanning {false}; //!< The requested scan state
     QMutex            m_mutexState; //!< Mutex protecting scan state

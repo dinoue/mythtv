@@ -3,8 +3,7 @@
 
 #include "LogoDetectorBase.h"
 
-typedef struct edgemaskentry EdgeMaskEntry;
-typedef struct VideoFrame_ VideoFrame;
+struct EdgeMaskEntry;
 class ClassicCommDetector;
 
 class ClassicLogoDetector : public LogoDetectorBase
@@ -21,7 +20,7 @@ class ClassicLogoDetector : public LogoDetectorBase
     unsigned int getRequiredAvailableBufferForSearch() override; // LogoDetectorBase
 
   protected:
-    virtual ~ClassicLogoDetector() = default;
+    ~ClassicLogoDetector() override;
 
   private:
     void SetLogoMaskArea();

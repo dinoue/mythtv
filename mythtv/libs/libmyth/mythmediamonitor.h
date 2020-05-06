@@ -13,10 +13,13 @@
 #include "mythmedia.h"
 
 /// Stores details of media handlers
+
+// Adding member initializers caused compilation to fail with an error
+// that it cannot convert a brace-enclosed initializer list to MHData.
 struct MHData
 {
-    void   (*callback)(MythMediaDevice *mediadevice);
-    int      MythMediaType;
+    void   (*callback)(MythMediaDevice *mediadevice); // NOLINT(cppcoreguidelines-pro-type-member-init)
+    int      MythMediaType;                           // NOLINT(cppcoreguidelines-pro-type-member-init)
     QString  destination;
     QString  description;
 };
@@ -26,7 +29,7 @@ class MonitorThread : public MThread
 {
   public:
     MonitorThread(MediaMonitor* pMon,  unsigned long interval);
-    ~MonitorThread() { wait(); m_Monitor = nullptr; }
+    ~MonitorThread() override { wait(); m_Monitor = nullptr; }
     void setMonitor(MediaMonitor* pMon) { m_Monitor = pMon; }
     void run(void) override; // MThread
 
@@ -89,7 +92,7 @@ class MPUBLIC MediaMonitor : public QObject
 
   protected:
     MediaMonitor(QObject *par, unsigned long interval, bool allowEject);
-    virtual ~MediaMonitor() = default;
+    ~MediaMonitor() override = default;
 
     static void AttemptEject(MythMediaDevice *device);
     void CheckDevices(void);

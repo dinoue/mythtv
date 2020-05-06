@@ -12,11 +12,11 @@
 
 #ifndef __CC_CALLBACKS_H__
 /** EIA-708-A closed caption packet */
-typedef struct CaptionPacket
+struct CaptionPacket
 {
     unsigned char data[128+16];
     int size;
-} CaptionPacket;
+};
 #endif
 
 class CC708Reader;
@@ -27,7 +27,7 @@ class CC708Decoder
     explicit CC708Decoder(CC708Reader *ccr) : m_reader(ccr)
     {
         memset(&m_partialPacket, 0, sizeof(CaptionPacket));
-        memset(m_last_seen,      0, sizeof(m_last_seen));
+        memset(m_lastSeen,       0, sizeof(m_lastSeen));
     }
    ~CC708Decoder() = default;
 
@@ -35,12 +35,12 @@ class CC708Decoder
     void decode_cc_null(void);
 
     /// \return Services seen in last few seconds as specified.
-    void services(uint seconds, bool[64]) const;
+    void services(uint seconds, bool seen[64]) const;
 
   private:
-    CaptionPacket  m_partialPacket;
-    CC708Reader   *m_reader {nullptr};
-    time_t         m_last_seen[64];
+    CaptionPacket  m_partialPacket {};
+    CC708Reader   *m_reader        {nullptr};
+    time_t         m_lastSeen[64]  {};
 };
 
 #endif // CC708DECODER_H_

@@ -84,7 +84,7 @@ void JobQueue::customEvent(QEvent *e)
 {
     if (e->type() == MythEvent::MythEventMessage)
     {
-        MythEvent *me = dynamic_cast<MythEvent *>(e);
+        auto *me = dynamic_cast<MythEvent *>(e);
         if (me == nullptr)
             return;
         QString message = me->Message();
@@ -166,10 +166,7 @@ void JobQueue::ProcessQueue(void)
     LOG(VB_JOBQUEUE, LOG_INFO, LOC + "ProcessQueue() started");
 
     QString logInfo;
-    int jobID;
-    int cmds;
     //int flags;
-    int status;
     QString hostname;
 
     QMap<int, int> jobStatus;
@@ -208,10 +205,10 @@ void JobQueue::ProcessQueue(void)
         if (!jobs.empty())
         {
             inTimeWindow = InJobRunWindow();
-            for (int x = 0; x < jobs.size(); x++)
+            foreach (auto & job, jobs)
             {
-                status = jobs[x].status;
-                hostname = jobs[x].hostname;
+                int status = job.status;
+                hostname = job.hostname;
 
                 if (((status == JOB_RUNNING) ||
                      (status == JOB_STARTING) ||
@@ -249,10 +246,10 @@ void JobQueue::ProcessQueue(void)
             for ( int x = 0;
                  (x < jobs.size()) && (m_jobsRunning < maxJobs); x++)
             {
-                jobID = jobs[x].id;
-                cmds = jobs[x].cmds;
+                int jobID = jobs[x].id;
+                int cmds = jobs[x].cmds;
                 //flags = jobs[x].flags;
-                status = jobs[x].status;
+                int status = jobs[x].status;
                 hostname = jobs[x].hostname;
 
                 if (!jobs[x].chanid)
@@ -1063,10 +1060,8 @@ bool JobQueue::ChangeJobArgs(int jobID, const QString& args)
 int JobQueue::GetRunningJobID(uint chanid, const QDateTime &recstartts)
 {
     m_runningJobsLock->lock();
-    for (auto it = m_runningJobs.begin(); it != m_runningJobs.end(); ++it)
+    foreach (auto jInfo, m_runningJobs)
     {
-        RunningJobInfo jInfo = *it;
-
         if ((jInfo.pginfo->GetChanID()             == chanid) &&
             (jInfo.pginfo->GetRecordingStartTime() == recstartts))
         {
@@ -1183,7 +1178,7 @@ bool JobQueue::InJobRunWindow(int orStartsWithinMins)
                     .arg(queueStartTimeStr).arg(queueEndTimeStr));
 
     if ((queueStartTime <= curTime) && (curTime < queueEndTime))
-    {
+    {   // NOLINT(bugprone-branch-clone)
         inTimeWindow = true;
     }
     else if ((queueStartTime > queueEndTime) &&
@@ -1776,11 +1771,11 @@ void JobQueue::ProcessJob(const JobQueueEntry& job)
 
 void JobQueue::StartChildJob(void *(*ChildThreadRoutine)(void *), int jobID)
 {
-    JobThreadStruct *jts = new JobThreadStruct;
+    auto *jts = new JobThreadStruct;
     jts->jq = this;
     jts->jobID = jobID;
 
-    pthread_t childThread;
+    pthread_t childThread = 0;
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
@@ -1846,7 +1841,7 @@ QString JobQueue::GetJobCommand(int id, int jobType, ProgramInfo *tmpInfo)
 
         uint transcoder = tmpInfo->QueryTranscoderID();
         command.replace("%TRANSPROFILE%",
-                        (RecordingProfile::TranscoderAutodetect == transcoder) ?
+                        (RecordingProfile::kTranscoderAutodetect == transcoder) ?
                         "autodetect" : QString::number(transcoder));
     }
 
@@ -1877,10 +1872,10 @@ QString JobQueue::PrettyPrint(off_t bytes)
     // Pretty print "bytes" as KB, MB, GB, TB, etc., subject to the desired
     // number of units
     static const struct {
-        const char      *suffix;
-        unsigned int    max;
-        int         precision;
-    } pptab[] = {
+        const char   *m_suffix;
+        unsigned int  m_max;
+        int           m_precision;
+    } kPpTab[] = {
         { "bytes", 9999, 0 },
         { "kB", 999, 0 },
         { "MB", 999, 1 },
@@ -1891,23 +1886,22 @@ QString JobQueue::PrettyPrint(off_t bytes)
         { "ZB", 999, 1 },
         { "YB", 0, 0 },
     };
-    unsigned int    ii;
-    float           fbytes = bytes;
+    float fbytes = bytes;
 
-    ii = 0;
-    while (pptab[ii].max && fbytes > pptab[ii].max) {
+    unsigned int ii = 0;
+    while (kPpTab[ii].m_max && fbytes > kPpTab[ii].m_max) {
         fbytes /= 1024;
         ii++;
     }
 
     return QString("%1 %2")
-        .arg(fbytes, 0, 'f', pptab[ii].precision)
-        .arg(pptab[ii].suffix);
+        .arg(fbytes, 0, 'f', kPpTab[ii].m_precision)
+        .arg(kPpTab[ii].m_suffix);
 }
 
 void *JobQueue::TranscodeThread(void *param)
 {
-    JobThreadStruct *jts = (JobThreadStruct *)param;
+    auto *jts = (JobThreadStruct *)param;
     JobQueue *jq = jts->jq;
 
     MThread::ThreadSetup(QString("Transcode_%1").arg(jts->jobID));
@@ -1947,7 +1941,7 @@ void JobQueue::DoTranscodeThread(int jobID)
 
     uint transcoder = program_info->QueryTranscoderID();
     QString profilearg =
-        (RecordingProfile::TranscoderAutodetect == transcoder) ?
+        (RecordingProfile::kTranscoderAutodetect == transcoder) ?
         "autodetect" : QString::number(transcoder);
 
     QString path;
@@ -1980,7 +1974,7 @@ void JobQueue::DoTranscodeThread(int jobID)
     }
 
     QString transcoderName;
-    if (transcoder == RecordingProfile::TranscoderAutodetect)
+    if (transcoder == RecordingProfile::kTranscoderAutodetect)
     {
         transcoderName = "Autodetect";
     }
@@ -2137,7 +2131,7 @@ void JobQueue::DoTranscodeThread(int jobID)
 
 void *JobQueue::MetadataLookupThread(void *param)
 {
-    JobThreadStruct *jts = (JobThreadStruct *)param;
+    auto *jts = (JobThreadStruct *)param;
     JobQueue *jq = jts->jq;
 
     MThread::ThreadSetup(QString("Metadata_%1").arg(jts->jobID));
@@ -2262,7 +2256,7 @@ void JobQueue::DoMetadataLookupThread(int jobID)
 
 void *JobQueue::FlagCommercialsThread(void *param)
 {
-    JobThreadStruct *jts = (JobThreadStruct *)param;
+    auto *jts = (JobThreadStruct *)param;
     JobQueue *jq = jts->jq;
 
     MThread::ThreadSetup(QString("Commflag_%1").arg(jts->jobID));
@@ -2384,8 +2378,8 @@ void JobQueue::DoFlagCommercialsThread(int jobID)
             program_info->SetPathname(program_info->GetPlaybackURL(false,true));
         if (program_info->IsLocal())
         {
-            PreviewGenerator *pg = new PreviewGenerator(
-                program_info, QString(), PreviewGenerator::kLocal);
+            auto *pg = new PreviewGenerator(program_info, QString(),
+                                            PreviewGenerator::kLocal);
             pg->Run();
             pg->deleteLater();
         }
@@ -2409,7 +2403,7 @@ void JobQueue::DoFlagCommercialsThread(int jobID)
 
 void *JobQueue::UserJobThread(void *param)
 {
-    JobThreadStruct *jts = (JobThreadStruct *)param;
+    auto *jts = (JobThreadStruct *)param;
     JobQueue *jq = jts->jq;
 
     MThread::ThreadSetup(QString("UserJob_%1").arg(jts->jobID));

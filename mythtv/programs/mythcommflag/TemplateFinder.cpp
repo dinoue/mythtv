@@ -145,8 +145,8 @@ bounding_box(const AVFrame *img, int imgheight,
      * Maximum logo size, expressed as a percentage of the content area
      * (adjusting for letterboxing and pillarboxing).
      */
-    static const int    MAXWIDTHPCT = 20;
-    static const int    MAXHEIGHTPCT = 20;
+    static constexpr int kMaxWidthPct = 20;
+    static constexpr int kMaxHeightPct = 20;
 
     /*
      * TUNABLE:
@@ -158,14 +158,17 @@ bounding_box(const AVFrame *img, int imgheight,
     const int           VERTSLOP = max(4, imgheight * 1 / 15);
     const int           HORIZSLOP = max(4, imgwidth * 1 / 20);
 
-    int maxwidth = (maxcol1 - mincol) * MAXWIDTHPCT / 100;
-    int maxheight = (maxrow1 - minrow) * MAXHEIGHTPCT / 100;
+    int maxwidth = (maxcol1 - mincol) * kMaxWidthPct / 100;
+    int maxheight = (maxrow1 - minrow) * kMaxHeightPct / 100;
 
     int row = minrow;
     int col = mincol;
     int width = maxcol1 - mincol;
     int height = maxrow1 - minrow;
-    int newrow = 0, newcol = 0, newright = 0, newbottom = 0;
+    int newrow = 0;
+    int newcol = 0;
+    int newright = 0;
+    int newbottom = 0;
 
     for (;;)
     {
@@ -449,12 +452,14 @@ template_alloc(const unsigned int *scores, int width, int height,
      * Lower values allow more pixels to be included as part of the template,
      * but strong non-template pixels might be included.
      */
-    static const float      MINSCOREPCTILE = 0.998;
+    static constexpr float kMinScorePctile = 0.998;
 
-    const int               nn = width * height;
-    int                     ii = 0, first = 0, last = 0;
-    unsigned int            threshscore = 0;
-    AVFrame               thresh;
+    const int    nn = width * height;
+    int          ii = 0;
+    int          first = 0;
+    int          last = 0;
+    unsigned int threshscore = 0;
+    AVFrame      thresh;
 
     if (av_image_alloc(thresh.data, thresh.linesize,
         width, height, AV_PIX_FMT_GRAY8, IMAGE_ALIGN))
@@ -480,7 +485,7 @@ template_alloc(const unsigned int *scores, int width, int height,
 
     /* Threshold the edge frequences. */
 
-    ii = (int)roundf(nn * MINSCOREPCTILE);
+    ii = (int)roundf(nn * kMinScorePctile);
     threshscore = sortedscores[ii];
     for (first = ii; first > 0 && sortedscores[first] == threshscore; first--)
         ;
@@ -492,7 +497,7 @@ template_alloc(const unsigned int *scores, int width, int height,
         last--;
 
     LOG(VB_COMMFLAG, LOG_INFO, QString("template_alloc wanted %1, got %2-%3")
-            .arg(MINSCOREPCTILE, 0, 'f', 6)
+            .arg(kMinScorePctile, 0, 'f', 6)
             .arg((float)first / nn, 0, 'f', 6)
             .arg((float)last / nn, 0, 'f', 6));
 
@@ -569,14 +574,17 @@ analyzeFrameDebug(long long frameno, const AVFrame *pgm, int pgmheight,
         const AVFrame *cropped, const AVFrame *edges, int cropheight,
         int croprow, int cropcol, bool debug_frames, const QString& debugdir)
 {
-    static const int    delta = 24;
-    static int          lastrow, lastcol, lastwidth, lastheight;
-    const int           cropwidth = cropped->linesize[0];
+    static constexpr int kDelta = 24;
+    static int s_lastrow;
+    static int s_lastcol;
+    static int s_lastwidth;
+    static int s_lastheight;
+    const int  cropwidth = cropped->linesize[0];
 
-    int rowsame = abs(lastrow - croprow) <= delta ? 1 : 0;
-    int colsame = abs(lastcol - cropcol) <= delta ? 1 : 0;
-    int widthsame = abs(lastwidth - cropwidth) <= delta ? 1 : 0;
-    int heightsame = abs(lastheight - cropheight) <= delta ? 1 : 0;
+    int rowsame    = abs(s_lastrow - croprow) <= kDelta ? 1 : 0;
+    int colsame    = abs(s_lastcol - cropcol) <= kDelta ? 1 : 0;
+    int widthsame  = abs(s_lastwidth - cropwidth) <= kDelta ? 1 : 0;
+    int heightsame = abs(s_lastheight - cropheight) <= kDelta ? 1 : 0;
 
     if (frameno > 0 && rowsame + colsame + widthsame + heightsame >= 3)
         return true;
@@ -587,10 +595,10 @@ analyzeFrameDebug(long long frameno, const AVFrame *pgm, int pgmheight,
             .arg(cropwidth).arg(cropheight)
             .arg(cropcol).arg(croprow));
 
-    lastrow = croprow;
-    lastcol = cropcol;
-    lastwidth = cropwidth;
-    lastheight = cropheight;
+    s_lastrow    = croprow;
+    s_lastcol    = cropcol;
+    s_lastwidth  = cropwidth;
+    s_lastheight = cropheight;
 
     if (debug_frames)
     {
@@ -613,8 +621,8 @@ analyzeFrameDebug(long long frameno, const AVFrame *pgm, int pgmheight,
     return true;
 }
 
-bool
-readTemplate(const QString& datafile, int *prow, int *pcol, int *pwidth, int *pheight,
+/* NOLINTNEXTLINE(readability-non-const-parameter) */
+bool readTemplate(const QString& datafile, int *prow, int *pcol, int *pwidth, int *pheight,
         const QString& tmplfile, AVFrame *tmpl, bool *pvalid)
 {
     QFile dfile(datafile);
@@ -693,9 +701,9 @@ TemplateFinder::TemplateFinder(PGMConverter *pgmc, BorderDetector *bd,
     : m_pgmConverter(pgmc)
     , m_borderDetector(bd)
     , m_edgeDetector(ed)
-    , m_debugdir(debugdir)
-    , m_debugdata(debugdir + "/TemplateFinder.txt")
-    , m_debugtmpl(debugdir + "/TemplateFinder.pgm")
+    , m_debugDir(debugdir)
+    , m_debugData(debugdir + "/TemplateFinder.txt")
+    , m_debugTmpl(debugdir + "/TemplateFinder.pgm")
 {
     /*
      * TUNABLE:
@@ -739,20 +747,20 @@ TemplateFinder::TemplateFinder(PGMConverter *pgmc, BorderDetector *bd,
 
     if (m_debugLevel >= 1)
     {
-        createDebugDirectory(m_debugdir,
+        createDebugDirectory(m_debugDir,
             QString("TemplateFinder debugLevel %1").arg(m_debugLevel));
 
-        m_debug_template = true;
-        m_debug_edgecounts = true;
+        m_debugTemplate = true;
+        m_debugEdgeCounts = true;
 
         if (m_debugLevel >= 3)
-            m_debug_frames = true;
+            m_debugFrames = true;
     }
 }
 
 TemplateFinder::~TemplateFinder(void)
 {
-    delete []scores;
+    delete []m_scores;
     av_freep(&m_tmpl.data[0]);
     av_freep(&m_cropped.data[0]);
 }
@@ -769,7 +777,8 @@ TemplateFinder::MythPlayerInited(MythPlayer *player, long long nframes)
      *    correct): don't "pollute" the set of candidate template edges with
      *    the "content" edges in the non-template portions of the frame.
      */
-    QString tmpldims, playerdims;
+    QString tmpldims;
+    QString playerdims;
 
     (void)nframes; /* gcc */
     QSize buf_dim = player->GetVideoBufferSize();
@@ -777,19 +786,19 @@ TemplateFinder::MythPlayerInited(MythPlayer *player, long long nframes)
     m_height = buf_dim.height();
     playerdims = QString("%1x%2").arg(m_width).arg(m_height);
 
-    if (m_debug_template)
+    if (m_debugTemplate)
     {
-        if ((m_tmpl_done = readTemplate(m_debugdata, &m_tmplrow, &m_tmplcol,
-                        &m_tmplwidth, &m_tmplheight, m_debugtmpl, &m_tmpl,
-                        &m_tmpl_valid)))
+        if ((m_tmplDone = readTemplate(m_debugData, &m_tmplRow, &m_tmplCol,
+                        &m_tmplWidth, &m_tmplHeight, m_debugTmpl, &m_tmpl,
+                        &m_tmplValid)))
         {
-            tmpldims = m_tmpl_valid ? QString("%1x%2@(%3,%4)")
-                .arg(m_tmplwidth).arg(m_tmplheight).arg(m_tmplcol).arg(m_tmplrow) :
+            tmpldims = m_tmplValid ? QString("%1x%2@(%3,%4)")
+                .arg(m_tmplWidth).arg(m_tmplHeight).arg(m_tmplCol).arg(m_tmplRow) :
                     "no template";
 
             LOG(VB_COMMFLAG, LOG_INFO,
                 QString("TemplateFinder::MythPlayerInited read %1: %2")
-                    .arg(m_debugtmpl)
+                    .arg(m_debugTmpl)
                     .arg(tmpldims));
         }
     }
@@ -800,13 +809,13 @@ TemplateFinder::MythPlayerInited(MythPlayer *player, long long nframes)
     if (m_borderDetector->MythPlayerInited(player))
         goto free_tmpl;
 
-    if (m_tmpl_done)
+    if (m_tmplDone)
     {
-        if (m_tmpl_valid)
+        if (m_tmplValid)
         {
             LOG(VB_COMMFLAG, LOG_INFO,
                 QString("TemplateFinder::MythPlayerInited %1 of %2 (%3)")
-                    .arg(tmpldims).arg(playerdims).arg(m_debugtmpl));
+                    .arg(tmpldims).arg(playerdims).arg(m_debugTmpl));
         }
         return ANALYZE_FINISHED;
     }
@@ -814,7 +823,7 @@ TemplateFinder::MythPlayerInited(MythPlayer *player, long long nframes)
     LOG(VB_COMMFLAG, LOG_INFO,
         QString("TemplateFinder::MythPlayerInited framesize %1")
             .arg(playerdims));
-    scores = new unsigned int[m_width * m_height];
+    m_scores = new unsigned int[m_width * m_height];
 
     return ANALYZE_OK;
 
@@ -877,12 +886,18 @@ TemplateFinder::analyzeFrame(const VideoFrame *frame, long long frameno,
      * This has a nice side-effect of reducing the area to be examined (speed
      * optimization).
      */
-    static const float  EXCLUDEWIDTH = 0.5;
-    static const float  EXCLUDEHEIGHT = 0.5;
+    static constexpr float kExcludeWidth = 0.5;
+    static constexpr float kExcludeHeight = 0.5;
 
-    int                 pgmwidth= 0, pgmheight = 0;
-    int                 croprow= 0, cropcol = 0, cropwidth = 0, cropheight = 0;
-    struct timeval      start {}, end {}, elapsed {};
+    int            pgmwidth= 0;
+    int            pgmheight = 0;
+    int            croprow= 0;
+    int            cropcol = 0;
+    int            cropwidth = 0;
+    int            cropheight = 0;
+    struct timeval start {};
+    struct timeval end {};
+    struct timeval elapsed {};
 
     if (frameno < m_nextFrame)
     {
@@ -904,14 +919,14 @@ TemplateFinder::analyzeFrame(const VideoFrame *frame, long long frameno,
 
         (void)gettimeofday(&start, nullptr);
 
-        if (croprow < mincontentrow)
-            mincontentrow = croprow;
-        if (cropcol < mincontentcol)
-            mincontentcol = cropcol;
-        if (cropcol + cropwidth > maxcontentcol1)
-            maxcontentcol1 = cropcol + cropwidth;
-        if (croprow + cropheight > maxcontentrow1)
-            maxcontentrow1 = croprow + cropheight;
+        if (croprow < m_minContentRow)
+            m_minContentRow = croprow;
+        if (cropcol < m_minContentCol)
+            m_minContentCol = cropcol;
+        if (cropcol + cropwidth > m_maxContentCol1)
+            m_maxContentCol1 = cropcol + cropwidth;
+        if (croprow + cropheight > m_maxContentRow1)
+            m_maxContentRow1 = croprow + cropheight;
 
         if (resetBuffers(cropwidth, cropheight))
             goto error;
@@ -924,8 +939,8 @@ TemplateFinder::analyzeFrame(const VideoFrame *frame, long long frameno,
          * Translate the excluded area of the screen into "cropped"
          * coordinates.
          */
-        int excludewidth = (int)(pgmwidth * EXCLUDEWIDTH);
-        int excludeheight = (int)(pgmheight * EXCLUDEHEIGHT);
+        int excludewidth  = (int)(pgmwidth * kExcludeWidth);
+        int excludeheight = (int)(pgmheight * kExcludeHeight);
         int excluderow = (pgmheight - excludeheight) / 2 - croprow;
         int excludecol = (pgmwidth - excludewidth) / 2 - cropcol;
         (void)m_edgeDetector->setExcludeArea(excluderow, excludecol,
@@ -936,20 +951,20 @@ TemplateFinder::analyzeFrame(const VideoFrame *frame, long long frameno,
         if (edges == nullptr)
             goto error;
 
-        if (pgm_scorepixels(scores, pgmwidth, croprow, cropcol,
+        if (pgm_scorepixels(m_scores, pgmwidth, croprow, cropcol,
                     edges, cropheight))
             goto error;
 
         if (m_debugLevel >= 2)
         {
             if (!analyzeFrameDebug(frameno, pgm, pgmheight, &m_cropped, edges,
-                        cropheight, croprow, cropcol, m_debug_frames, m_debugdir))
+                        cropheight, croprow, cropcol, m_debugFrames, m_debugDir))
                 goto error;
         }
 
         (void)gettimeofday(&end, nullptr);
         timersub(&end, &start, &elapsed);
-        timeradd(&m_analyze_time, &elapsed, &m_analyze_time);
+        timeradd(&m_analyzeTime, &elapsed, &m_analyzeTime);
     }
 
     if (m_nextFrame > m_endFrame)
@@ -972,36 +987,36 @@ int
 TemplateFinder::finished(long long nframes, bool final)
 {
     (void)nframes;  /* gcc */
-    if (!m_tmpl_done)
+    if (!m_tmplDone)
     {
-        if (!template_alloc(scores, m_width, m_height,
-                    mincontentrow, mincontentcol,
-                    maxcontentrow1, maxcontentcol1,
-                    &m_tmpl, &m_tmplrow, &m_tmplcol, &m_tmplwidth, &m_tmplheight,
-                    m_debug_edgecounts, m_debugdir))
+        if (!template_alloc(m_scores, m_width, m_height,
+                    m_minContentRow, m_minContentCol,
+                    m_maxContentRow1, m_maxContentCol1,
+                    &m_tmpl, &m_tmplRow, &m_tmplCol, &m_tmplWidth, &m_tmplHeight,
+                    m_debugEdgeCounts, m_debugDir))
         {
             if (final)
-                writeDummyTemplate(m_debugdata);
+                writeDummyTemplate(m_debugData);
         }
         else
         {
-            if (final && m_debug_template)
+            if (final && m_debugTemplate)
             {
-                if (!(m_tmpl_valid = writeTemplate(m_debugtmpl, &m_tmpl, m_debugdata,
-                                m_tmplrow, m_tmplcol, m_tmplwidth, m_tmplheight)))
+                if (!(m_tmplValid = writeTemplate(m_debugTmpl, &m_tmpl, m_debugData,
+                                m_tmplRow, m_tmplCol, m_tmplWidth, m_tmplHeight)))
                     goto free_tmpl;
 
                 LOG(VB_COMMFLAG, LOG_INFO,
                     QString("TemplateFinder::finished wrote %1"
                             " and %2 [%3x%4@(%5,%6)]")
-                        .arg(m_debugtmpl).arg(m_debugdata)
-                        .arg(m_tmplwidth).arg(m_tmplheight)
-                        .arg(m_tmplcol).arg(m_tmplrow));
+                        .arg(m_debugTmpl).arg(m_debugData)
+                        .arg(m_tmplWidth).arg(m_tmplHeight)
+                        .arg(m_tmplCol).arg(m_tmplRow));
             }
         }
 
         if (final)
-            m_tmpl_done = true;
+            m_tmplDone = true;
     }
 
     m_borderDetector->setLogoState(this);
@@ -1023,7 +1038,7 @@ TemplateFinder::reportTime(void) const
         return -1;
 
     LOG(VB_COMMFLAG, LOG_INFO, QString("TF Time: analyze=%1s")
-            .arg(strftimeval(&m_analyze_time)));
+            .arg(strftimeval(&m_analyzeTime)));
     return 0;
 }
 
@@ -1031,12 +1046,12 @@ const struct AVFrame *
 TemplateFinder::getTemplate(int *prow, int *pcol, int *pwidth, int *pheight)
     const
 {
-    if (m_tmpl_valid)
+    if (m_tmplValid)
     {
-        *prow = m_tmplrow;
-        *pcol = m_tmplcol;
-        *pwidth = m_tmplwidth;
-        *pheight = m_tmplheight;
+        *prow = m_tmplRow;
+        *pcol = m_tmplCol;
+        *pwidth = m_tmplWidth;
+        *pheight = m_tmplHeight;
         return &m_tmpl;
     }
     return nullptr;

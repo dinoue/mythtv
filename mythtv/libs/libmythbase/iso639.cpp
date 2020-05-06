@@ -60,9 +60,8 @@ vector<int> iso639_get_language_key_list(void)
     if (_language_keys.empty())
     {
         const QStringList list = iso639_get_language_list();
-        QStringList::const_iterator it = list.begin();
-        for (; it != list.end(); ++it)
-            _language_keys.push_back(iso639_str3_to_key(*it));
+        foreach (const auto & it, list)
+            _language_keys.push_back(iso639_str3_to_key(it));
     }
     return _language_keys;
 }
@@ -873,7 +872,7 @@ static int createCode2ToCode3Map(QMap<int, int>& codemap) {
     functionality.
 */
 
-typedef QMap<QString, QString> ISO639ToNameMap;
+using  ISO639ToNameMap = QMap<QString, QString>;
 static ISO639ToNameMap createLanguageMap(void)
 {
     ISO639ToNameMap map;

@@ -95,13 +95,13 @@ inline void rdtsc(uint64_t &x)
     QueryPerformanceCounter((LARGE_INTEGER*)(&x));
 }
 #else
-typedef struct {
+struct timing_ab_t {
     uint a;
     uint b;
-} timing_ab_t;
+};
 inline void rdtsc(uint64_t &x)
 {
-    timing_ab_t &y = (timing_ab_t&) x;
+    auto &y = (timing_ab_t&) x;
     asm("rdtsc \n"
         "mov %%eax, %0 \n"
         "mov %%edx, %1 \n"

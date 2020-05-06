@@ -29,14 +29,13 @@ class QTextStream;
 //
 //////////////////////////////////////////////////////////////////////////////
 
-typedef enum
+enum ObjectTypes
 {
     OT_Undefined  = 0,
     OT_Container  = 1,
     OT_Item       = 2,
     OT_Res        = 3
-
-} ObjectTypes;
+};
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -93,8 +92,8 @@ class Property
         QString  m_sValue;
 };
 
-typedef QMap<QString,Property*> Properties;
-typedef QList<CDSObject*>       CDSObjects;
+using Properties = QMap<QString,Property*>;
+using CDSObjects = QList<CDSObject*>;
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -125,7 +124,7 @@ class Resource
         }
 };
 
-typedef QList<Resource*> Resources;
+using Resources = QList<Resource*>;
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -151,7 +150,7 @@ class ContainerClass
         }
 };
 
-typedef QList<ContainerClass*> Classes;
+using Classes = QList<ContainerClass*>;
 
 /**
  * NOTE FilterMap contains a list of what should be included, not what should
@@ -177,7 +176,7 @@ typedef QList<ContainerClass*> Classes;
  *
  *      See UPnP MediaServer, ContentDirectory Service Section 2.3.18, 2013
  */
-typedef QStringList FilterMap;
+using FilterMap = QStringList;
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -222,7 +221,7 @@ class UPNP_PUBLIC CDSObject : public ReferenceCounter
         explicit      CDSObject( const QString &sId = "-1",
                                  const QString &sTitle = "",
                                  const QString &sParentId = "-1" );
-        virtual      ~CDSObject();
+        ~CDSObject() override;
 
         Property         *AddProperty( Property *pProp  );
         QList<Property*>  GetProperties( const QString &sName );

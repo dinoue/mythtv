@@ -28,14 +28,17 @@
  */
 
 #include "inputselectorsetting.h"
+
+#include <utility>
+
 #include "cardutil.h"
 #include "mythcorecontext.h"
 #include "mythdb.h"
 
 InputSelector::InputSelector(uint default_cardid,
-                             const QString &default_inputname) :
-    m_default_cardid(default_cardid),
-    m_default_inputname(default_inputname)
+                             QString default_inputname) :
+    m_defaultCardId(default_cardid),
+    m_defaultInputName(std::move(default_inputname))
 {
     setLabel(tr("Input"));
     setHelpText(
@@ -49,7 +52,7 @@ void InputSelector::Load(void)
 {
     clearSelections();
 
-    if (!m_sourceid)
+    if (!m_sourceId)
         return;
 
     MSqlQuery query(MSqlQuery::InitCon());
@@ -62,7 +65,7 @@ void InputSelector::Load(void)
         "      capturecard.parentid = 0");
 
     query.bindValue(":HOSTNAME", gCoreContext->GetHostName());
-    query.bindValue(":SOURCEID", m_sourceid);
+    query.bindValue(":SOURCEID", m_sourceId);
 
     if (!query.exec() || !query.isActive())
     {
@@ -70,7 +73,8 @@ void InputSelector::Load(void)
         return;
     }
 
-    uint which = 0, cnt = 0;
+    uint which = 0;
+    uint cnt = 0;
     for (; query.next(); ++cnt)
     {
         uint    cardid     = query.value(0).toUInt();
@@ -85,7 +89,7 @@ void InputSelector::Load(void)
 
         addSelection(desc, key);
 
-        which = (m_default_cardid == cardid) ? cnt : which;
+        which = (m_defaultCardId == cardid) ? cnt : which;
     }
 
     if (cnt)
@@ -94,9 +98,9 @@ void InputSelector::Load(void)
 
 void InputSelector::SetSourceID(const QString &sourceid)
 {
-    if (m_sourceid != sourceid.toUInt())
+    if (m_sourceId != sourceid.toUInt())
     {
-        m_sourceid = sourceid.toUInt();
+        m_sourceId = sourceid.toUInt();
         Load();
     }
 }

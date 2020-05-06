@@ -32,7 +32,7 @@ class ImportIconsWizard : public MythScreenType
   public:
     ImportIconsWizard(MythScreenStack *parent, bool fRefresh,
                       QString channelname = "");
-   ~ImportIconsWizard();
+   ~ImportIconsWizard() override;
 
     bool Create(void) override; // MythScreenType
     void Load(void) override; // MythScreenType
@@ -70,9 +70,9 @@ class ImportIconsWizard : public MythScreenType
         QString strNameCSV;          //!< name (csv form)
     };
     //! List of CSV entries
-    typedef QList<CSVEntry> ListEntries;
+    using ListEntries = QList<CSVEntry>;
     //! iterator over list of CSV entries
-    typedef QList<CSVEntry>::Iterator ListEntriesIter;
+    using ListEntriesIter = QList<CSVEntry>::Iterator;
 
     ListEntries m_listEntries;       //!< list of TV channels to search for
     ListEntries m_missingEntries;    //!< list of TV channels with no unique icon
@@ -80,9 +80,9 @@ class ImportIconsWizard : public MythScreenType
     ListEntriesIter m_missingIter;
 
     //! List of SearchEntry entries
-    typedef QList<SearchEntry> ListSearchEntries;
+    using ListSearchEntries = QList<SearchEntry>;
     //! iterator over list of SearchEntry entries
-    typedef QList<SearchEntry>::Iterator ListSearchEntriesIter;
+    using ListSearchEntriesIter = QList<SearchEntry>::Iterator;
 
     /*! \brief changes a string into csv format
      * \param str the string to change
@@ -147,7 +147,7 @@ class ImportIconsWizard : public MythScreenType
   protected slots:
     void enableControls(dialogState state=STATE_NORMAL);         //!< enable/disable the controls
     void manualSearch();           //!< process the manual search
-    void menuSelection(MythUIButtonListItem *);//!< process the icon selection
+    void menuSelection(MythUIButtonListItem *item);//!< process the icon selection
     void skip();                   //!< skip this icon
     void askSubmit(const QString& strParam);
     void Close() override; // MythScreenType

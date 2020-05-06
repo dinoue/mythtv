@@ -40,22 +40,22 @@ class AudioOutputALSA : public AudioOutputBase
     bool OpenMixer(void);
 
   private:
-    snd_pcm_t   *m_pcm_handle {nullptr};
-    int          m_pbufsize   {-1};
+    snd_pcm_t   *m_pcmHandle  {nullptr};
+    int          m_pbufSize   {-1};
     int          m_card       {-1};
     int          m_device     {-1};
     int          m_subdevice  {-1};
     QMutex       m_killAudioLock;
-    QString      m_lastdevice;
+    QString      m_lastDevice;
 
     struct {
         QString            device;
         QString            control;
-        snd_mixer_t*       handle;
-        snd_mixer_elem_t*  elem;
-        long               volmin;
-        long               volmax;
-        long               volrange;
+        snd_mixer_t*       handle   { nullptr };
+        snd_mixer_elem_t*  elem     { nullptr };
+        long               volmin   { 0L };
+        long               volmax   { 0L };
+        long               volrange { 0L };
     } m_mixer;
 
 };

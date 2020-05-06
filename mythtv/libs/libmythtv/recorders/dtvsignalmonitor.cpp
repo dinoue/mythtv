@@ -173,24 +173,25 @@ void DTVSignalMonitor::UpdateMonitorValues(void)
 
 void DTVSignalMonitor::UpdateListeningForEIT(void)
 {
-    vector<uint> add_eit, del_eit;
+    vector<uint> add_eit;
+    vector<uint> del_eit;
 
     if (GetStreamData()->HasEITPIDChanges(m_eit_pids) &&
         GetStreamData()->GetEITPIDChanges(m_eit_pids, add_eit, del_eit))
     {
-        for (size_t i = 0; i < del_eit.size(); i++)
+        for (uint eit : del_eit)
         {
             uint_vec_t::iterator it;
-            it = find(m_eit_pids.begin(), m_eit_pids.end(), del_eit[i]);
+            it = find(m_eit_pids.begin(), m_eit_pids.end(), eit);
             if (it != m_eit_pids.end())
                 m_eit_pids.erase(it);
-            GetStreamData()->RemoveListeningPID(del_eit[i]);
+            GetStreamData()->RemoveListeningPID(eit);
         }
 
-        for (size_t i = 0; i < add_eit.size(); i++)
+        for (uint eit : add_eit)
         {
-            m_eit_pids.push_back(add_eit[i]);
-            GetStreamData()->AddListeningPID(add_eit[i]);
+            m_eit_pids.push_back(eit);
+            GetStreamData()->AddListeningPID(eit);
         }
     }
 }
@@ -350,8 +351,8 @@ void DTVSignalMonitor::HandlePMT(uint /*program_num*/, const ProgramMapTable *pm
     {
         if (insert_crc(m_seen_table_crc, *pmt))
         {
-            LOG(VB_GENERAL, LOG_ERR, LOC +
-                QString("Wrong PMT; pmt->pn(%1) desired(%2)")
+            LOG(VB_CHANNEL, LOG_DEBUG, LOC +
+                QString("Wrong PMT; pmt->ProgramNumber(%1) desired(%2)")
                 .arg(pmt->ProgramNumber()).arg(m_programNumber));
         }
         return; // Not the PMT we are looking for...
@@ -435,7 +436,7 @@ void DTVSignalMonitor::HandleTVCT(
             LOG(VB_GENERAL, LOG_ERR, LOC +
                 QString("Could not find channel %1_%2 in TVCT")
                 .arg(m_majorChannel).arg(m_minorChannel));
-            LOG(VB_GENERAL, LOG_ERR, LOC + tvct->toString());
+            LOG(VB_GENERAL, LOG_DEBUG, LOC + tvct->toString());
         }
         GetATSCStreamData()->SetVersionTVCT(tvct->TransportStreamID(),-1);
         return;
@@ -460,7 +461,7 @@ void DTVSignalMonitor::HandleCVCT(uint /*pid*/, const CableVirtualChannelTable* 
             LOG(VB_GENERAL, LOG_ERR, LOC +
                 QString("Could not find channel %1_%2 in CVCT")
                 .arg(m_majorChannel).arg(m_minorChannel));
-            LOG(VB_GENERAL, LOG_ERR, LOC + cvct->toString());
+            LOG(VB_GENERAL, LOG_DEBUG, LOC + cvct->toString());
         }
         GetATSCStreamData()->SetVersionCVCT(cvct->TransportStreamID(),-1);
         return;

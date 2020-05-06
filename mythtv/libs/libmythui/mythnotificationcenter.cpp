@@ -92,14 +92,14 @@ void MythNotificationScreenStack::PopScreen(MythScreenType *screen, bool allowFa
 
     if (!m_Children.isEmpty())
     {
-        for (auto it = m_DrawOrder.begin(); it != m_DrawOrder.end(); ++it)
+        foreach (auto & draw, m_DrawOrder)
         {
-            if (*it != screen && !(*it)->IsDeleting())
+            if (draw != screen && !draw->IsDeleting())
             {
-                m_topScreen = (*it);
-                (*it)->SetAlpha(255);
+                m_topScreen = draw;
+                draw->SetAlpha(255);
                 if (poppedFullscreen)
-                    (*it)->aboutToShow();
+                    draw->aboutToShow();
             }
         }
     }
@@ -133,8 +133,7 @@ MythScreenType *MythNotificationScreenStack::GetTopScreen(void) const
     // loop from last to 2nd
     for (; it != m_Children.begin(); --it)
     {
-        MythNotificationScreen *s = dynamic_cast<MythNotificationScreen *>(*it);
-
+        auto *s = dynamic_cast<MythNotificationScreen *>(*it);
         if (!s)
         {
             // if for whatever reason it's not a notification on our screen
@@ -230,8 +229,7 @@ void MythNotificationScreen::SetNotification(MythNotification &notification)
         update = false;
     }
 
-    MythImageNotification *img =
-        dynamic_cast<MythImageNotification*>(&notification);
+    auto *img = dynamic_cast<MythImageNotification*>(&notification);
     if (img)
     {
         QString path = img->GetImagePath();
@@ -248,8 +246,7 @@ void MythNotificationScreen::SetNotification(MythNotification &notification)
         }
     }
 
-    MythPlaybackNotification *play =
-        dynamic_cast<MythPlaybackNotification*>(&notification);
+    auto *play = dynamic_cast<MythPlaybackNotification*>(&notification);
     if (play)
     {
         UpdatePlayback(play->GetProgress(), play->GetProgressText());
@@ -257,8 +254,7 @@ void MythNotificationScreen::SetNotification(MythNotification &notification)
         m_update |= kDuration;
     }
 
-    MythMediaNotification *media =
-        dynamic_cast<MythMediaNotification*>(&notification);
+    auto *media = dynamic_cast<MythMediaNotification*>(&notification);
     if (media && m_imagePath.isEmpty() && m_image.isNull())
     {
         m_update |= kNoArtwork;
@@ -793,8 +789,7 @@ NCPrivate::~NCPrivate()
  */
 void NCPrivate::ScreenDeleted(void)
 {
-    MythNotificationScreen *screen =
-        static_cast<MythNotificationScreen*>(sender());
+    auto *screen = static_cast<MythNotificationScreen*>(sender());
 
     bool duefordeletion = m_deletedScreens.contains(screen);
 
@@ -842,7 +837,7 @@ void NCPrivate::ScreenDeleted(void)
             {
                 // don't remove the id from the list, as the application is still registered
                 // re-create the screen
-                MythNotificationScreen *newscreen =
+                auto *newscreen =
                     new MythNotificationScreen(m_screenStack, *screen);
                 connect(newscreen, SIGNAL(ScreenDeleted()), this, SLOT(ScreenDeleted()));
                 m_registrations[screen->m_id] = newscreen;
@@ -872,7 +867,7 @@ bool NCPrivate::Queue(const MythNotification &notification)
     int id = notification.GetId();
     void *parent = notification.GetParent();
 
-    MythNotification *tmp = static_cast<MythNotification*>(notification.clone());
+    auto *tmp = static_cast<MythNotification*>(notification.clone());
     if (id > 0)
     {
         // quick sanity check to ensure the right caller is attempting
@@ -883,7 +878,6 @@ bool NCPrivate::Queue(const MythNotification &notification)
                 QString("Queue: 0x%1, not registered for id (%2)")
                 .arg((size_t)parent, QT_POINTER_SIZE, 16, QChar('0'))
                 .arg(id));
-            id = -1;
         }
         else
         {
@@ -1062,13 +1056,11 @@ void NCPrivate::UnRegister(void *from, int id, bool closeimemdiately)
 
 void NCPrivate::DeleteAllRegistrations(void)
 {
-    QMap<int, MythNotificationScreen*>::iterator it = m_registrations.begin();
-
-    for (; it != m_registrations.end(); ++it)
+    foreach (auto & registration, m_registrations)
     {
-        if (*it)
+        if (registration)
         {
-            m_deletedScreens.append(*it);
+            m_deletedScreens.append(registration);
         }
     }
     m_registrations.clear();
@@ -1108,10 +1100,9 @@ void NCPrivate::DeleteAllScreens(void)
 
 void NCPrivate::DeleteUnregistered(void)
 {
-    QMap<int,bool>::iterator it = m_unregistered.begin();
     bool needdelete = false;
 
-    for (; it != m_unregistered.end(); ++it)
+    for (auto it = m_unregistered.begin(); it != m_unregistered.end(); ++it)
     {
         int id = it.key();
         bool closeimemdiately = it.value();
@@ -1241,15 +1232,10 @@ void NCPrivate::GetNotificationScreens(QList<MythScreenType*> &_screens)
 
     m_screenStack->GetScreenList(screens);
 
-    QVector<MythScreenType*>::const_iterator it       = screens.begin();
-    QVector<MythScreenType*>::const_iterator itend    = screens.end();
-
     int position = 0;
-    for (; it != itend; ++it)
+    foreach (auto item, screens)
     {
-        MythNotificationScreen *screen =
-            dynamic_cast<MythNotificationScreen*>(*it);
-
+        auto *screen = dynamic_cast<MythNotificationScreen*>(item);
         if (screen)
         {
             if ((screen->m_visibility & MythNotification::kPlayback) == 0)
@@ -1280,7 +1266,7 @@ void NCPrivate::GetNotificationScreens(QList<MythScreenType*> &_screens)
         }
         else
         {
-            list.append(*it);
+            list.append(item);
         }
     }
     _screens = list;
@@ -1392,9 +1378,7 @@ void MythNotificationCenter::UnRegister(void *from, int id, bool closeimemdiatel
 
 QDateTime MythNotificationCenter::ScreenExpiryTime(const MythScreenType *screen)
 {
-    const MythNotificationScreen *s =
-        dynamic_cast<const MythNotificationScreen*>(screen);
-
+    const auto *s = dynamic_cast<const MythNotificationScreen*>(screen);
     if (!s)
         return QDateTime();
     return s->m_expiry;
@@ -1402,11 +1386,9 @@ QDateTime MythNotificationCenter::ScreenExpiryTime(const MythScreenType *screen)
 
 bool MythNotificationCenter::ScreenCreated(const MythScreenType *screen)
 {
-    const MythNotificationScreen *s =
-        dynamic_cast<const MythNotificationScreen*>(screen);
-
+    const auto *s = dynamic_cast<const MythNotificationScreen*>(screen);
     if (!s)
-        return true;;
+        return true;
     return s->m_created;
 }
 
@@ -1417,9 +1399,7 @@ void MythNotificationCenter::GetNotificationScreens(QList<MythScreenType*> &_scr
 
 void MythNotificationCenter::UpdateScreen(MythScreenType *screen)
 {
-    MythNotificationScreen *s =
-        dynamic_cast<MythNotificationScreen*>(screen);
-
+    auto *s = dynamic_cast<MythNotificationScreen*>(screen);
     if (!s)
         return;
 

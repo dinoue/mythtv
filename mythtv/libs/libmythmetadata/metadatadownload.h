@@ -11,9 +11,9 @@
 class META_PUBLIC MetadataLookupEvent : public QEvent
 {
   public:
-    explicit MetadataLookupEvent(MetadataLookupList lul) : QEvent(kEventType),
+    explicit MetadataLookupEvent(const MetadataLookupList& lul) : QEvent(kEventType),
                                             m_lookupList(lul) {}
-    ~MetadataLookupEvent() = default;
+    ~MetadataLookupEvent() override = default;
 
     MetadataLookupList m_lookupList;
 
@@ -23,9 +23,9 @@ class META_PUBLIC MetadataLookupEvent : public QEvent
 class META_PUBLIC MetadataLookupFailure : public QEvent
 {
   public:
-    explicit MetadataLookupFailure(MetadataLookupList lul) : QEvent(kEventType),
+    explicit MetadataLookupFailure(const MetadataLookupList& lul) : QEvent(kEventType),
                                             m_lookupList(lul) {}
-    ~MetadataLookupFailure() = default;
+    ~MetadataLookupFailure() override = default;
 
     MetadataLookupList m_lookupList;
 
@@ -38,7 +38,7 @@ class META_PUBLIC MetadataDownload : public MThread
 
     explicit MetadataDownload(QObject *parent)
         : MThread("MetadataDownload"), m_parent(parent) {}
-    ~MetadataDownload();
+    ~MetadataDownload() override;
 
     void addLookup(MetadataLookup *lookup);
     void prependLookup(MetadataLookup *lookup);

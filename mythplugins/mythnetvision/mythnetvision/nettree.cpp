@@ -29,9 +29,9 @@
 
 class GrabberScript;
 
-const QString NetTree::RSSNode = tr("RSS Feeds");
-const QString NetTree::SearchNode = tr("Searches");
-const QString NetTree::DownloadNode = tr("Downloaded Files");
+const QString NetTree::kRSSNode = tr("RSS Feeds");
+const QString NetTree::kSearchNode = tr("Searches");
+const QString NetTree::kDownloadNode = tr("Downloaded Files");
 
 namespace
 {
@@ -175,7 +175,7 @@ void NetTree::LoadData(void)
 
         MythGenericTree *selectedNode = m_currentNode->getSelectedChild();
 
-        typedef QList<MythGenericTree *> MGTreeChildList;
+        using MGTreeChildList = QList<MythGenericTree *>;
         MGTreeChildList *lchildren = m_currentNode->getAllChildren();
 
         for (MGTreeChildList::const_iterator p = lchildren->begin();
@@ -183,11 +183,11 @@ void NetTree::LoadData(void)
         {
             if (*p != nullptr)
             {
-                MythUIButtonListItem *item =
+                auto *item =
                         new MythUIButtonListItem(m_siteButtonList, QString(), nullptr,
                                 true, MythUIButtonListItem::NotChecked);
 
-                item->SetData(qVariantFromValue(*p));
+                item->SetData(QVariant::fromValue(*p));
 
                 UpdateItem(item);
 
@@ -218,8 +218,8 @@ void NetTree::UpdateItem(MythUIButtonListItem *item)
     if (!node)
         return;
 
-    RSSSite *site = node->GetData().value<RSSSite *>();
-    ResultItem *video = node->GetData().value<ResultItem *>();
+    auto *site = node->GetData().value<RSSSite *>();
+    auto *video = node->GetData().value<ResultItem *>();
 
     int nodeInt = node->getInt();
 
@@ -269,7 +269,7 @@ void NetTree::UpdateItem(MythUIButtonListItem *item)
             item->SetImage(dlfile);
         else if (video->GetThumbnail().startsWith("http"))
             m_imageDownload->addThumb(video->GetTitle(), video->GetThumbnail(),
-                                      qVariantFromValue<uint>(pos));
+                                      QVariant::fromValue<uint>(pos));
     }
     else
     {
@@ -289,7 +289,7 @@ void NetTree::UpdateItem(MythUIButtonListItem *item)
                     item->SetImage(dlfile);
                 else
                     m_imageDownload->addThumb(node->GetText(), tpath,
-                                              qVariantFromValue<uint>(pos));
+                                              QVariant::fromValue<uint>(pos));
             }
             else if (tpath != "0")
             {
@@ -398,7 +398,7 @@ void NetTree::ShowMenu(void)
 {
     QString label = tr("Playback/Download Options");
 
-    MythMenu *menu = new MythMenu(label, this, "options");
+    auto *menu = new MythMenu(label, this, "options");
 
     ResultItem *item = nullptr;
     if (m_type == DLG_TREE)
@@ -430,7 +430,7 @@ void NetTree::ShowMenu(void)
     menu->AddItem(tr("Scan/Manage Subscriptions"), nullptr, CreateShowManageMenu());
     menu->AddItem(tr("Change View"), nullptr, CreateShowViewMenu());
 
-    MythDialogBox *menuPopup =
+    auto *menuPopup =
         new MythDialogBox(menu, m_popupStack, "mythnettreemenupopup");
 
     if (menuPopup->Create())
@@ -443,7 +443,7 @@ MythMenu* NetTree::CreateShowViewMenu()
 {
     QString label = tr("View Options");
 
-    MythMenu *menu = new MythMenu(label, this, "options");
+    auto *menu = new MythMenu(label, this, "options");
 
     if (m_type != DLG_TREE)
         menu->AddItem(tr("Switch to List View"), SLOT(SwitchTreeView()));
@@ -459,18 +459,22 @@ MythMenu* NetTree::CreateShowManageMenu()
 {
     QString label = tr("Subscription Management");
 
-    MythMenu *menu = new MythMenu(label, this, "options");
+    auto *menu = new MythMenu(label, this, "options");
 
     menu->AddItem(tr("Update Site Maps"), SLOT(UpdateTrees()));
     menu->AddItem(tr("Update RSS"), SLOT(UpdateRSS()));
     menu->AddItem(tr("Manage Site Subscriptions"), SLOT(RunTreeEditor()));
     menu->AddItem(tr("Manage RSS Subscriptions"), SLOT(RunRSSEditor()));
     if (!m_treeAutoUpdate)
+    {
         menu->AddItem(tr("Enable Automatic Site Updates"),
                       SLOT(ToggleTreeUpdates()));
+    }
     else
+    {
         menu->AddItem(tr("Disable Automatic Site Updates"),
                       SLOT(ToggleTreeUpdates()));
+    }
 //    if (!m_rssAutoUpdate)
 //        menu->AddItem(tr("Enable Automatic RSS Updates"), SLOT(ToggleRSSUpdates()));
 //    else
@@ -499,7 +503,7 @@ void NetTree::SwitchBrowseView()
 
 void NetTree::SwitchView()
 {
-    NetTree *nettree =
+    auto *nettree =
         new NetTree(m_type, GetMythMainWindow()->GetMainStack(), "nettree");
 
     if (nettree->Create())
@@ -519,8 +523,7 @@ void NetTree::FillTree()
     // First let's add all the RSS
     if (!m_rssList.isEmpty())
     {
-        MythGenericTree *rssGeneric =
-            new MythGenericTree(RSSNode, kSubFolder, false);
+        auto *rssGeneric = new MythGenericTree(kRSSNode, kSubFolder, false);
 
         // Add an upfolder
         if (m_type != DLG_TREE)
@@ -529,23 +532,21 @@ void NetTree::FillTree()
         rssGeneric->SetData(QString("%1/mythnetvision/icons/rss.png")
                             .arg(GetShareDir()));
 
-        RSSSite::rssList::iterator i = m_rssList.begin();
-        for (; i != m_rssList.end(); ++i)
+        foreach (auto & feed, m_rssList)
         {
-            ResultItem::resultList items = getRSSArticles((*i)->GetTitle(),
+            ResultItem::resultList items = getRSSArticles(feed->GetTitle(),
                                                           VIDEO_PODCAST);
-            MythGenericTree *ret =
-                new MythGenericTree((*i)->GetTitle(), kSubFolder, false);
-            ret->SetData(qVariantFromValue(*i));
+            auto *ret =
+                new MythGenericTree(feed->GetTitle(), kSubFolder, false);
+            ret->SetData(QVariant::fromValue(feed));
             rssGeneric->addNode(ret);
 
             // Add an upfolder
             if (m_type != DLG_TREE)
                 ret->addNode(tr("Back"), kUpFolder, true, false);
 
-            ResultItem::resultList::iterator it = items.begin();
-            for (; it != items.end(); ++it)
-                AddFileNode(ret, *it);
+            foreach (auto & item, items)
+                AddFileNode(ret, item);
             SetSubfolderData(ret);
         }
 
@@ -554,30 +555,28 @@ void NetTree::FillTree()
     }
 
     // Now let's add all the grabber trees
-    for (GrabberScript::scriptList::iterator g = m_grabberList.begin();
-            g != m_grabberList.end(); ++g)
+    foreach (auto & g, m_grabberList)
     {
 
         QMultiMap<QPair<QString,QString>, ResultItem*> treePathsNodes =
-                           getTreeArticles((*g)->GetTitle(), VIDEO_FILE);
+                           getTreeArticles(g->GetTitle(), VIDEO_FILE);
 
         QList< QPair<QString,QString> > paths = treePathsNodes.uniqueKeys();
 
-        MythGenericTree *ret = new MythGenericTree(
-                   (*g)->GetTitle(), kSubFolder, false);
+        auto *ret = new MythGenericTree(g->GetTitle(), kSubFolder, false);
         QString thumb = QString("%1mythnetvision/icons/%2").arg(GetShareDir())
-                            .arg((*g)->GetImage());
-        ret->SetData(qVariantFromValue(thumb));
+                            .arg(g->GetImage());
+        ret->SetData(QVariant::fromValue(thumb));
 
         // Add an upfolder
         if (m_type != DLG_TREE)
             ret->addNode(tr("Back"), kUpFolder, true, false);
 
-        for (auto it2 = paths.begin(); it2 != paths.end(); ++it2)
+        foreach (auto & path, paths)
         {
-            QStringList curPaths = (*it2).first.split("/");
-            QString dirthumb = (*it2).second;
-            QList<ResultItem*> videos = treePathsNodes.values(*it2);
+            QStringList curPaths = path.first.split("/");
+            QString dirthumb = path.second;
+            QList<ResultItem*> videos = treePathsNodes.values(path);
             BuildGenericTree(ret, curPaths, dirthumb, videos);
         }
         m_siteGeneric->addNode(ret);
@@ -587,7 +586,7 @@ void NetTree::FillTree()
 }
 
 void NetTree::BuildGenericTree(MythGenericTree *dst, QStringList paths,
-                               const QString& dirthumb, QList<ResultItem*> videos)
+                               const QString& dirthumb, const QList<ResultItem*>& videos)
 {
     MythGenericTree *folder = nullptr;
 
@@ -620,9 +619,8 @@ void NetTree::BuildGenericTree(MythGenericTree *dst, QStringList paths,
     else
     {
         // File Handling
-        for (QList<ResultItem*>::iterator it = videos.begin();
-                it != videos.end(); ++it)
-            AddFileNode(folder, *it);
+        foreach (auto & video, videos)
+            AddFileNode(folder, video);
     }
     SetSubfolderData(folder);
 }
@@ -632,7 +630,7 @@ void NetTree::AddFileNode(MythGenericTree *where_to_add, ResultItem *video)
     QString title = video->GetTitle();
     title.replace("&amp;", "&");
     MythGenericTree *sub_node = where_to_add->addNode(title, 0, true);
-    sub_node->SetData(qVariantFromValue(video));
+    sub_node->SetData(QVariant::fromValue(video));
 
     InfoMap textMap;
     video->toMap(textMap);
@@ -689,7 +687,7 @@ void NetTree::UpdateResultItem(ResultItem *item)
             {
                 m_imageDownload->addThumb(item->GetTitle(),
                                           item->GetThumbnail(),
-                                          qVariantFromValue<uint>(0));
+                                          QVariant::fromValue<uint>(0));
             }
         }
     }
@@ -844,7 +842,7 @@ void NetTree::RunTreeEditor()
 {
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
 
-    TreeEditor *treeedit = new TreeEditor(mainStack, "mythnettreeedit");
+    auto *treeedit = new TreeEditor(mainStack, "mythnettreeedit");
 
     if (treeedit->Create())
     {
@@ -860,7 +858,7 @@ void NetTree::RunRSSEditor()
 {
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
 
-    RSSEditor *rssedit = new RSSEditor(mainStack, "mythnetrssedit");
+    auto *rssedit = new RSSEditor(mainStack, "mythnetrssedit");
 
     if (rssedit->Create())
     {
@@ -901,7 +899,7 @@ void NetTree::UpdateRSS()
     QString title(tr("Updating RSS.  This could take a while..."));
     OpenBusyPopup(title);
 
-    RSSManager *rssMan = new RSSManager();
+    auto *rssMan = new RSSManager();
     connect(rssMan, SIGNAL(finished()), this, SLOT(DoTreeRefresh()));
     rssMan->startTimer();
     rssMan->doUpdate();
@@ -935,7 +933,7 @@ void NetTree::customEvent(QEvent *event)
 {
     if (event->type() == ThumbnailDLEvent::kEventType)
     {
-        ThumbnailDLEvent *tde = dynamic_cast<ThumbnailDLEvent *>(event);
+        auto *tde = dynamic_cast<ThumbnailDLEvent *>(event);
         if (!tde)
             return;
 

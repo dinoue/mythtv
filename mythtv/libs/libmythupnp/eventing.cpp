@@ -33,17 +33,16 @@ uint StateVariables::BuildNotifyBody(
     ts << "<?xml version=\"1.0\"?>" << endl
        << "<e:propertyset xmlns:e=\"urn:schemas-upnp-org:event-1-0\">" << endl;
 
-    SVMap::const_iterator it = m_map.begin();
-    for (; it != m_map.end(); ++it)
+    foreach (auto prop, m_map)
     {
-        if ( ttLastNotified < (*it)->m_ttLastChanged )
+        if ( ttLastNotified < prop->m_ttLastChanged )
         {
             nCount++;
 
             ts << "<e:property>" << endl;
-            ts <<   "<" << (*it)->m_sName << ">";
-            ts <<     (*it)->ToString();
-            ts <<   "</" << (*it)->m_sName << ">";
+            ts <<   "<" << prop->m_sName << ">";
+            ts <<     prop->ToString();
+            ts <<   "</" << prop->m_sName << ">";
             ts << "</e:property>" << endl;
         }
     }
@@ -75,9 +74,8 @@ Eventing::Eventing(const QString &sExtensionName,
 
 Eventing::~Eventing()
 {
-    Subscribers::iterator it = m_Subscribers.begin();
-    for (; it != m_Subscribers.end(); ++it)
-        delete *it;
+    foreach (auto & subscriber, m_Subscribers)
+        delete subscriber;
     m_Subscribers.clear();
 }
 
@@ -374,7 +372,7 @@ void Eventing::NotifySubscriber( SubscriberInfo *pInfo )
 
         // -=>TODO: Need to add support for more than one CallBack URL.
 
-        QByteArray  *pBuffer = new QByteArray();    // UPnpEventTask will delete this pointer.
+        auto *pBuffer = new QByteArray();    // UPnpEventTask will delete this pointer.
         QTextStream  tsMsg( pBuffer, QIODevice::WriteOnly );
 
         tsMsg.setCodec(QTextCodec::codecForName("UTF-8"));
@@ -407,9 +405,8 @@ void Eventing::NotifySubscriber( SubscriberInfo *pInfo )
             QString("UPnp::Eventing::NotifySubscriber( %1 ) : %2 Variables")
                 .arg( sHost ).arg(nCount));
 
-        UPnpEventTask *pEventTask = 
-            new UPnpEventTask(QHostAddress( pInfo->m_qURL.host() ),
-                              nPort, pBuffer );
+        auto *pEventTask = new UPnpEventTask(QHostAddress(pInfo->m_qURL.host()),
+                                             nPort, pBuffer);
 
         TaskQueue::Instance()->AddTask( 250, pEventTask );
 

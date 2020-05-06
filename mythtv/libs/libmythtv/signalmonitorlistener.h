@@ -7,7 +7,7 @@
 #include "mythtvexp.h"
 #include "signalmonitorvalue.h"
 
-typedef enum {
+enum SignalMonitorMessageType {
     kAllGood,
     kStatusChannelTuned,
     kStatusSignalLock,
@@ -16,7 +16,7 @@ typedef enum {
     kStatusBitErrorRate,
     kStatusUncorrectedBlocks,
     kStatusRotorPosition,
-} SignalMonitorMessageType;
+};
 
 class MTV_PUBLIC SignalMonitorListener
 {
@@ -57,7 +57,7 @@ class MTV_PUBLIC SignalMonitorListener
 class MTV_PUBLIC DVBSignalMonitorListener : public SignalMonitorListener
 {
   protected:
-    virtual ~DVBSignalMonitorListener() = default;
+    ~DVBSignalMonitorListener() override = default;
 
   public:
     virtual void StatusSignalToNoise(    const SignalMonitorValue&) = 0;

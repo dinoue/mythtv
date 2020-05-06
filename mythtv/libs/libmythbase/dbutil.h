@@ -30,7 +30,10 @@ enum MythDBBackupStatus
 class MBASE_PUBLIC DBUtil
 {
   public:
-    DBUtil();
+    /** \fn DBUtil::DBUtil(void)
+     *  \brief Constructs the DBUtil object.
+     */
+    DBUtil() = default;
     ~DBUtil() = default;
 
     QString GetDBMSVersion(void);
@@ -38,7 +41,7 @@ class MBASE_PUBLIC DBUtil
 
     static MythDBBackupStatus BackupDB(QString &filename,
                                        bool disableRotation = false);
-    static bool CheckTables(const bool repair = false,
+    static bool CheckTables(bool repair = false,
                             const QString &options = "QUICK");
     static bool RepairTables(const QStringList &tables);
 
@@ -46,8 +49,8 @@ class MBASE_PUBLIC DBUtil
     static bool IsBackupInProgress(void);
     static int  CountClients(void);
 
-    static bool TryLockSchema(MSqlQuery &, uint timeout_secs);
-    static void UnlockSchema(MSqlQuery &);
+    static bool TryLockSchema(MSqlQuery &query, uint timeout_secs);
+    static void UnlockSchema(MSqlQuery &query);
 
     static bool CheckTimeZoneSupport(void);
 
@@ -74,9 +77,9 @@ class MBASE_PUBLIC DBUtil
 
     QString m_versionString;
 
-    int m_versionMajor;
-    int m_versionMinor;
-    int m_versionPoint;
+    int m_versionMajor { -1 };
+    int m_versionMinor { -1 };
+    int m_versionPoint { -1 };
 
 };
 

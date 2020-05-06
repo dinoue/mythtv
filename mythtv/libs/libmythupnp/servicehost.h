@@ -47,7 +47,7 @@ class UPNP_PUBLIC MethodInfo
         QVariant Invoke( Service *pService, const QStringMap &reqParams );
 };
 
-typedef QMap< QString, MethodInfo > MetaInfoMap;
+using MetaInfoMap = QMap< QString, MethodInfo >;
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ class UPNP_PUBLIC ServiceHost : public HttpServerExtension
 
         QString             m_sBaseUrl;
 
-        QMetaObject         m_oMetaObject;
+        QMetaObject         m_oMetaObject {};
         MetaInfoMap         m_Methods;
 
     protected:
@@ -80,7 +80,7 @@ class UPNP_PUBLIC ServiceHost : public HttpServerExtension
                               const QString     &sExtensionName,
                               const QString     &sBaseUrl,
                               const QString     &sSharePath );
-        virtual ~ServiceHost() = default;
+        ~ServiceHost() override = default;
 
         QStringList GetBasePaths() override; // HttpServerExtension
 

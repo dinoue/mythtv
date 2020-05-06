@@ -19,11 +19,11 @@ extern "C" {
 #include "remoteavformatcontext.h"
 #include "mythavutil.h"
 
-typedef struct SeekAmount
+struct SeekAmount
 {
     QString name;
     int amount;
-} SeekAmount;
+};
 
 extern struct SeekAmount SeekAmounts[];
 extern int SeekAmountsCount;
@@ -44,10 +44,10 @@ class ThumbFinder : public MythScreenType
 
       ThumbFinder(MythScreenStack *parent, ArchiveItem *archiveItem,
                   const QString &menuTheme);
-    ~ThumbFinder();
+    ~ThumbFinder() override;
 
     bool Create(void) override; // MythScreenType
-    bool keyPressEvent(QKeyEvent *) override; // MythScreenType
+    bool keyPressEvent(QKeyEvent *event) override; // MythScreenType
 
 
   private slots:

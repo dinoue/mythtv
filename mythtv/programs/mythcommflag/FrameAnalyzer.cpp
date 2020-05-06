@@ -87,10 +87,8 @@ long long
 frameAnalyzerMapSum(const FrameAnalyzer::FrameMap *frameMap)
 {
     long long sum = 0;
-    for (FrameAnalyzer::FrameMap::const_iterator ii = frameMap->begin();
-            ii != frameMap->end();
-            ++ii)
-        sum += *ii;
+    foreach (long long ii, *frameMap)
+        sum += ii;
     return sum;
 }
 
@@ -150,7 +148,8 @@ removeShortSegments(FrameAnalyzer::FrameMap *breakMap, long long nframes,
      *
      * Return whether or not any segments were actually removed.
      */
-    FrameAnalyzer::FrameMap::Iterator   bb, bbnext;
+    FrameAnalyzer::FrameMap::Iterator   bb;
+    FrameAnalyzer::FrameMap::Iterator   bbnext;
 
     bool removed = false;
 

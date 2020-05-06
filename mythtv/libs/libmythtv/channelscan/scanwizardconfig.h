@@ -34,6 +34,7 @@
 #include "standardsettings.h"
 #include "inputselectorsetting.h"
 #include "channelscantypes.h"
+#include "dtvmultiplex.h"
 
 class ScanWizard;
 class VideoSourceSelector;
@@ -46,6 +47,7 @@ class FreeToAirOnly;
 class ChannelNumbersOnly;
 class CompleteChannelsOnly;
 class FullChannelSearch;
+class RemoveDuplicates;
 class AddFullTS;
 class TrustEncSISetting;
 
@@ -121,16 +123,18 @@ class ScanOptionalConfig : public GroupSetting
     QString GetFrequencyStandard(void)       const;
     QString GetModulation(void)              const;
     QString GetFrequencyTable(void)          const;
-    bool    GetFrequencyTableRange(QString&,QString&) const;
+    bool    GetFrequencyTableRange(QString &start, QString &end) const;
     bool    DoIgnoreSignalTimeout(void)      const;
     bool    DoFollowNIT(void)                const;
     QString GetFilename(void)                const;
     uint    GetMultiplex(void)               const;
     QMap<QString,QString> GetStartChan(void) const;
     uint    GetScanID(void)                  const;
+    void    SetTuningPaneValues(uint frequency, const DTVMultiplex &mpx);
+    void    SetTuningPaneValuesATSC(const QString &freqtable);
 
   public slots:
-    void SetSourceID(const QString&);
+    void SetSourceID(const QString &sourceid);
 
   private:
     ScanTypeSetting        *m_scanType                 {nullptr};

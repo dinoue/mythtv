@@ -188,10 +188,11 @@ QStringList TextSubtitles::GetSubtitles(uint64_t timecode)
     TextSubtitleList::const_iterator nextSubPos =
         lower_bound(m_subtitles.begin(), m_subtitles.end(), searchTarget);
 
-    uint64_t startCode = 0, endCode = 0;
+    uint64_t startCode = 0;
+    uint64_t endCode = 0;
     if (nextSubPos != m_subtitles.begin())
     {
-        TextSubtitleList::const_iterator currentSubPos = nextSubPos;
+        auto currentSubPos = nextSubPos;
         --currentSubPos;
 
         const text_subtitle_t &sub = *currentSubPos;
@@ -212,10 +213,14 @@ QStringList TextSubtitles::GetSubtitles(uint64_t timecode)
         {
             const int maxReloadInterval = 1000; // ms
             if (IsFrameBasedTiming())
+            {
                 // Assume conservative 24fps
                 endCode = startCode + maxReloadInterval / 24;
+            }
             else
+            {
                 endCode = startCode + maxReloadInterval;
+            }
             QDateTime now = QDateTime::currentDateTimeUtc();
             if (!m_fileName.isEmpty() &&
                 m_lastLoaded.msecsTo(now) >= maxReloadInterval)
@@ -269,12 +274,14 @@ void TextSubtitleParser::LoadSubtitles(const QString &fileName,
     if (inBackground)
     {
         if (!SubtitleLoadHelper::IsLoading(&target))
+        {
             MThreadPool::globalInstance()->
                 start(new SubtitleLoadHelper(fileName, &target),
                       "SubtitleLoadHelper");
+        }
         return;
     }
-    demux_sputext_t sub_data;
+    demux_sputext_t sub_data {};
     RemoteFileWrapper rfile(fileName/*, false, false, 0*/);
 
     LOG(VB_VBI, LOG_INFO,

@@ -19,7 +19,7 @@ class MythMediaDevice;
 #define REG_JUMPEX(a, b, c, d, e) GetMythMainWindow()->RegisterJump(a, b, c, d, e)
 #define REG_MEDIAPLAYER(a,b,c) GetMythMainWindow()->RegisterMediaPlugin(a, b, c)
 
-typedef int (*MediaPlayCallback)(const QString &, const QString &, const QString &, const QString &, const QString &, int, int, const QString &, int, const QString &, const QString &, bool);
+using MediaPlayCallback = int (*)(const QString &, const QString &, const QString &, const QString &, const QString &, int, int, const QString &, int, const QString &, const QString &, bool);
 
 class MythMainWindowPrivate;
 
@@ -40,9 +40,11 @@ class MUI_PUBLIC MythMainWindow : public QWidget
   public:
     enum {drawRefresh = 70};
 
-    void Init(const QString& forcedpainter = QString(), bool mayReInit=true);
+    void Init(bool mayReInit = true);
     void ReinitDone(void);
     void Show(void);
+    void MoveResize(QRect &Geometry);
+    static bool WindowIsAlwaysFullscreen(void);
 
     void AddScreenStack(MythScreenStack *stack, bool main = false);
     void PopScreenStack();
@@ -90,7 +92,7 @@ class MUI_PUBLIC MythMainWindow : public QWidget
 
     bool IsExitingToMain(void) const;
 
-    static MythMainWindow *getMainWindow(const bool useDB = true);
+    static MythMainWindow *getMainWindow(bool useDB = true);
     static void destroyMainWindow();
 
     MythPainter *GetCurrentPainter();
@@ -99,7 +101,6 @@ class MUI_PUBLIC MythMainWindow : public QWidget
     MythNotificationCenter *GetCurrentNotificationCenter();
     void         ShowPainterWindow();
     void         HidePainterWindow();
-    void         ResizePainterWindow(const QSize &size);
 
     static void GrabWindow(QImage &image);
     static bool SaveScreenShot(const QImage &image, QString filename = "");
@@ -116,18 +117,10 @@ class MUI_PUBLIC MythMainWindow : public QWidget
     MythRect NormRect(const MythRect &rect);
     QPoint NormPoint(const QPoint &point);
     QSize NormSize(const QSize &size);
-    int NormX(const int x);
-    int NormY(const int y);
+    int NormX(int x);
+    int NormY(int y);
     void SetScalingFactors(float wmult, float hmult);
-
     void StartLIRC(void);
-
-    /* compatibility functions, to go away once everything's mythui */
-    void attach(QWidget *child);
-    void detach(QWidget *child);
-
-    QWidget *currentWidget(void);
-
     uint PushDrawDisabled(void);
     uint PopDrawDisabled(void);
     void SetEffectsEnabled(bool enable);
@@ -157,8 +150,8 @@ class MUI_PUBLIC MythMainWindow : public QWidget
     void signalSetDrawEnabled(bool enable);
 
   protected:
-    explicit MythMainWindow(const bool useDB = true);
-    virtual ~MythMainWindow();
+    explicit MythMainWindow(bool useDB = true);
+    ~MythMainWindow() override;
 
     void InitKeys(void);
 
@@ -178,7 +171,7 @@ class MUI_PUBLIC MythMainWindow : public QWidget
 
     void ShowMouseCursor(bool show);
 
-    MythMainWindowPrivate *d {nullptr};
+    MythMainWindowPrivate *d {nullptr}; // NOLINT(readability-identifier-naming)
 
   private slots:
     void DelayedAction(void);

@@ -41,13 +41,12 @@ void UPnpCDSExtensionResults::Add( CDSObject *pObject )
 //
 /////////////////////////////////////////////////////////////////////////////
 
-void UPnpCDSExtensionResults::Add( CDSObjects objects )
+void UPnpCDSExtensionResults::Add( const CDSObjects& objects )
 {
-    CDSObjects::iterator it;
-    for (it = objects.begin(); it != objects.end(); ++it)
+    foreach (auto & object, objects)
     {
-        (*it)->IncrRef();
-        m_List.append( *it );
+        object->IncrRef();
+        m_List.append( object );
     }
 }
 
@@ -60,9 +59,8 @@ QString UPnpCDSExtensionResults::GetResultXML(FilterMap &filter,
 {
     QString sXML;
 
-    CDSObjects::const_iterator it = m_List.begin();
-    for (; it != m_List.end(); ++it)
-        sXML += (*it)->toXml(filter, ignoreChildren);
+    foreach (auto item, m_List)
+        sXML += item->toXml(filter, ignoreChildren);
 
     return sXML;
 }
@@ -740,7 +738,7 @@ void UPnpCDS::HandleGetSystemUpdateID( HTTPRequest *pRequest )
         QString("UPnpCDS::ProcessRequest : %1 : %2")
             .arg(pRequest->m_sBaseUrl) .arg(pRequest->m_sMethod));
 
-    uint16_t nId = GetValue<uint16_t>("SystemUpdateID");
+    auto nId = GetValue<uint16_t>("SystemUpdateID");
 
     list.push_back(NameValue("Id", nId));
 
@@ -838,7 +836,7 @@ UPnpCDSExtensionResults *UPnpCDSExtension::Browse( UPnpCDSRequest *pRequest )
     // Process based on location in hierarchy
     // ----------------------------------------------------------------------
 
-    UPnpCDSExtensionResults *pResults = new UPnpCDSExtensionResults();
+    auto *pResults = new UPnpCDSExtensionResults();
 
     if (pResults != nullptr)
     {
@@ -917,7 +915,7 @@ UPnpCDSExtensionResults *UPnpCDSExtension::Search( UPnpCDSRequest *pRequest )
         return nullptr;
     }
 
-    UPnpCDSExtensionResults *pResults = new UPnpCDSExtensionResults();
+    auto *pResults = new UPnpCDSExtensionResults();
 
 //    CreateItems( pRequest, pResults, 0, "", false );
 
@@ -1122,9 +1120,11 @@ bool UPnPShortcutFeature::AddShortCut(ShortCutType type,
     if (!m_shortcuts.contains(type))
         m_shortcuts.insert(type, objectID);
     else
+    {
         LOG(VB_GENERAL, LOG_ERR, QString("UPnPCDSShortcuts::AddShortCut(): "
                                          "Attempted to register duplicate "
                                          "shortcut").arg(TypeToName(type)));
+    }
 
     return false;
 }
@@ -1225,9 +1225,6 @@ QString UPnPShortcutFeature::TypeToName(ShortCutType type)
           str = "VIDEOS_ALL";
           break;
        case VIDEOS_FOLDER_STRUCTURE :
-          str = "VIDEOS_FOLDER_STRUCTURE";
-          break;
-
        case FOLDER_STRUCTURE :
           str = "VIDEOS_FOLDER_STRUCTURE";
           break;

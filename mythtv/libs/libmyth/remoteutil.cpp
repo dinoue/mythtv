@@ -25,7 +25,7 @@ vector<ProgramInfo *> *RemoteGetRecordedList(int sort)
 
     QStringList strlist(str);
 
-    vector<ProgramInfo *> *info = new vector<ProgramInfo *>;
+    auto *info = new vector<ProgramInfo *>;
 
     if (!RemoteGetRecordingList(*info, strlist))
     {
@@ -36,15 +36,15 @@ vector<ProgramInfo *> *RemoteGetRecordedList(int sort)
     return info;
 }
 
-bool RemoteGetLoad(float load[3])
+bool RemoteGetLoad(double load[3])
 {
     QStringList strlist(QString("QUERY_LOAD"));
 
     if (gCoreContext->SendReceiveStringList(strlist) && strlist.size() >= 3)
     {
-        load[0] = strlist[0].toFloat();
-        load[1] = strlist[1].toFloat();
-        load[2] = strlist[2].toFloat();
+        load[0] = strlist[0].toDouble();
+        load[1] = strlist[1].toDouble();
+        load[2] = strlist[2].toDouble();
         return true;
     }
 
@@ -87,7 +87,7 @@ bool RemoteGetMemStats(int &totalMB, int &freeMB, int &totalVM, int &freeVM)
     return false;
 }
 
-bool RemoteCheckFile(const ProgramInfo *pginfo, bool checkSlaves)
+bool RemoteCheckFile(ProgramInfo *pginfo, bool checkSlaves)
 {
     QStringList strlist("QUERY_CHECKFILE");
     strlist << QString::number((int)checkSlaves);
@@ -121,9 +121,8 @@ bool RemoteDeleteRecording(uint recordingID, bool forceMetadataDelete,
         .arg(forgetHistory ? "FORGET" : "NO_FORGET");
     QStringList strlist(cmd);
 
-    if (!gCoreContext->SendReceiveStringList(strlist) || strlist.isEmpty())
-        result = false;
-    else if (strlist[0].toInt() == -2)
+    if ((!gCoreContext->SendReceiveStringList(strlist) || strlist.isEmpty()) ||
+        (strlist[0].toInt() == -2))
         result = false;
 
     if (!result)
@@ -193,8 +192,8 @@ uint RemoteGetRecordingList(
     QStringList::const_iterator it = strList.begin() + 1;
     for (int i = 0; i < numrecordings; i++)
     {
-        ProgramInfo *pginfo = new ProgramInfo(it, strList.end());
-            reclist.push_back(pginfo);
+        auto *pginfo = new ProgramInfo(it, strList.end());
+        reclist.push_back(pginfo);
     }
 
     return ((uint) reclist.size()) - reclist_initial_size;
@@ -206,7 +205,7 @@ vector<ProgramInfo *> *RemoteGetConflictList(const ProgramInfo *pginfo)
     QStringList strlist( cmd );
     pginfo->ToStringList(strlist);
 
-    vector<ProgramInfo *> *retlist = new vector<ProgramInfo *>;
+    auto *retlist = new vector<ProgramInfo *>;
 
     RemoteGetRecordingList(*retlist, strlist);
     return retlist;
@@ -276,11 +275,13 @@ QDateTime RemoteGetPreviewIfModified(
     QDateTime retdatetime;
     qlonglong timet = strlist[0].toLongLong();
     if (timet >= 0)
+    {
 #if QT_VERSION < QT_VERSION_CHECK(5,8,0)
         retdatetime = MythDate::fromTime_t(timet);
 #else
         retdatetime = MythDate::fromSecsSinceEpoch(timet);
 #endif
+    }
 
     if (strlist.size() < 4)
     {
@@ -538,21 +539,18 @@ vector<ProgramInfo *> *RemoteGetCurrentlyRecordingList(void)
     str += "Recording";
     QStringList strlist( str );
 
-    vector<ProgramInfo *> *reclist = new vector<ProgramInfo *>;
-    vector<ProgramInfo *> *info = new vector<ProgramInfo *>;
+    auto *reclist = new vector<ProgramInfo *>;
+    auto *info = new vector<ProgramInfo *>;
     if (!RemoteGetRecordingList(*info, strlist))
     {
         delete info;
         return reclist;
     }
 
-    ProgramInfo *p = nullptr;
-    vector<ProgramInfo *>::iterator it = info->begin();
     // make sure whatever RemoteGetRecordingList() returned
     // only has RecStatus::Recording shows
-    for ( ; it != info->end(); ++it)
+    for (auto & p : *info)
     {
-        p = *it;
         if (p->GetRecordingStatus() == RecStatus::Recording ||
             p->GetRecordingStatus() == RecStatus::Tuning ||
             p->GetRecordingStatus() == RecStatus::Failing ||

@@ -13,7 +13,7 @@ class TeletextScreen: public MythScreenType
 
   public:
     TeletextScreen(MythPlayer *player, const char * name, int fontStretch);
-    virtual ~TeletextScreen();
+    ~TeletextScreen() override;
 
     // MythScreenType methods
     bool Create(void) override; // MythScreenType
@@ -29,10 +29,10 @@ class TeletextScreen: public MythScreenType
   private:
     void OptimiseDisplayedArea(void);
     QImage* GetRowImage(int row, QRect &rect);
-    void SetForegroundColor(int color);
+    static void SetForegroundColor(int color);
     void SetBackgroundColor(int color);
     void DrawBackground(int x, int y);
-    void DrawRect(int row, const QRect);
+    void DrawRect(int row, QRect rect);
     void DrawCharacter(int x, int y, QChar ch, bool doubleheight = false);
     void DrawMosaic(int x, int y, int code, bool doubleheight);
     void DrawLine(const uint8_t *page, uint row, int lang);

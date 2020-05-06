@@ -24,7 +24,7 @@ class MPEGDescriptor;
 class MTV_PUBLIC DTVMultiplex
 {
   public:
-  DTVMultiplex() = default;
+    DTVMultiplex() = default;
     DTVMultiplex(const DTVMultiplex &/*other*/) = default;
     DTVMultiplex &operator=(const DTVMultiplex &/*other*/) = default;
     virtual ~DTVMultiplex() = default;
@@ -92,18 +92,18 @@ class MTV_PUBLIC DTVMultiplex
   public:
     // Basic tuning
     uint64_t         m_frequency  {0};
-    uint64_t         m_symbolrate {0};
+    uint64_t         m_symbolRate {0};
     DTVInversion     m_inversion;
     DTVBandwidth     m_bandwidth;
-    DTVCodeRate      m_hp_code_rate;    ///< High Priority FEC rate
-    DTVCodeRate      m_lp_code_rate;    ///< Low Priority FEC rate
+    DTVCodeRate      m_hpCodeRate;      ///< High Priority FEC rate
+    DTVCodeRate      m_lpCodeRate;      ///< Low Priority FEC rate
     DTVModulation    m_modulation;
-    DTVTransmitMode  m_trans_mode;
-    DTVGuardInterval m_guard_interval;
+    DTVTransmitMode  m_transMode;
+    DTVGuardInterval m_guardInterval;
     DTVHierarchy     m_hierarchy;
     DTVPolarity      m_polarity;
     DTVCodeRate      m_fec;             ///< Inner Forward Error Correction rate
-    DTVModulationSystem m_mod_sys;      ///< Modulation system
+    DTVModulationSystem m_modSys;       ///< Modulation system
     DTVRollOff       m_rolloff;
 
     // Optional additional info
@@ -116,11 +116,10 @@ class MTV_PUBLIC DTVMultiplex
 class MTV_PUBLIC ScanDTVTransport : public DTVMultiplex
 {
   public:
-    ScanDTVTransport() :
-        DTVMultiplex() { }
+    ScanDTVTransport() = default;
     ScanDTVTransport(const DTVMultiplex &mplex, DTVTunerType tt, uint cid) :
         DTVMultiplex(mplex), m_tuner_type(tt), m_cardid(cid) { }
-    virtual ~ScanDTVTransport() = default;
+    ~ScanDTVTransport() override = default;
 
     bool FillFromDB(DTVTunerType type, uint mplexid) override; // DTVMultiplex
     uint SaveScan(uint scanid) const;
@@ -135,10 +134,13 @@ class MTV_PUBLIC ScanDTVTransport : public DTVMultiplex
         const QString& mod_sys,      const QString& rolloff);
 
   public:
-    DTVTunerType          m_tuner_type {DTVTunerType::kTunerTypeUnknown};
-    uint                  m_cardid     {0};
+    DTVTunerType          m_tuner_type     {DTVTunerType::kTunerTypeUnknown};
+    uint                  m_cardid         {0};
     ChannelInsertInfoList m_channels;
+    uint                  m_networkID      {0};
+    uint                  m_transportID    {0};
+    int                   m_signalStrength {0};
 };
-typedef vector<ScanDTVTransport> ScanDTVTransportList;
+using ScanDTVTransportList = vector<ScanDTVTransport>;
 
 #endif // _DTVMULTIPLEX_H_

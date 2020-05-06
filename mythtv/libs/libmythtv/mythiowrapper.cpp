@@ -122,11 +122,9 @@ int mythfile_check(int id)
     int result = 0;
 
     m_fileWrapperLock.lockForWrite();
-    if (m_localfiles.contains(id))
-        result = 1;
-    else if (m_remotefiles.contains(id))
-        result = 1;
-    else if (m_ringbuffers.contains(id))
+    if ((m_localfiles.contains(id))  ||
+        (m_remotefiles.contains(id)) ||
+        (m_ringbuffers.contains(id)))
         result = 1;
     m_fileWrapperLock.unlock();
 
@@ -177,13 +175,17 @@ int mythfile_open(const char *pathname, int flags)
         else
         {
             if (flags & O_WRONLY)
+            {
                 rb = RingBuffer::Create(
                     pathname, true, false,
                     RingBuffer::kDefaultOpenTimeout, true); // Writeable
+            }
             else
+            {
                 rb = RingBuffer::Create(
                     pathname, false, true,
                     RingBuffer::kDefaultOpenTimeout, true); // Read-Only
+            }
 
             if (!rb)
                 return -1;
@@ -413,9 +415,8 @@ int mythdir_check(int id)
     int result = 0;
 
     m_dirWrapperLock.lockForWrite();
-    if (m_localdirs.contains(id))
-        result = 1;
-    else if (m_remotedirs.contains(id))
+    if ((m_localdirs.contains(id)) ||
+        (m_remotedirs.contains(id)))
         result = 1;
     m_dirWrapperLock.unlock();
 

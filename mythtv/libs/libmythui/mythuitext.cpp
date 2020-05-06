@@ -76,8 +76,8 @@ MythUIText::~MythUIText()
     delete m_Font;
     m_Font = nullptr;
 
-    for (auto Ilayout = m_Layouts.begin(); Ilayout != m_Layouts.end(); ++Ilayout)
-        delete *Ilayout;
+    foreach (auto & layout, m_Layouts)
+        delete layout;
 }
 
 void MythUIText::Reset()
@@ -500,7 +500,8 @@ bool MythUIText::FormatTemplate(QString & paragraph, QTextLayout *layout)
     range.start = 0;
     range.length = 0;
 
-    int pos = 0, end = 0;
+    int pos = 0;
+    int end = 0;
     while ((pos = paragraph.indexOf("[font]", pos, Qt::CaseInsensitive)) != -1)
     {
         if ((end = paragraph.indexOf("[/font]", pos + 1, Qt::CaseInsensitive))
@@ -689,8 +690,8 @@ bool MythUIText::LayoutParagraphs(const QStringList & paragraphs,
     bool    overflow = false;
     int     idx = 0;
 
-    for (auto Ilayout = m_Layouts.begin(); Ilayout != m_Layouts.end(); ++Ilayout)
-        (*Ilayout)->clearLayout();
+    foreach (auto & layout, m_Layouts)
+        layout->clearLayout();
 
     for (Ipara = paragraphs.begin(), idx = 0;
          Ipara != paragraphs.end(); ++Ipara, ++idx)
@@ -721,7 +722,7 @@ bool MythUIText::LayoutParagraphs(const QStringList & paragraphs,
 bool MythUIText::GetNarrowWidth(const QStringList & paragraphs,
                                 const QTextOption & textoption, qreal & width)
 {
-    qreal    height = 0, last_line_width = NAN;
+    qreal    last_line_width = NAN;
     int      last_width = -1;
     int      num_lines = 0;
     Qt::TextElideMode cutdown = m_Cutdown;
@@ -737,7 +738,7 @@ bool MythUIText::GetNarrowWidth(const QStringList & paragraphs,
         QRectF min_rect;
 
         m_drawRect.setWidth(0);
-        height = 0;
+        qreal height = 0;
 
         LayoutParagraphs(paragraphs, textoption, width, height,
                          min_rect, last_line_width, num_lines, false);
@@ -751,11 +752,10 @@ bool MythUIText::GetNarrowWidth(const QStringList & paragraphs,
                 too_narrow = width;
 
             // Too narrow?  How many lines didn't fit?
-            qreal lines = static_cast<int>
-                    ((height - m_drawRect.height()) / line_height);
+            qreal lines = roundf((height - m_drawRect.height()) / line_height);
             lines -= (1.0 - last_line_width / width);
             width += (lines * width) /
-                     (m_drawRect.height() / line_height);
+                ((double)m_drawRect.height() / line_height);
 
             if (width > best_width || static_cast<int>(width) == last_width)
             {
@@ -769,8 +769,7 @@ bool MythUIText::GetNarrowWidth(const QStringList & paragraphs,
             if (best_width > width)
                 best_width = width;
 
-            qreal lines = static_cast<int>
-                    (m_Area.height() - height) / line_height;
+            qreal lines = floor((m_Area.height() - height) / line_height);
             if (lines >= 1)
             {
                 // Too wide?
@@ -911,14 +910,14 @@ void MythUIText::FillCutMessage(void)
         for (int idx = m_Layouts.size(); idx < paragraphs.size(); ++idx)
             m_Layouts.push_back(new QTextLayout);
 
-        qreal width = NAN, height = NAN;
+        qreal width = NAN;
         if (m_MultiLine && m_ShrinkNarrow &&
             m_MinSize.isValid() && !m_CutMessage.isEmpty())
             GetNarrowWidth(paragraphs, textoption, width);
         else
             width = m_Area.width();
 
-        height = 0;
+        qreal height = 0;
         m_leftBearing = m_rightBearing = 0;
         int   num_lines = 0;
         qreal last_line_width = NAN;
@@ -1138,7 +1137,8 @@ QPoint MythUIText::CursorPosition(int text_offset)
 
     QVector<QTextLayout *>::const_iterator Ipara = nullptr;
     QPoint pos;
-    int    x = 0, y = 0;
+    int    x = 0;
+    int    y = 0;
     int    offset = text_offset;
 
     for (Ipara = m_Layouts.constBegin(); Ipara != m_Layouts.constEnd(); ++Ipara)
@@ -1445,13 +1445,10 @@ bool MythUIText::ParseElement(
             m_Message = qApp->translate("ThemeUI",
                                         parseText(element).toUtf8());
         }
-        else if (element.attribute("lang", "").toLower() ==
-                 gCoreContext->GetLanguageAndVariant())
-        {
-            m_Message = parseText(element);
-        }
-        else if (element.attribute("lang", "").toLower() ==
-                 gCoreContext->GetLanguage())
+        else if ((element.attribute("lang", "").toLower() ==
+                  gCoreContext->GetLanguageAndVariant()) ||
+                 (element.attribute("lang", "").toLower() ==
+                  gCoreContext->GetLanguage()))
         {
             m_Message = parseText(element);
         }
@@ -1620,7 +1617,7 @@ bool MythUIText::ParseElement(
 
 void MythUIText::CopyFrom(MythUIType *base)
 {
-    MythUIText *text = dynamic_cast<MythUIText *>(base);
+    auto *text = dynamic_cast<MythUIText *>(base);
 
     if (!text)
     {
@@ -1687,7 +1684,7 @@ void MythUIText::CopyFrom(MythUIType *base)
 
 void MythUIText::CreateCopy(MythUIType *parent)
 {
-    MythUIText *text = new MythUIText(parent, objectName());
+    auto *text = new MythUIText(parent, objectName());
     text->CopyFrom(this);
 }
 

@@ -171,6 +171,22 @@ class FullChannelSearch : public TransMythUICheckBoxSetting
     };
 };
 
+class RemoveDuplicates : public TransMythUICheckBoxSetting
+{
+  public:
+    RemoveDuplicates()
+    {
+        setLabel(QObject::tr("Remove duplicates"));
+        setHelpText(
+            QObject::tr(
+                "If set, select the transport stream multiplex with the best signal "
+                "when identical transports are received on different frequencies. "
+                "This option is useful for DVB-T2 and ATSC/OTA when a transport "
+                "can sometimes be received from different transmitters."));
+        setValue(true);
+    };
+};
+
 class AddFullTS : public TransMythUICheckBoxSetting
 {
   public:
@@ -208,7 +224,7 @@ class ScanFrequencykHz: public TransTextEditSetting
     {
         setLabel(QObject::tr("Frequency"));
         setHelpText(QObject::tr("Frequency (Option has no default)\n"
-                                "The frequency for this channel in kHz."));
+                                "The frequency for this transport (multiplex) in kHz."));
     };
 };
 
@@ -219,7 +235,7 @@ class ScanFrequency: public TransTextEditSetting
     {
         setLabel(QObject::tr("Frequency"));
         setHelpText(QObject::tr("Frequency (Option has no default)\n"
-                                "The frequency for this channel in Hz."));
+                                "The frequency for this transport (multiplex) in Hz."));
     };
 };
 
@@ -448,7 +464,7 @@ class PaneError : public GroupSetting
   public:
     explicit PaneError(const QString &error)
     {
-        TransTextEditSetting* label = new TransTextEditSetting();
+        auto* label = new TransTextEditSetting();
         label->setValue(error);
         addChild(label);
     }

@@ -17,15 +17,11 @@ class XMLTVParser
 {
   public:
     XMLTVParser();
-    void lateInit();
-
-    static ChannelInfo *parseChannel(QDomElement &element, QUrl &baseUrl);
-    ProgInfo *parseProgram(QDomElement &element);
     bool parseFile(const QString& filename, ChannelInfoList *chanlist,
                    QMap<QString, QList<ProgInfo> > *proglist);
 
   private:
-    unsigned int m_current_year {0};
+    unsigned int m_currentYear {0};
     QString m_movieGrabberPath;
     QString m_tvGrabberPath;
 };

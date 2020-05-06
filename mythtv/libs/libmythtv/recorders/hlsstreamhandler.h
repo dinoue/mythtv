@@ -27,15 +27,15 @@ class HLSStreamHandler : public IPTVStreamHandler
     static HLSStreamHandler* Get(const IPTVTuningData& tuning, int inputid);
     static void Return(HLSStreamHandler* & ref, int inputid);
 
-  protected:
-    explicit HLSStreamHandler(const IPTVTuningData &tuning, int inputid);
-    virtual ~HLSStreamHandler(void);
-
-    void run(void) override; // MThread
-
-  private:
+    // Deleted functions should be public.
     HLSStreamHandler(const HLSStreamHandler &) = delete;            // not copyable
     HLSStreamHandler &operator=(const HLSStreamHandler &) = delete; // not copyable
+
+  protected:
+    explicit HLSStreamHandler(const IPTVTuningData &tuning, int inputid);
+    ~HLSStreamHandler(void) override;
+
+    void run(void) override; // MThread
 
   protected:
     HLSReader*     m_hls        {nullptr};

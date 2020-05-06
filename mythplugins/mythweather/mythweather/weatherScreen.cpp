@@ -128,11 +128,11 @@ bool WeatherScreen::prepareScreen(bool checkOnly)
             continue;
         }
 
-        if (auto w2 = dynamic_cast<MythUIText *>(widget))
+        if (auto *w2 = dynamic_cast<MythUIText *>(widget))
         {
             w2->SetText(itr.value());
         }
-        else if (auto w3 = dynamic_cast<MythUIImage *>(widget))
+        else if (auto *w3 = dynamic_cast<MythUIImage *>(widget))
         {
             w3->SetFilename(itr.value());
             w3->Load();
@@ -152,7 +152,7 @@ void WeatherScreen::prepareWidget(MythUIType *widget)
      * Basically so we don't do it twice since some screens (Static Map) mess
      * with image dimensions
      */
-    MythUIImage *img = dynamic_cast<MythUIImage *>(widget);
+    auto *img = dynamic_cast<MythUIImage *>(widget);
     if (img != nullptr)
     {
         img->Load();

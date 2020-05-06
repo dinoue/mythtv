@@ -254,13 +254,17 @@ QString CommandLineArg::GetHelpString(int off, const QString& group, bool force)
     if (termwidth < off)
     {
         if (off > 70)
+        {
             // developer has configured some absurdly long command line
             // arguments, but we still need to do something
             termwidth = off+40;
+        }
         else
+        {
             // user is running uselessly narrow console, use a sane console
             // width instead
             termwidth = 79;
+        }
     }
 
     if (m_help.isEmpty() && !force)
@@ -272,9 +276,11 @@ QString CommandLineArg::GetHelpString(int off, const QString& group, bool force)
         return helpstr;
 
     if (!m_parents.isEmpty() && !force)
+    {
         // only print if an independent option, not subject
         // to a parent option
         return helpstr;
+    }
 
     if (!m_deprecated.isEmpty())
         // option is marked as deprecated, do not show
@@ -328,10 +334,14 @@ QString CommandLineArg::GetLongHelpString(QString keyword) const
 
     // argument has been marked as removed, so warn user of such
     if (!m_removed.isEmpty())
+    {
         PrintRemovedWarning(keyword);
     // argument has been marked as deprecated, so warn user of such
+    }
     else if (!m_deprecated.isEmpty())
+    {
         PrintDeprecatedWarning(keyword);
+    }
 
     msg << "Option:      " << keyword << endl << endl;
 
@@ -543,11 +553,10 @@ CommandLineArg* CommandLineArg::SetParentOf(const QString &opt)
 
 /** \brief Set argument as parent of multiple children
  */
-CommandLineArg* CommandLineArg::SetParentOf(QStringList opts)
+CommandLineArg* CommandLineArg::SetParentOf(const QStringList& opts)
 {
-    QStringList::const_iterator i = opts.begin();
-    for (; i != opts.end(); ++i)
-        m_children << new CommandLineArg(*i);
+    foreach (const auto opt, opts)
+        m_children << new CommandLineArg(opt);
     return this;
 }
 
@@ -561,11 +570,10 @@ CommandLineArg* CommandLineArg::SetParent(const QString &opt)
 
 /** \brief Set argument as child of multiple parents
  */
-CommandLineArg* CommandLineArg::SetParent(QStringList opts)
+CommandLineArg* CommandLineArg::SetParent(const QStringList& opts)
 {
-    QStringList::const_iterator i = opts.begin();
-    for (; i != opts.end(); ++i)
-        m_parents << new CommandLineArg(*i);
+    foreach (const auto opt, opts)
+        m_parents << new CommandLineArg(opt);
     return this;
 }
 
@@ -579,11 +587,10 @@ CommandLineArg* CommandLineArg::SetChildOf(const QString &opt)
 
 /** \brief Set argument as child of multiple parents
  */
-CommandLineArg* CommandLineArg::SetChildOf(QStringList opts)
+CommandLineArg* CommandLineArg::SetChildOf(const QStringList& opts)
 {
-    QStringList::const_iterator i = opts.begin();
-    for (; i != opts.end(); ++i)
-        m_parents << new CommandLineArg(*i);
+    foreach (const auto opt, opts)
+        m_parents << new CommandLineArg(opt);
     return this;
 }
 
@@ -597,11 +604,10 @@ CommandLineArg* CommandLineArg::SetChild(const QString& opt)
 
 /** \brief Set argument as parent of multiple children
  */
-CommandLineArg* CommandLineArg::SetChild(QStringList opts)
+CommandLineArg* CommandLineArg::SetChild(const QStringList& opts)
 {
-    QStringList::const_iterator i = opts.begin();
-    for (; i != opts.end(); ++i)
-        m_children << new CommandLineArg(*i);
+    foreach (const auto opt, opts)
+        m_children << new CommandLineArg(opt);
     return this;
 }
 
@@ -616,13 +622,12 @@ CommandLineArg* CommandLineArg::SetRequiredChild(const QString& opt)
 
 /** \brief Set argument as parent of multiple children and mark as required
  */
-CommandLineArg* CommandLineArg::SetRequiredChild(QStringList opts)
+CommandLineArg* CommandLineArg::SetRequiredChild(const QStringList& opts)
 {
-    QStringList::const_iterator i = opts.begin();
-    for (; i != opts.end(); ++i)
+    foreach (const auto opt, opts)
     {
-        m_children << new CommandLineArg(*i);
-        m_requires << new CommandLineArg(*i);
+        m_children << new CommandLineArg(opt);
+        m_requires << new CommandLineArg(opt);
     }
     return this;
 }
@@ -638,13 +643,12 @@ CommandLineArg* CommandLineArg::SetRequiredChildOf(const QString& opt)
 
 /** \brief Set argument as child required by multiple parents
  */
-CommandLineArg* CommandLineArg::SetRequiredChildOf(QStringList opts)
+CommandLineArg* CommandLineArg::SetRequiredChildOf(const QStringList& opts)
 {
-    QStringList::const_iterator i = opts.begin();
-    for (; i != opts.end(); ++i)
+    foreach (const auto opt, opts)
     {
-        m_parents << new CommandLineArg(*i);
-        m_requiredby << new CommandLineArg(*i);
+        m_parents << new CommandLineArg(opt);
+        m_requiredby << new CommandLineArg(opt);
     }
     return this;
 }
@@ -659,11 +663,10 @@ CommandLineArg* CommandLineArg::SetRequires(const QString& opt)
 
 /** \brief Set argument as requiring multiple options
  */
-CommandLineArg* CommandLineArg::SetRequires(QStringList opts)
+CommandLineArg* CommandLineArg::SetRequires(const QStringList& opts)
 {
-    QStringList::const_iterator i = opts.begin();
-    for (; i != opts.end(); ++i)
-        m_requires << new CommandLineArg(*i);
+    foreach (const auto opt, opts)
+        m_requires << new CommandLineArg(opt);
     return this;
 }
 
@@ -677,11 +680,10 @@ CommandLineArg* CommandLineArg::SetBlocks(const QString &opt)
 
 /** \brief Set argument as incompatible with multiple options
  */
-CommandLineArg* CommandLineArg::SetBlocks(QStringList opts)
+CommandLineArg* CommandLineArg::SetBlocks(const QStringList& opts)
 {
-    QStringList::const_iterator i = opts.begin();
-    for (; i != opts.end(); ++i)
-        m_blocks << new CommandLineArg(*i);
+    foreach (const auto opt, opts)
+        m_blocks << new CommandLineArg(opt);
     return this;
 }
 
@@ -821,20 +823,19 @@ void CommandLineArg::SetBlocks(CommandLineArg *other, bool forward)
 
 /** \brief Mark a list of arguments as mutually exclusive
  */
-void CommandLineArg::AllowOneOf(QList<CommandLineArg*> args)
+void CommandLineArg::AllowOneOf(const QList<CommandLineArg*>& args)
 {
     // TODO: blocks do not get set properly if multiple dummy arguments
     //       are provided. since this method will not have access to the
     //       argument list, this issue will have to be resolved later in
     //       ReconcileLinks().
-    QList<CommandLineArg*>::const_iterator i1,i2;
 
     // loop through all but the last entry
-    for (i1 = args.begin(); i1 != args.end()-1; ++i1)
+    for (auto i1 = args.cbegin(); i1 != args.cend()-1; ++i1)
     {
         // loop through the next to the last entry
         // and block use with the current
-        for (i2 = i1+1; i2 != args.end(); ++i2)
+        for (auto i2 = i1+1; i2 != args.cend(); ++i2)
         {
             (*i1)->SetBlocks(*i2);
         }
@@ -892,8 +893,8 @@ void CommandLineArg::Convert(void)
     else if (m_type == QVariant::Map)
     {
         QVariantMap vmap = m_stored.toMap();
-        QVariantMap::iterator iter = vmap.begin();
-        for (; iter != vmap.end(); ++iter)
+        // NOLINTNEXTLINE(modernize-loop-convert)
+        for (auto iter = vmap.begin(); iter != vmap.end(); ++iter)
             (*iter) = QString::fromLocal8Bit(iter->toByteArray());
     }
     else
@@ -969,9 +970,11 @@ bool CommandLineArg::TestLinks(void) const
                  << " requires all of the following be defined as well"
                  << endl;
             for (i = m_requires.constBegin(); i != m_requires.constEnd(); ++i)
+            {
                 cerr << " "
                      << (*i)->GetPreferredKeyword().toLocal8Bit()
                                                    .constData();
+            }
             cerr << endl << endl;
             return false;
         }
@@ -985,9 +988,11 @@ bool CommandLineArg::TestLinks(void) const
             cerr << "ERROR: " << m_usedKeyword.toLocal8Bit().constData()
                  << " requires that none of the following be defined" << endl;
             for (i = m_blocks.constBegin(); i != m_blocks.constEnd(); ++i)
+            {
                 cerr << " "
                      << (*i)->GetPreferredKeyword().toLocal8Bit()
                                                    .constData();
+            }
             cerr << endl << endl;
             return false;
         }
@@ -1073,9 +1078,11 @@ void CommandLineArg::PrintVerbose(void) const
         cerr << '"' << it2->toByteArray().constData() << '"';
         ++it2;
         for (; it2 != vlist.end(); ++it2)
+        {
             cerr << ", \""
                  << it2->constData()
                  << '"';
+        }
         cerr << endl;
         break;
 
@@ -1236,9 +1243,11 @@ CommandLineArg* MythCommandLineParser::add(QStringList arglist,
         {
             arg->AddKeyword(*i);
             if (m_verbose)
+            {
                 cerr << "Adding " << (*i).toLocal8Bit().constData()
                      << " as taking type '" << QVariant::typeToName(type)
                      << "'" << endl;
+            }
             arg->IncrRef();
             m_optionedArgs.insert(*i, arg);
         }
@@ -1441,9 +1450,11 @@ bool MythCommandLineParser::Parse(int argc, const char * const * argv)
         res = getOpt(argc, argv, argpos, opt, val);
 
         if (m_verbose)
+        {
             cerr << "res: " << NamedOptType(res) << endl
                  << "opt:  " << opt.toLocal8Bit().constData() << endl
                  << "val:  " << val.constData() << endl << endl;
+        }
 
         // '--' found on command line, enable passthrough mode
         if (res == kPassthrough && !m_namedArgs.contains("_passthrough"))
@@ -1603,9 +1614,8 @@ bool MythCommandLineParser::Parse(int argc, const char * const * argv)
         {
             cerr << endl << "Extra argument list:" << endl;
             QStringList slist = toStringList("_args");
-            QStringList::const_iterator it2 = slist.begin();
-            for (; it2 != slist.end(); ++it2)
-                cerr << "  " << (*it2).toLocal8Bit().constData() << endl;
+            foreach (auto lopt, slist)
+                cerr << "  " << (lopt).toLocal8Bit().constData() << endl;
         }
 
         if (m_namedArgs.contains("_passthrough"))
@@ -1671,10 +1681,12 @@ bool MythCommandLineParser::ReconcileLinks(void)
 
             // replace linked argument
             if (m_verbose)
+            {
                 cerr << QString("  Setting %1 as child of %2")
                             .arg((*args_it)->m_name).arg((*links_it)->m_name)
                             .toLocal8Bit().constData()
                      << endl;
+            }
             (*args_it)->SetChildOf(m_namedArgs[(*links_it)->m_name]);
         }
 
@@ -1698,10 +1710,12 @@ bool MythCommandLineParser::ReconcileLinks(void)
 
             // replace linked argument
             if (m_verbose)
+            {
                 cerr << QString("  Setting %1 as parent of %2")
                             .arg((*args_it)->m_name).arg((*links_it)->m_name)
                             .toLocal8Bit().constData()
                      << endl;
+            }
             (*args_it)->SetParentOf(m_namedArgs[(*links_it)->m_name]);
         }
 
@@ -1725,10 +1739,12 @@ bool MythCommandLineParser::ReconcileLinks(void)
 
             // replace linked argument
             if (m_verbose)
+            {
                 cerr << QString("  Setting %1 as requiring %2")
                             .arg((*args_it)->m_name).arg((*links_it)->m_name)
                             .toLocal8Bit().constData()
                      << endl;
+            }
             (*args_it)->SetRequires(m_namedArgs[(*links_it)->m_name]);
         }
 
@@ -2196,8 +2212,7 @@ void MythCommandLineParser::allowArgs(bool allow)
     else if (!allow)
         return;
 
-    CommandLineArg *arg = new CommandLineArg("_args", QVariant::StringList,
-                                             QStringList());
+    auto *arg = new CommandLineArg("_args", QVariant::StringList, QStringList());
     m_namedArgs["_args"] = arg;
 }
 
@@ -2215,7 +2230,7 @@ void MythCommandLineParser::allowExtras(bool allow)
         return;
 
     QMap<QString,QVariant> vmap;
-    CommandLineArg *arg = new CommandLineArg("_extra", QVariant::Map, vmap);
+    auto *arg = new CommandLineArg("_extra", QVariant::Map, vmap);
 
     m_namedArgs["_extra"] = arg;
 }
@@ -2233,7 +2248,7 @@ void MythCommandLineParser::allowPassthrough(bool allow)
     else if (!allow)
         return;
 
-    CommandLineArg *arg = new CommandLineArg("_passthrough",
+    auto *arg = new CommandLineArg("_passthrough",
                                     QVariant::StringList, QStringList());
     m_namedArgs["_passthrough"] = arg;
 }
@@ -2590,6 +2605,8 @@ int MythCommandLineParser::ConfigureLogging(const QString& mask, unsigned int pr
         .arg(MYTH_SOURCE_PATH).arg(MYTH_SOURCE_VERSION));
     LOG(VB_GENERAL, LOG_CRIT, QString("Qt version: compile: %1, runtime: %2")
         .arg(QT_VERSION_STR).arg(qVersion()));
+    LOG(VB_GENERAL, LOG_INFO, QString("%1 (%2)")
+        .arg(QSysInfo::prettyProductName()).arg(QSysInfo::currentCpuArchitecture()));
     LOG(VB_GENERAL, LOG_NOTICE,
         QString("Enabled verbose msgs: %1").arg(verboseString));
 
@@ -2694,9 +2711,11 @@ bool setUser(const QString &username)
         }
 #if defined(__linux__) || defined(__LINUX__)
         if (dumpability && (prctl(PR_SET_DUMPABLE, dumpability) == -1))
+        {
             LOG(VB_GENERAL, LOG_WARNING, "Unable to re-enable core file "
                     "creation. Run without the --user argument to use "
                     "shell-specified limits.");
+        }
 #endif
     }
     else

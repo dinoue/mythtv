@@ -126,11 +126,15 @@ void GameHandler::InitMetaDataMap(const QString& GameType)
     }
 
     if (m_romDB.count() == 0)
+    {
         LOG(VB_GENERAL, LOG_ERR, LOC + QString("No romDB data read from "
             "database for gametype %1 . Not imported?").arg(GameType));
+    }
     else
+    {
         LOG(VB_GENERAL, LOG_INFO, LOC +
             QString("Loaded %1 items from romDB Database") .arg(m_romDB.count()));
+    }
 }
 
 void GameHandler::GetMetadata(GameHandler *handler, const QString& rom, QString* Genre, QString* Year,
@@ -219,7 +223,7 @@ void GameHandler::promptForRemoval(const GameScan& scan)
         return;
 
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
-    MythDialogBox *removalPopup = new MythDialogBox(
+    auto *removalPopup = new MythDialogBox(
         //: %1 is the file name
         tr("%1 appears to be missing.\n"
            "Remove it from the database?")
@@ -231,8 +235,8 @@ void GameHandler::promptForRemoval(const GameScan& scan)
 
         removalPopup->AddButton(tr("No"));
         removalPopup->AddButton(tr("No to all"));
-        removalPopup->AddButton(tr("Yes"), qVariantFromValue(scan));
-        removalPopup->AddButton(tr("Yes to all"), qVariantFromValue(scan));
+        removalPopup->AddButton(tr("Yes"), QVariant::fromValue(scan));
+        removalPopup->AddButton(tr("Yes to all"), QVariant::fromValue(scan));
         popupStack->AddScreen(removalPopup);
 }
     else
@@ -243,7 +247,7 @@ static void updateDisplayRom(const QString& romname, int display, const QString&
 {
     MSqlQuery query(MSqlQuery::InitCon());
     query.prepare("UPDATE gamemetadata SET display = :DISPLAY "
-                  "WHERE romname = :ROMNAME AND system = :SYSTEM");
+                  "WHERE romname = :ROMNAME AND `system` = :SYSTEM");
 
     query.bindValue(":DISPLAY", display);
     query.bindValue(":ROMNAME", romname);
@@ -273,7 +277,7 @@ static void updateGameName(const QString& romname, const QString& GameName, cons
 {
     MSqlQuery query(MSqlQuery::InitCon());
     query.prepare("UPDATE gamemetadata SET GameName = :GAMENAME "
-                  "WHERE romname = :ROMNAME AND system = :SYSTEM ");
+                  "WHERE romname = :ROMNAME AND `system` = :SYSTEM ");
 
     query.bindValue(":GAMENAME", GameName);
     query.bindValue(":ROMNAME", romname);
@@ -285,25 +289,26 @@ static void updateGameName(const QString& romname, const QString& GameName, cons
 }
 
 
-static void UpdateGameCounts(QStringList updatelist)
+static void UpdateGameCounts(const QStringList& updatelist)
 {
     MSqlQuery query(MSqlQuery::InitCon());
 
     QRegExp multiDiskRGXP = QRegExp( "[0-4]$", Qt::CaseSensitive, QRegExp::RegExp);
     int pos = 0;
 
-    QString lastrom, firstname, basename;
+    QString lastrom;
+    QString firstname;
+    QString basename;
 
-    for ( QStringList::Iterator it = updatelist.begin(); it != updatelist.end(); ++it )
+    foreach (auto GameType, updatelist)
     {
-        QString GameType = *it;
         LOG(VB_GENERAL, LOG_NOTICE,
             LOC + QString("Update gametype %1").arg(GameType));
 
-        query.prepare("SELECT romname,system,spandisks,gamename FROM "
+        query.prepare("SELECT romname,`system`,spandisks,gamename FROM "
               "gamemetadata,gameplayers WHERE "
               "gamemetadata.gametype = :GAMETYPE AND "
-              "playername = system ORDER BY romname");
+              "playername = `system` ORDER BY romname");
 
         query.bindValue(":GAMETYPE",GameType);
 
@@ -387,9 +392,19 @@ void GameHandler::UpdateGameDB(GameHandler *handler)
 
     GameScanMap::Iterator iter;
 
-    QString GameName, Genre, Country, CRC32, Year, Plot;
-    QString Publisher, Version, Fanart, Boxart, ScreenShot;
-    QString thequery, queryvalues;
+    QString GameName;
+    QString Genre;
+    QString Country;
+    QString CRC32;
+    QString Year;
+    QString Plot;
+    QString Publisher;
+    QString Version;
+    QString Fanart;
+    QString Boxart;
+    QString ScreenShot;
+    QString thequery;
+    QString queryvalues;
 
     int removalprompt = gCoreContext->GetSetting("GameRemovalPrompt").toInt();
     int indepth = gCoreContext->GetSetting("GameDeepScan").toInt();
@@ -448,7 +463,7 @@ void GameHandler::UpdateGameDB(GameHandler *handler)
 #endif
 
             query.prepare("INSERT INTO gamemetadata "
-                          "(system, romname, gamename, genre, year, gametype, "
+                          "(`system`, romname, gamename, genre, year, gametype, "
                           "rompath, country, crc_value, diskcount, display, plot, "
                           "publisher, version, fanart, boxart, screenshot) "
                           "VALUES (:SYSTEM, :ROMNAME, :GAMENAME, :GENRE, :YEAR, "
@@ -499,7 +514,7 @@ void GameHandler::VerifyGameDB(GameHandler *handler)
 
     MSqlQuery query(MSqlQuery::InitCon());
     query.prepare("SELECT romname,rompath,gamename FROM gamemetadata "
-                  "WHERE system = :SYSTEM");
+                  "WHERE `system` = :SYSTEM");
 
     query.bindValue(":SYSTEM",handler->SystemName());
 
@@ -598,7 +613,7 @@ int GameHandler::buildFileCount(const QString& directory, GameHandler *handler)
 void GameHandler::clearAllGameData(void)
 {
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
-    MythDialogBox *clearPopup = new MythDialogBox(
+    auto *clearPopup = new MythDialogBox(
         tr("This will clear all game metadata from the database. Are you sure "
             "you want to do this?"), popupStack, "clearAllPopup");
 
@@ -697,7 +712,7 @@ void GameHandler::processGames(GameHandler *handler)
         //: %1 is the system name
         QString message = tr("Scanning for %1 games...")
             .arg(handler->SystemName());
-        MythUIBusyDialog *busyDialog = new MythUIBusyDialog(message, popupStack,
+        auto *busyDialog = new MythUIBusyDialog(message, popupStack,
                                                 "gamescanbusy");
 
         if (busyDialog->Create())
@@ -761,10 +776,8 @@ void GameHandler::processAllGames(void)
     checkHandlers();
     QStringList updatelist;
 
-    for (int x = 0; x < handlers->size(); x++)
+    foreach (auto handler, *handlers)
     {
-        GameHandler *handler = handlers->at(x);
-
         if (handler)
         {
             updateSettings(handler);
@@ -784,9 +797,8 @@ GameHandler* GameHandler::GetHandler(RomInfo *rominfo)
     if (!rominfo)
         return nullptr;
 
-    for (int x = 0; x < handlers->size(); x++)
+    foreach (auto handler, *handlers)
     {
-        GameHandler *handler = handlers->at(x);
         if (handler)
         {
             if (rominfo->System() == handler->SystemName())
@@ -802,10 +814,8 @@ GameHandler* GameHandler::GetHandlerByName(const QString& systemname)
     if (systemname.isEmpty() || systemname.isNull())
         return nullptr;
 
-    for (int x = 0; x < handlers->size(); x++)
+    foreach (auto handler, *handlers)
     {
-        GameHandler *handler = handlers->at(x);
-
         if (handler)
         {
             if (handler->SystemName() == systemname)
@@ -904,12 +914,11 @@ void GameHandler::Launchgame(RomInfo *romdata, const QString& systemname)
     QStringList cmdlist = exec.split(";");
     if (cmdlist.count() > 0)
     {
-        for (QStringList::Iterator cmd = cmdlist.begin(); cmd != cmdlist.end();
-             ++cmd )
+        foreach (auto & cmd, cmdlist)
         {
             LOG(VB_GENERAL, LOG_INFO, LOC +
-                QString("Executing : %1").arg(*cmd));
-            myth_system(*cmd, kMSProcessEvents);
+                QString("Executing : %1").arg(cmd));
+            myth_system(cmd, kMSProcessEvents);
         }
     }
     else
@@ -938,7 +947,7 @@ void GameHandler::registerHandler(GameHandler *handler)
 
 void GameHandler::customEvent(QEvent *event)
 {
-    if (auto dce = dynamic_cast<DialogCompletionEvent*>(event))
+    if (auto *dce = dynamic_cast<DialogCompletionEvent*>(event))
     {
         QString resultid   = dce->GetId();
         QString resulttext = dce->GetResultText();

@@ -30,7 +30,7 @@ class Program;
 class SERVICE_PUBLIC ChannelInfo : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO( "version", "2.1" );
+    Q_CLASSINFO( "version", "2.2" );
 
     // Q_CLASSINFO Used to augment Metadata for properties. 
     // See datacontracthelper.h for details
@@ -56,6 +56,7 @@ class SERVICE_PUBLIC ChannelInfo : public QObject
     Q_PROPERTY( bool      CommFree        READ CommFree       WRITE setCommFree       DESIGNABLE SerializeDetails )
     Q_PROPERTY( bool      UseEIT          READ UseEIT         WRITE setUseEIT         DESIGNABLE SerializeDetails )
     Q_PROPERTY( bool      Visible         READ Visible        WRITE setVisible        DESIGNABLE SerializeDetails )
+    Q_PROPERTY( QString   ExtendedVisible READ ExtendedVisible WRITE setExtendedVisible DESIGNABLE SerializeDetails )
     Q_PROPERTY( QString   XMLTVID         READ XMLTVID        WRITE setXMLTVID        DESIGNABLE SerializeDetails )
     Q_PROPERTY( QString   DefaultAuth     READ DefaultAuth    WRITE setDefaultAuth    DESIGNABLE SerializeDetails )
     Q_PROPERTY( QString   ChannelGroups   READ ChannelGroups  WRITE setChannelGroups  DESIGNABLE SerializeDetails )
@@ -82,6 +83,7 @@ class SERVICE_PUBLIC ChannelInfo : public QObject
     PROPERTYIMP       ( bool        , CommFree       )
     PROPERTYIMP       ( bool        , UseEIT         )
     PROPERTYIMP       ( bool        , Visible        )
+    PROPERTYIMP       ( QString     , ExtendedVisible )
     PROPERTYIMP       ( QString     , XMLTVID        )
     PROPERTYIMP       ( QString     , DefaultAuth    )
     PROPERTYIMP       ( QString     , ChannelGroups  )
@@ -97,7 +99,7 @@ class SERVICE_PUBLIC ChannelInfo : public QObject
 
         static void InitializeCustomTypes();
 
-        Q_INVOKABLE ChannelInfo(QObject *parent = nullptr)
+        Q_INVOKABLE explicit ChannelInfo(QObject *parent = nullptr)
             : QObject           ( parent ),
               m_ChanId          ( 0      ),
               m_MplexId         ( 0      ),
@@ -107,7 +109,7 @@ class SERVICE_PUBLIC ChannelInfo : public QObject
               m_FineTune        ( 0      ),
               m_SourceId        ( 0      ),
               m_InputId         ( 0      ),
-              m_CommFree        ( 0      ),
+              m_CommFree        ( false  ),
               m_UseEIT          ( false  ),
               m_Visible         ( true   ),
               m_SerializeDetails( true   )
@@ -229,7 +231,7 @@ class SERVICE_PUBLIC Program : public QObject
 
         static inline void InitializeCustomTypes();
 
-        Q_INVOKABLE Program(QObject *parent = nullptr)
+        Q_INVOKABLE explicit Program(QObject *parent = nullptr)
             : QObject               ( parent ),
               m_Repeat              ( false  ),
               m_Stars               ( 0      ),
@@ -307,7 +309,7 @@ inline Program *ChannelInfo::AddNewProgram()
     // We must make sure the object added to the QVariantList has
     // a parent of 'this'
 
-    Program *pObject = new Program( this );
+    auto *pObject = new Program( this );
     m_Programs.append( QVariant::fromValue<QObject *>( pObject ));
 
     return pObject;
