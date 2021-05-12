@@ -54,7 +54,8 @@ endif
 #LIB_PKGS = $(shell sed -nr 's/^Package:[[:space:]]*(lib(myth-|mythavcodec|mythavdevice|mythavfilter|mythavformat|mythavutil|mythpostproc|mythswresample|mythswscale|mythqjson|mythzmq)[0-9]+)[[:space:]]*$$/\1/p' debian/control)
 
 %:
-	dh $@ --with quilt,linktree
+	dh $@ --with linktree
+#	dh $@ --with quilt,linktree
 
 override_dh_auto_configure:
 	./configure --compile-type=release --prefix=/usr --runprefix=/usr \
@@ -132,7 +133,7 @@ override_dh_fixperms-arch:
 override_dh_clean:
 	[ ! -f config.mak ] || $(MAKE) distclean
 
-	dh_quilt_unpatch
+	# dh_quilt_unpatch
 
 	debconf-updatepo
 
@@ -159,4 +160,5 @@ debian/libmythtv-recommends-dummy.so:
 	-lcec \
 	$(ARCH_SPECIFIC_LIB_RECOMMENDS)
 
-override_dh_dwz override_dh_quilt_unpatch override_dh_auto_test override_dh_auto_clean:
+#override_dh_dwz override_dh_quilt_unpatch override_dh_auto_test override_dh_auto_clean:
+override_dh_dwz override_dh_auto_test override_dh_auto_clean:
