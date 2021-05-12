@@ -31,9 +31,9 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_FCNTL_H
+//#ifdef HAVE_FCNTL_H
 #include <fcntl.h>
-#endif
+//#endif
 
 #ifdef _WIN32
 #include <windows.h>
