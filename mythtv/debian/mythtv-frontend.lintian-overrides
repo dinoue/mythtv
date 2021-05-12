@@ -1,0 +1,8 @@
+mythtv-frontend: no-manual-page usr/bin/mythavtest
+mythtv-frontend: no-manual-page usr/bin/mythfrontend
+mythtv-frontend: no-manual-page usr/bin/mythlcdserver
+mythtv-frontend: no-manual-page usr/bin/mythmediaserver
+mythtv-frontend: no-manual-page usr/bin/mythreplex
+mythtv-frontend: no-manual-page usr/bin/mythscreenwizard
+mythtv-frontend: no-manual-page usr/bin/mythshutdown
+mythtv-frontend: no-manual-page usr/bin/mythwelcome

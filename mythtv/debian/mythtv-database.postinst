@@ -1,0 +1,162 @@
+#!/bin/sh -e
+MYSQL="/usr/share/mythtv/sql/mythtv*.sql"
+MYSQLCONFIG="/etc/mysql/conf.d/mythtv.cnf"
+MYSQLCONFIGUPDATEHINT="/etc/mysql/conf.d/mythtv.cnf.ipv6update-with-public_bind.tmp"
+FSTAB="/etc/fstab"
+NEWIP="127.0.0.1"
+LOCALHOSTNAME=`cat /etc/hostname`
+NEWMYSQLCONFDIR="/etc/mysql/mysql.conf.d/"
+
+#Used to fail at some point but not abort postinst
+fail_database() {
+    echo "Failed to create or modify database (incorrect admin username/password?)" >&2
+    echo "Try:" >&2
+    echo "sudo dpkg-reconfigure mythtv-database" >&2
+
+    db_set mythtv/mysql_admin_password ""
+    exit 0
+}
+
+#ask the root password a few times if it's still not working
+ask_root_pw() {
+    db_input high mythtv/mysql_host || true
+    db_input high mythtv/mysql_admin_user || true
+    db_input high mythtv/mysql_admin_password || true
+    db_go || true
+    db_get mythtv/mysql_host
+    hostname="$RET"
+    db_get mythtv/mysql_admin_user
+    admin_username="$RET"
+    db_get mythtv/mysql_admin_password
+    admin_password="$RET"
+    if [ "$admin_password" != "" ]; then
+        admin_password="-p$admin_password"
+    fi
+    SECURITY_INFO="--host=$hostname --user=$admin_username $admin_password"
+}
+
+update_database() {
+    #Set up privs for mythtv@network
+    if ! echo "CREATE USER IF NOT EXISTS $mythtv_username@localhost IDENTIFIED BY '$mythtv_password'; \
+	GRANT ALL ON $database.* TO $mythtv_username@localhost;" | \
+        mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
+
+    if ! echo "CREATE USER IF NOT EXISTS $mythtv_username@'%' IDENTIFIED BY '$mythtv_password'; \
+	GRANT ALL ON $database.* TO $mythtv_username@'%';" | \
+        mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
+        fail_database
+    fi
+
+    # load timezone data
+    if ! mysql_tzinfo_to_sql /usr/share/zoneinfo/ 2>/dev/null | mysql $SECURITY_INFO mysql >/dev/null 2>&1; then
+        fail_database
+    fi
+}
+
+case "$1" in
+    configure)
+
+    #Fixup mysql binding ipv6-compatibility config-update when public_bind was in use (hint from preinst)
+    if [ -f "${MYSQLCONFIG}" ]; then
+        if [ -f "${MYSQLCONFIGUPDATEHINT}" ]; then
+            sed -i -e 's/^#bind-address=::$/bind-address=::/' ${MYSQLCONFIG}
+            rm ${MYSQLCONFIGUPDATEHINT}
+        fi
+    fi
+
+    ## This will need to exist until we no longer support 14.04
+    if [ -d "${NEWMYSQLCONFDIR}" ]; then
+      if [ ! -f "${NEWMYSQLCONFDIR}/mythtv.cnf" ]; then
+        ln -s "${MYSQLCONFIG}" "${NEWMYSQLCONFDIR}"
+      fi
+    fi
+
+    . /usr/share/debconf/confmodule
+
+    db_get mythtv/mysql_mythtv_dbname
+    database="$RET"
+
+    db_get mythtv/mysql_mythtv_user
+    mythtv_username="$RET"
+
+    db_get mythtv/mysql_mythtv_password
+    mythtv_password="$RET"
+
+    db_get mythtv/mysql_admin_user
+    admin_username="$RET"
+
+    if [ "$admin_username" = "debian-sys-maint" ]; then
+        SECURITY_INFO="--defaults-file=/etc/mysql/debian.cnf"
+    else
+        db_get mythtv/mysql_host
+        hostname="$RET"
+
+        db_get mythtv/mysql_admin_password
+        admin_password="$RET"
+
+        if [ "$admin_password" != "" ]; then
+            admin_password="-p$admin_password"
+        fi
+        SECURITY_INFO="--host=$hostname --user=$admin_username $admin_password"
+    fi
+
+    #If we are running locally, make sure to start mysql first
+    #It's okay if it fails, we'll fall back cleanly later
+    if [ "$hostname" = "localhost" ]; then
+        #redirection of 3 is because of debconf internally using it.
+        if [ which invoke-rc.d > /dev/null ]; then
+            invoke-rc.d mysql start 3> /dev/null || true
+        else
+            /etc/init.d/mysql start 3> /dev/null || true
+        fi
+    fi
+
+    #For database fillings
+    #and mysql binding checks
+    if [ -f "${MYSQLCONFIG}" ]; then
+        db_get mythtv/public_bind
+        if [ -n "$RET" ] && [ $RET = true ]; then
+            NEWIP=`ifconfig | grep "inet addr:" | grep --invert-match 127.0.0.1 | sed ' s/inet addr://g; s/^[ \t]*//;s/[ \t]*$//; q;' | awk '{print $1}'`
+            sed -i -e 's/^#bind/bind/' ${MYSQLCONFIG}
+        else
+            sed -i -e 's/^bind/#bind/' ${MYSQLCONFIG}
+        fi
+    fi
+
+    #Check for existing database
+    if ! echo "SELECT NULL;" | mysql $SECURITY_INFO "$database" >/dev/null 2>&1; then
+        #No existing database, create a database
+        i=1
+        while ! echo "CREATE DATABASE $database;" | mysql $SECURITY_INFO ; do
+#>/dev/null 2>&1; do
+            if [ $i -ge 5 ]; then
+                fail_database
+            fi
+            ask_root_pw
+            i=$(($i+1))
+        done
+    fi
+
+    #Update Permissions
+    update_database
+
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+    echo "postinst called with unknown argument \`$1'" >&2
+    db_set mythtv/mysql_admin_password ""
+    db_set mythtv/mysql_mythtv_password ""
+    exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+db_set mythtv/mysql_admin_password ""
+db_set mythtv/mysql_mythtv_password ""
+exit 0

@@ -1,0 +1,2 @@
+database/*.sql usr/share/mythtv/sql
+debian/mythtv.cnf etc/mysql/conf.d

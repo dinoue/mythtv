@@ -1,0 +1,47 @@
+mythtv (31.0+fixes20210225.git525e3b0bb4-dmo1) experimental; urgency=medium
+
+    Add optional metadata grabber for television: tvmaze
+    
+    See
+    https://www.tvmaze.com/
+    https://www.tvmaze.com/api
+    
+    This commit adds an alternative metadata grabber for TV-Series.
+    The tvmaze metadata grabber follows the defintions in
+    https://www.mythtv.org/wiki/MythTV_Universal_Metadata_Format
+    
+    To enable this grabber, run in mythtv frontend
+    "Setup" -> "Artwork and Data Sources"
+    and select 'TVMaze.com' for the default TelevisionGrabber.
+    
+    Once done, you can check this global setting with mysql:
+    
+    [mythconverg]> select * from settings where value like '%grabber%';
+    +--------------------+-------------------------------+----------+
+    | value              | data                          | hostname |
+    +--------------------+-------------------------------+----------+
+    | TelevisionGrabber  | metadata/Television/tvmaze.py | NULL     |
+    | MovieGrabber       | metadata/Movie/tmdb3.py       | NULL     |
+    +--------------------+-------------------------------+----------+
+    
+    Any further metadata update will then use these grabbers.
+
+ -- Christian Marillat <marillat@deb-multimedia.org>  Thu, 25 Feb 2021 08:53:30 +0100
+
+mythtv (0.24~rc1-0.0) experimental; urgency=low
+
+  Upgrading from a previous version of MythTV to 0.24 are required to rescan
+  for audio devices on their frontends (in the audio settings menu) after
+  upgrading due to the rewritten audio framework which can conflict with
+  legacy settings.
+
+ -- Christian Marillat <marillat@debian.org>  Sun, 24 Oct 2010 17:19:28 +0200
+
+mythtv (0.20-svn20070223-0.0) unstable; urgency=low
+
+  The cron.daily file has been removed because we are killing zap2it's
+  servers.
+
+  http://mythtv.org/pipermail/mythtv-users/2004-June/thread.html#45708
+
+ -- Christian Marillat <marillat@debian.org>  Fri, 23 Feb 2007 17:24:13 +0100

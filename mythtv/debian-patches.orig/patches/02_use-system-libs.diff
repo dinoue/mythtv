@@ -1,0 +1,53 @@
+--- a/libs/libmythtv/libmythtv.pro
++++ b/libs/libmythtv/libmythtv.pro
+@@ -285,7 +285,7 @@ win32-msvc*|freebsd {
+   QMAKE_CXXFLAGS += -isystem ../../external/libmythdvdnav/dvdread
+ }
+ 
+-!win32-msvc*:POST_TARGETDEPS += ../../external/libmythdvdnav/libmythdvdnav-$${MYTH_LIB_EXT}
++#!win32-msvc*:POST_TARGETDEPS += ../../external/libmythdvdnav/libmythdvdnav-$${MYTH_LIB_EXT}
+ 
+ HEADERS += DVD/dvdringbuffer.h
+ SOURCES += DVD/dvdringbuffer.cpp
+@@ -440,7 +440,7 @@ using_frontend {
+         DEFINES += USING_NVDEC
+         HEADERS += decoders/mythnvdeccontext.h
+         SOURCES += decoders/mythnvdeccontext.cpp
+-        INCLUDEPATH += ../../external/nv-codec-headers/include
++        INCLUDEPATH += /usr/include/ffnvcodec
+     }
+ 
+     using_mediacodec {
+--- a/libs/libmyth/libmyth.pro
++++ b/libs/libmyth/libmyth.pro
+@@ -87,20 +87,19 @@ HEADERS += netgrabbermanager.h
+ SOURCES += mythrssmanager.cpp           netutils.cpp
+ SOURCES += netgrabbermanager.cpp
+ 
+-INCLUDEPATH += ../../external/libmythsoundtouch ../libmythfreesurround
++INCLUDEPATH += /usr/include/soundtouch ../libmythfreesurround
+ INCLUDEPATH += ../libmythbase
+ INCLUDEPATH += ../.. ../ ./ ../libmythupnp ../libmythui
+ INCLUDEPATH += ../.. ../../external/FFmpeg
+ INCLUDEPATH += ../libmythservicecontracts
+ INCLUDEPATH += $${POSTINC}
+-DEPENDPATH += ../../external/libmythsoundtouch
+ DEPENDPATH += ../libmythfreesurround
+ DEPENDPATH += ../ ../libmythui ../libmythbase
+ DEPENDPATH += ../libmythupnp
+ DEPENDPATH += ./audio
+ DEPENDPATH += ../libmythservicecontracts
+ 
+-LIBS += -L../../external/libmythsoundtouch   -lmythsoundtouch-$${LIBVERSION}
++LIBS += -lSoundTouch
+ LIBS += -L../libmythbase           -lmythbase-$${LIBVERSION}
+ LIBS += -L../libmythui           -lmythui-$${LIBVERSION}
+ LIBS += -L../libmythupnp         -lmythupnp-$${LIBVERSION}
+@@ -118,7 +117,6 @@ LIBS += -L../libmythservicecontracts
+ 
+ !win32-msvc* {
+     !using_libbluray_external:POST_TARGETDEPS += ../../external/libmythbluray/libmythbluray-$${MYTH_LIB_EXT}
+-    POST_TARGETDEPS += ../../external/libmythsoundtouch/libmythsoundtouch-$${MYTH_LIB_EXT}
+     POST_TARGETDEPS += ../../external/FFmpeg/libswresample/$$avLibName(swresample)
+     POST_TARGETDEPS += ../../external/FFmpeg/libavutil/$$avLibName(avutil)
+     POST_TARGETDEPS += ../../external/FFmpeg/libavcodec/$$avLibName(avcodec)

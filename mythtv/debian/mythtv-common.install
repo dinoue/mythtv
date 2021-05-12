@@ -1,0 +1,10 @@
+contrib/config_files/config.xml			usr/share/mythtv
+usr/share/mythtv/fonts
+usr/share/mythtv/hardwareprofile
+usr/share/mythtv/i18n
+usr/share/mythtv/locales
+usr/share/mythtv/metadata
+usr/share/mythtv/metadata/Movie/tmdb3.py
+usr/share/mythtv/metadata/Television/ttvdb.py
+usr/share/mythtv/themes
+debian/mythtv_logo.svg				usr/share/pixmaps

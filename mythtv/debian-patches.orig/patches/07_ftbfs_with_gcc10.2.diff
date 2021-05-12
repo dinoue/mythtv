@@ -1,0 +1,29 @@
+Index: mythtv-dmo-31.0+fixes20210424.git05c16580e1/external/libudfread/default_blockinput.c
+===================================================================
+--- mythtv-dmo-31.0+fixes20210424.git05c16580e1.orig/external/libudfread/default_blockinput.c
++++ mythtv-dmo-31.0+fixes20210424.git05c16580e1/external/libudfread/default_blockinput.c
+@@ -31,9 +31,9 @@
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
+-#ifdef HAVE_FCNTL_H
++//#ifdef HAVE_FCNTL_H
+ #include <fcntl.h>
+-#endif
++//#endif
+ 
+ #ifdef _WIN32
+ #include <windows.h>
+Index: mythtv-dmo-31.0+fixes20210424.git05c16580e1/external/libmythdvdnav/dvdread/dvd_input.c
+===================================================================
+--- mythtv-dmo-31.0+fixes20210424.git05c16580e1.orig/external/libmythdvdnav/dvdread/dvd_input.c
++++ mythtv-dmo-31.0+fixes20210424.git05c16580e1/external/libmythdvdnav/dvdread/dvd_input.c
+@@ -55,6 +55,8 @@ int         (*dvdinput_read)  (dvd_input
+ #   if defined(WIN32)
+ /* Only needed on MINGW at the moment */
+ #    include "../msvc/contrib/dlfcn.c"
++#   else
++#    include <dlfcn.h>
+ #   endif
+ # endif
+ 

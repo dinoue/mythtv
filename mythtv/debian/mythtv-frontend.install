@@ -1,0 +1,9 @@
+debian/mythtv.desktop usr/share/applications
+usr/bin/mythavtest
+usr/bin/mythfrontend
+usr/bin/mythlcdserver
+usr/bin/mythmediaserver
+usr/bin/mythreplex
+usr/bin/mythscreenwizard
+usr/bin/mythshutdown
+usr/bin/mythwelcome

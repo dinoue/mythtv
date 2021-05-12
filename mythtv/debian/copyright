@@ -1,0 +1,804 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: MythTV
+Source: https://www.mythtv.org/
+
+Files: *
+Copyright: 2007-2008, Angius Fabrizio <blue_death@users.sourceforge.net>
+           2000-2001, Brad Hughes <bhughes@trolltech.com>
+           2003-2004, Brandon Beattie, Doug Larrick
+           2013-2014, Bubblestuff Pty Ltd
+           2006, Chris Ingrassia
+           1998, Christoph Bartelmus <lirc@bartelmus.de>
+           2003-2011, Daniel Kristjansson
+           2008, Daniel Kristjansson, Jens Rehaag
+           2003-2010, Daniel Thor Kristjansson
+           2006, Dave Abrahams
+           2005-2006, David C.J. Matthews
+           2012-2015, Digital Nirvana
+           2007-2009, for TeX Gyre extensions by B. Jackowski
+           2006-2007, Google Corporation
+           1998, Hewlett-Packard Company
+           2002-2021, Isaac Richards <ijr@po.cwru.edu>
+           2006, Janne Grunau <janne-mythtv@grunau.be>
+           2010-2015, Jean-Yves Avenard
+           2004, Jeremy White <jwhite@whitesen.org>
+           2005, Jim Westfall
+           2013, John Poet
+           2013, jQuery Foundation and other contributors
+           2003, Kenneth Aafloy
+           2011, Lawrence Rust <lvr@softsystem.co.uk>
+           2007-2010, Marco van Hylckama Vlieg
+           2005, Matt Porter
+           2008, Mike McGrath
+           1999, National Electronics and Computer Technology Center
+           2006, Pekka Jääskeläinen
+           2017, Peter G Bennett <pbennett@mythtv.org>
+           2011, Ronald Frazier
+           2006-2009, Silicondust Engineering Ltd
+           2006, Stuart Auchterlonie <stuarta@squashedfrog.net>
+           2004, Taylor Jacob <rtjacob@earthlink.net>
+           2000-2003, The Royal National Institute for the Blind
+           1998, Trent Piepho <xyzzy@u.washington.edu>
+           1992-2008, Trolltech ASA
+           2001-2002, Vietnamese characters were added by Han The Thanh
+           2005, WIS Technologies International Ltd
+           2006, Yeasah Pell
+License: GPL-2
+
+Files: COPYING
+       libs/libmyth/audio/audioconvert.cpp
+       libs/libmyth/audio/audioconvert.h
+       libs/libmyth/audio/audiooutputdownmix.cpp
+       libs/libmyth/audio/audiooutputjack.cpp
+       libs/libmyth/audio/audiooutputpulse.cpp
+       libs/libmyth/audio/audiooutputpulse.h
+       libs/libmyth/audio/eldutils.cpp
+       libs/libmyth/audio/eldutils.h
+       libs/libmyth/guistartup.cpp
+       libs/libmyth/guistartup.h
+       libs/libmyth/mythterminal.cpp
+       libs/libmyth/test/test_audioconvert/test_audioconvert.h
+       libs/libmyth/test/test_audioutils/test_audioutils.h
+       libs/libmyth/test/test_programinfo/test_programinfo.h
+       libs/libmythbase/housekeeper.cpp
+       libs/libmythbase/mthread.cpp
+       libs/libmythbase/mthreadpool.cpp
+       libs/libmythbase/mythcommandlineparser.cpp
+       libs/libmythbase/mythsignalingtimer.cpp
+       libs/libmythbase/mythsystem.cpp
+       libs/libmythbase/mythsystem.h
+       libs/libmythbase/mythsystemlegacy.cpp
+       libs/libmythbase/mythsystemlegacy.h
+       libs/libmythbase/mythtimer.cpp
+       libs/libmythbase/plist.cpp
+       libs/libmythbase/portchecker.cpp
+       libs/libmythbase/portchecker.h
+       libs/libmythbase/test/test_mythsorthelper/test_mythsorthelper.cpp
+       libs/libmythbase/test/test_mythsorthelper/test_mythsorthelper.h
+       libs/libmythbase/test/test_mythsystem/test_mythsystem.h
+       libs/libmythbase/test/test_mythsystemlegacy/test_mythsystemlegacy.h
+       libs/libmythbase/test/test_mythtimer/test_mythtimer.h
+       libs/libmythbase/test/test_template/test_template.h
+       libs/libmythfreemheg/ASN1Codes.h
+       libs/libmythfreemheg/Actions.cpp
+       libs/libmythfreemheg/Actions.h
+       libs/libmythfreemheg/BaseActions.cpp
+       libs/libmythfreemheg/BaseActions.h
+       libs/libmythfreemheg/BaseClasses.cpp
+       libs/libmythfreemheg/BaseClasses.h
+       libs/libmythfreemheg/Bitmap.cpp
+       libs/libmythfreemheg/Bitmap.h
+       libs/libmythfreemheg/DynamicLineArt.cpp
+       libs/libmythfreemheg/DynamicLineArt.h
+       libs/libmythfreemheg/Engine.cpp
+       libs/libmythfreemheg/Engine.h
+       libs/libmythfreemheg/Groups.cpp
+       libs/libmythfreemheg/Groups.h
+       libs/libmythfreemheg/Ingredients.cpp
+       libs/libmythfreemheg/Ingredients.h
+       libs/libmythfreemheg/Link.cpp
+       libs/libmythfreemheg/Link.h
+       libs/libmythfreemheg/Logging.h
+       libs/libmythfreemheg/ParseBinary.cpp
+       libs/libmythfreemheg/ParseBinary.h
+       libs/libmythfreemheg/ParseNode.cpp
+       libs/libmythfreemheg/ParseNode.h
+       libs/libmythfreemheg/ParseText.cpp
+       libs/libmythfreemheg/ParseText.h
+       libs/libmythfreemheg/Presentable.cpp
+       libs/libmythfreemheg/Presentable.h
+       libs/libmythfreemheg/Programs.cpp
+       libs/libmythfreemheg/Programs.h
+       libs/libmythfreemheg/Root.cpp
+       libs/libmythfreemheg/Root.h
+       libs/libmythfreemheg/Stream.cpp
+       libs/libmythfreemheg/Stream.h
+       libs/libmythfreemheg/Text.cpp
+       libs/libmythfreemheg/Text.h
+       libs/libmythfreemheg/TokenGroup.cpp
+       libs/libmythfreemheg/TokenGroup.h
+       libs/libmythfreemheg/Variables.cpp
+       libs/libmythfreemheg/Variables.h
+       libs/libmythfreemheg/Visible.cpp
+       libs/libmythfreemheg/Visible.h
+       libs/libmythfreemheg/freemheg.h
+       libs/libmythfreesurround/el_processor.cpp
+       libs/libmythfreesurround/el_processor.h
+       libs/libmythfreesurround/freesurround.cpp
+       libs/libmythfreesurround/freesurround.h
+       libs/libmythmetadata/test/test_videometadata/test_videometadata.h
+       libs/libmythmpeg2/alloc.c
+       libs/libmythmpeg2/alpha_asm.h
+       libs/libmythmpeg2/attributes.h
+       libs/libmythmpeg2/cpu_accel.c
+       libs/libmythmpeg2/cpu_state.c
+       libs/libmythmpeg2/decode.c
+       libs/libmythmpeg2/header.c
+       libs/libmythmpeg2/idct.c
+       libs/libmythmpeg2/idct_alpha.c
+       libs/libmythmpeg2/idct_altivec.c
+       libs/libmythmpeg2/idct_mmx.c
+       libs/libmythmpeg2/mmx.h
+       libs/libmythmpeg2/motion_comp.c
+       libs/libmythmpeg2/motion_comp_alpha.c
+       libs/libmythmpeg2/motion_comp_altivec.c
+       libs/libmythmpeg2/motion_comp_mmx.c
+       libs/libmythmpeg2/motion_comp_vis.c
+       libs/libmythmpeg2/mpeg2.h
+       libs/libmythmpeg2/mpeg2_internal.h
+       libs/libmythmpeg2/slice.c
+       libs/libmythmpeg2/vis.h
+       libs/libmythmpeg2/vlc.h
+       libs/libmythservicecontracts/datacontracthelper.h
+       libs/libmythservicecontracts/datacontracts/artworkInfo.h
+       libs/libmythservicecontracts/datacontracts/artworkInfoList.h
+       libs/libmythservicecontracts/datacontracts/backendInfo.h
+       libs/libmythservicecontracts/datacontracts/blurayInfo.h
+       libs/libmythservicecontracts/datacontracts/buildInfo.h
+       libs/libmythservicecontracts/datacontracts/captureCard.h
+       libs/libmythservicecontracts/datacontracts/captureCardList.h
+       libs/libmythservicecontracts/datacontracts/castMember.h
+       libs/libmythservicecontracts/datacontracts/channelGroup.h
+       libs/libmythservicecontracts/datacontracts/connectionInfo.h
+       libs/libmythservicecontracts/datacontracts/cutList.h
+       libs/libmythservicecontracts/datacontracts/cutting.h
+       libs/libmythservicecontracts/datacontracts/databaseInfo.h
+       libs/libmythservicecontracts/datacontracts/encoder.h
+       libs/libmythservicecontracts/datacontracts/encoderList.h
+       libs/libmythservicecontracts/datacontracts/enum.h
+       libs/libmythservicecontracts/datacontracts/enumItem.h
+       libs/libmythservicecontracts/datacontracts/envInfo.h
+       libs/libmythservicecontracts/datacontracts/frontend.h
+       libs/libmythservicecontracts/datacontracts/frontendList.h
+       libs/libmythservicecontracts/datacontracts/genre.h
+       libs/libmythservicecontracts/datacontracts/genreList.h
+       libs/libmythservicecontracts/datacontracts/input.h
+       libs/libmythservicecontracts/datacontracts/inputList.h
+       libs/libmythservicecontracts/datacontracts/labelValue.h
+       libs/libmythservicecontracts/datacontracts/lineup.h
+       libs/libmythservicecontracts/datacontracts/logInfo.h
+       libs/libmythservicecontracts/datacontracts/logMessage.h
+       libs/libmythservicecontracts/datacontracts/musicMetadataInfo.h
+       libs/libmythservicecontracts/datacontracts/musicMetadataInfoList.h
+       libs/libmythservicecontracts/datacontracts/programAndChannel.h
+       libs/libmythservicecontracts/datacontracts/programGuide.h
+       libs/libmythservicecontracts/datacontracts/programList.h
+       libs/libmythservicecontracts/datacontracts/recording.h
+       libs/libmythservicecontracts/datacontracts/settingList.h
+       libs/libmythservicecontracts/datacontracts/timeZoneInfo.h
+       libs/libmythservicecontracts/datacontracts/titleInfo.h
+       libs/libmythservicecontracts/datacontracts/titleInfoList.h
+       libs/libmythservicecontracts/datacontracts/versionInfo.h
+       libs/libmythservicecontracts/datacontracts/videoLookupInfo.h
+       libs/libmythservicecontracts/datacontracts/videoLookupInfoList.h
+       libs/libmythservicecontracts/datacontracts/videoMetadataInfo.h
+       libs/libmythservicecontracts/datacontracts/videoMetadataInfoList.h
+       libs/libmythservicecontracts/datacontracts/videoStreamInfo.h
+       libs/libmythservicecontracts/datacontracts/videoStreamInfoList.h
+       libs/libmythservicecontracts/datacontracts/wolInfo.h
+       libs/libmythservicecontracts/service.cpp
+       libs/libmythservicecontracts/service.h
+       libs/libmythservicecontracts/services/captureServices.h
+       libs/libmythservicecontracts/services/channelServices.h
+       libs/libmythservicecontracts/services/contentServices.h
+       libs/libmythservicecontracts/services/dvrServices.h
+       libs/libmythservicecontracts/services/guideServices.h
+       libs/libmythservicecontracts/services/musicServices.h
+       libs/libmythservicecontracts/services/mythServices.h
+       libs/libmythservicecontracts/services/rttiServices.h
+       libs/libmythservicecontracts/services/videoServices.h
+       libs/libmythservicecontracts/test/test_datacontracts/test_datacontracts.cpp
+       libs/libmythservicecontracts/test/test_datacontracts/test_datacontracts.h
+       libs/libmythtv/HLS/httplivestream.cpp
+       libs/libmythtv/HLS/httplivestreambuffer.cpp
+       libs/libmythtv/HLS/httplivestreambuffer.h
+       libs/libmythtv/avformatwriter.cpp
+       libs/libmythtv/channelscan/channelscan_sm.cpp
+       libs/libmythtv/channelscan/channelscan_sm.h
+       libs/libmythtv/channelscan/channelscanmiscsettings.h
+       libs/libmythtv/channelscan/channelscanner.cpp
+       libs/libmythtv/channelscan/channelscanner.h
+       libs/libmythtv/channelscan/channelscanner_cli.cpp
+       libs/libmythtv/channelscan/channelscanner_cli.h
+       libs/libmythtv/channelscan/channelscanner_gui.cpp
+       libs/libmythtv/channelscan/channelscanner_gui.h
+       libs/libmythtv/channelscan/channelscanner_gui_scan_pane.cpp
+       libs/libmythtv/channelscan/channelscanner_gui_scan_pane.h
+       libs/libmythtv/channelscan/frequencytablesetting.cpp
+       libs/libmythtv/channelscan/inputselectorsetting.cpp
+       libs/libmythtv/channelscan/inputselectorsetting.h
+       libs/libmythtv/channelscan/modulationsetting.h
+       libs/libmythtv/channelscan/multiplexsetting.cpp
+       libs/libmythtv/channelscan/paneall.h
+       libs/libmythtv/channelscan/panedvbc.h
+       libs/libmythtv/channelscan/panedvbs.h
+       libs/libmythtv/channelscan/panedvbt.h
+       libs/libmythtv/channelscan/panedvbt2.h
+       libs/libmythtv/channelscan/panedvbutilsimport.h
+       libs/libmythtv/channelscan/paneexistingscanimport.h
+       libs/libmythtv/channelscan/panesingle.h
+       libs/libmythtv/channelscan/scanmonitor.cpp
+       libs/libmythtv/channelscan/scanmonitor.h
+       libs/libmythtv/channelscan/scanwizardconfig.h
+       libs/libmythtv/decoders/mythcodeccontext.cpp
+       libs/libmythtv/decoders/mythcodeccontext.h
+       libs/libmythtv/dtvconfparser.cpp
+       libs/libmythtv/dtvconfparser.h
+       libs/libmythtv/dtvconfparserhelpers.h
+       libs/libmythtv/filewriterbase.cpp
+       libs/libmythtv/ivtv_myth.h
+       libs/libmythtv/mpeg/H264Parser.h
+       libs/libmythtv/mpeg/sctedescriptors.cpp
+       libs/libmythtv/mpeg/sctedescriptors.h
+       libs/libmythtv/mpeg/sctetables.cpp
+       libs/libmythtv/mpeg/sctetables.h
+       libs/libmythtv/mpeg/splicedescriptors.cpp
+       libs/libmythtv/mpeg/splicedescriptors.h
+       libs/libmythtv/mythccextractorplayer.cpp
+       libs/libmythtv/recorders/ExternalRecChannelFetcher.cpp
+       libs/libmythtv/recorders/ExternalRecChannelFetcher.h
+       libs/libmythtv/recorders/ExternalRecorder.cpp
+       libs/libmythtv/recorders/RTjpegN.cpp
+       libs/libmythtv/recorders/asirecorder.cpp
+       libs/libmythtv/recorders/audioinput.cpp
+       libs/libmythtv/recorders/audioinput.h
+       libs/libmythtv/recorders/audioinputalsa.cpp
+       libs/libmythtv/recorders/audioinputalsa.h
+       libs/libmythtv/recorders/audioinputoss.cpp
+       libs/libmythtv/recorders/audioinputoss.h
+       libs/libmythtv/recorders/dtvrecorder.cpp
+       libs/libmythtv/recorders/dvbcam.cpp
+       libs/libmythtv/recorders/dvbchannel.cpp
+       libs/libmythtv/recorders/dvbdev/dvbci.cpp
+       libs/libmythtv/recorders/dvbdev/dvbci.h
+       libs/libmythtv/recorders/dvbrecorder.cpp
+       libs/libmythtv/recorders/importrecorder.cpp
+       libs/libmythtv/recorders/rtp/README.UDP
+       libs/libmythtv/recorders/v4l2encrecorder.cpp
+       libs/libmythtv/recorders/vbitext/cc.cpp
+       libs/libmythtv/scanwizard.cpp
+       libs/libmythtv/scanwizard.h
+       libs/libmythtv/teletextdecoder.cpp
+       libs/libmythtv/teletextextractorreader.cpp
+       libs/libmythtv/test/test_avcinfo/test_avcinfo.cpp
+       libs/libmythtv/test/test_avcinfo/test_avcinfo.h
+       libs/libmythtv/test/test_copyframes/test_copyframes.h
+       libs/libmythtv/test/test_eitfixups/test_eitfixups.cpp
+       libs/libmythtv/test/test_eitfixups/test_eitfixups.h
+       libs/libmythtv/test/test_iptvrecorder/test_iptvrecorder.h
+       libs/libmythtv/test/test_mpegtables/test_mpegtables.cpp
+       libs/libmythtv/test/test_mpegtables/test_mpegtables.h
+       libs/libmythtv/test/test_mythiowrapper/test_mythiowrapper.cpp
+       libs/libmythtv/test/test_mythiowrapper/test_mythiowrapper.h
+       libs/libmythtv/transporteditor.cpp
+       libs/libmythtv/transporteditor.h
+       libs/libmythtv/vbi608extractor.cpp
+       libs/libmythtv/vbi608extractor.h
+       libs/libmythtv/videooutwindow.cpp
+       libs/libmythtv/xine_demux_sputext.cpp
+       libs/libmythui/jsmenu.cpp
+       libs/libmythui/mythgesture.cpp
+       libs/libmythui/mythgesture.h
+       libs/libmythupnp/bufferedsocketdevice.cpp
+       libs/libmythupnp/bufferedsocketdevice.h
+       libs/libmythupnp/configuration.cpp
+       libs/libmythupnp/configuration.h
+       libs/libmythupnp/eventing.cpp
+       libs/libmythupnp/eventing.h
+       libs/libmythupnp/htmlserver.cpp
+       libs/libmythupnp/htmlserver.h
+       libs/libmythupnp/httprequest.cpp
+       libs/libmythupnp/httprequest.h
+       libs/libmythupnp/httpserver.cpp
+       libs/libmythupnp/httpserver.h
+       libs/libmythupnp/mbroadcastsocketdevice.h
+       libs/libmythupnp/mmulticastsocketdevice.cpp
+       libs/libmythupnp/mmulticastsocketdevice.h
+       libs/libmythupnp/mythxmlclient.cpp
+       libs/libmythupnp/mythxmlclient.h
+       libs/libmythupnp/serializers/jsonSerializer.cpp
+       libs/libmythupnp/serializers/jsonSerializer.h
+       libs/libmythupnp/serializers/serializer.cpp
+       libs/libmythupnp/serializers/serializer.h
+       libs/libmythupnp/serializers/soapSerializer.h
+       libs/libmythupnp/serializers/xmlSerializer.cpp
+       libs/libmythupnp/serializers/xmlSerializer.h
+       libs/libmythupnp/serializers/xmlplistSerializer.cpp
+       libs/libmythupnp/serverSideScripting.cpp
+       libs/libmythupnp/serverSideScripting.h
+       libs/libmythupnp/serviceHosts/*
+       libs/libmythupnp/servicehost.cpp
+       libs/libmythupnp/servicehost.h
+       libs/libmythupnp/services/*
+       libs/libmythupnp/soapclient.cpp
+       libs/libmythupnp/soapclient.h
+       libs/libmythupnp/ssdp.cpp
+       libs/libmythupnp/ssdp.h
+       libs/libmythupnp/ssdpcache.cpp
+       libs/libmythupnp/ssdpcache.h
+       libs/libmythupnp/taskqueue.cpp
+       libs/libmythupnp/taskqueue.h
+       libs/libmythupnp/upnp.cpp
+       libs/libmythupnp/upnp.h
+       libs/libmythupnp/upnpcds.cpp
+       libs/libmythupnp/upnpcds.h
+       libs/libmythupnp/upnpcdsobjects.cpp
+       libs/libmythupnp/upnpcdsobjects.h
+       libs/libmythupnp/upnpcmgr.cpp
+       libs/libmythupnp/upnpcmgr.h
+       libs/libmythupnp/upnpdevice.cpp
+       libs/libmythupnp/upnpdevice.h
+       libs/libmythupnp/upnpserviceimpl.h
+       libs/libmythupnp/upnptaskcache.h
+       libs/libmythupnp/upnptaskevent.cpp
+       libs/libmythupnp/upnptaskevent.h
+       libs/libmythupnp/upnptasknotify.cpp
+       libs/libmythupnp/upnptasknotify.h
+       libs/libmythupnp/upnptasksearch.cpp
+       libs/libmythupnp/upnptasksearch.h
+       libs/libmythupnp/upnputil.cpp
+       libs/libmythupnp/upnputil.h
+       libs/libmythupnp/websocket.h
+       libs/libmythupnp/wsdl.cpp
+       libs/libmythupnp/wsdl.h
+       libs/libmythupnp/xsd.cpp
+       libs/libmythupnp/xsd.h
+       programs/mythbackend/serviceHosts/*
+       programs/mythbackend/services/*
+       programs/mythfrontend/action.cpp
+       programs/mythfrontend/action.h
+       programs/mythfrontend/actionset.cpp
+       programs/mythfrontend/actionset.h
+       programs/mythfrontend/keybindings.cpp
+       programs/mythfrontend/keybindings.h
+       programs/mythfrontend/mythcontrols.cpp
+       programs/mythfrontend/mythcontrols.h
+       programs/mythutil/mpegutils.cpp
+       programs/scripts/hardwareprofile/__init__.py
+       programs/scripts/hardwareprofile/deleteProfile.py
+       programs/scripts/hardwareprofile/devicelist.py
+       programs/scripts/hardwareprofile/distros/all.py
+       programs/scripts/hardwareprofile/distros/distro.py
+       programs/scripts/hardwareprofile/distros/mythtv_data/data_mythtv.py
+       programs/scripts/hardwareprofile/distros/mythtv_data/main.py
+       programs/scripts/hardwareprofile/distros/mythtv_data/makeopts.py
+       programs/scripts/hardwareprofile/distros/mythtv_data/orddict.py
+       programs/scripts/hardwareprofile/distros/mythtv_data/request.py
+       programs/scripts/hardwareprofile/distros/mythtv_data/uuiddb.py
+       programs/scripts/hardwareprofile/distros/shared/html.py
+       programs/scripts/hardwareprofile/gate.py
+       programs/scripts/hardwareprofile/getLink.py
+       programs/scripts/hardwareprofile/hwdata.py
+       programs/scripts/hardwareprofile/i18n.py
+       programs/scripts/hardwareprofile/os_detect.py
+       programs/scripts/hardwareprofile/request.py
+       programs/scripts/hardwareprofile/scan.py
+       programs/scripts/hardwareprofile/sendProfile.py
+       programs/scripts/hardwareprofile/smolt.py
+       programs/scripts/hardwareprofile/smolt_config.py
+       programs/scripts/hardwareprofile/software.py
+       programs/scripts/hardwareprofile/uuiddb.py
+Copyright: 1999-2000, Aaron Holtzman <aholtzma@ess.engr.uvic.ca>
+           2008-2009, Alan Calvert
+           2011, Alexandre Rostovtsev <tetromino@gmail.com>
+           2007, Anand K. Mistry
+           2015, Bill Meek, from
+           2003-2004, Brandon Beattie, Doug Larrick
+           2012-2013, Bubblestuff Pty Ltd
+           2009, Carlos Goncalves <mail@cgoncalves.info>
+           2008, Chris Lamb <chris@chris-lamb.co.uk>
+           2011-2013, Chris Pinkham <cpinkham@mythtv.org>
+           2007, Christian Kothe
+           2005-2013, Daniel Kristjansson
+           2008, Daniel Kristjansson, Jens Rehaag
+           2003-2010, Daniel Thor Kristjansson
+           2005-2014, David Blain <dblain@mythtv.org>
+           2014, David C J Matthews
+           2017-2018, David Hampton
+           2003, David S. Miller <davem@redhat.com>
+           2010-2011, Digital Nirvana, Inc
+           2004-2008, <dm@prolingua.co.uk>
+           2001-2005, dvb.matt
+           2002-2003, Falk Hueffner <falk@debian.org>
+           2010, <foobum@gmail.com>
+           2009, Francois Cami <fcami@fedoraproject.org>
+           2012, Gavin Hurlbut
+           2004, Hans Verkuil <hverkuil@xs4all.nl>
+           2008, Intel Corporation
+           2008, Issac Richards
+           2008-2011, james meyer <james.meyer@operamail.com>
+           2010-2011, Jean-Yves Avenard
+           2014, Jean-Yves Avenard / Bubblestuff Pty Ltd
+           2004, Jeremy White <jwhite@whitesen.org>
+           2010, Jim Stichnoth, Daniel Kristjansson
+           1998-1999, Joerg Walter <trouble@moes.pmnet.uni-oldenburg.de>
+           2013-2018, John Poet
+           2004-2005, John Pullan <john@pullan.org>
+           1998, <justin@suntiger.ee.up.ac.za>
+           2013-2014, Karl Dietz
+           2003, Kenneth Aafloy
+           2003-2004, Kevin Thayer <nufan_wfk@yahoo.com>
+           2000, Klaus Schmidinger
+           2012, Mark Kendall
+           2013, Martin Thwaites
+           2005, Micah Galizia
+           2000-2004, Michel Lespinasse <walken@zoy.org>
+           2007-2010, Mike McGrath <mmcgrath@redhat.com>
+           2013, MythTV Developers
+           2017-2019, MythTV Developers <mythtv-dev@mythtv.org>
+           2003-2007, Others who contributed to NuppelVideoRecorder.cpp
+           2017, Paul Harrison <pharrison@mythtv.org>
+           2011-2020, Peter Bennett <pbennett@mythtv.org>
+           2003, Peter Gubanov <peter@elecard.net.ru>
+           2011-2013, Raymond Wagner
+           2011, Raymond Wagner <raymond@wagnerrp.com>
+           2011-2012, Raymond Wagner <rwagner@mythtv.org>
+           2009-2011, Raymond Wagner <sebastian@pipping.org>
+           2003, Regis Duchesne <hpreg@zoy.org>
+           2015, Richard Hulme
+           2010-2011, Robert McNamara <rmcnamara@mythtv.org>
+           2012, Robert Siebert <trebor_s@web.de>
+           2012, Rune Petersen
+           2013-2015, Stuart Morgan <smorgan@mythtv.org>
+           2004, Takashi Iwai <tiwai@suse.de>
+           2014, The MythTV Team
+           2000-2003, the xine project
+           2007, Vincent Penne
+           1999, Wim Taymans <wim.taymans@tvd.be>
+           2008, Yaakov M. Nemoy <loupgaroublond@gmail.com>
+License: GPL-2+
+
+Files: html/3rdParty/jquery/galleria/*
+Copyright: 2010, Aino
+License: Expat
+
+Files: bindings/python/tmdb3/*
+License: BSD-3-clause
+
+Files: programs/mythtranscode/external/replex/*
+Copyright: 2011, Gavin Hurlbut <ghurlbut@mythtv.org>
+           2003, Marcus Metzler <mocm@metzlerbros.de>
+License: GPL-2+
+
+Files: themes/fonts/FreeMono.ttf
+       themes/fonts/FreeMonoBold.ttf
+       themes/fonts/FreeMonoBoldOblique.ttf
+       themes/fonts/FreeMonoOblique.ttf
+       themes/fonts/FreeSans.ttf
+       themes/fonts/FreeSansBold.ttf
+       themes/fonts/FreeSansBoldOblique.ttf
+       themes/fonts/FreeSansOblique.ttf
+       themes/fonts/FreeSerif.ttf
+       themes/fonts/FreeSerifBold.ttf
+       themes/fonts/FreeSerifBoldItalic.ttf
+       themes/fonts/FreeSerifItalic.ttf
+       themes/fonts/README-freefont-20120503.txt
+Copyright: 2002-2012, GNU Freefont contributors
+License: GPL-3+ with Font exception
+
+Files: bindings/python/tvmaze/embed.py
+       bindings/python/tvmaze/endpoints.py
+       bindings/python/tvmaze/episode.py
+       bindings/python/tvmaze/person.py
+       bindings/python/tvmaze/season.py
+       bindings/python/tvmaze/show.py
+       bindings/python/tvmaze/tvmaze_api.py
+       html/3rdParty/jquery/jquery-2.0.3.js
+Copyright: 2020, Lachlan Mackenzie
+           2005-2013, jQuery Foundation, Inc. and other contributors
+License: Expat
+
+Files: programs/mythexternrecorder/MythExternControl.cpp
+       programs/mythexternrecorder/MythExternControl.h
+       programs/mythexternrecorder/MythExternRecApp.cpp
+       programs/mythexternrecorder/MythExternRecApp.h
+       programs/mythexternrecorder/main.cpp
+       programs/scripts/internetcontent/nv_python_libs/vimeo/vimeo_api.py
+       themes/fonts/tiresias_gpl3.txt
+Copyright: 2018, John Poet
+           2009, Marc Poulhiès
+License: GPL-3+
+
+Files: programs/mythtranscode/external/replex/CHANGES
+       programs/mythtranscode/external/replex/Makefile.standalone
+       programs/mythtranscode/external/replex/README
+       programs/mythtranscode/external/replex/TODO
+       programs/mythtranscode/external/replex/multiplex.c
+       programs/mythtranscode/external/replex/pes.h
+       programs/mythtranscode/external/replex/replex.pro
+Copyright: 2003, Marcus Metzler <mocm@metzlerbros.de>
+License: GPL-2+
+
+Files: libs/libmythbase/ffmpeg-mmx.h
+       libs/libmythtv/mythframe.cpp
+       libs/libmythtv/recorders/RTjpegN.h
+       programs/mythbackend/serviceHosts/imageServiceHost.h
+       programs/mythbackend/services/image.h
+       programs/scripts/hardwareprofile/MultipartPostHandler.py
+Copyright: 2014, Bubblestuff Pty Ltd
+           1997-2001, H. Dietz and R. Fisher
+           1998-1999, Joerg Walter <trouble@moes.pmnet.uni-oldenburg.de>
+           1998, <justin@suntiger.ee.up.ac.za>
+           2010, Laurent Aimar
+           2012, Robert Siebert <trebor_s@web.de>
+           1999, Wim Taymans <wim.taymans@tvd.be>
+License: LGPL-2.1+
+
+Files: contrib/imports/mirobridge/mirobridge/mirobridge_interpreter_2_0_3.py
+       contrib/imports/mirobridge/mirobridge/mirobridge_interpreter_2_5_2.py
+       contrib/imports/mirobridge/mirobridge/mirobridge_interpreter_3_0_0.py
+       contrib/imports/mirobridge/mirobridge/mirobridge_interpreter_3_5_0.py
+       contrib/imports/mirobridge/mirobridge/mirobridge_interpreter_4_0_2.py
+       contrib/imports/mirobridge/mirobridge/mirobridge_interpreter_6_0_0.py
+Copyright: 2005-2011, Participatory Culture Foundation
+License: GPL-2+
+
+Files: bindings/php/MythBackend.php
+       bindings/php/MythBase.php
+       bindings/php/MythFrontend.php
+       contrib/icons/master_iconmap/channel_icons.pl
+       contrib/maintenance/optimize_mythdb.pl
+       contrib/user_jobs/*
+Copyright: MythTV
+License: LGPL
+
+Files: libs/libmythtv/docs/*
+Copyright: 1998, Justin Schoeman <justin@suntiger.ee.up.ac.za>
+License: Expat
+
+Files: programs/scripts/metadata/Music/discid/__init__.py
+       programs/scripts/metadata/Music/discid/disc.py
+       programs/scripts/metadata/Music/discid/libdiscid.py
+       programs/scripts/metadata/Music/discid/track.py
+       programs/scripts/metadata/Music/discid/util.py
+Copyright: 2013, Johannes Dewender
+License: LGPL-3
+
+Files: themes/fonts/DroidSans-Bold.ttf
+       themes/fonts/DroidSans.ttf
+       themes/fonts/README-droid.txt
+Copyright: 2007, Google Corporation
+           2008, The Android Open Source Project
+License: Apache-2
+
+Files: libs/libmythtv/visualisations/goom/ifs.c
+       programs/scripts/metadata/Music/mbutils.py
+Copyright: 1997, Massimino Pascal <Pascal.Massimon@ens.fr>
+           2016, Paul Harrison
+License: MIT/X11
+
+Files: html/3rdParty/jquery/jqueryJScroll/README.md
+       html/3rdParty/jquery/jqueryJScroll/jquery.jscroll.js
+Copyright: 2011-2013, Philip Klauzinski
+License: Expat
+
+Files: html/3rdParty/jquery/jqueryGrid/js/*
+       html/3rdParty/jquery/jqueryMultiSelect/js/jquery.multiselect.js
+Copyright: 2012, Eric Hynds
+License: Expat
+
+Files: html/3rdParty/jquery/jqueryGrid/js/jquery.jqGrid.js
+Copyright: 2007-2008, Brice Burgess <bhb@iceburg.net>
+           2008-2011, Tony Tomov <tony@trirand.com>
+           2007, http://www.iceburg.net
+License: Expat
+
+Files: libs/libmythtv/docs/LICENSE.XJ
+Copyright: 1996, Scott Laird
+License: Expat
+
+Files: programs/scripts/metadata/Music/musicbrainzngs/compat.py
+Copyright: 2012, Kenneth Reitz
+License: ISC
+
+Files: libs/libmythtv/videodev2.h
+Copyright: 1999-2012, the contributors
+License: GPL-2+
+
+Files: bindings/python/tmdb3/LICENSE
+Copyright: 2012-2013, Raymond Wagner
+License: BSD-3-clause
+
+Files: html/3rdParty/jquery/galleria/LICENSE
+Copyright: 2013, Aino http://aino.se
+License: Expat
+
+Files: debian/*
+Copyright: 2001-2021, Christian Marillat <marillat@deb-multimedia.org>
+           2010, Mario Limonciello
+           2002-2005, Matt Zimmerman <mdz@debian.org>
+           2002-2012, Paul Andreassen
+           2007, Rosetta Contributors and Canonical Ltd
+License: GPL-2
+
+License: Apache-2
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ .
+ http://www.apache.org/licenses/LICENSE-2.0
+ .
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+License: BSD-3-clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. Neither the name of the University nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+
+License: Expat
+ Permission is hereby granted, free of charge, to any person obtaining a
+ copy of this software and associated documentation files (the
+ "Software"), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included
+ in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ DEALINGS IN THE SOFTWARE.
+
+License: GPL-2
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as
+ published by the Free Software Foundation.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>
+ .
+ On Debian systems, the complete text of the GNU General Public License
+ version 2 can be found in /usr/share/common-licenses/GPL-2
+
+License: GPL-2+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details.
+ .
+ On Debian systems, the full text of the GNU General Public License version
+ 2 can be found in the file /usr/share/common-licenses/GPL-2
+
+License: GPL-3+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public License
+ version 3 can be found in the file /usr/share/common-licenses/GPL-3
+
+License: ISC
+ Permission to use, copy, modify, and distribute this software for any
+ purpose with or without fee is hereby granted, provided that the above
+ copyright notice and this permission notice appear in all copies.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+License: LGPL
+ This package is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation.
+ .
+ This package is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
+ License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public License
+ along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA
+ 02110-1301, USA.
+ .
+ On Debian systems the full text of the GNU Lesser General Public License,
+ can be found in the file /usr/share/common-licenses/LGPL
+
+License: LGPL-2.1+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 2.1 of the License, or (at your
+ option) any later version.
+ .
+ This program is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
+ License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program; see the file COPYING.LIB.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+ MA 02110-1301, USA.
+ .
+ On Debian systems, the full text of the GNU Lesser General Public License
+ version 2.1 can be found in the file /usr/share/common-licenses/LGPL-2.1
+
+License: MIT/X11
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ "Software"), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included
+ in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -1,0 +1,11 @@
+mythtv-backend: no-manual-page usr/bin/mythbackend
+mythtv-backend: no-manual-page usr/bin/mythccextractor
+mythtv-backend: no-manual-page usr/bin/mythcommflag
+mythtv-backend: no-manual-page usr/bin/mythexternrecorder
+mythtv-backend: no-manual-page usr/bin/mythfilerecorder
+mythtv-backend: no-manual-page usr/bin/mythfilldatabase
+mythtv-backend: no-manual-page usr/bin/mythjobqueue
+mythtv-backend: no-manual-page usr/bin/mythmetadatalookup
+mythtv-backend: no-manual-page usr/bin/mythpreviewgen
+mythtv-backend: no-manual-page usr/bin/mythtv-setup
+mythtv-backend: no-manual-page usr/bin/mythutil
