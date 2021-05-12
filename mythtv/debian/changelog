@@ -1,3 +1,11 @@
+mythtv-dmo (1:31.0+fixes20210512.gitf7de8cea58-dmo1.ISDB.1) unstable; urgency=medium
+
+  * Merge newer Upstream from fixes/31 commit f7de8cea580dfd215dfe6d3e83201edb85647b8d .
+  * Apply ISDB-Ja commit fd2beb4f1301292c09e3833f81ad815cae6a367c .
+  * See https://github.com/Artanejp/mythtv/tree/31+ISDB-Ja .
+  
+ -- Kyuma Ohta <whatisthis.sowhat@gmail.com>  Wed, 12 May 2021 20:19:15 +0900
+
 mythtv-dmo (1:31.0+fixes20210508.gitf7de8cea58-dmo1.ISDB.1) unstable; urgency=medium
 
   * Apply ISDB-Ja commit 7425a6997005ea263049b8749e31d06b61abd792 .
