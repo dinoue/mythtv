@@ -159,7 +159,7 @@ QDate DishEventTagsDescriptor::originalairdate(void) const
 
     QDate originalairdate = t.date();
 
-    if (originalairdate.year() < 1940)
+    if (originalairdate.year() < 1895)
         return {};
 
     return originalairdate;
