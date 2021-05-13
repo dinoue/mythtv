@@ -7,14 +7,14 @@ K.Ohta <whatisthis.sowhat@gmail.com> by May 14, 2021
 About
 -----
 
-This is Japanese ISDB extension variant for MythTV (31).
+This is Japanese ISDB extension variant fork of MythTV (31).
 
 This still includes codes written by anonymous a.k.a 名無しさん
-a lot. So, `this still be unofficial`.
+a lot. So, this still be unofficial.
 	
-This is `only for` Japanese variant of ISDB, not for another countries.
+This is only for Japanese variant of ISDB, not for another countries.
 	
- - Some Japanese letters are hardcoded within libraries (mostly for EIT).
+Some Japanese letters are hardcoded within libraries (mostly for EIT).
    
 Status
 -----
@@ -28,19 +28,18 @@ Status
 Please help me
 -----
 
- - Contribute more cleanly licensed codes .
+ - Contribute more cleanly licensed codes.
 			  
- - `Check with BS and CS , report to issues of HP`_.
+ - Check with BS and CS , report to issues of HP.
 				
  - Contribute not hardcoded Japanese letters (or with any solutions).
 
- - Please contribute codes more cleanly      
-
 Resources
 -----
- - `base repository`_ https://github.com/Artanejp/mythtv.git
 
- - `HP`_ <https://github.com/Artanejp/mythtv/tree/31+ISDB-Ja>
+ - base repository https://github.com/Artanejp/mythtv.git
+
+ - HP https://github.com/Artanejp/mythtv/tree/31+ISDB-Ja
 
 
 `Belows are original README.rst :`
