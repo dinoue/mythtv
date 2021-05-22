@@ -1,8 +1,8 @@
-Source: mythtv-dmo
+Source: mythtv-isdb-ja
 Section: graphics
 Priority: optional
-Maintainer: Christian Marillat <marillat@deb-multimedia.org>
-Bugs: mailto:marillat@deb-multimedia.org
+Maintainer: Kyuma Ohta <whatisthis.sowhat@gmail.com>
+Bugs: mailto:whatisthis.sowhat@gmail.com
 Homepage: https://www.mythtv.org/
 Standards-Version: 4.5.1
 Build-Conflicts: libmyth-dev, liboss4-salsa-dev, libroar-dev

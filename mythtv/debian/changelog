@@ -1,3 +1,15 @@
+mythtv-isdb-ja (2:31.0+fixes20210522.gitd3952305b7.ISDB.1) unstable; urgency=medium
+
+  * Modify version and name tob prefer than mythtv-dmo.
+  
+ -- Kyuma Ohta <whatisthis.sowhat@gmail.com>  Sat, 22 May 2021 19:22:07 +0900
+
+mythtv-isdb-ja (1:31.0+fixes20210522+isdb-ja.gitd3952305b7.1) unstable; urgency=medium
+
+  * Modify version and name tob prefer than mythtv-dmo.
+  
+ -- Kyuma Ohta <whatisthis.sowhat@gmail.com>  Sat, 22 May 2021 19:00:04 +0900
+
 mythtv-dmo (1:31.0+fixes20210522.gitd3952305b7-isdb-ja.ISDB.1) unstable; urgency=medium
 
   * Merge newer Upstream from fixes/31 commit 8c59ee69d71beb825d8765ad6bc729b1cfc0150 .
