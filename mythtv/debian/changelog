@@ -1,3 +1,11 @@
+mythtv-isdb-ja (2:31.0+fixes20210812.git6becdb95b5.ISDB.1) unstable; urgency=medium
+
+  * Merge newer Upstream from fixes/31 commit 5da2523154 .
+  * Debian/sid, Bullseye : Built with based on newest release.
+  * See https://github.com/Artanejp/mythtv/tree/31+ISDB-Ja .
+  
+ -- Kyuma Ohta <whatisthis.sowhat@gmail.com>  Tue, 17 Aug 2021 12:25:12 +0900
+
 mythtv-isdb-ja (2:31.0+fixes20210727.git2115407f0.ISDB.1) unstable; urgency=medium
 
   * Merge newer Upstream from fixes/31 commit 2115407f0e100c93fae3b42cf4af2da668b0e9ff .
