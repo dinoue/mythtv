@@ -1,3 +1,11 @@
+mythtv-isdb-ja (2:31.0+fixes20211110.git1633f8288a3.ISDB.1) unstable; urgency=medium
+
+  * Merge newer Upstream from fixes/31 commit  25f1bb1d12f.
+  * Debian/sid, Bookworm : Built with based on newest release.
+  * See https://github.com/Artanejp/mythtv/tree/31+ISDB-Ja .
+  
+ -- Kyuma Ohta <whatisthis.sowhat@gmail.com>  Wed, 10 Nov 2021 22:58:12 +0900
+
 mythtv-isdb-ja (2:31.0+fixes20210812.git6becdb95b5.ISDB.1) unstable; urgency=medium
 
   * Merge newer Upstream from fixes/31 commit 5da2523154 .
