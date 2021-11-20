@@ -8,6 +8,9 @@
 extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/internal.h"
+
+#define CONFIG_SAFE_BITSTREAM_READER 1
+#include "libavcodec/get_bits.h"
 #include "libavcodec/golomb.h"
 }
 
