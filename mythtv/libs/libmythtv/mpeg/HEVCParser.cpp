@@ -10,9 +10,29 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/internal.h"
 
+#ifdef __clang__
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wunused-parameter"
+#   pragma clang diagnostic ignored "-Wsign-compare"
+#elif defined __GNUC__
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wunused-parameter"
+#   pragma GCC diagnostic ignored "-Wsign-compare"
+#endif
+// NOLINTBEGIN(clang-analyzer-core.NullDereference)
+#define register
+
 #define CONFIG_SAFE_BITSTREAM_READER 1
 #include "libavcodec/get_bits.h"
 #include "libavcodec/golomb.h"
+
+#undef register // reserved keyword since C++17
+// NOLINTEND(clang-analyzer-core.NullDereference)
+#ifdef __clang__
+#   pragma clang diagnostic pop
+#elif defined __GNUC__
+#   pragma GCC diagnostic pop
+#endif
 }
 
 #include <cmath>
