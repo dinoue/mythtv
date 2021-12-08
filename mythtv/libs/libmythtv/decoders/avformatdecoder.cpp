@@ -11,18 +11,39 @@
 
 extern "C" {
 #include "libavutil/avutil.h"
+#include "libavutil/display.h"
 #include "libavutil/error.h"
-#include "libavutil/log.h"
 #include "libavutil/intreadwrite.h" // for AV_RB32 and AV_RB24
+#include "libavutil/imgutils.h"
+#include "libavutil/log.h"
+#include "libavutil/stereo3d.h"
+
 #include "libavcodec/avcodec.h"
-#include "libavcodec/internal.h" // for avpriv_find_start_code
+
 #include "libavformat/avformat.h"
 #include "libavformat/avio.h"
-#include "libavformat/internal.h"
+
 #include "libswscale/swscale.h"
-#include "libavformat/isom.h"
-#include "libavutil/imgutils.h"
-#include "libavutil/display.h"
+
+// TODO remove internal headers:
+#include "libavcodec/internal.h" // for avpriv_find_start_code
+
+// suppress warning from unused transitively included "os_support.h"
+#ifdef __clang__
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wunused-parameter"
+#elif defined __GNUC__
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
+
+#include "libavformat/internal.h" // for ff_read_frame_flush
+
+#ifdef __clang__
+#   pragma clang diagnostic pop
+#elif defined __GNUC__
+#   pragma GCC diagnostic pop
+#endif
 }
 
 #ifdef USING_MEDIACODEC // Android
