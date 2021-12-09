@@ -1,26 +1,3 @@
-// Qt
-#include <QFile>
-#include <QDateTime>
-#include <QReadLocker>
-
-// MythTV
-#include "threadedfilewriter.h"
-#include "io/mythfilebuffer.h"
-#include "io/mythstreamingbuffer.h"
-#include "mythmiscutil.h"
-#include "livetvchain.h"
-#include "mythcontext.h"
-#include "mythconfig.h"
-#include "remotefile.h"
-#include "compat.h"
-#include "mythdate.h"
-#include "mythtimer.h"
-#include "mythlogging.h"
-#include "DVD/mythdvdbuffer.h"
-#include "DVD/mythdvdstream.h"
-#include "Bluray/mythbdbuffer.h"
-#include "HLS/httplivestreambuffer.h"
-#include "mythcdrom.h"
 #include "io/mythmediabuffer.h"
 
 // Std
@@ -39,6 +16,36 @@
 extern "C" {
 #include "libavformat/avformat.h"
 }
+
+// Qt
+#include <QFile>
+#include <QDateTime>
+#include <QReadLocker>
+
+// MythTV
+// libmythbase
+#include "remotefile.h"
+#include "compat.h"
+#include "mythcdrom.h"
+#include "mythcorecontext.h"
+#include "mythconfig.h"
+#include "mythdate.h"
+#include "mythtimer.h"
+#include "mythlogging.h"
+#include "mythmiscutil.h"
+#include "threadedfilewriter.h"
+
+// libmythtv
+#include "livetvchain.h"
+
+#include "io/mythfilebuffer.h"
+#include "io/mythstreamingbuffer.h"
+
+#include "DVD/mythdvdbuffer.h"
+#include "DVD/mythdvdstream.h"
+#include "Bluray/mythbdbuffer.h"
+#include "HLS/httplivestreambuffer.h"
+
 
 #define LOC      QString("RingBuf(%1): ").arg(m_filename)
 
