@@ -21,8 +21,24 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
  *****************************************************************************/
+#include "httplivestreambuffer.h"
+
+// C++
+#include <algorithm> // for min/max
+#include <array>
 
 
+extern "C" {
+// TODO remove internal FFmpeg header
+#include "libavformat/url.h" // for ffurl_*
+}
+
+#ifdef USING_LIBCRYPTO
+// encryption related stuff
+#include <openssl/aes.h>
+#define AES_BLOCK_SIZE 16       // HLS only support AES-128
+using aesiv_array = std::array<uint8_t, AES_BLOCK_SIZE>;
+#endif
 
 // QT
 #include <QObject>
@@ -34,24 +50,10 @@
 #endif
 #include <QUrl>
 
-// C++
-#include <algorithm> // for min/max
-#include <array>
-
 // libmythbase
 #include "mthread.h"
 #include "mythdownloadmanager.h"
 #include "mythlogging.h"
-
-// libmythtv
-#include "httplivestreambuffer.h"
-
-#ifdef USING_LIBCRYPTO
-// encryption related stuff
-#include <openssl/aes.h>
-#define AES_BLOCK_SIZE 16       // HLS only support AES-128
-using aesiv_array = std::array<uint8_t,AES_BLOCK_SIZE>;
-#endif
 
 #define LOC QString("HLSBuffer: ")
 

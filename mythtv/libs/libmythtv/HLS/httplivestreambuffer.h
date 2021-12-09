@@ -23,13 +23,13 @@
 #ifndef MythXCode_hlsbuffer_h
 #define MythXCode_hlsbuffer_h
 
-#include "mythcorecontext.h"
-#include "io/mythmediabuffer.h"
+#include <cstdio>
 
-extern "C" {
-#include "libavformat/avformat.h"
-#include "libavformat/url.h"
-}
+#include <QByteArray>
+#include <QList>
+#include <QString>
+
+#include "io/mythmediabuffer.h"
 
 class MythDownloadManager;
 class HLSStream;
