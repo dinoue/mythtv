@@ -4,11 +4,7 @@
 // MythTV
 #include "io/mythmediabuffer.h"
 
-// FFmpeg
-extern "C" {
-#include "libavformat/avformat.h"
-#include "libavformat/url.h"
-}
+struct URLContext; // forward declare internal FFmpeg struct
 
 class MythStreamingBuffer : public MythMediaBuffer
 {

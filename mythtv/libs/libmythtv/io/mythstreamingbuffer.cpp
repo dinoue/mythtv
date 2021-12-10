@@ -1,10 +1,17 @@
+#include "io/mythstreamingbuffer.h"
+
+// FFmpeg
+extern "C" {
+// TODO remove internal FFmpeg header
+#include "libavformat/url.h"
+}
+
 // Qt
 #include <QUrl>
 
 // MythTV
 #include "mythcorecontext.h"
 #include "mythlogging.h"
-#include "io/mythstreamingbuffer.h"
 
 #define LOC QString("StreamRingBuf(%1): ").arg(m_filename)
 
