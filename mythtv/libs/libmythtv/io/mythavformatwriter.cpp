@@ -19,6 +19,15 @@
  */
 #include "io/mythavformatwriter.h"
 
+// FFmpeg
+extern "C" {
+#include "libavutil/opt.h"
+#include "libavutil/samplefmt.h"
+#include "libavutil/imgutils.h"
+
+#include "libavformat/url.h"
+}
+
 #include <QtGlobal>
 #include <QtEndian>
 
@@ -27,14 +36,6 @@
 #include "mythcorecontext.h"
 #include "audiooutpututil.h"
 #include "mythavutil.h"
-
-
-// FFmpeg
-extern "C" {
-#include "libavutil/opt.h"
-#include "libavutil/samplefmt.h"
-#include "libavutil/imgutils.h"
-}
 
 #define LOC QString("AVFW(%1): ").arg(m_filename)
 #define LOC_ERR QString("AVFW(%1) Error: ").arg(m_filename)

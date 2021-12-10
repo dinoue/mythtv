@@ -2,7 +2,13 @@
 #include "io/mythavformatbuffer.h"
 #include "mythcorecontext.h"
 
-URLProtocol MythAVFormatBuffer::s_avfrURL;
+// FFmpeg
+extern "C" {
+#include "libavformat/avformat.h"
+#include "libavformat/url.h"
+}
+
+static URLProtocol s_avfrURL {};
 
 MythAVFormatBuffer::MythAVFormatBuffer(MythMediaBuffer *Buffer)
   : m_buffer(Buffer)
