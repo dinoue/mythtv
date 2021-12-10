@@ -1,12 +1,17 @@
-// MythTV
 #include "io/mythavformatbuffer.h"
-#include "mythcorecontext.h"
 
 // FFmpeg
 extern "C" {
 #include "libavformat/avformat.h"
 #include "libavformat/url.h"
 }
+
+#include <QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
+#include <QMutex>
+#else
+#include <QRecursiveMutex>
+#endif
 
 static URLProtocol s_avfrURL {};
 
