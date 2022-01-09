@@ -65,6 +65,8 @@ extern "C" {
 // Grr. NULL keeps getting redefined back to 0
 #undef NULL
 #define NULL nullptr
+
+#define CONFIG_SAFE_BITSTREAM_READER 1
 #include "libavcodec/get_bits.h"
 }
 
