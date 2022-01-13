@@ -9,7 +9,10 @@
 extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavcodec/internal.h" // for avpriv_find_start_code
-#include "libavutil/internal.h"
+
+//#include "libavutil/internal.h"
+// from libavutil/internal.h for an unused by MythTV function in libavcodec/golomb.h
+#define SUINT unsigned
 
 #ifdef __clang__
 #   pragma clang diagnostic push
