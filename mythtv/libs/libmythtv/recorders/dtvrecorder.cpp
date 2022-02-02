@@ -17,11 +17,6 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-
-extern "C" {
-#include "libavcodec/internal.h" // for avpriv_find_start_code
-}
-
 #include "atscstreamdata.h"
 #include "mpegstreamdata.h"
 #include "dvbstreamdata.h"
@@ -35,6 +30,7 @@ extern "C" {
 
 #include "AVCParser.h"
 #include "HEVCParser.h"
+#include "bytereader.h"
 
 #define LOC ((m_tvrec) ? \
     QString("DTVRec[%1]: ").arg(m_tvrec->GetInputId()) : \
@@ -441,9 +437,9 @@ bool DTVRecorder::FindMPEG2Keyframes(const TSPacket* tspacket)
 
     while (bufptr < bufend)
     {
-        bufptr = avpriv_find_start_code(bufptr, bufend, &m_startCode);
+        bufptr = ByteReader::find_start_code(bufptr, bufend, &m_startCode, false);
         int bytes_left = bufend - bufptr;
-        if ((m_startCode & 0xffffff00) == 0x00000100)
+        if (ByteReader::start_code_is_valid(m_startCode))
         {
             // At this point we have seen the start code 0 0 1
             // the next byte will be the PES packet stream id.
@@ -1094,14 +1090,13 @@ void DTVRecorder::FindPSKeyFrames(const uint8_t *buffer, uint len)
         bool hasKeyFrame  = false;
 
         const uint8_t *tmp = bufptr;
-        bufptr =
-            avpriv_find_start_code(bufptr + skip, bufend, &m_startCode);
+        bufptr = ByteReader::find_start_code(bufptr + skip, bufend, &m_startCode, false);
         m_audioBytesRemaining = 0;
         m_otherBytesRemaining = 0;
         m_videoBytesRemaining -= std::min(
             (uint)(bufptr - tmp), m_videoBytesRemaining);
 
-        if ((m_startCode & 0xffffff00) != 0x00000100)
+        if (!ByteReader::start_code_is_valid(m_startCode))
             continue;
 
         // NOTE: Length may be zero for packets that only contain bytes from

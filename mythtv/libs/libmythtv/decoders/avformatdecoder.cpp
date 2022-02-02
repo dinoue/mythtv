@@ -26,7 +26,6 @@ extern "C" {
 #include "libswscale/swscale.h"
 
 // TODO remove internal headers:
-#include "libavcodec/internal.h" // for avpriv_find_start_code
 
 // suppress warning from unused transitively included "os_support.h"
 #ifdef __clang__
@@ -110,6 +109,7 @@ extern "C" {
 #include "mythuihelper.h"
 #include "DVD/mythdvdbuffer.h"
 #include "Bluray/mythbdbuffer.h"
+#include "bytereader.h"
 #include "mythavutil.h"
 #include "mythhdrvideometadata.h"
 
@@ -3177,7 +3177,7 @@ void AvFormatDecoder::MpegPreProcessPkt(AVStream *stream, AVPacket *pkt)
 
     while (bufptr < bufend)
     {
-        bufptr = avpriv_find_start_code(bufptr, bufend, &m_startCodeState);
+        bufptr = ByteReader::find_start_code(bufptr, bufend, &m_startCodeState, false);
 
         float aspect_override = -1.0F;
         if (m_ringBuffer->IsDVD())

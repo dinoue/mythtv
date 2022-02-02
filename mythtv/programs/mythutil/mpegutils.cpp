@@ -19,11 +19,6 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-
-extern "C" {
-#include "libavcodec/internal.h" // for avpriv_find_start_code
-}
-
 // MythTV headers
 #include "streamlisteners.h"
 #include "scanstreamdata.h"
@@ -34,6 +29,7 @@ extern "C" {
 #include "io/mythmediabuffer.h"
 #include "dvbtables.h"
 #include "exitcodes.h"
+#include "bytereader.h"
 
 // Application local headers
 #include "mpegutils.h"
@@ -363,9 +359,9 @@ bool PTSListener::ProcessTSPacket(const TSPacket &tspacket)
 
     while (bufptr < bufend)
     {
-        bufptr = avpriv_find_start_code(bufptr, bufend, &m_startCode);
+        bufptr = ByteReader::find_start_code(bufptr, bufend, &m_startCode, false);
         int bytes_left = bufend - bufptr;
-        if ((m_startCode & 0xffffff00) == 0x00000100)
+        if (ByteReader::start_code_is_valid(m_startCode))
         {
             // At this point we have seen the start code 0 0 1
             // the next byte will be the PES packet stream id.
