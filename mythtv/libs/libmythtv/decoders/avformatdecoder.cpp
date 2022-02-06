@@ -24,25 +24,6 @@ extern "C" {
 #include "libavformat/avio.h"
 
 #include "libswscale/swscale.h"
-
-// TODO remove internal headers:
-
-// suppress warning from unused transitively included "os_support.h"
-#ifdef __clang__
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wunused-parameter"
-#elif defined __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
-
-#include "libavformat/internal.h" // for ff_read_frame_flush
-
-#ifdef __clang__
-#   pragma clang diagnostic pop
-#elif defined __GNUC__
-#   pragma GCC diagnostic pop
-#endif
 }
 
 #ifdef USING_MEDIACODEC // Android
@@ -226,6 +207,7 @@ int  get_avf_buffer_dxva2(struct AVCodecContext *c, AVFrame *pic, int flags);
     return false;                                   \
 } while (false)
 
+// This is a slightly modified static int has_codec_parameters() from libavformat/utils.c
 static bool StreamHasRequiredParameters(AVCodecContext *Context, AVStream *Stream)
 {
     switch (Stream->codecpar->codec_type)
@@ -773,7 +755,7 @@ void AvFormatDecoder::SeekReset(long long newKey, uint skipFrames,
         m_ptsDetected = false;
         m_reorderedPtsDetected = false;
 
-        ff_read_frame_flush(m_ic);
+        avformat_flush(m_ic);
 
         // Only reset the internal state if we're using our seeking,
         // not when using libavformat's seeking
