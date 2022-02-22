@@ -1,0 +1,289 @@
+Source: mythtv-isdb-ja
+Section: graphics
+Priority: optional
+Maintainer: Kyuma Ohta <whatisthis.sowhat@gmail.com>
+Bugs: mailto:whatisthis.sowhat@gmail.com
+Homepage: https://www.mythtv.org/
+Standards-Version: 4.5.1
+Build-Conflicts: libmyth-dev, liboss4-salsa-dev, libroar-dev
+Build-Depends: debhelper-compat (= 13), dh-sequence-python3, libxext-dev,
+ libvorbis-dev, libdbi-perl, default-libmysqlclient-dev, libfreetype-dev,
+ libjack-jackd2-dev, qtscript5-dev, libavc1394-dev [linux-any], libfaad-dev,
+ liblircclient-dev, libsamplerate0-dev, libasound2-dev [linux-any], libdts-dev,
+ libxinerama-dev, quilt, libtag1-dev, libiec61883-dev (>= 1.0.0) [linux-any],
+ libxxf86vm-dev, po-debconf, libxvmc-dev, libdvdnav-dev, libssl-dev, texinfo,
+ libsoundtouch-dev, nasm [any-amd64 any-i386], libxrandr-dev, libfftw3-dev,
+ libdbd-mysql-perl, libfribidi-dev, libxml2-dev, libgl-dev, liba52-0.7.4-dev,
+ libxvidcore-dev, libpulse-dev, libtool-bin, libexiv2-dev, libvdpau-dev,
+ qtbase5-dev, libsctp-dev, libcec-dev (>= 2:6~), libdrm-dev, uuid-dev,
+ libva-dev [any-amd64 any-i386], libudev-dev, liblzma-dev, libqt5webkit5-dev,
+ libx264-dev (>= 3:0.159~), libvpx-dev (>= 1.8.0), libass-dev (>= 0.10.2),
+ libavahi-compat-libdnssd-dev, libhttp-message-perl, libio-socket-inet6-perl,
+ libhdhomerun-dev (>= 20170815-2~), libsystemd-dev, librtmp-dev, libbz2-dev,
+ libgnutls28-dev | gnutls-dev, libqt5opengl5-dev, libbluray-dev, libwww-perl,
+ libnet-upnp-perl, libx265-dev, libmp3lame-dev, libxnvctrl-dev, liblzo2-dev,
+ libxml-simple-perl, python3-simplejson, python3-future, libdav1d-dev,
+ libaom-dev [amd64], python3-mysqldb, python3-lxml, python3-requests,
+ libxcb-shm0-dev, libegl-dev, nv-codec-headers [amd64 i386],
+ dh-linktree, fonts-freefont-ttf, fonts-tlwg-purisa-ttf, fonts-texgyre
+
+Package: mythtv
+Architecture: all
+Pre-Depends: default-mysql-server | virtual-mysql-server
+Depends: mythtv-database (>= ${source:Version}), mythtv-frontend (>= ${source:Version}), mythtv-backend (>= ${source:Version}), ${misc:Depends}
+Recommends: mythtv-doc
+Description: Personal video recorder application (client and server)
+ MythTV implements the following PVR features, and more, with a
+ unified graphical interface:
+ .
+  - Basic 'live-tv' functionality. Pause/Fast Forward/Rewind "live" TV.
+  - Video compression using RTjpeg or MPEG-4
+  - Program listing retrieval using XMLTV
+  - Themable, semi-transparent on-screen display
+  - Electronic program guide
+  - Scheduled recording of TV programs
+  - Resolution of conflicts between scheduled recordings
+  - Basic video editing
+ .
+ This package will install a complete MythTV client/server environment on a
+ single system, including a MySQL server.
+ .
+ The powerpc packages were compiled with altivec and sparc packages with
+ ultra-sparc support.
+
+Package: mythtv-common
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${python3:Depends}, libxml-xpath-perl, default-mysql-client | virtual-mysql-client, adduser
+Recommends: mythtv-doc (>= ${source:Version}), python3-selinux
+Conflicts: mythlogserver
+Description: Personal video recorder application (common data)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains infrastructure needed by both the client and the
+ server.
+
+Package: mythtv-doc
+Architecture: all
+Section: doc
+Depends: ${misc:Depends}
+Description: Personal video recorder application (documentation)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains documentation, including the MythTV HOWTO.
+
+Package: mythtv-database
+Architecture: all
+Multi-Arch: foreign
+Depends: mythtv-common (>= ${source:Version}), ${misc:Depends}, dbconfig-mysql | dbconfig-no-thanks, libdbd-mysql-perl, default-mysql-client | virtual-mysql-client, cron | cron-daemon
+Recommends: default-mysql-server | virtual-mysql-server
+Description: Personal video recorder application (database)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ The powerpc packages were compiled with altivec and sparc packages with
+ ultra-sparc support.
+ .
+ This package sets up a MySQL database for use MythTV. It should be
+ installed on the system where the MySQL server resides.
+
+Package: mythtv-backend
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends: mythtv-common (>= ${source:Version}), ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, python3, cron | cron-daemon, wget, lsb-base, mythtv-transcode, python3-pycurl, python3-mythtv
+Replaces: mythtv-common (<= 0.27.0-dmo2)
+Recommends: mythtv-database, logrotate, xmltv-util
+Suggests: mythtv-frontend, mythweb
+Description: Personal video recorder application (server)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains only the server software, which provides video and
+ audio capture and encoding services. In order to be useful, it requires a
+ mythtv-frontend installation, either on the same system or one reachable
+ via the network.
+ .
+ A database is also required. The mythtv-database package must be installed,
+ either on the same system, or one reachable via the network.
+ .
+ The powerpc packages were compiled with altivec and sparc packages with
+ ultra-sparc support.
+ .
+ For a complete installation of all MythTV components, install the 'mythtv'
+ package.
+
+Package: mythtv-frontend
+Architecture: any
+Depends: mythtv-common (>= ${source:Version}), ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, python3-mythtv
+Suggests: mythtv-backend, mythmusic, mythweather, mythgallery, mythgame, ffmpeg
+Description: Personal video recorder application (client)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains only the client software, which provides a front-end
+ for playback and configuration. It requires access to a mythtv-backend
+ installation, either on the same system or one reachable via the network.
+ .
+ A database is also required. The mythtv-database package must be installed,
+ either on the same system, or one reachable via the network.
+ .
+ The powerpc packages were compiled with altivec and sparc packages with
+ ultra-sparc support.
+ .
+ For a complete installation of all MythTV components, install the 'mythtv'
+ package.
+
+Package: libmyth-31
+Architecture: any
+Section: libs
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqt5sql5-mysql, procps, iputils-ping
+Recommends: udisks2, ${shlibs:Recommends}
+Breaks: libmyth-0.27-0, libmyth-0.28-0, libmyth-30
+Description: Common library code for MythTV and add-on modules (runtime)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ The powerpc packages were compiled with altivec and sparc packages with
+ ultra-sparc support.
+ .
+ This package contains a shared library, libmyth, which is used by various
+ components in the system.
+
+Package: libmyth-dev
+Architecture: any
+Section: libdevel
+Multi-Arch: same
+Depends: libmyth-31 (= ${binary:Version}), ${misc:Depends}
+Description: Common library code for MythTV and add-on modules (development)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains files needed for developing applications which use
+ libmyth (such as the various add-ons for MythTV)
+
+Package: libmythtv-perl
+Architecture: all
+Section: perl
+Depends: ${perl:Depends}, ${misc:Depends}, libdbi-perl, libdbd-mysql-perl, libwww-perl, libnet-upnp-perl, libio-socket-inet6-perl, libhttp-message-perl
+Description: Personal video recorder application (common data)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains Perl bindings to access mythtv datas.
+
+Package: python3-mythtv
+Architecture: all
+Section: python
+Conflicts: python-mythtv
+Replaces: python-mythtv
+Provides: ${python3:Provides}
+Depends: ${python3:Depends}, ${misc:Depends}, python3-mysqldb, python3-lxml, python3-future, python3-requests, python3-requests-cache, python3-simplejson, python3-future
+Description: Personal video recorder application (common data)
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains files needed for some python MythTV add-ons.
+
+Package: php-mythtv
+Architecture: all
+Section: php
+Depends: ${misc:Depends}, libapache2-mod-php | php
+Description: PHP Bindings for MythTV
+ MythTV provides a unified graphical interface for recording and viewing
+ television programs. Refer to the mythtv package for more information.
+ .
+ This package contains files needed for using PHP based applications that
+ connect to MythTV backends.
+
+Package: mythffmpeg
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Section: utils
+Description: Special ffmpeg version for nuvexport
+ Special ffmpeg version for nuvexport. This binary is linked against the
+ libmythav* libraries and not libraries in libavc* packages.
+
+Package: libmythavcodec58
+Architecture: any
+Section: libs
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: libavcodec package for MythTV
+ This package is only used by MythTV packages.
+
+Package: libmythavdevice58
+Architecture: any
+Section: libs
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: libavdevice package for MythTV
+ This package is only used by MythTV packages.
+
+Package: libmythavfilter7
+Architecture: any
+Section: libs
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: libavfilter package for MythTV
+ This package is only used by MythTV packages.
+
+Package: libmythavformat58
+Architecture: any
+Section: libs
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: libavformat package for MythTV
+ This package is only used by MythTV packages.
+
+Package: libmythavutil56
+Architecture: any
+Section: libs
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: libavutil package for MythTV
+ This package is only used by MythTV packages.
+
+Package: libmythpostproc55
+Architecture: any
+Section: libs
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: libpostproc package for MythTV
+ This package is only used by MythTV packages.
+
+Package: libmythswscale5
+Architecture: any
+Section: libs
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: libswscale package for MythTV
+ This package is only used by MythTV packages.
+
+Package: libmythswresample3
+Architecture: any
+Section: libs
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: swresample package for MythTV
+ This package is only used by MythTV packages.
+
+Package: mythtv-transcode
+Architecture: any
+Depends: mythtv-common, ${shlibs:Depends}, ${misc:Depends}
+Suggests: mythtv-backend, mytharchive
+Description: Utilities used for transcoding MythTV tasks
+ Some utilities are applicable for both a frontend or a backend machine.
+ This package provides utilities that can be used on both without
+ requiring an entire backend to be installed.

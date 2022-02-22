@@ -1,0 +1,15 @@
+The first thing to do is to add your account to the mythtv group :
+
+sudo adduser <login-name> mythtv
+
+Add a symbolic link to the .mythtv directory :
+
+mkdir ~/.mythtv
+cd ~/.mythtv
+ln -s /etc/mythtv/config.xml config.xml
+
+And then configure MythTV:
+
+mythtv-setup
+
+Christian Marillat

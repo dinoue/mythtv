@@ -1,0 +1,72 @@
+--- a/html/3rdParty/jquery/galleria/plugins/flickr/flickr-demo.html
++++ b/html/3rdParty/jquery/galleria/plugins/flickr/flickr-demo.html
+@@ -20,7 +20,7 @@
+         </style>
+ 
+         <!-- load jQuery -->
+-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
++        <script src="/usr/share/javascript/jquery/jquery.js"></script>
+ 
+         <!-- load Galleria -->
+         <script src="../../galleria-1.3.5.min.js"></script>
+@@ -59,4 +59,4 @@
+     });
+     </script>
+     </body>
+-</html>
+\ No newline at end of file
++</html>
+--- a/html/3rdParty/jquery/galleria/plugins/history/history-demo.html
++++ b/html/3rdParty/jquery/galleria/plugins/history/history-demo.html
+@@ -20,7 +20,7 @@
+         </style>
+ 
+         <!-- load jQuery -->
+-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
++        <script src="/usr/share/javascript/jquery/jquery.js"></script>
+ 
+         <!-- load Galleria -->
+         <script src="../../galleria-1.3.5.min.js"></script>
+@@ -97,4 +97,4 @@
+ 
+     </script>
+     </body>
+-</html>
+\ No newline at end of file
++</html>
+--- a/html/3rdParty/jquery/galleria/plugins/picasa/picasa-demo.html
++++ b/html/3rdParty/jquery/galleria/plugins/picasa/picasa-demo.html
+@@ -20,7 +20,7 @@
+         </style>
+ 
+         <!-- load jQuery -->
+-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
++        <script src="/usr/share/javascript/jquery/jquery.js"></script>
+ 
+         <!-- load Galleria -->
+         <script src="../../galleria-1.3.5.min.js"></script>
+@@ -52,4 +52,4 @@
+ 
+     </script>
+     </body>
+-</html>
+\ No newline at end of file
++</html>
+--- a/html/3rdParty/jquery/galleria/themes/classic/classic-demo.html
++++ b/html/3rdParty/jquery/galleria/themes/classic/classic-demo.html
+@@ -20,7 +20,7 @@
+         </style>
+ 
+         <!-- load jQuery -->
+-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
++        <script src="/usr/share/javascript/jquery/jquery.js"></script>
+ 
+         <!-- load Galleria -->
+         <script src="../../galleria-1.3.5.min.js"></script>
+@@ -121,4 +121,4 @@
+ 
+     </script>
+     </body>
+-</html>
+\ No newline at end of file
++</html>

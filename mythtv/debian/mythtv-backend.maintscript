@@ -1,0 +1,2 @@
+rm_conffile /etc/logrotate.d/mythtv-backend 0.26.0-dmo10~ mythtv-backend
+rm_conffile /etc/mythtv/additional.args 31.0~pre20200305.git1460627a2c-dmo1~

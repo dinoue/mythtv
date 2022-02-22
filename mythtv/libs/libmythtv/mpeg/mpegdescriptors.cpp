@@ -97,6 +97,7 @@ desc_list_t MPEGDescriptor::FindAll(const desc_list_t &parsed, uint desc_tag)
     return tmp;
 }
 
+/*
 static uint maxPriority(const QMap<uint,uint> &langPrefs)
 {
     uint max_pri = 0;
@@ -207,6 +208,7 @@ desc_list_t MPEGDescriptor::FindBestMatches(
 
     return tmp;
 }
+*/
 
 #define EMPTY_STR_16 "","","","", "","","","", "","","","", "","","","",
 
@@ -387,6 +389,7 @@ QString MPEGDescriptor::DescriptorTagString(void) const
     if (IsValid()) { DESC_NAME d(m_data, DescriptorLength()+2); \
     if (d.IsValid()) str = d.toString(); } } while (false)
 
+
 QString MPEGDescriptor::descrDump(const QString &name) const
 {
     QString str;
@@ -430,11 +433,12 @@ QString MPEGDescriptor::toStringPD(uint priv_dsid) const
     else if (DescriptorID::hevc_video == DescriptorTag())
     {
         SET_STRING(HEVCVideoDescriptor);
+	// ToDo: Check not comment out is right 20200324
     }
-    else if (DescriptorID::network_name == DescriptorTag())
-    {
-        SET_STRING(NetworkNameDescriptor);
-    }
+//    else if (DescriptorID::network_name == DescriptorTag())
+//  {
+//       SET_STRING(NetworkNameDescriptor);
+//  }
     else if (DescriptorID::service_list == DescriptorTag())
     {
         SET_STRING(ServiceListDescriptor);
@@ -446,15 +450,16 @@ QString MPEGDescriptor::toStringPD(uint priv_dsid) const
     else if (DescriptorID::cable_delivery_system == DescriptorTag())
     {
         SET_STRING(CableDeliverySystemDescriptor);
+	// ToDo: Check not comment out is right 20200324
     }
-    else if (DescriptorID::bouquet_name == DescriptorTag())
-    {
-        SET_STRING(BouquetNameDescriptor);
-    }
-    else if (DescriptorID::service == DescriptorTag())
-    {
-        SET_STRING(ServiceDescriptor);
-    }
+//    else if (DescriptorID::bouquet_name == DescriptorTag())
+//    {
+//        SET_STRING(BouquetNameDescriptor);
+//    }
+//    else if (DescriptorID::service == DescriptorTag())
+//    {
+//        SET_STRING(ServiceDescriptor);
+//    }
     else if (DescriptorID::country_availability == DescriptorTag())
     {
         SET_STRING(CountryAvailabilityDescriptor);

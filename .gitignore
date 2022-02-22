@@ -4,6 +4,8 @@
 moc_*.cpp
 moc_*.h
 *.moc
+*.diff
+*.patch
 *.so
 *.so.*
 *.orig

@@ -1,0 +1,2 @@
+# Append additional arguments
+#EXTRA_ARGS="verbose all --syslog local6"

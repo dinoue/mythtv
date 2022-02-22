@@ -11,6 +11,7 @@
 #include "mythuicomposite.h"
 #include "mythuiutils.h"
 
+class QInputMethodEvent;
 class ScreenLoadTask;
 class MythScreenStack;
 class MythUIBusyDialog;
@@ -55,6 +56,7 @@ class MUI_PUBLIC MythScreenType : public MythUIComposite
     virtual bool Create(void); // do the actual work of making the screen.
     bool keyPressEvent(QKeyEvent *event) override; // MythUIType
     bool gestureEvent(MythGestureEvent *event) override; // MythUIType
+	bool inputMethodEvent(QInputMethodEvent *event) override;// MythUIType
     virtual void ShowMenu(void);
 
     void doInit(void);

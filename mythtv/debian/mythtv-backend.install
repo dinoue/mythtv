@@ -1,0 +1,28 @@
+contrib/*			usr/share/doc/mythtv-backend/contrib
+debian/mythtv-setup.desktop	usr/share/applications
+usr/bin/mythbackend
+usr/bin/mythccextractor
+usr/bin/mythcommflag
+usr/bin/mythexternrecorder
+usr/bin/mythfilerecorder
+usr/bin/mythfilldatabase
+usr/bin/mythjobqueue
+usr/bin/mythmetadatalookup
+usr/bin/mythpreviewgen
+usr/bin/mythtv-setup
+usr/bin/mythutil
+usr/share/mythtv/backend-config
+usr/share/mythtv/CDS_scpd.xml
+usr/share/mythtv/CMGR_scpd.xml
+usr/share/mythtv/devicemaster.xml
+usr/share/mythtv/deviceslave.xml
+usr/share/mythtv/externrecorder
+usr/share/mythtv/html
+usr/share/mythtv/internetcontent
+usr/share/mythtv/internetcontent/nv_python_libs/vimeo/vimeo_data.py
+usr/share/mythtv/MFEXML_scpd.xml
+usr/share/mythtv/MSRR_scpd.xml
+usr/share/mythtv/MXML_scpd.xml
+usr/share/mythtv/mythconverg_backup.pl
+usr/share/mythtv/mythconverg_restore.pl
+usr/share/mythtv/setup.xml

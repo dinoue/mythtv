@@ -55,6 +55,8 @@ int         (*dvdinput_read)  (dvd_input_t, void *, int, int);
 #   if defined(WIN32)
 /* Only needed on MINGW at the moment */
 #    include "../msvc/contrib/dlfcn.c"
+#   else
+#    include <dlfcn.h>
 #   endif
 # endif
 

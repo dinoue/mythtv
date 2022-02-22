@@ -1,0 +1,309 @@
+Index: mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythdialogbox.cpp
+===================================================================
+--- mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e.orig/libs/libmythui/mythdialogbox.cpp
++++ mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythdialogbox.cpp
+@@ -327,6 +327,14 @@ void MythDialogBox::AddButton(const QStr
+     m_buttonList->GetVisibleCount();
+ }
+ 
++bool MythDialogBox::inputMethodEvent(QInputMethodEvent *event)
++{
++    if (GetFocusWidget()->inputMethodEvent(event))
++        return true;
++
++	return false;
++}
++
+ bool MythDialogBox::keyPressEvent(QKeyEvent *event)
+ {
+     if (GetFocusWidget()->keyPressEvent(event))
+Index: mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythdialogbox.h
+===================================================================
+--- mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e.orig/libs/libmythui/mythdialogbox.h
++++ mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythdialogbox.h
+@@ -175,6 +175,7 @@ class MUI_PUBLIC MythDialogBox : public
+     }
+ 
+     bool keyPressEvent(QKeyEvent *event) override; // MythScreenType
++	bool inputMethodEvent(QInputMethodEvent *event) override;// MythScreenType
+     bool gestureEvent(MythGestureEvent *event) override; // MythScreenType
+ 
+   public slots:
+Index: mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythmainwindow.cpp
+===================================================================
+--- mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e.orig/libs/libmythui/mythmainwindow.cpp
++++ mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythmainwindow.cpp
+@@ -20,6 +20,7 @@ using namespace std;
+ #include <QEvent>
+ #include <QKeyEvent>
+ #include <QKeySequence>
++#include <QInputMethodEvent>
+ #include <QSize>
+ #include <QWindow>
+ 
+@@ -1114,6 +1115,7 @@ void MythMainWindow::Init(bool mayReInit
+         d->m_paintwin = new MythPainterWindowQt(this, d);
+         openglwarn = QCoreApplication::applicationName() == MYTH_APPNAME_MYTHFRONTEND;
+     }
++    setAttribute(Qt::WA_InputMethodEnabled);
+ 
+     if (!d->m_paintwin)
+     {
+@@ -2136,6 +2138,37 @@ bool MythMainWindow::eventFilter(QObject
+             }
+             break;
+         }
++        case QEvent::InputMethod:
++		{
++            ResetIdleTimer();
++            QInputMethodEvent *ie = dynamic_cast<QInputMethodEvent*>(e);
++			// Q: Is It OK? 20200506 K.O
++//            if (currentWidget())
++//            {
++//                ie->accept();
++//                QWidget *current = currentWidget();
++//                if (current && current->isEnabled())
++//                    qApp->notify(current, ie);
++//
++//                break;
++//            }
++            QVector<MythScreenStack *>::Iterator it;
++            for (it = d->m_stackList.end()-1; it != d->m_stackList.begin()-1; --it)
++            {
++                MythScreenType *top = (*it)->GetTopScreen();
++                if (top)
++                {
++                    if (top->inputMethodEvent(ie))
++                        return true;
++
++                    // Note:  The following break prevents keypresses being
++                    //        sent to windows below popups
++                    if ((*it)->objectName() == "popup stack")
++                        break;
++                }
++            }
++            break;
++		}
+         case QEvent::MouseButtonPress:
+         {
+             ResetIdleTimer();
+Index: mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythscreentype.cpp
+===================================================================
+--- mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e.orig/libs/libmythui/mythscreentype.cpp
++++ mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythscreentype.cpp
+@@ -3,6 +3,7 @@
+ 
+ #include <QCoreApplication>
+ #include <QDomDocument>
++#include <QInputMethodEvent>
+ #include <QRunnable>
+ #include <utility>
+ 
+@@ -411,6 +412,14 @@ void MythScreenType::ShowMenu(void)
+     // Virtual
+ }
+ 
++bool MythScreenType::inputMethodEvent(QInputMethodEvent *event)
++{
++    if (!GetMythMainWindow()->IsExitingToMain() && m_CurrentFocusWidget &&
++        m_CurrentFocusWidget->inputMethodEvent(event))
++        return true;
++	return false;
++}
++
+ bool MythScreenType::keyPressEvent(QKeyEvent *event)
+ {
+     if (!GetMythMainWindow()->IsExitingToMain() && m_CurrentFocusWidget &&
+Index: mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythscreentype.h
+===================================================================
+--- mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e.orig/libs/libmythui/mythscreentype.h
++++ mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythscreentype.h
+@@ -11,6 +11,7 @@
+ #include "mythuicomposite.h"
+ #include "mythuiutils.h"
+ 
++class QInputMethodEvent;
+ class ScreenLoadTask;
+ class MythScreenStack;
+ class MythUIBusyDialog;
+@@ -55,6 +56,7 @@ class MUI_PUBLIC MythScreenType : public
+     virtual bool Create(void); // do the actual work of making the screen.
+     bool keyPressEvent(QKeyEvent *event) override; // MythUIType
+     bool gestureEvent(MythGestureEvent *event) override; // MythUIType
++	bool inputMethodEvent(QInputMethodEvent *event) override;// MythUIType
+     virtual void ShowMenu(void);
+ 
+     void doInit(void);
+Index: mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythuitextedit.cpp
+===================================================================
+--- mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e.orig/libs/libmythui/mythuitextedit.cpp
++++ mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythuitextedit.cpp
+@@ -7,6 +7,7 @@
+ #include <QChar>
+ #include <QKeyEvent>
+ #include <QDomDocument>
++#include <QInputMethodEvent>
+ #include <Qt>
+ 
+ // libmythbase headers
+@@ -56,6 +57,9 @@ MythUITextEdit::MythUITextEdit(MythUITyp
+     m_lastKeyPress.start();
+ 
+     m_composeKey = 0;
++
++    m_messageBak.clear();
++    m_isIMEinput = false;
+ }
+ 
+ void MythUITextEdit::Select()
+@@ -279,6 +283,19 @@ bool MythUITextEdit::InsertCharacter(con
+     return true;
+ }
+ 
++// This is used for updating IME.
++bool MythUITextEdit::UpdateTmpString(const QString &str)
++{
++	if (!m_Text)
++        return false;
++
++	if(str.isEmpty()) return false;
++	QString newmessage = m_Message;
++	newmessage.append(str);
++    SetText(newmessage, false);
++	return true;
++}
++
+ void MythUITextEdit::RemoveCharacter(int position)
+ {
+     if (m_Message.isEmpty() || position < 0 || position >= m_Message.size())
+@@ -420,8 +437,44 @@ static void LoadDeadKeys(QMap<QPair<int,
+     map[keyCombo(Qt::Key_Dead_Diaeresis,  Qt::Key_Y)] = Qt::Key_ydiaeresis;
+ }
+ 
++bool MythUITextEdit::inputMethodEvent(QInputMethodEvent *event)
++{
++    // 1st test.
++    if(m_isPassword) return false;
++
++	bool _bak = m_isIMEinput;
++    if(!m_isIMEinput && (event->commitString().isEmpty() || event->preeditString().isEmpty())) {
++        m_isIMEinput = true;
++        m_messageBak = m_Message;
++    }
++/*	printf("IME: %s->%s PREEDIT=\"%s\" COMMIT=\"%s\"\n"
++		   , (_bak) ? "ON" : "OFF"
++		   , (m_isIMEinput) ? "ON" : "OFF"
++		   , event->preeditString().toUtf8().constData()
++		   , event->commitString().toUtf8().constData());*/
++    if(!event->commitString().isEmpty() && m_isIMEinput) {
++	    m_Message = m_messageBak;
++	    m_messageBak.clear();
++	    InsertText(event->commitString());
++	    m_isIMEinput = false;
++		return true; // commited
++    } else if(m_isIMEinput && !event->preeditString().isEmpty()) {
++	    m_Message = m_messageBak;
++	    UpdateTmpString(event->preeditString());
++	    return true; // preedited
++    } else if(m_isIMEinput && _bak) { // Abort?
++        m_isIMEinput = false;
++        QString newmessage= m_messageBak;
++		m_messageBak.clear();
++		SetText(newmessage, true);
++		return true;
++	}
++    return true; // Not commited
++}
++
+ bool MythUITextEdit::keyPressEvent(QKeyEvent *event)
+ {
++	if(m_isIMEinput) return true; // Prefer IME then keyPress.
+     m_lastKeyPress.restart();
+ 
+     QStringList actions;
+Index: mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythuitextedit.h
+===================================================================
+--- mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e.orig/libs/libmythui/mythuitextedit.h
++++ mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythuitextedit.h
+@@ -9,6 +9,8 @@
+ #include "mythvirtualkeyboard.h"
+ #include "mythstorage.h"
+ 
++class QInputMethodEvent;
++
+ class MythFontProperties;
+ class MythUIStateType;
+ class MythUIImage;
+@@ -40,6 +42,7 @@ class MUI_PUBLIC MythUITextEdit : public
+     void Pulse(void) override; // MythUIType
+     bool keyPressEvent(QKeyEvent *event) override; // MythUIType
+     bool gestureEvent(MythGestureEvent *event) override; // MythUIType
++	bool inputMethodEvent(QInputMethodEvent *event) override; // MythUIType
+     void Reset(void) override; // MythUIType
+ 
+     void SetText(const QString &text, bool moveCursor = true);
+@@ -83,6 +86,7 @@ class MUI_PUBLIC MythUITextEdit : public
+     void CutTextToClipboard(void);
+     void CopyTextToClipboard(void);
+     void PasteTextFromClipboard(QClipboard::Mode mode = QClipboard::Clipboard);
++	bool UpdateTmpString(const QString &str);
+ 
+     bool m_initialized;
+ 
+@@ -105,6 +109,9 @@ class MUI_PUBLIC MythUITextEdit : public
+     MythUIText  *m_Text;
+ 
+     int m_composeKey;
++
++	bool m_isIMEinput;
++	QString m_messageBak;
+ };
+ 
+ #endif
+Index: mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythuitype.cpp
+===================================================================
+--- mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e.orig/libs/libmythui/mythuitype.cpp
++++ mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythuitype.cpp
+@@ -6,6 +6,7 @@
+ #include <QDomDocument>
+ #include <QEvent>
+ #include <QKeyEvent>
++#include <QInputMethodEvent>
+ #include <utility>
+ 
+ // XML headers
+@@ -974,6 +975,14 @@ bool MythUIType::keyPressEvent(QKeyEvent
+     return false;
+ }
+ 
++/** \brief Input Method event handler
++ *
++ *  \param event Input Method event
++ */
++bool MythUIType::inputMethodEvent(QInputMethodEvent * /*event*/)
++{
++	return false;
++}
+ 
+ void MythUIType::customEvent(QEvent *event)
+ {
+Index: mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythuitype.h
+===================================================================
+--- mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e.orig/libs/libmythui/mythuitype.h
++++ mythtv-dmo-31.0+fixes20200524.git1ca7a4b09e/libs/libmythui/mythuitype.h
+@@ -22,6 +22,7 @@ class MythFontProperties;
+ 
+ class QEvent;
+ class QKeyEvent;
++class QInputMethodEvent;
+ class MythGestureEvent;
+ class MythMediaEvent;
+ 
+@@ -141,6 +142,7 @@ class MUI_PUBLIC MythUIType : public QOb
+     // This class is not based on QWidget, so this is a new function
+     // and not an override of QWidget::keyPressEvent.
+     virtual bool keyPressEvent(QKeyEvent *event);
++	virtual bool inputMethodEvent(QInputMethodEvent *event);
+     virtual bool gestureEvent(MythGestureEvent *event);
+     virtual void mediaEvent(MythMediaEvent *event);
+ 

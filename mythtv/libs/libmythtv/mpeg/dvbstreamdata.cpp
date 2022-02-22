@@ -19,9 +19,11 @@ using namespace std;
 
 // service_id is synonymous with the MPEG program number in the PMT.
 DVBStreamData::DVBStreamData(uint desired_netid,  uint desired_tsid,
-                             int desired_program, int cardnum, bool cacheTables)
+                             int desired_program, int cardnum, bool cacheTables, DVBKind dvbkind)
     : MPEGStreamData(desired_program, cardnum, cacheTables),
-      m_desiredNetId(desired_netid), m_desiredTsId(desired_tsid)
+      m_desiredNetId(desired_netid), m_desiredTsId(desired_tsid),
+      _dvbkind(dvbkind),
+      m_dvbRealNetworkId(-1), m_dvbEitDishnetLong(false)
 {
     m_nitStatus.SetVersion(-1,0);
     m_nitoStatus.SetVersion(-1,0);
@@ -217,7 +219,7 @@ bool DVBStreamData::HandleTables(uint pid, const PSIPTable &psip)
         if ((psip.TableID() == TableID::NIT  && psip.TableIDExtension() != (uint)m_dvbRealNetworkId) ||
             (psip.TableID() == TableID::NITo && psip.TableIDExtension() == (uint)m_dvbRealNetworkId)  )
         {
-            auto *nit = new NetworkInformationTable(psip);
+            auto *nit = new NetworkInformationTable(psip, _dvbkind);
             if (!nit->Mutate())
             {
                 delete nit;
@@ -241,7 +243,7 @@ bool DVBStreamData::HandleTables(uint pid, const PSIPTable &psip)
 
             if (m_cacheTables)
             {
-                auto *nit = new NetworkInformationTable(psip);
+                auto *nit = new NetworkInformationTable(psip, _dvbkind);
                 CacheNIT(nit);
                 QMutexLocker locker(&m_listenerLock);
                 for (auto & listener : m_dvbMainListeners)
@@ -249,10 +251,12 @@ bool DVBStreamData::HandleTables(uint pid, const PSIPTable &psip)
             }
             else
             {
-                NetworkInformationTable nit(psip);
+                NetworkInformationTable nit(psip, _dvbkind);
                 QMutexLocker locker(&m_listenerLock);
                 for (auto & listener : m_dvbMainListeners)
                     listener->HandleNIT(&nit);
+//                for (size_t i = 0; i < _dvb_main_listeners.size(); i++)
+//                  _dvb_main_listeners[i]->HandleNIT(&nit);
             }
 
             return true;
@@ -265,13 +269,13 @@ bool DVBStreamData::HandleTables(uint pid, const PSIPTable &psip)
 
             if (m_cacheTables)
             {
-                auto *sdt = new ServiceDescriptionTable(psip);
+				auto *sdt = new ServiceDescriptionTable(psip, _dvbkind);
                 CacheSDT(sdt);
                 ProcessSDT(tsid, sdt);
             }
             else
             {
-                ServiceDescriptionTable sdt(psip);
+                ServiceDescriptionTable sdt(psip, _dvbkind);
                 ProcessSDT(tsid, &sdt);
             }
 
@@ -279,7 +283,7 @@ bool DVBStreamData::HandleTables(uint pid, const PSIPTable &psip)
         }
         case TableID::TDT:
         {
-            TimeDateTable tdt(psip);
+            TimeDateTable tdt(psip, _dvbkind);
 
             UpdateTimeOffset(tdt.UTCUnix());
 
@@ -293,7 +297,7 @@ bool DVBStreamData::HandleTables(uint pid, const PSIPTable &psip)
         {
             m_nitoStatus.SetSectionSeen(psip.Version(), psip.Section(),
                                         psip.LastSection());
-            NetworkInformationTable nit(psip);
+            NetworkInformationTable nit(psip, _dvbkind);
 
             QMutexLocker locker(&m_listenerLock);
             for (auto & listener : m_dvbOtherListeners)
@@ -306,14 +310,14 @@ bool DVBStreamData::HandleTables(uint pid, const PSIPTable &psip)
             uint tsid = psip.TableIDExtension();
             m_sdtoStatus.SetSectionSeen(tsid, psip.Version(), psip.Section(),
                                         psip.LastSection());
-            ServiceDescriptionTable sdt(psip);
+            ServiceDescriptionTable sdt(psip, _dvbkind);
 
             // some providers send the SDT for the current multiplex as SDTo
             // this routine changes the TableID to SDT and recalculates the CRC
             if (m_desiredNetId == sdt.OriginalNetworkID() &&
                 m_desiredTsId  == tsid)
             {
-                auto *sdta = new ServiceDescriptionTable(psip);
+				auto *sdta = new ServiceDescriptionTable(psip, _dvbkind);
                 if (!sdta->Mutate())
                 {
                     delete sdta;
@@ -379,9 +383,11 @@ bool DVBStreamData::HandleTables(uint pid, const PSIPTable &psip)
         m_eitStatus.SetSectionSeen(key, psip.Version(), psip.Section(),
                                     psip.LastSection());
 
-        DVBEventInformationTable eit(psip);
+        DVBEventInformationTable eit(psip, _dvbkind);
         for (auto & listener : m_dvbEitListeners)
             listener->HandleEIT(&eit);
+//       for (size_t i = 0; i < _dvb_eit_listeners.size(); i++)
+//            _dvb_eit_listeners[i]->HandleEIT(&eit);
 
         if (m_eitHelper)
             m_eitHelper->AddEIT(&eit);

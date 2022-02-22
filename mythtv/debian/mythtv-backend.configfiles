@@ -1,0 +1,2 @@
+/etc/cron.daily/mythtv-backend
+/etc/logrotate.d/mythtv-backend

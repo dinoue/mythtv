@@ -1,0 +1,164 @@
+#!/usr/bin/make -f
+
+ifeq (nostrip,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	DEBUG_BUILD=1
+endif
+
+ifeq (noopt,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	DEBUG_BUILD=1
+endif
+ifdef DEBUG_BUILD
+	CONFIGURE_OPTS += --compile-type=debug
+endif
+
+ifeq (ccache,$(findstring ccache,$(PATH)))
+	CONFIGURE_OPTS += --cc=/usr/lib/ccache/cc --cxx=/usr/lib/ccache/c++
+endif
+
+ifeq "$(DEB_BUILD_ARCH)" "i386"
+	CONFIGURE_OPTS += --enable-vaapi
+else
+ifeq "$(DEB_BUILD_ARCH)" "amd64"
+	CONFIGURE_OPTS += --enable-vaapi
+else
+ifeq "$(DEB_BUILD_ARCH)" "powerpc"
+        CONFIGURE_OPTS += --disable-altivec
+else
+ifeq "$(DEB_BUILD_ARCH)" "arm64"
+        EXTRAS_CXXFLAGS += -fPIC
+else
+ifeq "$(DEB_BUILD_ARCH)" "armhf"
+        CONFIGURE_OPTS += --disable-mmal
+else
+ifneq (,$(filter $(DEB_HOST_ARCH),mips mipsel mips64el))
+	CONFIGURE_OPTS += --disable-loongson2 --disable-loongson3 \
+	--disable-mips32r2 --disable-mips32r5 --disable-mips32r6 \
+	--disable-mips64r6 --disable-mipsdsp --disable-mipsdspr2 \
+	--disable-mipsfpu --disable-mmi --disable-msa
+endif
+endif
+endif
+endif
+endif
+endif
+
+# grep MYTH_BINARY_VERSION libs/libmythbase/mythversion.h
+# 31.20200101-1 as 31.0
+
+MYTH_BINARY_VERSION = $(shell grep MYTH_BINARY_VERSION libs/libmythbase/mythversion.h | cut -d'"' -f2)
+
+ifneq "$(MYTH_BINARY_VERSION)" "31.20200101-1"
+	exit 1
+endif
+
+#LIB_PKGS = $(shell sed -nr 's/^Package:[[:space:]]*(lib(myth-|mythavcodec|mythavdevice|mythavfilter|mythavformat|mythavutil|mythpostproc|mythswresample|mythswscale|mythqjson|mythzmq)[0-9]+)[[:space:]]*$$/\1/p' debian/control)
+
+%:
+	dh $@ --with linktree
+#	dh $@ --with quilt,linktree
+
+override_dh_auto_configure:
+	./configure --compile-type=release --prefix=/usr --runprefix=/usr \
+	--enable-libx264 --enable-libmp3lame --enable-libxvid --enable-libx265 \
+	--enable-libvpx --enable-nonfree --enable-pic --enable-hdhomerun \
+	--arch=$(DEB_HOST_GNU_CPU) --disable-ffprobe --disable-ffserver \
+	--libdir-name=lib/$(DEB_HOST_MULTIARCH) $(CONFIGURE_OPTS)
+
+ifeq "$(DEB_BUILD_ARCH)" "armhf"
+	perl -i -pe 's,CONFIG_THUMB 0,CONFIG_THUMB 1,' config.h
+endif
+
+ifeq "$(DEB_BUILD_ARCH)" "armel"
+	perl -i -pe 's,-DHAVE_CONFIG_H,-DHAVE_CONFIG_H -DHAVE_PTHREAD_H,' external/libudfread/Makefile
+endif
+
+#	exit 1
+
+override_dh_auto_install:
+	$(MAKE) install PREFIX=usr INSTALL_ROOT=$(CURDIR)/debian/tmp/
+
+	-rm debian/tmp/usr/local/lib/*/perl/*/auto/MythTV/.packlist
+	rm debian/tmp/usr/share/mythtv/themes/Terra/watermarks/README.license
+# Not needed
+	rm debian/tmp/usr/bin/mythwikiscripts
+
+	find debian/tmp/usr/share -type f -exec chmod 0644 {} \;
+
+# Keep executable
+	chmod +x debian/tmp/usr/share/mythtv/*.pl
+	chmod +x debian/tmp/usr/share/mythtv/metadata/Television/ttvdb.py
+	chmod +x debian/tmp/usr/share/mythtv/metadata/Movie/tmdb*.py
+	chmod +x debian/tmp/usr/share/mythtv/internetcontent/*.py
+	chmod +x debian/tmp/usr/share/mythtv/internetcontent/*.pl
+	chmod +x debian/tmp/usr/share/mythtv/metadata/Television/tmdb3tv.py
+	chmod +x debian/tmp/usr/share/mythtv/metadata/Television/tvmaze.py
+
+override_dh_install:
+	rm debian/tmp/usr/share/mythtv/fonts/README-freefont-20120503.txt
+	rm debian/tmp/usr/share/mythtv/fonts/README-purisa.txt
+	rm debian/tmp/usr/share/mythtv/fonts/README-TeX-Gyre-Chorus.txt
+
+	dh_install -X.a -XCOPYING -XLICENSE -Xusr/share/mythtv/themes/MythCenter-wide/fonts
+
+	dh_install -pmythtv-frontend debian/mythtv.desktop usr/share/applications
+	dh_install -XCOPYING -XLICENSE -pmythtv-backend debian/mythtv-setup.desktop usr/share/applications
+
+	rm -f debian/mythtv/usr/share/mythtv/setup.xml
+
+override_dh_installdocs:
+	dh_installdocs -XCOPYING README debian/README.Debian AUTHORS keys.txt FAQ UPGRADING keys.txt
+
+override_dh_strip:
+ifneq (nostrip,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	dh_strip -a
+endif
+
+override_dh_installexamples-indep:
+	dh_installexamples -pmythtv-doc contrib/*
+
+#override_dh_makeshlibs:
+#	for pkg in $(LIB_PKGS); do \
+#	  dh_makeshlibs -p$$pkg -V "$$pkg (>= $(SHLIBS_VERSION))"; \
+#	done
+
+override_dh_installinit:
+	dh_installinit -u'defaults 40 16'
+
+override_dh_compress-arch:
+	dh_compress -X.py -X.pl
+
+override_dh_fixperms-arch:
+	dh_fixperms -X.py -X.pl
+
+override_dh_clean:
+	[ ! -f config.mak ] || $(MAKE) distclean
+
+	# dh_quilt_unpatch
+
+	debconf-updatepo
+
+	dh_clean version.cpp external/FFmpeg/mythffmpeg config.log external/FFmpeg/mythffplay \
+	external/FFmpeg/libavfilter/libmpcodecs/*.o external/FFmpeg/libavfilter/libmpcodecs/*.d \
+	config.fate external/FFmpeg/libavcodec/codec_names.h external/FFmpeg/.config \
+	external/FFmpeg/mythffserver external/FFmpeg/mythffprobe TMPMAK src debian/substvars \
+	debian/libmythtv-recommends-dummy.so bindings/perl/MYMETA.json bindings/perl/MYMETA.yml \
+	bindings/perl/Makefile.perl bindings/perl/pm_to_blib external/libsamplerate/Makefile \
+	external/libmythbluray/.qmake.stash external/libmythbluray/Makefile doc/config.texi \
+	external/libmythsoundtouch/.qmake.stash external/libmythsoundtouch/Makefile external/libsamplerate/.qmake.stash \
+	external/FFmpeg/doc/config.texi external/FFmpeg/libavdevice/indev_list.c \
+	external/FFmpeg/libavdevice/outdev_list.c external/FFmpeg/libavfilter/filter_list.c
+
+#	find -name .exists | xargs -r rm
+
+override_dh_shlibdeps: debian/libmythtv-recommends-dummy.so
+	dh_shlibdeps
+
+	dpkg-shlibdeps -dRecommends -edebian/libmythtv-recommends-dummy.so -xlibc6 -O >> debian/libmyth-31.substvars
+
+debian/libmythtv-recommends-dummy.so:
+	cc -xc -shared -Wl,--no-as-needed -o $@ /dev/null \
+	-lcec \
+	$(ARCH_SPECIFIC_LIB_RECOMMENDS)
+
+#override_dh_dwz override_dh_quilt_unpatch override_dh_auto_test override_dh_auto_clean:
+override_dh_dwz override_dh_auto_test override_dh_auto_clean:

@@ -1,0 +1,4 @@
+#    Debian Pakcage							Mythtv
+replace /usr/share/fonts/truetype/freefont			/usr/share/mythtv/fonts
+replace /usr/share/fonts/truetype/tlwg				/usr/share/mythtv/fonts
+replace /usr/share/texmf/fonts/opentype/public/tex-gyre		/usr/share/mythtv/fonts
