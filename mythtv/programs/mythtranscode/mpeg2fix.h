@@ -12,10 +12,6 @@ extern "C"
 #include "libavcodec/avcodec.h"
 #include "libavformat/avformat.h"
 
-//replex
-#include "external/replex/ringbuffer.h"
-#include "external/replex/multiplex.h"
-
 //libmpeg2
 #include "config.h"
 #if CONFIG_LIBMPEG2EXTERNAL
@@ -24,6 +20,10 @@ extern "C"
 #include "mpeg2.h"
 #endif
 }
+
+//replex
+#include "external/replex/ringbuffer.h"
+#include "external/replex/multiplex.h"
 
 //Qt
 #include <QMap>
@@ -47,10 +47,10 @@ class MPEG2frame
   public:
     explicit MPEG2frame(int size);
     ~MPEG2frame();
-    void ensure_size(int size);
-    void set_pkt(AVPacket *newpkt);
+    void ensure_size(int size) const;
+    void set_pkt(AVPacket *newpkt) const;
 
-    AVPacket          m_pkt        {};
+    AVPacket         *m_pkt        {nullptr};
     bool              m_isSequence {false};
     bool              m_isGop      {false};
     uint8_t          *m_framePos   {nullptr};
@@ -83,6 +83,10 @@ class PTSOffsetQueue
 };
 
 //container for all multiplex related variables
+using RingbufferArray = std::array<ringbuffer,N_AUDIO>;
+using ExtTypeIntArray = std::array<int,N_AUDIO>;
+using AudioFrameArray = std::array<audio_frame_t,N_AUDIO>;
+
 class MPEG2replex
 {
   public:
@@ -94,16 +98,16 @@ class MPEG2replex
     QString         m_outfile;
     int             m_otype                   {0};
     ringbuffer      m_vrBuf                   {};
-    ringbuffer      m_extrbuf[N_AUDIO]        {};
+    RingbufferArray m_extrbuf                 {};
     ringbuffer      m_indexVrbuf              {};
-    ringbuffer      m_indexExtrbuf[N_AUDIO]   {};
+    RingbufferArray m_indexExtrbuf            {};
     int             m_extCount                {0};
-    int             m_exttype[N_AUDIO]        {0};
-    int             m_exttypcnt[N_AUDIO]      {0};
+    ExtTypeIntArray m_exttype                 {0};
+    ExtTypeIntArray m_exttypcnt               {0};
 
     pthread_mutex_t m_mutex                   {};
     pthread_cond_t  m_cond                    {};
-    audio_frame_t   m_extframe[N_AUDIO]       {};
+    AudioFrameArray m_extframe                {};
     sequence_t      m_seq_head                {};
 
   private:
@@ -118,14 +122,14 @@ class MPEG2fixup
 {
   public:
     MPEG2fixup(const QString &inf, const QString &outf,
-               frm_dir_map_t *deleteMap, const char *fmt, int norp,
-               int fixPTS, int maxf, bool showprog, int otype,
+               frm_dir_map_t *deleteMap, const char *fmt, bool norp,
+               bool fixPTS, int maxf, bool showprog, int otype,
                void (*update_func)(float) = nullptr, int (*check_func)() = nullptr);
     ~MPEG2fixup();
     int Start();
     void AddRangeList(const QStringList& rangelist, int type);
     static void ShowRangeMap(frm_dir_map_t *mapPtr, QString msg);
-    int BuildKeyframeIndex(QString &file, frm_pos_map_t &posMap, frm_pos_map_t &durMap);
+    int BuildKeyframeIndex(const QString &file, frm_pos_map_t &posMap, frm_pos_map_t &durMap);
 
     void SetAllAudio(bool keep) { m_allAudio = keep; }
 
@@ -170,7 +174,7 @@ class MPEG2fixup
     void AddSequence(MPEG2frame *frame1, MPEG2frame *frame2);
     static FrameList ReorderDTStoPTS(FrameList *dtsOrder, int pos);
     void InitialPTSFixup(MPEG2frame *curFrame, int64_t &origvPTS,
-                         int64_t &PTSdiscrep, int numframes, bool fix);
+                         int64_t &PTSdiscrep, int numframes, bool fix) const;
     static void SetFrameNum(uint8_t *ptr, int num);
     static int GetFrameNum(const MPEG2frame *frame)
     {
@@ -199,7 +203,7 @@ class MPEG2fixup
     {
         if (id >= m_inputFC->nb_streams)
             return nullptr;
-        return gCodecMap->getCodecContext(m_inputFC->streams[id]);
+        return m_codecMap.GetCodecContext(m_inputFC->streams[id]);
     }
     AVCodecParserContext *getCodecParserContext(uint id)
     {
@@ -229,6 +233,7 @@ class MPEG2fixup
 
     pthread_t     m_thread          {};
 
+    MythCodecMap     m_codecMap     {};
     AVFormatContext *m_inputFC      {nullptr};
     AVFrame         *m_picture      {nullptr};
 
@@ -240,8 +245,8 @@ class MPEG2fixup
 
     bool            m_discard       {false};
     //control options
-    int             m_noRepeat;
-    int             m_fixPts;
+    bool            m_noRepeat;
+    bool            m_fixPts;
     int             m_maxFrames;
     QString         m_infile;
     const char     *m_format        {nullptr};
@@ -258,15 +263,13 @@ class MPEG2fixup
     int             m_frameNum              {0};
     int             m_statusUpdateTime      {5};
     uint64_t        m_lastWrittenPos        {0};
-    uint16_t        m_invZigzagDirect16[64] {};
+    std::array<uint16_t,64> m_invZigzagDirect16 {};
     bool            m_zigzagInit            {false};
 };
 
 #ifdef NO_MYTH
     #include <QDateTime>
     #include <iostream>
-
-    using namespace std;
 
     extern int verboseMask;
     #undef LOG

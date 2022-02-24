@@ -11,8 +11,6 @@
 
 #include "config.h"
 
-using namespace std;
-
 #define LOC      QString("AOOSS: ")
 
 #include "mythcorecontext.h"
@@ -81,7 +79,7 @@ AudioOutputSettings* AudioOutputOSS::GetOutputSettings(bool /*digital*/)
 
 #if defined(AFMT_AC3)
         // Check if drivers supports AC3
-    settings->setPassthrough(((formats & AFMT_AC3) != 0) - 1);
+    settings->setPassthrough(static_cast<int>((formats & AFMT_AC3) != 0) - 1);
 #endif
 
     for (int i = 1; i <= 2; i++)
@@ -110,7 +108,7 @@ bool AudioOutputOSS::OpenDevice()
 
     VBAUDIO(QString("Opening OSS audio device '%1'.").arg(m_mainDevice));
 
-    while (timer.elapsed() < 2000 && m_audioFd == -1)
+    while (timer.elapsed() < 2s && m_audioFd == -1)
     {
         QByteArray device = m_mainDevice.toLatin1();
         m_audioFd = open(device.constData(), O_WRONLY);
@@ -126,7 +124,7 @@ bool AudioOutputOSS::OpenDevice()
                          .arg(m_mainDevice));
         }
         if (m_audioFd < 0)
-            usleep(50);
+            usleep(50us);
     }
 
     if (m_audioFd == -1)

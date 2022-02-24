@@ -1,11 +1,10 @@
 // -*- Mode: c++ -*-
 
-#ifndef _FIREWIRESIGNALMONITOR_H_
-#define _FIREWIRESIGNALMONITOR_H_
+#ifndef FIREWIRESIGNALMONITOR_H
+#define FIREWIRESIGNALMONITOR_H
 
 // C++ headers
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QMutex>
@@ -58,22 +57,22 @@ class FirewireSignalMonitor : public DTVSignalMonitor, public TSDataListener
     void AddData(const unsigned char *data, uint len) override; // TSDataListener
 
   public:
-    static const uint kPowerTimeout;
-    static const uint kBufferTimeout;
+    static constexpr std::chrono::milliseconds kPowerTimeout  { 3s };
+    static constexpr std::chrono::milliseconds kBufferTimeout { 5s };
 
   protected:
     volatile bool      m_dtvMonitorRunning           {false};
     FirewireTableMonitorThread *m_tableMonitorThread {nullptr};
-    bool               m_stb_needs_retune            {true};
-    bool               m_stb_needs_to_wait_for_pat   {false};
-    bool               m_stb_needs_to_wait_for_power {false};
-    MythTimer          m_stb_wait_for_pat_timer;
-    MythTimer          m_stb_wait_for_power_timer;
+    bool               m_stbNeedsRetune              {true};
+    bool               m_stbNeedsToWaitForPat        {false};
+    bool               m_stbNeedsToWaitForPower      {false};
+    MythTimer          m_stbWaitForPatTimer;
+    MythTimer          m_stbWaitForPowerTimer;
 
-    vector<unsigned char> m_buffer;
+    std::vector<unsigned char> m_buffer;
 
-    static QMap<void*,uint> s_pat_keys;
-    static QMutex           s_pat_keys_lock;
+    static QHash<void*,uint> s_patKeys;
+    static QMutex            s_patKeysLock;
 };
 
-#endif // _FIREWIRESIGNALMONITOR_H_
+#endif // FIREWIRESIGNALMONITOR_H

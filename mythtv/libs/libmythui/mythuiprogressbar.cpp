@@ -50,6 +50,16 @@ bool MythUIProgressBar::ParseElement(
     return true;
 }
 
+void MythUIProgressBar::Set(int start, int total, int used)
+{
+    if (used != m_current || start != m_start || total != m_total)
+    {
+        m_start = start;
+        m_total = total;
+        SetUsed(used);
+    }
+}
+
 void MythUIProgressBar::SetStart(int value)
 {
     m_start = value;
@@ -185,7 +195,7 @@ void MythUIProgressBar::CreateCopy(MythUIType *parent)
 
 void MythUIProgressBar::SetVisible(bool visible)
 {
-    if (m_firstdepend || visible != m_Visible)
+    if (m_firstdepend || visible != m_visible)
     {
         emit DependChanged(!visible);
         m_firstdepend = false;

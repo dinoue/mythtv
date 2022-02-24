@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2017 Paul Harrison <pharrison@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +28,7 @@ class SERVICE_PUBLIC Genre : public QObject
 
     Q_PROPERTY( QString Name         READ Name         WRITE setName         )
 
-    PROPERTYIMP    ( QString    , Name           );
+    PROPERTYIMP_REF( QString    , Name           );
 
     public:
 

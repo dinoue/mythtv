@@ -66,9 +66,15 @@ class MBASE_PUBLIC MythEvent : public QEvent
     const QString& ExtraData(int idx = 0) const { return m_extradata[idx]; }
     const QStringList& ExtraDataList() const { return m_extradata; }
     int ExtraDataCount() const { return m_extradata.size(); }
+    void log(const QString& prefix);
 
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     virtual MythEvent *clone() const
     { return new MythEvent(m_message, m_extradata); }
+#else
+    MythEvent *clone() const override
+    { return new MythEvent(type(), m_message, m_extradata); }
+#endif
 
     static Type MythEventMessage;
     static Type MythUserMessage;
@@ -83,6 +89,14 @@ class MBASE_PUBLIC MythEvent : public QEvent
     static Type kDisableUDPListenerEventType;
     static Type kEnableUDPListenerEventType;
 
+  // No implicit copying.
+  protected:
+    MythEvent(const MythEvent &other) = default;
+    MythEvent &operator=(const MythEvent &other) = default;
+  public:
+    MythEvent(MythEvent &&) = delete;
+    MythEvent &operator=(MythEvent &&) = delete;
+
   protected:
     QString m_message;
     QStringList m_extradata;
@@ -94,7 +108,7 @@ class MBASE_PUBLIC ExternalKeycodeEvent : public QEvent
     explicit ExternalKeycodeEvent(const int key) :
         QEvent(kEventType), m_keycode(key) {}
 
-    int getKeycode() { return m_keycode; }
+    int getKeycode() const { return m_keycode; }
 
     static Type kEventType;
 

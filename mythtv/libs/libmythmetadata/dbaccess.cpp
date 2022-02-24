@@ -38,11 +38,11 @@ class SingleValueImp
           m_valueName(std::move(value_name)), m_cleanStub(this)
     {
         m_insertSql = QString("INSERT INTO %1 (%2) VALUES (:NAME)")
-                .arg(m_tableName).arg(m_valueName);
-        m_fillSql = QString("SELECT %1, %2 FROM %3").arg(m_idName)
-                .arg(m_valueName).arg(m_tableName);
+                .arg(m_tableName, m_valueName);
+        m_fillSql = QString("SELECT %1, %2 FROM %3")
+                .arg(m_idName, m_valueName, m_tableName);
         m_deleteSql = QString("DELETE FROM %1 WHERE %2 = :ID")
-                .arg(m_tableName).arg(m_idName);
+                .arg(m_tableName, m_idName);
     }
 
     virtual ~SingleValueImp() = default;
@@ -86,7 +86,7 @@ class SingleValueImp
 
     bool get(int id, QString &value)
     {
-        entry_map::const_iterator p = m_entries.find(id);
+        auto p = m_entries.find(id);
         if (p != m_entries.end())
         {
             value = p->second;
@@ -118,7 +118,7 @@ class SingleValueImp
 
     bool exists(const QString &name, int *id = nullptr)
     {
-        entry_map::const_iterator p = find(name);
+        auto p = find(name);
         if (p != m_entries.end())
         {
             if (id)
@@ -135,11 +135,10 @@ class SingleValueImp
             m_dirty = false;
             m_retEntries.clear();
 
-            for (entry_map::const_iterator p = m_entries.begin();
-                    p != m_entries.end(); ++p)
+            for (auto & item : m_entries)
             {
-                m_retEntries.push_back(entry_list::value_type(p->first,
-                                        p->second));
+                m_retEntries.push_back(
+                    entry_list::value_type(item.first, item.second));
             }
             std::sort(m_retEntries.begin(), m_retEntries.end(),
                       call_sort<SingleValueImp, entry>(*this));
@@ -264,9 +263,9 @@ class MultiValueImp
         m_cleanStub(this)
     {
         m_insertSql = QString("INSERT INTO %1 (%2, %3) VALUES (:ID, :VALUE)")
-                .arg(m_tableName).arg(m_idName).arg(m_valueName);
-        m_fillSql = QString("SELECT %1, %2 FROM %3 ORDER BY %4").arg(m_idName)
-                .arg(m_valueName).arg(m_tableName).arg(m_idName);
+                .arg(m_tableName, m_idName, m_valueName);
+        m_fillSql = QString("SELECT %1, %2 FROM %3 ORDER BY %4")
+                .arg(m_idName, m_valueName, m_tableName, m_idName);
     }
 
     mutable QMutex m_mutex;
@@ -346,7 +345,7 @@ class MultiValueImp
                 MSqlQuery query(MSqlQuery::InitCon());
                 QString del_query = QString("DELETE FROM %1 WHERE %2 = :ID AND "
                                             "%3 = :VALUE")
-                        .arg(m_tableName).arg(m_idName).arg(m_valueName);
+                        .arg(m_tableName, m_idName, m_valueName);
                 query.prepare(del_query);
                 query.bindValue(":ID", p->first);
                 query.bindValue(":VALUE", int(*vp));
@@ -366,7 +365,7 @@ class MultiValueImp
         {
             MSqlQuery query(MSqlQuery::InitCon());
             QString del_query = QString("DELETE FROM %1 WHERE %2 = :ID")
-                    .arg(m_tableName).arg(m_idName);
+                    .arg(m_tableName, m_idName);
             query.prepare(del_query);
             query.bindValue(":ID", p->first);
             if (!query.exec() || !query.isActive())
@@ -810,7 +809,7 @@ const FileAssociations::association_list &FileAssociations::getList() const
 
 void FileAssociations::getExtensionIgnoreList(ext_ignore_list &ext_ignore) const
 {
-    return m_imp->getExtensionIgnoreList(ext_ignore);
+    m_imp->getExtensionIgnoreList(ext_ignore);
 }
 
 void FileAssociations::load_data()

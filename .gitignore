@@ -44,6 +44,7 @@ obj
 *.ipch
 .directory
 .vscode
+*.code-workspace
 .qmake.stash
 tags
 TAGS
@@ -51,4 +52,13 @@ GPATH
 GRTAGS
 GTAGS
 compile_commands.json
+qdbusxml2cpp_wrapper.sh
+uic_wrapper.sh
+*.gcov
+*.gcda
+*.gcno
+*.profraw
+*.profdata
 __pycache__
+mocinclude.opt
+build

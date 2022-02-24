@@ -57,7 +57,8 @@ class SystemEventThread : public QRunnable
 
         gCoreContext->SendMessage(
             QString("SYSTEM_EVENT_RESULT %1 SENDER %2 RESULT %3")
-                    .arg(m_event).arg(gCoreContext->GetHostName()).arg(result));
+                    .arg(m_event, gCoreContext->GetHostName(),
+                         QString::number(result)));
     }
 
   private:
@@ -112,7 +113,6 @@ void MythSystemEventHandler::SubstituteMatches(const QStringList &tokens,
     QString args;
     uint chanid = 0;
     QDateTime recstartts;
-    QString sender;
 
     QStringList::const_iterator it = tokens.begin();
     ++it;
@@ -141,9 +141,6 @@ void MythSystemEventHandler::SubstituteMatches(const QStringList &tokens,
 
             if (++it == tokens.end())
                 break;
-
-            if (token == "SENDER")
-                sender = *it;
 
             // The following string is broken up on purpose to indicate
             // what we're replacing is the token surrounded by percent signs
@@ -187,14 +184,14 @@ void MythSystemEventHandler::SubstituteMatches(const QStringList &tokens,
 
     // 1st, try loading RecordingInfo / ProgramInfo
     RecordingInfo recinfo(chanid, recstartts);
-    bool loaded = recinfo.GetChanID();
+    bool loaded = recinfo.GetChanID() != 0U;
     if (loaded)
         recinfo.SubstituteMatches(command);
     else
     {
         // 2rd Try searching for RecordingInfo
         RecordingInfo::LoadStatus status = RecordingInfo::kNoProgram;
-        RecordingInfo recinfo2(chanid, recstartts, false, 0, &status);
+        RecordingInfo recinfo2(chanid, recstartts, false, 0h, &status);
         if (status == RecordingInfo::kFoundProgram)
             recinfo2.SubstituteMatches(command);
         else
@@ -228,15 +225,16 @@ void MythSystemEventHandler::SubstituteMatches(const QStringList &tokens,
 QString MythSystemEventHandler::EventNameToSetting(const QString &name)
 {
     QString result("EventCmd");
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList parts = name.toLower().split('_', QString::SkipEmptyParts);
+#else
+    QStringList parts = name.toLower().split('_', Qt::SkipEmptyParts);
+#endif
 
-    QStringList::Iterator it = parts.begin();
-    while (it != parts.end())
+    for (const auto & part : qAsConst(parts))
     {
-        result += (*it).left(1).toUpper();
-        result += (*it).mid(1);
-
-        ++it;
+        result += part.at(0).toUpper();
+        result += part.mid(1);
     }
 
     return result;
@@ -282,7 +280,11 @@ void MythSystemEventHandler::customEvent(QEvent *e)
             (!msg.startsWith("LOCAL_SYSTEM_EVENT ")))
             return;
 
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
         QStringList tokens = msg.split(' ', QString::SkipEmptyParts);
+#else
+        QStringList tokens = msg.split(' ', Qt::SkipEmptyParts);
+#endif
 
         // Return if this event is for another host
         if ((tokens.size() >= 4) &&
@@ -339,8 +341,8 @@ void SendMythSystemRecEvent(const QString &msg, const RecordingInfo *pginfo)
             .arg(pginfo->GetChanID())
             .arg(pginfo->GetRecordingStartTime(MythDate::ISODate))
             .arg(pginfo->GetRecordingStatus())
-            .arg(CardUtil::GetVideoDevice(cardid))
-            .arg(CardUtil::GetVBIDevice(cardid)));
+            .arg(CardUtil::GetVideoDevice(cardid),
+                 CardUtil::GetVBIDevice(cardid)));
     }
     else
     {
@@ -361,7 +363,7 @@ void SendMythSystemPlayEvent(const QString &msg, const ProgramInfo *pginfo)
     {
         gCoreContext->SendSystemEvent(
             QString("%1 HOSTNAME %2 CHANID %3 STARTTIME %4")
-                    .arg(msg).arg(gCoreContext->GetHostName())
+                    .arg(msg, gCoreContext->GetHostName())
                     .arg(pginfo->GetChanID())
                     .arg(pginfo->GetRecordingStartTime(MythDate::ISODate)));
     }

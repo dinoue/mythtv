@@ -3,7 +3,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QRegExp>
+#include <QRegularExpression>
 
 #include "mythcorecontext.h"
 #include "mythmiscutil.h"
@@ -21,7 +21,9 @@
 #include "programinfo.h" // for format_season_and_episode
 #include "mythsorthelper.h"
 
-using namespace std;
+#if QT_VERSION < QT_VERSION_CHECK(5,15,2)
+#define capturedView capturedRef
+#endif
 
 class VideoMetadataImp
 {
@@ -36,12 +38,12 @@ class VideoMetadataImp
              QString coverfile, QString screenshot, QString banner,
              QString fanart, const QString &title, QString sortTitle,
              const QString &subtitle, QString sortSubtitle,
-             QString tagline, int year, const QDate &releasedate,
+             QString tagline, int year, const QDate releasedate,
              QString inetref, int collectionref, QString homepage,
              QString director, QString studio,
              QString plot, float userrating,
              QString rating, int length, int playcount,
-             int season, int episode, const QDate &insertdate,
+             int season, int episode, const QDate insertdate,
              int id, ParentalLevel::Level showlevel, int categoryID,
              int childID, bool browse, bool watched,
              QString playcommand, QString category,
@@ -277,8 +279,8 @@ class VideoMetadataImp
     QDate getReleaseDate() const { return m_releasedate; }
     void SetReleaseDate(QDate releasedate) { m_releasedate = releasedate; }
 
-    int GetLength() const { return m_length; }
-    void SetLength(int length) { m_length = length; }
+    std::chrono::minutes GetLength() const { return m_length; }
+    void SetLength(std::chrono::minutes length) { m_length = length; }
 
     unsigned int GetPlayCount() const { return m_playcount; }
     void SetPlayCount(int playcount) { m_playcount = playcount; }
@@ -329,6 +331,7 @@ class VideoMetadataImp
     bool IsHostSet() const;
 
     void GetImageMap(InfoMap &imageMap) const;
+    QString GetImage(const QString &name) const;
 
   private:
     void fillCountries();
@@ -373,7 +376,7 @@ class VideoMetadataImp
     int                  m_childID       {-1};
     int                  m_year          {VIDEO_YEAR_DEFAULT};
     QDate                m_releasedate;
-    int                  m_length        {0};
+    std::chrono::minutes m_length        {0min};
     int                  m_playcount     {0};
     int                  m_season        {0};
     int                  m_episode       {0};
@@ -418,7 +421,7 @@ bool VideoMetadataImp::removeDir(const QString &dirName)
         return d.rmdir(dirName);
     }
 
-    foreach (auto & entry, contents)
+    for (const auto& entry : qAsConst(contents))
     {
         if (entry.isDir())
         {
@@ -559,11 +562,11 @@ void VideoMetadataImp::fromDBRow(MSqlQuery &query)
     m_year = query.value(5).toInt();
     m_releasedate = query.value(6).toDate();
     m_userrating = (float)query.value(7).toDouble();
-    if (isnan(m_userrating) || m_userrating < 0)
+    if (std::isnan(m_userrating) || m_userrating < 0)
         m_userrating = 0.0;
     if (m_userrating > 10.0F)
         m_userrating = 10.0F;
-    m_length = query.value(8).toInt();
+    m_length = std::chrono::minutes(query.value(8).toInt());
     m_playcount = query.value(9).toInt();
     m_filename = query.value(10).toString();
     m_hash = query.value(11).toString();
@@ -641,7 +644,7 @@ void VideoMetadataImp::saveToDatabase()
         m_trailer = VIDEO_TRAILER_DEFAULT;
     if (m_inetref.isEmpty())
         m_inetref = VIDEO_INETREF_DEFAULT;
-    if (isnan(m_userrating))
+    if (std::isnan(m_userrating))
         m_userrating = 0.0;
     if (m_userrating < -10.0F || m_userrating > 10.0F)
         m_userrating = 0.0;
@@ -695,31 +698,31 @@ void VideoMetadataImp::saveToDatabase()
         query.bindValue(":INTID", m_id);
     }
 
-    query.bindValue(":TITLE", m_title.isNull() ? "" : m_title);
-    query.bindValue(":SUBTITLE", m_subtitle.isNull() ? "" : m_subtitle);
+    query.bindValueNoNull(":TITLE", m_title);
+    query.bindValueNoNull(":SUBTITLE", m_subtitle);
     query.bindValue(":TAGLINE", m_tagline);
-    query.bindValue(":DIRECTOR", m_director.isNull() ? "" : m_director);
+    query.bindValueNoNull(":DIRECTOR", m_director);
     query.bindValue(":STUDIO", m_studio);
     query.bindValue(":PLOT", m_plot);
-    query.bindValue(":RATING", m_rating.isNull() ? "" : m_rating);
+    query.bindValueNoNull(":RATING", m_rating);
     query.bindValue(":YEAR", m_year);
     query.bindValue(":RELEASEDATE", m_releasedate);
     query.bindValue(":USERRATING", m_userrating);
-    query.bindValue(":LENGTH", m_length);
+    query.bindValue(":LENGTH", static_cast<qint64>(m_length.count()));
     query.bindValue(":PLAYCOUNT", m_playcount);
     query.bindValue(":SEASON", m_season);
     query.bindValue(":EPISODE", m_episode);
     query.bindValue(":FILENAME", m_filename);
     query.bindValue(":HASH", m_hash);
-    query.bindValue(":TRAILER", m_trailer.isNull() ? "" : m_trailer);
+    query.bindValueNoNull(":TRAILER", m_trailer);
     query.bindValue(":SHOWLEVEL", m_showlevel);
-    query.bindValue(":COVERFILE", m_coverfile.isNull() ? "" : m_coverfile);
-    query.bindValue(":SCREENSHOT", m_screenshot.isNull() ? "" : m_screenshot);
-    query.bindValue(":BANNER", m_banner.isNull() ? "" : m_banner);
-    query.bindValue(":FANART", m_fanart.isNull() ? "" : m_fanart);
-    query.bindValue(":INETREF", m_inetref.isNull() ? "" : m_inetref);
+    query.bindValueNoNull(":COVERFILE", m_coverfile);
+    query.bindValueNoNull(":SCREENSHOT", m_screenshot);
+    query.bindValueNoNull(":BANNER", m_banner);
+    query.bindValueNoNull(":FANART", m_fanart);
+    query.bindValueNoNull(":INETREF", m_inetref);
     query.bindValue(":COLLECTION", m_collectionref);
-    query.bindValue(":HOMEPAGE", m_homepage.isNull() ? "" : m_homepage);
+    query.bindValueNoNull(":HOMEPAGE", m_homepage);
     query.bindValue(":BROWSE", m_browse);
     query.bindValue(":WATCHED", m_watched);
     query.bindValue(":HOST", m_host);
@@ -886,11 +889,11 @@ void VideoMetadataImp::GetImageMap(InfoMap &imageMap) const
 {
     QString coverfile;
     if (IsHostSet()
-        && !GetCoverFile().startsWith("/")
+        && !GetCoverFile().startsWith(u'/')
         && !GetCoverFile().isEmpty()
         && !IsDefaultCoverFile(GetCoverFile()))
     {
-        coverfile = generate_file_url("Coverart", GetHost(),
+        coverfile = generate_file_url(QStringLiteral(u"Coverart"), GetHost(),
                                       GetCoverFile());
     }
     else
@@ -898,14 +901,14 @@ void VideoMetadataImp::GetImageMap(InfoMap &imageMap) const
         coverfile = GetCoverFile();
     }
 
-    imageMap["coverfile"] = coverfile;
-    imageMap["coverart"] = coverfile;
+    imageMap[QStringLiteral(u"coverfile")] = coverfile;
+    imageMap[QStringLiteral(u"coverart")] = coverfile;
 
     QString screenshotfile;
-    if (IsHostSet() && !GetScreenshot().startsWith("/")
+    if (IsHostSet() && !GetScreenshot().startsWith(u'/')
         && !GetScreenshot().isEmpty())
     {
-        screenshotfile = generate_file_url("Screenshots",
+        screenshotfile = generate_file_url(QStringLiteral(u"Screenshots"),
                                            GetHost(), GetScreenshot());
     }
     else
@@ -913,14 +916,14 @@ void VideoMetadataImp::GetImageMap(InfoMap &imageMap) const
         screenshotfile = GetScreenshot();
     }
 
-    imageMap["screenshotfile"] = screenshotfile;
-    imageMap["screenshot"] = screenshotfile;
+    imageMap[QStringLiteral(u"screenshotfile")] = screenshotfile;
+    imageMap[QStringLiteral(u"screenshot")] = screenshotfile;
 
     QString bannerfile;
-    if (IsHostSet() && !GetBanner().startsWith("/")
+    if (IsHostSet() && !GetBanner().startsWith(u'/')
         && !GetBanner().isEmpty())
     {
-        bannerfile = generate_file_url("Banners", GetHost(),
+        bannerfile = generate_file_url(QStringLiteral(u"Banners"), GetHost(),
                                        GetBanner());
     }
     else
@@ -928,14 +931,14 @@ void VideoMetadataImp::GetImageMap(InfoMap &imageMap) const
         bannerfile = GetBanner();
     }
 
-    imageMap["bannerfile"] = bannerfile;
-    imageMap["banner"] = bannerfile;
+    imageMap[QStringLiteral(u"bannerfile")] = bannerfile;
+    imageMap[QStringLiteral(u"banner")] = bannerfile;
 
     QString fanartfile;
-    if (IsHostSet() && !GetFanart().startsWith("/")
+    if (IsHostSet() && !GetFanart().startsWith('/')
         && !GetFanart().isEmpty())
     {
-        fanartfile = generate_file_url("Fanart", GetHost(),
+        fanartfile = generate_file_url(QStringLiteral(u"Fanart"), GetHost(),
                                        GetFanart());
     }
     else
@@ -943,13 +946,78 @@ void VideoMetadataImp::GetImageMap(InfoMap &imageMap) const
         fanartfile = GetFanart();
     }
 
-    imageMap["fanartfile"] = fanartfile;
-    imageMap["fanart"] = fanartfile;
+    imageMap[QStringLiteral(u"fanartfile")] = fanartfile;
+    imageMap[QStringLiteral(u"fanart")] = fanartfile;
 
     QString smartimage = coverfile;
     if (!screenshotfile.isEmpty () && (GetSeason() > 0 || GetEpisode() > 0))
         smartimage = screenshotfile;
-    imageMap["smartimage"] = smartimage;
+    imageMap[QStringLiteral(u"smartimage")] = smartimage;
+}
+
+// This should be the equivalent of GetImageMap, only the image names
+// are computed one at a time as needed.
+QString VideoMetadataImp::GetImage(const QString& name) const
+{
+    if ((name == QStringLiteral(u"coverfile")) ||
+        (name == QStringLiteral(u"coverart")))
+    {
+        QString coverfile = GetCoverFile();
+        if (IsHostSet()
+            && !coverfile.startsWith(u'/')
+            && !coverfile.isEmpty()
+            && !IsDefaultCoverFile(coverfile))
+            return generate_file_url(QStringLiteral(u"Coverart"), GetHost(),
+                                     coverfile);
+        return coverfile;
+    }
+
+    if ((name == QStringLiteral(u"screenshotfile")) ||
+        (name == QStringLiteral(u"screenshot")))
+    {
+        QString screenshot = GetScreenshot();
+        if (IsHostSet() && !screenshot.startsWith(u'/')
+            && !screenshot.isEmpty())
+            return generate_file_url(QStringLiteral(u"Screenshots"),
+                                     GetHost(), screenshot);
+        return screenshot;
+    }
+
+    if ((name == QStringLiteral(u"bannerfile")) ||
+        (name == QStringLiteral(u"banner")))
+    {
+        QString bannerfile = GetBanner();
+        if (IsHostSet() && !bannerfile.startsWith(u'/')
+            && !bannerfile.isEmpty())
+            return generate_file_url(QStringLiteral(u"Banners"), GetHost(),
+                                     bannerfile);
+        return bannerfile;
+    }
+
+    if ((name == QStringLiteral(u"fanartfile")) ||
+        (name == QStringLiteral(u"fanart")))
+    {
+        QString fanartfile = GetFanart();
+        if (IsHostSet() && !fanartfile.startsWith('/')
+            && !fanartfile.isEmpty())
+            return generate_file_url(QStringLiteral(u"Fanart"), GetHost(),
+                                     fanartfile);
+        return fanartfile;
+    }
+
+    if ((name == QStringLiteral(u"smartimage")) ||
+        (name == QStringLiteral(u"buttonimage")))
+    {
+        if (GetSeason() > 0 || GetEpisode() > 0)
+        {
+            QString screenshotfile = GetImage("screenshot");
+            if (!screenshotfile.isEmpty())
+                return screenshotfile;
+        }
+        return GetImage("coverart");
+    }
+
+    return QString();
 }
 
 ////////////////////////////////////////
@@ -1075,9 +1143,9 @@ QString VideoMetadata::FilenameToMeta(const QString &file_name, int position)
     //          3 returns episode, 4 returns subtitle
 
     QString cleanFilename = file_name.left(file_name.lastIndexOf('.'));
-    cleanFilename.replace(QRegExp("%20"), " ");
-    cleanFilename.replace(QRegExp("_"), " ");
-    cleanFilename.replace(QRegExp("\\."), " ");
+    cleanFilename.replace(QRegularExpression("%20"), " ");
+    cleanFilename.replace(QRegularExpression("_"), " ");
+    cleanFilename.replace(QRegularExpression("\\."), " ");
 
     /*: Word(s) which should be recognized as "season" when parsing a video
      * file name. To list more than one word, separate them with a '|'.
@@ -1103,40 +1171,36 @@ QString VideoMetadata::FilenameToMeta(const QString &file_name, int position)
                   "(\\d{1,3})" // Episode
                   "%1" // optional separator
                   "(.*)$" // Subtitle
-                  ).arg(separator)
-                   .arg(season_translation).arg(episode_translation);
-    QRegExp filename_parse(regexp,
-                  Qt::CaseInsensitive, QRegExp::RegExp2);
+                  ).arg(separator, season_translation, episode_translation);
+    static const QRegularExpression filename_parse { regexp,
+        QRegularExpression::CaseInsensitiveOption|QRegularExpression::UseUnicodePropertiesOption };
 
     // Cleanup Regexp
     QString regexp2 = QString("(%1(?:(?:Season|%2)%1\\d*%1)*%1)$")
-                             .arg(separator).arg(season_translation);
-    QRegExp title_parse(regexp2, Qt::CaseInsensitive, QRegExp::RegExp2);
+                             .arg(separator, season_translation);
+    static const QRegularExpression title_parse {regexp2,
+        QRegularExpression::CaseInsensitiveOption|QRegularExpression::UseUnicodePropertiesOption };
 
-    int pos = filename_parse.indexIn(cleanFilename);
-    if (pos > -1)
+    auto match = filename_parse.match(cleanFilename);
+    if (match.hasMatch())
     {
-        QString title = filename_parse.cap(1);
-        QString season = filename_parse.cap(2);
-        QString episode = filename_parse.cap(3);
-        QString subtitle = filename_parse.cap(4);
-
-        // Clean up the title
-        int pos2 = title_parse.indexIn(title);
-        if (pos2 > -1)
-            title = title.left(pos2);
-        title = title.right(title.length() -
-                     title.lastIndexOf('/') -1);
-
         // Return requested value
-        if (position == 1 && !title.isEmpty())
+        if (position == 1 && !match.capturedView(1).isEmpty())
+        {
+            // Clean up the title
+            QString title = match.captured(1);
+            match = title_parse.match(title);
+            if (match.hasMatch())
+                title = title.left(match.capturedStart());
+            title = title.right(title.length() - title.lastIndexOf('/') -1);
             return title.trimmed();
+        }
         if (position == 2)
-            return season.trimmed();
+            return match.captured(2).trimmed();
         if (position == 3)
-            return episode.trimmed();
+            return match.captured(3).trimmed();
         if (position == 4)
-            return subtitle.trimmed();
+            return match.captured(4).trimmed();
     }
     else if (position == 1)
     {
@@ -1162,10 +1226,10 @@ VideoMetadata::VideoMetadata(const QString &filename, const QString &sortFilenam
              const QString &screenshot, const QString &banner, const QString &fanart,
              const QString &title, const QString &sortTitle,
              const QString &subtitle, const QString &sortSubtitle, const QString &tagline,
-             int year, const QDate &releasedate, const QString &inetref, int collectionref,
+             int year, const QDate releasedate, const QString &inetref, int collectionref,
              const QString &homepage, const QString &director, const QString &studio,
              const QString &plot, float userrating, const QString &rating,
-             int length, int playcount, int season, int episode, const QDate &insertdate,
+             int length, int playcount, int season, int episode, const QDate insertdate,
              int id, ParentalLevel::Level showlevel, int categoryID,
              int childID, bool browse, bool watched,
              const QString &playcommand, const QString &category,
@@ -1213,73 +1277,182 @@ void VideoMetadata::toMap(InfoMap &metadataMap)
 {
     GetImageMap(metadataMap);
 
-    metadataMap["filename"] = GetFilename();
-    metadataMap["sortfilename"] = GetSortFilename();
-    metadataMap["title"] = GetTitle();
-    metadataMap["sorttitle"] = GetSortTitle();
-    metadataMap["subtitle"] = GetSubtitle();
-    metadataMap["sortsubtitle"] = GetSortSubtitle();
-    metadataMap["tagline"] = GetTagline();
-    metadataMap["director"] = GetDirector();
-    metadataMap["studio"] = GetStudio();
-    metadataMap["description0"] = metadataMap["description"] = GetPlot();
-    metadataMap["genres"] = GetDisplayGenres(*this);
-    metadataMap["countries"] = GetDisplayCountries(*this);
-    metadataMap["cast"] = GetDisplayCast(*this).join(", ");
-    metadataMap["rating"] = GetDisplayRating(GetRating());
-    metadataMap["length"] = GetDisplayLength(GetLength());
-    metadataMap["playcount"] = QString::number(GetPlayCount());
-    metadataMap["year"] = GetDisplayYear(GetYear());
+    metadataMap[QStringLiteral(u"filename")] = GetFilename();
+    metadataMap[QStringLiteral(u"sortfilename")] = GetSortFilename();
+    metadataMap[QStringLiteral(u"title")] = GetTitle();
+    metadataMap[QStringLiteral(u"sorttitle")] = GetSortTitle();
+    metadataMap[QStringLiteral(u"subtitle")] = GetSubtitle();
+    metadataMap[QStringLiteral(u"sortsubtitle")] = GetSortSubtitle();
+    metadataMap[QStringLiteral(u"tagline")] = GetTagline();
+    metadataMap[QStringLiteral(u"director")] = GetDirector();
+    metadataMap[QStringLiteral(u"studio")] = GetStudio();
+    metadataMap[QStringLiteral(u"description0")] = metadataMap[QStringLiteral(u"description")] = GetPlot();
+    metadataMap[QStringLiteral(u"genres")] = GetDisplayGenres(*this);
+    metadataMap[QStringLiteral(u"countries")] = GetDisplayCountries(*this);
+    metadataMap[QStringLiteral(u"cast")] = GetDisplayCast(*this).join(", ");
+    metadataMap[QStringLiteral(u"rating")] = GetDisplayRating(GetRating());
+    metadataMap[QStringLiteral(u"length")] = GetDisplayLength(GetLength());
+    metadataMap[QStringLiteral(u"playcount")] = QString::number(GetPlayCount());
+    metadataMap[QStringLiteral(u"year")] = GetDisplayYear(GetYear());
 
-    metadataMap["releasedate"] = MythDate::toString(
+    metadataMap[QStringLiteral(u"releasedate")] = MythDate::toString(
         GetReleaseDate(), MythDate::kDateFull | MythDate::kAddYear);
 
-    metadataMap["userrating"] = GetDisplayUserRating(GetUserRating());
+    metadataMap[QStringLiteral(u"userrating")] = GetDisplayUserRating(GetUserRating());
 
     if (GetSeason() > 0 || GetEpisode() > 0)
     {
-        metadataMap["season"] = format_season_and_episode(GetSeason(), 1);
-        metadataMap["episode"] = format_season_and_episode(GetEpisode(), 1);
-        metadataMap["s##e##"] = metadataMap["s00e00"] = QString("s%1e%2")
-            .arg(format_season_and_episode(GetSeason(), 2))
-            .arg(format_season_and_episode(GetEpisode(), 2));
-        metadataMap["##x##"] = metadataMap["00x00"] = QString("%1x%2")
-            .arg(format_season_and_episode(GetSeason(), 1))
-            .arg(format_season_and_episode(GetEpisode(), 2));
+        metadataMap[QStringLiteral(u"season")] = format_season_and_episode(GetSeason(), 1);
+        metadataMap[QStringLiteral(u"episode")] = format_season_and_episode(GetEpisode(), 1);
+        QString usingSE = QStringLiteral(u"s%1e%2")
+            .arg(format_season_and_episode(GetSeason(), 2),
+                 format_season_and_episode(GetEpisode(), 2));
+        metadataMap[QStringLiteral(u"s##e##")] = metadataMap[QStringLiteral(u"s00e00")] = usingSE;
+        QString usingX = QStringLiteral(u"%1x%2")
+            .arg(format_season_and_episode(GetSeason(), 1),
+                 format_season_and_episode(GetEpisode(), 2));
+        metadataMap[QStringLiteral(u"##x##")] = metadataMap[QStringLiteral(u"00x00")] = usingX;
     }
     else
     {
-        metadataMap["s##e##"] = metadataMap["##x##"] = QString();
-        metadataMap["s00e00"] = metadataMap["00x00"] = QString();
-        metadataMap["season"] = metadataMap["episode"] = QString();
+        metadataMap[QStringLiteral(u"s##e##")] = metadataMap[QStringLiteral(u"##x##")] = QString();
+        metadataMap[QStringLiteral(u"s00e00")] = metadataMap[QStringLiteral(u"00x00")] = QString();
+        metadataMap[QStringLiteral(u"season")] = metadataMap[QStringLiteral(u"episode")] = QString();
     }
 
     GetStateMap(metadataMap);
 
-    metadataMap["insertdate"] = MythDate::toString(
+    metadataMap[QStringLiteral(u"insertdate")] = MythDate::toString(
         GetInsertdate(), MythDate::kDateFull | MythDate::kAddYear);
-    metadataMap["inetref"] = GetInetRef();
-    metadataMap["homepage"] = GetHomepage();
-    metadataMap["child_id"] = QString::number(GetChildID());
-    metadataMap["browseable"] = GetDisplayBrowse(GetBrowse());
-    metadataMap["watched"] = GetDisplayWatched(GetWatched());
-    metadataMap["processed"] = GetDisplayProcessed(GetProcessed());
-    metadataMap["category"] = GetCategory();
+    metadataMap[QStringLiteral(u"inetref")] = GetInetRef();
+    metadataMap[QStringLiteral(u"homepage")] = GetHomepage();
+    metadataMap[QStringLiteral(u"child_id")] = QString::number(GetChildID());
+    metadataMap[QStringLiteral(u"browseable")] = GetDisplayBrowse(GetBrowse());
+    metadataMap[QStringLiteral(u"watched")] = GetDisplayWatched(GetWatched());
+    metadataMap[QStringLiteral(u"processed")] = GetDisplayProcessed(GetProcessed());
+    metadataMap[QStringLiteral(u"category")] = GetCategory();
 }
 
-
-void VideoMetadata::GetStateMap(InfoMap &stateMap)
+// This should be the equivalent of toMap, only the text strings
+// are computed one at a time as needed.
+QString VideoMetadata::GetText(const QString& name) const
 {
-    stateMap["trailerstate"] = TrailerToState(GetTrailer());
-    stateMap["userratingstate"] =
+    if (name == QStringLiteral(u"filename"))
+        return GetFilename();
+    if (name == QStringLiteral(u"sortfilename"))
+        return GetSortFilename();
+    if (name == QStringLiteral(u"title"))
+        return GetTitle();
+    if (name == QStringLiteral(u"sorttitle"))
+        return GetSortTitle();
+    if (name == QStringLiteral(u"subtitle"))
+        return GetSubtitle();
+    if (name == QStringLiteral(u"sortsubtitle"))
+        return GetSortSubtitle();
+    if (name == QStringLiteral(u"tagline"))
+        return GetTagline();
+    if (name == QStringLiteral(u"director"))
+        return GetDirector();
+    if (name == QStringLiteral(u"studio"))
+        return GetStudio();
+    if ((name == QStringLiteral(u"description")) ||
+        (name == QStringLiteral(u"description0")))
+        return GetPlot();
+    if (name == QStringLiteral(u"genres"))
+        return GetDisplayGenres(*this);
+    if (name == QStringLiteral(u"countries"))
+        return GetDisplayCountries(*this);
+    if (name == QStringLiteral(u"cast"))
+        return GetDisplayCast(*this).join(", ");
+    if (name == QStringLiteral(u"rating"))
+        return GetDisplayRating(GetRating());
+    if (name == QStringLiteral(u"length"))
+        return GetDisplayLength(GetLength());
+    if (name == QStringLiteral(u"playcount"))
+        return QString::number(GetPlayCount());
+    if (name == QStringLiteral(u"year"))
+        return GetDisplayYear(GetYear());
+
+    if (name == QStringLiteral(u"releasedate"))
+        return MythDate::toString(GetReleaseDate(), MythDate::kDateFull | MythDate::kAddYear);
+
+    if (name == QStringLiteral(u"userrating"))
+        return GetDisplayUserRating(GetUserRating());
+
+    if (GetSeason() > 0 || GetEpisode() > 0)
+    {
+        if (name == QStringLiteral(u"season"))
+            return format_season_and_episode(GetSeason(), 1);
+        if (name == QStringLiteral(u"episode"))
+            return format_season_and_episode(GetEpisode(), 1);
+        if ((name == QStringLiteral(u"s##e##")) ||
+            (name == QStringLiteral(u"s00e00")))
+        {
+            return QStringLiteral(u"s%1e%2")
+                .arg(format_season_and_episode(GetSeason(), 2),
+                     format_season_and_episode(GetEpisode(), 2));
+        }
+        if ((name == QStringLiteral(u"##x##")) ||
+            (name == QStringLiteral(u"00x00")))
+        {
+            return QStringLiteral(u"%1x%2")
+                .arg(format_season_and_episode(GetSeason(), 1),
+                     format_season_and_episode(GetEpisode(), 2));
+        }
+    }
+
+    if (name == QStringLiteral(u"insertdate"))
+        return MythDate::toString(
+            GetInsertdate(), MythDate::kDateFull | MythDate::kAddYear);
+    if (name == QStringLiteral(u"inetref"))
+        return GetInetRef();
+    if (name == QStringLiteral(u"homepage"))
+        return GetHomepage();
+    if (name == QStringLiteral(u"child_id"))
+        return QString::number(GetChildID());
+    if (name == QStringLiteral(u"browseable"))
+        return GetDisplayBrowse(GetBrowse());
+    if (name == QStringLiteral(u"watched"))
+        return GetDisplayWatched(GetWatched());
+    if (name == QStringLiteral(u"processed"))
+        return GetDisplayProcessed(GetProcessed());
+    if (name == QStringLiteral(u"category"))
+        return GetCategory();
+    return QString();
+}
+
+void VideoMetadata::GetStateMap(InfoMap &stateMap) const
+{
+    stateMap[QStringLiteral(u"trailerstate")] = TrailerToState(GetTrailer());
+    stateMap[QStringLiteral(u"userratingstate")] =
             QString::number((int)(GetUserRating()));
-    stateMap["watchedstate"] = WatchedToState(GetWatched());
-    stateMap["videolevel"] = ParentalLevelToState(GetShowLevel());
+    stateMap[QStringLiteral(u"watchedstate")] = WatchedToState(GetWatched());
+    stateMap[QStringLiteral(u"videolevel")] = ParentalLevelToState(GetShowLevel());
+}
+
+// This should be the equivalent of GetStateMap, only the state strings
+// are computed one at a time as needed.
+QString VideoMetadata::GetState(const QString& name) const
+{
+    if (name == QStringLiteral(u"trailerstate"))
+        return TrailerToState(GetTrailer());
+    if (name == QStringLiteral(u"userratingstate"))
+        return QString::number((int)(GetUserRating()));
+    if (name == QStringLiteral(u"watchedstate"))
+        return WatchedToState(GetWatched());
+    if (name == QStringLiteral(u"videolevel"))
+        return ParentalLevelToState(GetShowLevel());
+    return QString();
 }
 
 void VideoMetadata::GetImageMap(InfoMap &imageMap)
 {
     m_imp->GetImageMap(imageMap);
+}
+
+QString VideoMetadata::GetImage(const QString& name) const
+{
+    return m_imp->GetImage(name);
 }
 
 void ClearMap(InfoMap &metadataMap)
@@ -1324,6 +1497,36 @@ void ClearMap(InfoMap &metadataMap)
     metadataMap["watched"] = "";
     metadataMap["category"] = "";
     metadataMap["processed"] = "";
+}
+
+QString VideoMetadata::MetadataGetTextCb(const QString& name, void *data)
+{
+    if (data == nullptr)
+        return QString();
+    auto *metadata = static_cast<VideoMetadata *>(data);
+    QString result = metadata->GetText(name);
+    if (!result.isEmpty())
+        return result;
+    result = metadata->GetImage(name);
+    if (!result.isEmpty())
+        return result;
+    return metadata->GetState(name);
+}
+
+QString VideoMetadata::MetadataGetImageCb(const QString& name, void *data)
+{
+    if (data == nullptr)
+        return QString();
+    auto *metadata = static_cast<VideoMetadata *>(data);
+    return metadata->GetImage(name);
+}
+
+QString VideoMetadata::MetadataGetStateCb(const QString& name, void *data)
+{
+    if (data == nullptr)
+        return QString();
+    auto *metadata = static_cast<VideoMetadata *>(data);
+    return metadata->GetState(name);
 }
 
 const QString &VideoMetadata::GetPrefix() const
@@ -1476,12 +1679,12 @@ void VideoMetadata::SetRating(const QString &rating)
     m_imp->SetRating(rating);
 }
 
-int VideoMetadata::GetLength() const
+std::chrono::minutes VideoMetadata::GetLength() const
 {
     return m_imp->GetLength();
 }
 
-void VideoMetadata::SetLength(int length)
+void VideoMetadata::SetLength(std::chrono::minutes length)
 {
     m_imp->SetLength(length);
 }
@@ -1623,7 +1826,7 @@ const QString &VideoMetadata::GetHash() const
 
 void VideoMetadata::SetHash(const QString &hash)
 {
-    return m_imp->SetHash(hash);
+    m_imp->SetHash(hash);
 }
 
 const QString &VideoMetadata::GetHost() const

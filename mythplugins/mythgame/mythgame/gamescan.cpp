@@ -40,6 +40,8 @@ void GameScannerThread::run(void)
     verifyFiles();
     updateDB();
 
+    LOG(VB_GENERAL, LOG_INFO, QString("Finished Game Scan."));
+
     RunEpilog();
 }
 
@@ -64,10 +66,9 @@ void GameScannerThread::verifyFiles()
                           GameScanner::tr("Verifying game files..."));
 
     // For every file we know about, check to see if it still exists.
-    foreach (auto info, m_dbgames)
+    for (const auto *info : qAsConst(m_dbgames))
     {
         QString romfile = info->Romname();
-        QString system = info->System();
         QString gametype = info->GameType();
         if (!romfile.isEmpty())
         {
@@ -104,7 +105,7 @@ void GameScannerThread::updateDB()
         SendProgressEvent(counter, (uint)(m_files.size() + m_remove.size()),
                           GameScanner::tr("Updating game database..."));
 
-    foreach (auto & file, m_files)
+    for (const auto & file : qAsConst(m_files))
     {
         if (!file.indb)
         {
@@ -119,7 +120,7 @@ void GameScannerThread::updateDB()
             SendProgressEvent(++counter);
     }
 
-    foreach (const uint & p, m_remove)
+    for (const uint & p : qAsConst(m_remove))
     {
         removeOrphan(p);
         m_dbDataChanged = true;
@@ -137,13 +138,12 @@ bool GameScannerThread::buildFileList()
         SendProgressEvent(counter, (uint)m_handlers.size(),
                           GameScanner::tr("Searching for games..."));
 
-    for (QList<GameHandler*>::const_iterator iter = m_handlers.begin();
-         iter != m_handlers.end(); ++iter)
+    for (auto * handler : qAsConst(m_handlers))
     {
-        QDir dir((*iter)->SystemRomPath());
-        QStringList extensions = (*iter)->ValidExtensions();
+        QDir dir(handler->SystemRomPath());
+        QStringList extensions = handler->ValidExtensions();
         QStringList filters;
-        foreach (auto & ext, extensions)
+        for (const auto & ext : qAsConst(extensions))
         {
             filters.append(QString("*.%1").arg(ext));
         }
@@ -152,13 +152,13 @@ bool GameScannerThread::buildFileList()
         dir.setFilter(QDir::Files | QDir::Readable | QDir::NoDotAndDotDot);
 
         QStringList files = dir.entryList();
-        foreach (auto & file, files)
+        for (const auto & file : qAsConst(files))
         {
             RomFileInfo info;
-            info.system = (*iter)->SystemName();
-            info.gametype = (*iter)->GameType();
+            info.system = handler->SystemName();
+            info.gametype = handler->GameType();
             info.romfile = file;
-            info.rompath = (*iter)->SystemRomPath();
+            info.rompath = handler->SystemRomPath();
             info.romname = QFileInfo(file).baseName();
             info.indb = false;
             m_files.append(info);
@@ -207,10 +207,10 @@ void GameScanner::doScan(QList<GameHandler*> handlers)
         if (progressDlg->Create())
         {
             popupStack->AddScreen(progressDlg, false);
-            connect(m_scanThread->qthread(), SIGNAL(finished()),
-                    progressDlg, SLOT(Close()));
-            connect(m_scanThread->qthread(), SIGNAL(finished()),
-                    SLOT(finishedScan()));
+            connect(m_scanThread->qthread(), &QThread::finished,
+                    progressDlg, &MythScreenType::Close);
+            connect(m_scanThread->qthread(), &QThread::finished,
+                    this, &GameScanner::finishedScan);
         }
         else
         {

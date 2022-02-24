@@ -27,8 +27,8 @@
  *
  */
 
-#ifndef _CHANNEL_SCANNER_H_
-#define _CHANNEL_SCANNER_H_
+#ifndef CHANNEL_SCANNER_H
+#define CHANNEL_SCANNER_H
 
 // Qt headers
 #include <QCoreApplication>
@@ -126,14 +126,14 @@ class MTV_PUBLIC ChannelScanner
 
     /// imported channels
     DTVChannelList           m_channels;
-    fbox_chan_map_t          m_iptv_channels;
+    fbox_chan_map_t          m_iptvChannels;
 
     // vbox support
 #ifdef USING_VBOX
     VBoxChannelFetcher      *m_vboxScanner         {nullptr};
 #endif
 #if !defined( USING_MINGW ) && !defined( _MSC_VER )
-    ExternRecChannelScanner *m_ExternRecScanner    {nullptr};
+    ExternRecChannelScanner *m_externRecScanner    {nullptr};
 #endif
 
     /// Only fta channels desired post scan?
@@ -160,4 +160,4 @@ class MTV_PUBLIC ChannelScanner
     ServiceRequirements      m_serviceRequirements {kRequireAV};
 };
 
-#endif // _CHANNEL_SCANNER_H_
+#endif // CHANNEL_SCANNER_H

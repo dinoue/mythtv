@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2010 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -34,15 +34,15 @@ class SERVICE_PUBLIC DatabaseInfo : public QObject
     Q_PROPERTY( bool    LocalEnabled  READ LocalEnabled    WRITE setLocalEnabled   )
     Q_PROPERTY( QString LocalHostName READ LocalHostName   WRITE setLocalHostName  )
 
-    PROPERTYIMP( QString, Host          )
-    PROPERTYIMP( bool   , Ping          )
-    PROPERTYIMP( int    , Port          )
-    PROPERTYIMP( QString, UserName      )
-    PROPERTYIMP( QString, Password      )
-    PROPERTYIMP( QString, Name          )
-    PROPERTYIMP( QString, Type          )
-    PROPERTYIMP( bool   , LocalEnabled  )
-    PROPERTYIMP( QString, LocalHostName );
+    PROPERTYIMP_REF( QString, Host          )
+    PROPERTYIMP    ( bool   , Ping          )
+    PROPERTYIMP    ( int    , Port          )
+    PROPERTYIMP_REF( QString, UserName      )
+    PROPERTYIMP_REF( QString, Password      )
+    PROPERTYIMP_REF( QString, Name          )
+    PROPERTYIMP_REF( QString, Type          )
+    PROPERTYIMP    ( bool   , LocalEnabled  )
+    PROPERTYIMP_REF( QString, LocalHostName );
 
     public:
 

@@ -1,5 +1,4 @@
 test_eitfixups
-*.gcda
-*.gcno
-*.gcov
 
+.info
+html

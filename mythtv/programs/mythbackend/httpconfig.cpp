@@ -2,6 +2,9 @@
 #include <QByteArray>
 #include <QDir>
 #include <QFileInfo>
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#include <QStringConverter>
+#endif
 #include <QTextStream>
 #include <QUrl>
 
@@ -35,7 +38,7 @@ bool HttpConfig::ProcessRequest(HTTPRequest *request)
     LOG(VB_UPNP, LOG_INFO,
         QString("HttpConfig::ProcessRequest(): m_sBaseURL: '%1',"
                 "m_sMethod: '%2'")
-            .arg(request->m_sBaseUrl).arg(request->m_sMethod));
+            .arg(request->m_sBaseUrl, request->m_sMethod));
     if (!request->m_sBaseUrl.startsWith("/Config"))
     {
         return false;
@@ -107,7 +110,7 @@ bool HttpConfig::ProcessRequest(HTTPRequest *request)
     }
     else if (request->m_sMethod == "Settings")
     {
-        QString result = "{ \"Error\": \"Unknown Settings List\" }";
+        QString result = R"({ "Error": "Unknown Settings List" })";
         QString fn = GetShareDir() + "backend-config/";
 
         if (request->m_sBaseUrl == "/Config/Database")
@@ -204,7 +207,7 @@ bool HttpConfig::ProcessRequest(HTTPRequest *request)
                 QTextStream os(&request->m_response);
                 os << "<ul class=\"jqueryFileTree\" style=\"display: none;\">\r\n";
 
-                foreach (auto entry, entries)
+                for (const auto & entry : qAsConst(entries))
                 {
                     QStringList parts = entry.split("::");
                     QFileInfo fi(parts[1]);
@@ -217,17 +220,17 @@ bool HttpConfig::ProcessRequest(HTTPRequest *request)
                                                         storageGroup);
                     if (entry.startsWith("sgdir::"))
                     {
-                        os << "    <li class=\"directory collapsed\"><a href=\"#\" rel=\""
+                        os << R"(    <li class="directory collapsed"><a href="#" rel=")"
                            << path << "/\">" << parts[1] << "</a></li>\r\n";
                     }
                     else if (entry.startsWith("dir::"))
                     {
-                        os << "    <li class=\"directory collapsed\"><a href=\"#\" rel=\""
+                        os << R"(    <li class="directory collapsed"><a href="#" rel=")"
                            << path << "/\">" << fi.fileName() << "</a></li>\r\n";
                     }
                     else if (entry.startsWith("file::"))
                     {
-                        os << "    <li class=\"file ext_" << fi.suffix() << "\"><a href=\"#\" rel=\""
+                        os << "    <li class=\"file ext_" << fi.suffix() << R"("><a href="#" rel=")"
                            << parts[3] << "\">" << fi.fileName() << "</a></li>\r\n";
                     }
                 }
@@ -243,14 +246,14 @@ bool HttpConfig::ProcessRequest(HTTPRequest *request)
                 os << "<ul class=\"jqueryFileTree\" style=\"display: none;\">\r\n";
 
                 QFileInfoList infoList = dir.entryInfoList();
-                foreach (auto & fi, infoList)
+                for (const auto & fi : qAsConst(infoList))
                 {
                     if (!fi.isDir())
                         continue;
                     if (fi.fileName().startsWith("."))
                         continue;
 
-                    os << "    <li class=\"directory collapsed\"><a href=\"#\" rel=\""
+                    os << R"(    <li class="directory collapsed"><a href="#" rel=")"
                        << fi.absoluteFilePath() << "/\">" << fi.fileName() << "</a></li>\r\n";
                 }
 
@@ -260,14 +263,14 @@ bool HttpConfig::ProcessRequest(HTTPRequest *request)
 
                 if (!dirsOnly)
                 {
-                    foreach (auto & fi, infoList)
+                    for (const auto & fi : qAsConst(infoList))
                     {
                         if (fi.isDir())
                             continue;
                         if (fi.fileName().startsWith("."))
                             continue;
 
-                        os << "    <li class=\"file ext_" << fi.suffix() << "\"><a href=\"#\" rel=\""
+                        os << "    <li class=\"file ext_" << fi.suffix() << R"("><a href="#" rel=")"
                            << fi.absoluteFilePath() << "\">" << fi.fileName() << "</a></li>\r\n";
                     }
                 }
@@ -360,7 +363,11 @@ void HttpConfig::PrintHeader(QBuffer &buffer, const QString &form,
 {
     QTextStream os(&buffer);
 
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     os.setCodec("UTF-8");
+#else
+    os.setEncoding(QStringConverter::Utf8);
+#endif
 
     os << "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" "
        << "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n"
@@ -384,11 +391,15 @@ void HttpConfig::OpenForm(QBuffer &buffer, const QString &form,
 {
     QTextStream os(&buffer);
 
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     os.setCodec("UTF-8");
+#else
+    os.setEncoding(QStringConverter::Utf8);
+#endif
 
     os << "  <form id=\"config_form_" << group << "\">\r\n"
-       << "    <input type=\"hidden\" id=\"__config_form_action__\" value=\"" << form << "\" />\r\n"
-       << "    <input type=\"hidden\" id=\"__group__\" value=\"" << group << "\" />\r\n";
+       << R"(    <input type="hidden" id="__config_form_action__" value=")" << form << "\" />\r\n"
+       << R"(    <input type="hidden" id="__group__" value=")" << group << "\" />\r\n";
 }
 
 void HttpConfig::CloseForm(QBuffer &buffer, const QString &group)
@@ -397,7 +408,7 @@ void HttpConfig::CloseForm(QBuffer &buffer, const QString &group)
 
 //    os << "    <div class=\"config_form_submit\"\r\n"
 //       << "         id=\"config_form_submit\">\r\n";
-    os << "      <input type=\"button\" value=\"Save Changes\" onClick=\"javascript:submitConfigForm('" << group << "')\" />\r\n"
+    os << R"(      <input type="button" value="Save Changes" onClick="javascript:submitConfigForm(')" << group << "')\" />\r\n"
 //       << "    </div>\r\n"
        << "  </form>\r\n";
 }
@@ -417,6 +428,6 @@ void HttpConfig::PrintSettings(QBuffer &buffer, const MythSettingList &settings)
 {
     QTextStream os(&buffer);
 
-    foreach (auto setting, settings)
+    for (const auto *setting : qAsConst(settings))
         os << setting->ToHTML(1);
 }

@@ -1,7 +1,7 @@
 // -*- Mode: c++ -*-
 // Copyright (c) 2005, Daniel Thor Kristjansson
-#ifndef _DVB_TABLES_H_
-#define _DVB_TABLES_H_
+#ifndef DVB_TABLES_H
+#define DVB_TABLES_H
 
 #include <QString>
 #include <cstdint>  // uint32_t
@@ -24,6 +24,15 @@ class MTV_PUBLIC DVBTable : public PSIPTable
   protected:
     DVBKind _dvbkind;
 };
+
+static inline QDateTime dvbdate2qt(const std::array<uint8_t,5> buf)
+{
+    return dvbdate2qt(buf.data());
+}
+static inline time_t dvbdate2unix(const std::array<uint8_t,5> buf)
+{
+    return dvbdate2unix(buf.data());
+}
 
 /** \class NetworkInformationTable
  *  \brief This table tells the decoder on which PIDs to find other tables.
@@ -103,7 +112,7 @@ class MTV_PUBLIC NetworkInformationTable : public DVBTable
   private:
     mutable QString m_cachedNetworkName;
     mutable const unsigned char* m_tscPtr {nullptr};
-    mutable vector<const unsigned char*> m_ptrs; // used to parse
+    mutable std::vector<const unsigned char*> m_ptrs; // used to parse
 };
 
 /** \class ServiceDescriptionTable
@@ -170,6 +179,7 @@ class MTV_PUBLIC ServiceDescriptionTable : public DVBTable
         { return m_ptrs[i]+5; }
     // }
     ServiceDescriptor *GetServiceDescriptor(uint i) const;
+    ServiceRelocatedDescriptor *GetServiceRelocatedDescriptor(uint i) const;
 
     /// mutates a SDTo into a SDTa (vice versa) and recalculates the CRC
     bool Mutate(void);
@@ -178,7 +188,7 @@ class MTV_PUBLIC ServiceDescriptionTable : public DVBTable
     QString toString(void) const override; // PSIPTable
 
   private:
-    mutable vector<const unsigned char*> m_ptrs; // used to parse
+    mutable std::vector<const unsigned char*> m_ptrs; // used to parse
 };
 
 /** \class BouquetAssociationTable
@@ -249,7 +259,7 @@ class MTV_PUBLIC BouquetAssociationTable : public PSIPTable
 
   private:
     mutable const unsigned char* m_tscPtr {nullptr};
-    mutable vector<const unsigned char*> m_ptrs;
+    mutable std::vector<const unsigned char*> m_ptrs;
 };
 
 class MTV_PUBLIC DiscontinuityInformationTable : public PSIPTable
@@ -376,7 +386,7 @@ class MTV_PUBLIC DVBEventInformationTable : public DVBTable
     static bool IsEIT(uint table_id);
 
   private:
-    mutable vector<const unsigned char*> m_ptrs; // used to parse
+    mutable std::vector<const unsigned char*> m_ptrs; // used to parse
 };
 
 /** \class TimeDateTable
@@ -405,4 +415,4 @@ class MTV_PUBLIC TimeDateTable : public DVBTable
     time_t UTCUnix(void) const { return dvbdate2unix(UTCdata(), _dvbkind); }
 };
 
-#endif // _DVB_TABLES_H_
+#endif // DVB_TABLES_H

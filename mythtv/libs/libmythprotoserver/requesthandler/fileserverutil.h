@@ -1,8 +1,6 @@
 #ifndef MEDIASERVERUTIL_H_
 #define MEDIASERVERUTIL_H_
 
-using namespace std;
-
 // c++
 #include <utility>
 
@@ -26,8 +24,8 @@ class PROTOSERVER_PUBLIC DeleteHandler : public ReferenceCounter
     void Close(void);
 
     QString     GetPath(void)           { return m_path;    }
-    int         GetFD(void)             { return m_fd;      }
-    off_t       GetSize(void)           { return m_size;    }
+    int         GetFD(void) const       { return m_fd;      }
+    off_t       GetSize(void) const     { return m_size;    }
     QDateTime   GetWait(void)           { return m_wait;    }
 
     void        SetPath(QString path)   { m_path= std::move(path);     }

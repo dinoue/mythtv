@@ -6,8 +6,6 @@
 
 #include "config.h"
 
-using namespace std;
-
 #include <QFile>
 #include "mythcorecontext.h"
 #include "audiooutputalsa.h"
@@ -105,7 +103,6 @@ AudioOutputALSA::~AudioOutputALSA()
 
 int AudioOutputALSA::TryOpenDevice(int open_mode, bool try_ac3)
 {
-    QString real_device;
     QByteArray dev_ba;
     int err = -1;
 
@@ -513,7 +510,7 @@ void AudioOutputALSA::CloseDevice()
 }
 
 template <class AudioDataType>
-static inline void _ReorderSmpteToAlsa(AudioDataType *buf, uint frames,
+static inline void tReorderSmpteToAlsa(AudioDataType *buf, uint frames,
                                        uint extrach)
 {
     AudioDataType tmpC;
@@ -539,9 +536,9 @@ static inline void ReorderSmpteToAlsa(void *buf, uint frames,
 {
     switch(AudioOutputSettings::FormatToBits(format))
     {
-        case  8: _ReorderSmpteToAlsa((uchar *)buf, frames, extrach); break;
-        case 16: _ReorderSmpteToAlsa((short *)buf, frames, extrach); break;
-        default: _ReorderSmpteToAlsa((int   *)buf, frames, extrach); break;
+        case  8: tReorderSmpteToAlsa((uchar *)buf, frames, extrach); break;
+        case 16: tReorderSmpteToAlsa((short *)buf, frames, extrach); break;
+        default: tReorderSmpteToAlsa((int   *)buf, frames, extrach); break;
     }
 }
 
@@ -601,7 +598,7 @@ void AudioOutputALSA::WriteAudio(uchar *aubuf, int size)
             case -ESTRPIPE:
                 VBAUDIO("WriteAudio: device is suspended");
                 while ((err = snd_pcm_resume(m_pcmHandle)) == -EAGAIN)
-                    usleep(200);
+                    usleep(200us);
 
                 if (err < 0)
                 {
@@ -844,17 +841,16 @@ int AudioOutputALSA::GetVolumeChannel(int channel) const
     if (chk < 0)
     {
         VBERROR(QString("failed to get channel %1 volume, mixer %2/%3: %4")
-                .arg(channel).arg(m_mixer.device)
-                .arg(m_mixer.control)
-                .arg(snd_strerror(chk)));
+                .arg(QString::number(channel), m_mixer.device,
+                     m_mixer.control, snd_strerror(chk)));
     }
     else
     {
         retvol = (m_mixer.volrange != 0L) ? (mixervol - m_mixer.volmin) *
                                             100.0F / m_mixer.volrange + 0.5F
                                             : 0;
-        retvol = max(retvol, 0);
-        retvol = min(retvol, 100);
+        retvol = std::max(retvol, 0);
+        retvol = std::min(retvol, 100);
         VBAUDIO(QString("get volume channel %1: %2")
                 .arg(channel).arg(retvol));
     }
@@ -867,13 +863,13 @@ void AudioOutputALSA::SetVolumeChannel(int channel, int volume)
         return;
 
     long mixervol = (int64_t(volume) * m_mixer.volrange) / 100 + m_mixer.volmin;
-    mixervol = max(mixervol, m_mixer.volmin);
-    mixervol = min(mixervol, m_mixer.volmax);
+    mixervol = std::max(mixervol, m_mixer.volmin);
+    mixervol = std::min(mixervol, m_mixer.volmax);
 
     auto chan = (snd_mixer_selem_channel_id_t) channel;
 
     if (snd_mixer_selem_has_playback_switch(m_mixer.elem))
-        snd_mixer_selem_set_playback_switch(m_mixer.elem, chan, (volume > 0));
+        snd_mixer_selem_set_playback_switch(m_mixer.elem, chan, static_cast<int>(volume > 0));
 
     if (snd_mixer_selem_set_playback_volume(m_mixer.elem, chan, mixervol) < 0)
         VBERROR(QString("failed to set channel %1 volume").arg(channel));
@@ -902,7 +898,7 @@ bool AudioOutputALSA::OpenMixer(void)
     if (chk < 0)
     {
         VBERROR(QString("failed to open mixer device %1: %2")
-                .arg(mixer_device_tag).arg(snd_strerror(chk)));
+                .arg(mixer_device_tag, snd_strerror(chk)));
         return false;
     }
 
@@ -915,7 +911,7 @@ bool AudioOutputALSA::OpenMixer(void)
         snd_mixer_close(m_mixer.handle);
         m_mixer.handle = nullptr;
         VBERROR(QString("failed to register %1: %2")
-                .arg(mixer_device_tag).arg(snd_strerror(chk)));
+                .arg(mixer_device_tag, snd_strerror(chk)));
         return false;
     }
 
@@ -924,7 +920,7 @@ bool AudioOutputALSA::OpenMixer(void)
         snd_mixer_close(m_mixer.handle);
         m_mixer.handle = nullptr;
         VBERROR(QString("failed to load %1: %2")
-                .arg(mixer_device_tag).arg(snd_strerror(chk)));
+                .arg(mixer_device_tag, snd_strerror(chk)));
         return false;
     }
 
@@ -942,8 +938,7 @@ bool AudioOutputALSA::OpenMixer(void)
         {
             m_mixer.elem = elx;
             VBAUDIO(QString("found playback control %1 on %2")
-                    .arg(m_mixer.control)
-                    .arg(mixer_device_tag));
+                    .arg(m_mixer.control, mixer_device_tag));
             break;
         }
         elx = snd_mixer_elem_next(elx);
@@ -953,7 +948,7 @@ bool AudioOutputALSA::OpenMixer(void)
         snd_mixer_close(m_mixer.handle);
         m_mixer.handle = nullptr;
         VBERROR(QString("no playback control %1 found on %2")
-                .arg(m_mixer.control).arg(mixer_device_tag));
+                .arg(m_mixer.control, mixer_device_tag));
         return false;
     }
     if ((snd_mixer_selem_get_playback_volume_range(m_mixer.elem,
@@ -963,17 +958,16 @@ bool AudioOutputALSA::OpenMixer(void)
         snd_mixer_close(m_mixer.handle);
         m_mixer.handle = nullptr;
         VBERROR(QString("failed to get volume range on %1/%2")
-                .arg(mixer_device_tag).arg(m_mixer.control));
+                .arg(mixer_device_tag, m_mixer.control));
         return false;
     }
 
     m_mixer.volrange = m_mixer.volmax - m_mixer.volmin;
     VBAUDIO(QString("mixer volume range on %1/%2 - min %3, max %4, range %5")
-            .arg(mixer_device_tag).arg(m_mixer.control)
+            .arg(mixer_device_tag, m_mixer.control)
             .arg(m_mixer.volmin).arg(m_mixer.volmax).arg(m_mixer.volrange));
     VBAUDIO(QString("%1/%2 set up successfully")
-            .arg(mixer_device_tag)
-            .arg(m_mixer.control));
+            .arg(mixer_device_tag, m_mixer.control));
 
     if (m_setInitialVol)
     {
@@ -1001,14 +995,10 @@ QMap<QString, QString> *AudioOutputALSA::GetDevices(const char *type)
 
     while (*n != nullptr)
     {
-          char *name = snd_device_name_get_hint(*n, "NAME");
-          char *desc = snd_device_name_get_hint(*n, "DESC");
-          if (name && desc && (strcmp(name, "null") != 0))
+          QString name = snd_device_name_get_hint(*n, "NAME");
+          QString desc = snd_device_name_get_hint(*n, "DESC");
+          if (!name.isEmpty() && !desc.isEmpty() && (name != "null"))
               alsadevs->insert(name, desc);
-          if (name)
-              free(name);
-          if (desc)
-              free(desc);
           n++;
     }
     snd_device_name_free_hint(hints);

@@ -5,6 +5,7 @@
 #ifndef DSMCC_BIOP_H
 #define DSMCC_BIOP_H
 
+#include <array>
 #include <cstdlib>
 
 #include "dsmcccache.h"
@@ -136,7 +137,7 @@ class BiopIor
     }
  
     int Process(const unsigned char *data);
-    void AddTap(Dsmcc *pStatus);
+    void AddTap(Dsmcc *pStatus) const;
 
     unsigned long  m_typeIdLen            {0};
     char          *m_typeId               {nullptr};

@@ -44,7 +44,8 @@ void MHRoot::PrintMe(FILE *fd, int nTabs) const
 // An action was attempted on an object of a class which doesn't support this.
 void MHRoot::InvalidAction(const char *actionName)
 {
-    MHLOG(MHLogWarning, QString("WARN Action \"%1\" is not understood by class \"%2\"").arg(actionName).arg(ClassName()));
+    MHLOG(MHLogWarning, QString("WARN Action \"%1\" is not understood by class \"%2\"")
+          .arg(actionName, ClassName()));
     throw "Invalid Action";
 }
 
@@ -124,14 +125,14 @@ MHRoot *MHRoot::FindByObjectNo(int n)
 void MHGetAvailabilityStatus::Initialise(MHParseNode *p, MHEngine *engine)
 {
     MHElemAction::Initialise(p, engine);
-    m_ResultVar.Initialise(p->GetArgN(1), engine);
+    m_rsultVar.Initialise(p->GetArgN(1), engine);
 }
 
 void MHGetAvailabilityStatus::Perform(MHEngine *engine)
 {
     // This is a special case.  If the object does not exist we set the result to false.
     MHObjectRef target;
-    m_Target.GetValue(target, engine); // Get the target
+    m_target.GetValue(target, engine); // Get the target
     MHRoot *pObject = engine->FindObject(target, false);
     bool fResult = false; // Default result.
 
@@ -140,5 +141,5 @@ void MHGetAvailabilityStatus::Perform(MHEngine *engine)
         fResult = pObject->GetAvailabilityStatus();
     }
 
-    engine->FindObject(m_ResultVar)->SetVariableValue(fResult);
+    engine->FindObject(m_rsultVar)->SetVariableValue(fResult);
 }

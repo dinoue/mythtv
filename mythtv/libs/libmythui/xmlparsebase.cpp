@@ -26,6 +26,7 @@
 /* ui type includes */
 #include "mythscreentype.h"
 #include "mythuiimage.h"
+#include "mythuiprocedural.h"
 #include "mythuitext.h"
 #include "mythuitextedit.h"
 #include "mythuiclock.h"
@@ -76,7 +77,11 @@ bool XMLParseBase::parseBool(QDomElement &element)
 MythPoint XMLParseBase::parsePoint(const QString &text, bool normalize)
 {
     MythPoint retval;
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList values = text.split(',', QString::SkipEmptyParts);
+#else
+    QStringList values = text.split(',', Qt::SkipEmptyParts);
+#endif
     if (values.size() == 2)
         retval = MythPoint(values[0], values[1]);
 
@@ -133,7 +138,11 @@ QSize XMLParseBase::parseSize(QDomElement &element, bool normalize)
 MythRect XMLParseBase::parseRect(const QString &text, bool normalize)
 {
     MythRect retval;
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList values = text.split(',', QString::SkipEmptyParts);
+#else
+    QStringList values = text.split(',', Qt::SkipEmptyParts);
+#endif
     if (values.size() == 4)
         retval = MythRect(values[0], values[1], values[2], values[3]);
     if (values.size() == 5)
@@ -228,7 +237,7 @@ QBrush XMLParseBase::parseGradient(const QDomElement &element)
 
     if (!gradientStart.isEmpty())
     {
-        QColor startColor = QColor(gradientStart);
+        auto startColor = QColor(gradientStart);
         startColor.setAlpha(gradientAlpha);
         QGradientStop stop(0.0, startColor);
         stops.append(stop);
@@ -245,7 +254,7 @@ QBrush XMLParseBase::parseGradient(const QDomElement &element)
             int alpha = childElem.attribute("alpha", "-1").toInt();
             if (alpha < 0)
                 alpha = gradientAlpha;
-            QColor stopColor = QColor(color);
+            auto stopColor = QColor(color);
             stopColor.setAlpha(alpha);
             QGradientStop stop((position / 100), stopColor);
             stops.append(stop);
@@ -254,7 +263,7 @@ QBrush XMLParseBase::parseGradient(const QDomElement &element)
 
     if (!gradientEnd.isEmpty())
     {
-        QColor endColor = QColor(gradientEnd);
+        auto endColor = QColor(gradientEnd);
         endColor.setAlpha(gradientAlpha);
         QGradientStop stop(1.0, endColor);
         stops.append(stop);
@@ -391,6 +400,7 @@ void XMLParseBase::ParseChildren(const QString &filename,
                 delete font;
             }
             else if (type == "imagetype" ||
+                     type == "procedural" ||
                      type == "textarea" ||
                      type == "group" ||
                      type == "textedit" ||
@@ -474,13 +484,15 @@ MythUIType *XMLParseBase::ParseUIType(
         {
             VERBOSE_XML(VB_GENERAL, LOG_ERR, filename, element,
                        QString("Couldn't find object '%1' to inherit '%2' from")
-                        .arg(inherits).arg(name));
+                        .arg(inherits, name));
             return nullptr;
         }
     }
 
     if (type == "imagetype")
         uitype = new MythUIImage(parent, name);
+    else if (type == "procedural")
+        uitype = new MythUIProcedural(parent, name);
     else if (type == "textarea")
         uitype = new MythUIText(parent, name);
     else if (type == "group")
@@ -538,7 +550,7 @@ MythUIType *XMLParseBase::ParseUIType(
         {
             VERBOSE_XML(VB_GENERAL, LOG_ERR, filename, element,
                         QString("Duplicate name: '%1' in parent '%2'")
-                        .arg(name).arg(parent->objectName()));
+                        .arg(name, parent->objectName()));
             parent->DeleteChild(olduitype);
         }
         else
@@ -554,7 +566,7 @@ MythUIType *XMLParseBase::ParseUIType(
         {
             VERBOSE_XML(VB_GENERAL, LOG_ERR, filename, element,
                       QString("Type of new widget '%1' doesn't match old '%2'")
-                        .arg(name).arg(inherits));
+                        .arg(name, inherits));
             if (parent)
                 parent->DeleteChild(uitype);
             return nullptr;
@@ -595,6 +607,7 @@ MythUIType *XMLParseBase::ParseUIType(
                 delete font;
             }
             else if (info.tagName() == "imagetype" ||
+                     info.tagName() == "procedural" ||
                      info.tagName() == "textarea" ||
                      info.tagName() == "group" ||
                      info.tagName() == "textedit" ||
@@ -634,7 +647,7 @@ bool XMLParseBase::WindowExists(const QString &xmlfile,
                                 const QString &windowname)
 {
     const QStringList searchpath = GetMythUI()->GetThemeSearchPath();
-    foreach (const auto & dir, searchpath)
+    for (const auto & dir : qAsConst(searchpath))
     {
         QString themefile = dir + xmlfile;
         QFile f(themefile);
@@ -689,10 +702,10 @@ bool XMLParseBase::LoadWindowFromXML(const QString &xmlfile,
     bool showWarnings = true;
 
     const QStringList searchpath = GetMythUI()->GetThemeSearchPath();
-    foreach (const auto & dir, searchpath)
+    for (const auto & dir : qAsConst(searchpath))
     {
         QString themefile = dir + xmlfile;
-        LOG(VB_GUI, LOG_INFO, LOC + QString("Loading window %1 from %2").arg(windowname).arg(themefile));
+        LOG(VB_GUI, LOG_INFO, LOC + QString("Loading window %1 from %2").arg(windowname, themefile));
         if (doLoad(windowname, parent, themefile,
                    onlyLoadWindows, showWarnings))
         {
@@ -703,7 +716,7 @@ bool XMLParseBase::LoadWindowFromXML(const QString &xmlfile,
 
     LOG(VB_GENERAL, LOG_ERR, LOC +
         QString("Unable to load window '%1' from '%2'")
-            .arg(windowname).arg(xmlfile));
+            .arg(windowname, xmlfile));
 
     return false;
 }
@@ -790,6 +803,7 @@ bool XMLParseBase::doLoad(const QString &windowname,
                     delete font;
                 }
                 else if (type == "imagetype" ||
+                         type == "procedural" ||
                          type == "textarea" ||
                          type == "group" ||
                          type == "textedit" ||
@@ -839,8 +853,7 @@ bool XMLParseBase::LoadBaseTheme(void)
     bool showWarnings = true;
 
     const QStringList searchpath = GetMythUI()->GetThemeSearchPath();
-    QMap<QString, QString> dependsMap;
-    foreach (const auto & dir, searchpath)
+    for (const auto & dir : qAsConst(searchpath))
     {
         QString themefile = dir + "base.xml";
         if (doLoad(QString(), GetGlobalObjectStore(), themefile,
@@ -880,7 +893,7 @@ bool XMLParseBase::LoadBaseTheme(const QString &baseTheme)
     bool showWarnings = true;
 
     const QStringList searchpath = GetMythUI()->GetThemeSearchPath();
-    foreach (const auto & dir, searchpath)
+    for (const auto & dir : qAsConst(searchpath))
     {
         QString themefile = dir + baseTheme;
         if (doLoad(QString(), GetGlobalObjectStore(), themefile,

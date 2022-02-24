@@ -13,6 +13,7 @@ win32-msvc* {
   CONFIG *= using_backend using_frontend
   CONFIG *= using_opengl
   CONFIG *= using_hdhomerun
+  CONFIG *= using_satip
 
   CONFIG_LIBMPEG2EXTERNAL = yes
   CONFIG_QTDBUS = no
@@ -24,9 +25,16 @@ win32-msvc* {
   include ( config.mak )
 }
 
+contains(QT_MAJOR_VERSION, 6) {
+QT += core5compat
+}
 CONFIG += $$CCONFIG
-# enable C++11 support, QT5.7 will be based on C++11 anyway
-CONFIG += c++11
+CONFIG += c++17
+CONFIG += no_qt_rpath
+
+# Make sure all the Qt header files are marked as system headers
+QMAKE_DEFAULT_INCDIRS += $$[QT_INSTALL_HEADERS]
+INCLUDEPATH += $$[QT_INSTALL_HEADERS]
 
 defineReplace(avLibName) {
         NAME = $$1
@@ -44,7 +52,7 @@ defineReplace(avLibName) {
 
 #check QT major version
 contains(QT_MAJOR_VERSION, 4) {
-        error("Must build against Qt5")
+        error("Must build against Qt5 or higher")
 }
 
 # Where binaries, includes and runtime assets are installed by 'make install'
@@ -72,8 +80,8 @@ isEmpty( LIBDIR ) {
     LIBDIR = $${RUNPREFIX}/$${LIBDIRNAME}
 }
 
-LIBVERSION = 31
-VERSION = 31.0
+LIBVERSION = 32
+VERSION = 32.0
 
 # Die on the (common) case where OS X users inadvertently use Fink's
 # Qt/X11 install instead of Qt/Mac. '
@@ -109,9 +117,6 @@ win32 {
 
         DEFINES += _WIN32 WIN32 WIN32_LEAN_AND_MEAN NOMINMAX _USE_MATH_DEFINES
         DEFINES += _CRT_SECURE_NO_WARNINGS
-        DEFINES += __STDC_CONSTANT_MACROS
-        DEFINES += __STDC_FORMAT_MACROS
-        DEFINES += __STDC_LIMIT_MACROS
 
         debug  :DEFINES += _DEBUG
         release:DEFINES += NDEBUG
@@ -177,6 +182,11 @@ win32 {
         # This corrects the moc tool path from a DOS-style to a unix style:
         QMAKE_MOC = $$[QT_INSTALL_BINS]/moc
         QMAKE_EXTENSION_SHLIB = dll
+
+        isEmpty(QMAKE_EXTENSION_LIB) {
+            QMAKE_EXTENSION_LIB=a
+        }
+        MYTH_LIB_EXT  =$${LIBVERSION}.$${QMAKE_EXTENSION_LIB}
     }
 
     # if CYGWIN compile, set up flag in CONFIG
@@ -184,7 +194,6 @@ win32 {
 
         CONFIG += cygwin
         QMAKE_EXTENSION_SHLIB=dll.a
-        DEFINES += CONFIG_CYGWIN
     }
 
 } else {
@@ -266,10 +275,10 @@ macx:QMAKE_CFLAGS_STATIC_LIB += -fno-common
 # clang 3.0 on Linux does not like duplicate arguments.
 macx {
     QMAKE_CFLAGS   += $$CPPFLAGS   $$CFLAGS
-    QMAKE_CXXFLAGS += $$CXXPPFLAGS $$ECXXFLAGS
+    QMAKE_CXXFLAGS += $$CXXPPFLAGS $$CXXFLAGS $$ECXXFLAGS
 } else {
     QMAKE_CFLAGS   *= $$CPPFLAGS   $$CFLAGS
-    QMAKE_CXXFLAGS *= $$CXXPPFLAGS $$ECXXFLAGS
+    QMAKE_CXXFLAGS *= $$CXXPPFLAGS $$CXXFLAGS $$ECXXFLAGS
 }
 
 profile:!win32:!macx:CONFIG += debug

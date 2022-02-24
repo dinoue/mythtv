@@ -1,10 +1,10 @@
-#ifndef _COMMDETECTOR_FACTORY_H_
-#define _COMMDETECTOR_FACTORY_H_
+#ifndef COMMDETECTOR_FACTORY_H
+#define COMMDETECTOR_FACTORY_H
 
 #include "programinfo.h"
 
 class CommDetectorBase;
-class MythPlayer;
+class MythCommFlagPlayer;
 class RemoteEncoder;
 class QDateTime;
 
@@ -17,7 +17,7 @@ class CommDetectorFactory
     static CommDetectorBase* makeCommDetector(
         SkipType commDetectMethod,
         bool showProgress,
-        bool fullSpeed, MythPlayer* player,
+        bool fullSpeed, MythCommFlagPlayer* player,
         int chanid,
         const QDateTime& startedAt,
         const QDateTime& stopsAt,
@@ -26,7 +26,6 @@ class CommDetectorFactory
         bool useDB);
 };
 
-#endif
-
+#endif // COMMDETECTOR_FACTORY_H
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */

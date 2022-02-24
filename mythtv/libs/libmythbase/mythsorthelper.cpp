@@ -31,7 +31,12 @@ void MythSortHelper::MythSortHelperCommon(void)
     }
     m_prefixesRegex = QRegularExpression(m_prefixes);
     m_prefixesRegex2 = QRegularExpression(m_prefixes + "(.*)");
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     m_exclList = m_exclusions.split(";", QString::SkipEmptyParts);
+#else
+    m_exclList = m_exclusions.split(";", Qt::SkipEmptyParts);
+#endif
+    // NOLINTNEXTLINE(modernize-loop-convert)
     for (int i = 0; i < m_exclList.size(); i++)
       m_exclList[i] = m_exclList[i].trimmed();
 }
@@ -99,6 +104,12 @@ MythSortHelper::MythSortHelper(
  */
 MythSortHelper::MythSortHelper(MythSortHelper *other)
 {
+    if (other == nullptr)
+    {
+        LOG(VB_GENERAL, LOG_ERR,
+            QString("MythSortHelper created from null pointer."));
+        return;
+    }
     m_caseSensitive   = other->m_caseSensitive;
     m_prefixMode      = other->m_prefixMode;
     m_prefixes        = other->m_prefixes;
@@ -122,6 +133,7 @@ static std::shared_ptr<MythSortHelper> singleton = nullptr;
 std::shared_ptr<MythSortHelper> getMythSortHelper(void)
 {
     if (singleton == nullptr)
+        // coverity[resource_leak]
         singleton = std::make_shared<MythSortHelper>(new MythSortHelper());
     return singleton;
 }
@@ -164,7 +176,7 @@ QString MythSortHelper::doTitle(const QString& title) const
         if (m_exclList.contains(ltitle))
             return ltitle;
     } else {
-        foreach (const QString &str, m_exclList)
+        for (const auto& str : qAsConst(m_exclList))
             if (ltitle.startsWith(str))
                 return ltitle;
     }
@@ -193,15 +205,11 @@ QString MythSortHelper::doPathname(const QString& pathname) const
     if (m_prefixMode == SortPrefixKeep)
 	return lpathname;
     QStringList parts = lpathname.split("/");
+    // NOLINTNEXTLINE(modernize-loop-convert)
     for (int i = 0; i < parts.size(); ++i) {
-        bool excluded = false;
-        for (int j = 0; j < m_exclList.size(); ++j) {
-            if (parts[i].startsWith(m_exclList[j])) {
-                excluded = true;
-                break;
-            }
-        }
-        if (excluded)
+        if (std::any_of(m_exclList.cbegin(), m_exclList.cend(),
+                        [&parts,i](const QString& excl)
+                            { return parts[i].startsWith(excl); } ))
             continue;
         if (m_prefixMode == SortPrefixRemove)
             parts[i] = parts[i].remove(m_prefixesRegex);

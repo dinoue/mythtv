@@ -4,7 +4,7 @@
 //                                                                            
 // Copyright (c) 2010 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -31,9 +31,9 @@ class SERVICE_PUBLIC SettingList : public QObject
     Q_CLASSINFO( "Settings", "type=QString;name=String");
 
     Q_PROPERTY( QString     HostName READ HostName WRITE setHostName )
-    Q_PROPERTY( QVariantMap Settings READ Settings DESIGNABLE true )
+    Q_PROPERTY( QVariantMap Settings READ Settings )
 
-    PROPERTYIMP       ( QString    , HostName )
+    PROPERTYIMP_REF   ( QString,     HostName )
     PROPERTYIMP_RO_REF( QVariantMap, Settings )
 
     public:

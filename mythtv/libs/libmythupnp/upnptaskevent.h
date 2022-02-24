@@ -6,12 +6,12 @@
 //                                                                            
 // Copyright (c) 2006 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __UPNPTASKEVENT_H__
-#define __UPNPTASKEVENT_H__
+#ifndef UPNPTASKEVENT_H
+#define UPNPTASKEVENT_H
 
 #include "upnp.h"
 #include "bufferedsocketdevice.h"
@@ -28,7 +28,7 @@ class UPnpEventTask : public Task
 {
     protected: 
 
-        QHostAddress m_PeerAddress;
+        QHostAddress m_peerAddress;
         int          m_nPeerPort;
         QByteArray  *m_pPayload {nullptr};
 
@@ -50,4 +50,4 @@ class UPnpEventTask : public Task
 };
 
 
-#endif
+#endif // UPNPTASKEVENT_H

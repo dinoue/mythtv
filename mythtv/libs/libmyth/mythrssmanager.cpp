@@ -13,21 +13,18 @@
 #include "rssparse.h"
 #include "mythsorthelper.h"
 
-using namespace std;
-
 #define LOC      QString("RSSSite: ")
 
 // ---------------------------------------------------
 
 RSSManager::RSSManager()
 {
-    m_updateFreq = (gCoreContext->GetNumSetting(
-                       "rss.updateFreq", 6) * 3600 * 1000);
+    m_updateFreq = gCoreContext->GetDurSetting<std::chrono::hours>("rss.updateFreq", 6h);
 
     m_timer = new QTimer();
 
-    connect( m_timer, SIGNAL(timeout()),
-                      this, SLOT(doUpdate()));
+    connect( m_timer, &QTimer::timeout,
+                      this, &RSSManager::doUpdate);
 }
 
 RSSManager::~RSSManager()
@@ -49,13 +46,13 @@ void RSSManager::doUpdate()
 {
     m_sites = findAllDBRSS();
 
-    foreach (auto & site, m_sites)
+    for (const auto *site : qAsConst(m_sites))
     {
         LOG(VB_GENERAL, LOG_INFO, LOC +
             QString("Updating RSS Feed %1") .arg(site->GetTitle()));
 
-        connect(site, SIGNAL(finished(RSSSite*)),
-                this, SLOT(slotRSSRetrieved(RSSSite*)));
+        connect(site, &RSSSite::finished,
+                this, &RSSManager::slotRSSRetrieved);
     }
 
     slotRefreshRSS();
@@ -87,7 +84,7 @@ void RSSManager::processAndInsertRSS(RSSSite *site)
     clearRSSArticles(site->GetTitle(), site->GetType());
 
     ResultItem::resultList rss = site->GetVideoList();
-    foreach (auto & video, rss)
+    for (auto *video : qAsConst(rss))
     {
         // Insert in the DB here.
         insertRSSArticleInDB(site->GetTitle(), video, site->GetType());
@@ -108,11 +105,11 @@ void RSSManager::slotRSSRetrieved(RSSSite *site)
 RSSSite::RSSSite( QString  title,
                   QString  sortTitle,
                   QString  image,
-                  const ArticleType& type,
+                  ArticleType type,
                   QString  description,
                   QString  url,
                   QString  author,
-                  const bool& download,
+                  bool download,
                   QDateTime  updated) :
     m_title(std::move(title)), m_sortTitle(std::move(sortTitle)),
     m_image(std::move(image)), m_type(type),
@@ -146,8 +143,8 @@ void RSSSite::retrieve(void)
     if (!m_manager)
     {
         m_manager = new QNetworkAccessManager();
-        connect(m_manager, SIGNAL(finished(QNetworkReply*)), this,
-                       SLOT(slotCheckRedirect(QNetworkReply*)));
+        connect(m_manager, &QNetworkAccessManager::finished, this,
+                       &RSSSite::slotCheckRedirect);
     }
 
     m_reply = m_manager->get(QNetworkRequest(m_urlReq));
@@ -190,13 +187,13 @@ ResultItem::resultList RSSSite::GetVideoList(void) const
     return m_articleList;
 }
 
-unsigned int RSSSite::timeSinceLastUpdate(void) const
+std::chrono::minutes RSSSite::timeSinceLastUpdate(void) const
 {
     QMutexLocker locker(&m_lock);
 
     QDateTime curTime(MythDate::current());
-    unsigned int min = m_updated.secsTo(curTime)/60;
-    return min;
+    auto secs = std::chrono::seconds(m_updated.secsTo(curTime));
+    return duration_cast<std::chrono::minutes>(secs);
 }
 
 void RSSSite::process(void)
@@ -205,7 +202,7 @@ void RSSSite::process(void)
 
     m_articleList.clear();
 
-    if (!m_data.size())
+    if (m_data.isEmpty())
     {
         emit finished(this);
         return;
@@ -227,9 +224,9 @@ void RSSSite::process(void)
     {
         ResultItem::resultList items;
         Parse parser;
-        items = parser.parseRSS(domDoc);
+        items = Parse::parseRSS(domDoc);
 
-        foreach (auto & item, items)
+        for (const auto *item : qAsConst(items))
         {
             insertRSSArticle(new ResultItem(
                item->GetTitle(), item->GetSortTitle(),

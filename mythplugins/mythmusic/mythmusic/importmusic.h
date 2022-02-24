@@ -4,7 +4,6 @@
 #include <iostream>
 #include <utility>
 #include <vector>
-using namespace std;
 
 #include <QStringList>
 
@@ -47,7 +46,7 @@ class FileCopyThread: public MThread
               m_dstFile(std::move(dst)) {}
         void run() override; // MThread
 
-        bool GetResult(void) { return m_result; }
+        bool GetResult(void) const { return m_result; }
 
     private:
         QString m_srcFile;
@@ -68,7 +67,7 @@ class ImportMusicDialog : public MythScreenType
     bool keyPressEvent(QKeyEvent *event) override; // MythScreenType
     void customEvent(QEvent *event) override; // MythUIType
 
-    bool somethingWasImported() { return m_somethingWasImported; }
+    bool somethingWasImported() const { return m_somethingWasImported; }
     void doScan(void);
     void doFileCopy(const QString &src, const QString &dst);
 
@@ -100,7 +99,7 @@ class ImportMusicDialog : public MythScreenType
     void setTitleWordCaps(void);
     void setTitleInitialCap(void);
     void metadataChanged(void);
-    void chooseBackend(void);
+    void chooseBackend(void) const;
     void setSaveHost(const QString& host);
 
   signals:
@@ -108,13 +107,13 @@ class ImportMusicDialog : public MythScreenType
 
   private:
     void fillWidgets();
-    void scanDirectory(QString &directory, vector<TrackInfo*> *tracks);
+    void scanDirectory(QString &directory, std::vector<TrackInfo*> *tracks);
     void showImportCoverArtDialog();
     static bool copyFile(const QString &src, const QString &dst);
 
     QString              m_musicStorageDir;
     bool                 m_somethingWasImported {false};
-    vector<TrackInfo*>  *m_tracks               {nullptr};
+    std::vector<TrackInfo*> *m_tracks           {nullptr};
     QStringList          m_sourceFiles;
     int                  m_currentTrack         {0};
     MusicMetadata       *m_playingMetaData      {nullptr};

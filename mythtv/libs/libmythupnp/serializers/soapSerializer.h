@@ -6,12 +6,12 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __SOAPSERIALIZER_H__
-#define __SOAPSERIALIZER_H__
+#ifndef SOAPSERIALIZER_H
+#define SOAPSERIALIZER_H
 
 #include "upnpexp.h"
 #include "xmlSerializer.h"
@@ -78,5 +78,4 @@ class UPNP_PUBLIC SoapSerializer : public XmlSerializer
         }
 };
 
-#endif
-
+#endif // SOAPSERIALIZER_H

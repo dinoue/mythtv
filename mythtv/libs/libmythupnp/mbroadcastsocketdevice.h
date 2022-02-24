@@ -6,12 +6,12 @@
 //
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
                                                                        
-#ifndef _MBROADCAST_SOCKET_DEVICE_H_
-#define _MBROADCAST_SOCKET_DEVICE_H_
+#ifndef MBROADCAST_SOCKET_DEVICE_H
+#define MBROADCAST_SOCKET_DEVICE_H
 
 #include <QString>
 
@@ -32,7 +32,6 @@ class MBroadcastSocketDevice : public MSocketDevice
         m_address.setAddress( sAddress );
         m_port = nPort;
 
-        QByteArray addr = sAddress.toLatin1();
         setProtocol(IPv4);
         setSocket(createNewSocket(), MSocketDevice::Datagram);
 
@@ -68,4 +67,4 @@ class MBroadcastSocketDevice : public MSocketDevice
     quint16         m_port;
 };
 
-#endif // _MBROADCAST_SOCKET_DEVICE_H_
+#endif // MBROADCAST_SOCKET_DEVICE_H

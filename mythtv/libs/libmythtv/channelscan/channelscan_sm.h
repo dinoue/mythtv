@@ -60,7 +60,7 @@ class SignalMonitor;
 class DTVSignalMonitor;
 class DVBSignalMonitor;
 
-using pmt_vec_t = vector<const ProgramMapTable*>;
+using pmt_vec_t = std::vector<const ProgramMapTable*>;
 using pmt_map_t = QMap<uint, pmt_vec_t>;
 class ScannedChannelInfo;
 using ChannelListItem = QPair<transport_scan_items_it_t, ScannedChannelInfo*>;
@@ -91,10 +91,10 @@ class ChannelScanSM : public MPEGStreamListener,
     friend class AnalogSignalHandler;
 
   public:
-    ChannelScanSM(ScanMonitor *_scan_monitor,
-                  const QString &_cardtype, ChannelBase* _channel, int _sourceID,
-                  uint signal_timeout, uint channel_timeout,
-                  QString _inputname, bool test_decryption);
+    ChannelScanSM(ScanMonitor *scan_monitor,
+                  const QString &cardtype, ChannelBase* channel, int sourceID,
+                  std::chrono::milliseconds signal_timeout, std::chrono::milliseconds channel_timeout,
+                  QString inputname, bool test_decryption);
     ~ChannelScanSM() override;
 
     void StartScanner(void);
@@ -116,14 +116,14 @@ class ChannelScanSM : public MPEGStreamListener,
     bool ScanExistingTransports(uint sourceid, bool follow_nit);
 
     void SetAnalog(bool is_analog);
-    void SetSourceID(int _SourceID)   { m_sourceID                = _SourceID; }
-    void SetSignalTimeout(uint val)    { m_signalTimeout = val; }
-    void SetChannelTimeout(uint val)   { m_channelTimeout = val; }
+    void SetSourceID(int SourceID)     { m_sourceID = SourceID; }
+    void SetSignalTimeout(std::chrono::milliseconds val)    { m_signalTimeout = val; }
+    void SetChannelTimeout(std::chrono::milliseconds val)   { m_channelTimeout = val; }
     void SetScanDTVTunerType(DTVTunerType t) { m_scanDTVTunerType = t; }
     void SetScanDTVTunerType(int t) { m_scanDTVTunerType = DTVTunerType(t); }
 
-    uint GetSignalTimeout(void)  const { return m_signalTimeout; }
-    uint GetChannelTimeout(void) const { return m_channelTimeout; }
+    std::chrono::milliseconds GetSignalTimeout(void)  const { return m_signalTimeout; }
+    std::chrono::milliseconds GetChannelTimeout(void) const { return m_channelTimeout; }
 
     SignalMonitor    *GetSignalMonitor(void) { return m_signalMonitor; }
     DTVSignalMonitor *GetDTVSignalMonitor(void);
@@ -137,7 +137,7 @@ class ChannelScanSM : public MPEGStreamListener,
 
     // MPEG
     void HandlePAT(const ProgramAssociationTable *pat) override; // MPEGStreamListener
-    void HandleCAT(const ConditionalAccessTable */*cat*/) override { } // MPEGStreamListener
+    void HandleCAT(const ConditionalAccessTable *cat) override; // MPEGStreamListener
     void HandlePMT(uint program_num, const ProgramMapTable *pmt) override; // MPEGStreamListener
     void HandleEncryptionStatus(uint pnum, bool encrypted) override; // MPEGStreamListener
 
@@ -157,7 +157,7 @@ class ChannelScanSM : public MPEGStreamListener,
     void HandleBAT(const BouquetAssociationTable *bat) override; // DVBOtherStreamListener
 
   private:
-    // some useful gets
+    // Gets
     DTVChannel       *GetDTVChannel(void);
     const DTVChannel *GetDTVChannel(void) const;
     V4LChannel       *GetV4LChannel(void);
@@ -169,12 +169,12 @@ class ChannelScanSM : public MPEGStreamListener,
 
     bool HasTimedOut(void);
     void HandleActiveScan(void);
-    bool Tune(const transport_scan_items_it_t &transport);
-    void ScanTransport(const transport_scan_items_it_t &transport);
+    bool Tune(transport_scan_items_it_t transport);
+    void ScanTransport(transport_scan_items_it_t transport);
     DTVTunerType GuessDTVTunerType(DTVTunerType type) const;
     static void LogLines(const QString& string);
 
-    /// \brief Updates Transport Scan progress bar
+    // Updates Transport Scan progress bar
     inline void UpdateScanPercentCompleted(void);
 
     bool CheckImportedList(const DTVChannelInfoList &channels,
@@ -189,7 +189,7 @@ class ChannelScanSM : public MPEGStreamListener,
     void IgnoreEncryptedMsg(const QString &name, int aux_num);
 
     bool TestNextProgramEncryption(void);
-    void UpdateScanTransports(const NetworkInformationTable *nit);
+    void UpdateScanTransports(uint frequency, const NetworkInformationTable *nit);
     bool UpdateChannelInfo(bool wait_until_complete);
 
     void HandleAllGood(void); // used for analog scanner
@@ -198,9 +198,9 @@ class ChannelScanSM : public MPEGStreamListener,
 
     static QString loc(const ChannelScanSM *siscan);
 
-    static const uint kDVBTableTimeout;
-    static const uint kATSCTableTimeout;
-    static const uint kMPEGTableTimeout;
+    static const std::chrono::milliseconds kDVBTableTimeout;
+    static const std::chrono::milliseconds kATSCTableTimeout;
+    static const std::chrono::milliseconds kMPEGTableTimeout;
 
   private:
     // Set in constructor
@@ -208,10 +208,10 @@ class ChannelScanSM : public MPEGStreamListener,
     ChannelBase      *m_channel;
     SignalMonitor    *m_signalMonitor;
     int               m_sourceID;
-    uint              m_signalTimeout;
-    uint              m_channelTimeout;
-    uint              m_otherTableTimeout {0};
-    uint              m_otherTableTime    {0};
+    std::chrono::milliseconds m_signalTimeout;
+    std::chrono::milliseconds m_channelTimeout;
+    std::chrono::milliseconds m_otherTableTimeout {0ms};
+    std::chrono::milliseconds m_otherTableTime    {0ms};
     bool              m_setOtherTables    {false};
     QString           m_inputName;
     bool              m_testDecryption;
@@ -222,7 +222,7 @@ class ChannelScanSM : public MPEGStreamListener,
     uint              m_bouquetId         {0};
     uint              m_regionId          {0};
     uint              m_nitId             {0};
-
+    uint              m_lcnOffset         {0};
     // Optional info
     DTVTunerType      m_scanDTVTunerType  {DTVTunerType::kTunerTypeUnknown};
 
@@ -256,8 +256,10 @@ class ChannelScanSM : public MPEGStreamListener,
     // Analog Info
     AnalogSignalHandler *m_analogSignalHandler {nullptr};
 
-    /// Scanner thread, runs ChannelScanSM::run()
+    // Scanner thread, runs ChannelScanSM::run()
     MThread             *m_scannerThread       {nullptr};
+
+    // Protect UpdateChannelInfo
     QMutex               m_mutex;
 };
 

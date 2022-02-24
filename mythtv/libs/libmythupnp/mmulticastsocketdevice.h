@@ -6,12 +6,12 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef _MULTICAST_SOCKET_DEVICE_H_
-#define _MULTICAST_SOCKET_DEVICE_H_
+#ifndef MULTICAST_SOCKET_DEVICE_H
+#define MULTICAST_SOCKET_DEVICE_H
 
 #ifdef __FreeBSD__
 #  include <sys/types.h>
@@ -70,4 +70,4 @@ class MMulticastSocketDevice : public MSocketDevice
     struct ip_mreq      m_imr {};
 };
 
-#endif // _MULTICAST_SOCKET_DEVICE_H_
+#endif // MULTICAST_SOCKET_DEVICE_H

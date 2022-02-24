@@ -3,9 +3,9 @@
 
 // C++ headers
 #include <iostream>
-using namespace std;
 
 // Qt headers
+#include <QtGlobal>
 #include <QCoreApplication>
 #include <QFileInfo>
 
@@ -88,10 +88,10 @@ int main(int argc, char *argv[])
 
     if (cmdline.toBool("manual"))
     {
-        cout << "###\n";
-        cout << "### Running in manual channel configuration mode.\n";
-        cout << "### This will ask you questions about every channel.\n";
-        cout << "###\n";
+        std::cout << "###\n";
+        std::cout << "### Running in manual channel configuration mode.\n";
+        std::cout << "### This will ask you questions about every channel.\n";
+        std::cout << "###\n";
         fill_data.m_chanData.m_interactive = true;
     }
 
@@ -104,11 +104,11 @@ int main(int argc, char *argv[])
 
     if (cmdline.toBool("preset"))
     {
-        cout << "###\n";
-        cout << "### Running in preset channel configuration mode.\n";
-        cout << "### This will assign channel ";
-        cout << "preset numbers to every channel.\n";
-        cout << "###\n";
+        std::cout << "###\n";
+        std::cout << "### Running in preset channel configuration mode.\n";
+        std::cout << "### This will assign channel ";
+        std::cout << "preset numbers to every channel.\n";
+        std::cout << "###\n";
         fill_data.m_chanData.m_channelPreset = true;
     }
 
@@ -118,8 +118,8 @@ int main(int argc, char *argv[])
         if (!cmdline.toBool("sourceid") ||
             !cmdline.toBool("xmlfile"))
         {
-            cerr << "The --file option must be used in combination" << endl
-                 << "with both --sourceid and --xmlfile." << endl;
+            std::cerr << "The --file option must be used in combination" << std::endl
+                      << "with both --sourceid and --xmlfile." << std::endl;
             return GENERIC_EXIT_INVALID_CMDLINE;
         }
 
@@ -143,8 +143,8 @@ int main(int argc, char *argv[])
     {
         if (!cmdline.toBool("sourceid"))
         {
-            cerr << "The --cardtype option must be used in combination" << endl
-                 << "with a --sourceid option." << endl;
+            std::cerr << "The --cardtype option must be used in combination" << std::endl
+                      << "with a --sourceid option." << std::endl;
             return GENERIC_EXIT_INVALID_CMDLINE;
         }
 
@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
     QStringList sl = cmdline.toStringList("refresh");
     if (!sl.isEmpty())
     {
-        foreach (auto item, sl)
+        for (const auto & item : qAsConst(sl))
         {
             QString warn = QString("Invalid entry in --refresh list: %1")
                                 .arg(item);
@@ -203,20 +203,20 @@ int main(int argc, char *argv[])
                 uint lower = r[0].toUInt(&ok);
                 if (!ok)
                 {
-                    cerr << warn.toLocal8Bit().constData() << endl;
+                    std::cerr << warn.toLocal8Bit().constData() << std::endl;
                     return 0;
                 }
 
                 uint upper = r[1].toUInt(&ok);
                 if (!ok)
                 {
-                    cerr << warn.toLocal8Bit().constData() << endl;
+                    std::cerr << warn.toLocal8Bit().constData() << std::endl;
                     return 0;
                 }
 
                 if (lower > upper)
                 {
-                    cerr << warn.toLocal8Bit().constData() << endl;
+                    std::cerr << warn.toLocal8Bit().constData() << std::endl;
                     return 0;
                 }
 
@@ -229,7 +229,7 @@ int main(int argc, char *argv[])
                 uint day = item.toUInt(&ok);
                 if (!ok)
                 {
-                    cerr << warn.toLocal8Bit().constData() << endl;
+                    std::cerr << warn.toLocal8Bit().constData() << std::endl;
                     return 0;
                 }
 
@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
     QList<int> signallist;
     signallist << SIGINT << SIGTERM << SIGSEGV << SIGABRT << SIGBUS << SIGFPE
                << SIGILL;
-#if ! CONFIG_DARWIN
+#ifndef Q_OS_DARWIN
     signallist << SIGRTMIN;
 #endif
     SignalHandler::Init(signallist);
@@ -468,7 +468,7 @@ int main(int argc, char *argv[])
 
             LOG(VB_GENERAL, LOG_INFO,
                 QString("    %1 -> %2 (part %3 of %4)")
-                    .arg(orig_programid).arg(new_programid)
+                    .arg(orig_programid, new_programid)
                     .arg(partnum).arg(parttotal));
 
             repl.bindValue(":NEWID", new_programid);
@@ -479,8 +479,7 @@ int main(int argc, char *argv[])
             {
                 LOG(VB_GENERAL, LOG_INFO,
                     QString("Fudging programid from '%1' to '%2'")
-                        .arg(orig_programid)
-                        .arg(new_programid));
+                        .arg(orig_programid, new_programid));
             }
             else
                 found += repl.numRowsAffected();

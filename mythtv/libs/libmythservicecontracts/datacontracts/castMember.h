@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2013 Stuart Morgan <smorgan@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -33,10 +33,10 @@ class SERVICE_PUBLIC CastMember : public QObject
     Q_PROPERTY( QString   Role           READ Role           WRITE setRole           )
     Q_PROPERTY( QString   TranslatedRole READ TranslatedRole WRITE setTranslatedRole )
 
-    PROPERTYIMP ( QString     , Name           )
-    PROPERTYIMP ( QString     , CharacterName  )
-    PROPERTYIMP ( QString     , Role           )
-    PROPERTYIMP ( QString     , TranslatedRole )
+    PROPERTYIMP_REF ( QString     , Name           )
+    PROPERTYIMP_REF ( QString     , CharacterName  )
+    PROPERTYIMP_REF ( QString     , Role           )
+    PROPERTYIMP_REF ( QString     , TranslatedRole )
 
     public:
 

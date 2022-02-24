@@ -18,10 +18,14 @@
         - ?/7/2010 - Add streaming support
 */
 
+// C++ headers
+#include <chrono>
+
 // QT headers
 #include <QObject>
 #include <QIODevice>
 #include <QFile>
+#include <QRegularExpression>
 #include <QTimer>
 
 // Myth headers
@@ -32,8 +36,6 @@
 #include <mythlogging.h>
 #include <decoderhandler.h>
 #include <mythavutil.h>
-
-using namespace std;
 
 // Mythmusic Headers
 #include "avfdecoder.h"
@@ -144,25 +146,25 @@ ShoutCastMetaMap ShoutCastMetaParser::parseMeta(const QString &mdata)
         title_begin_pos += 13;
         int title_end_pos = mdata.indexOf("';", title_begin_pos);
         QString title = mdata.mid(title_begin_pos, title_end_pos - title_begin_pos);
-        QRegExp rx;
-        rx.setPattern(m_metaFormat);
-        if (rx.indexIn(title) != -1)
+        QRegularExpression rx { m_metaFormat };
+        auto match = rx.match(title);
+        if (match.hasMatch())
         {
             LOG(VB_PLAYBACK, LOG_INFO, QString("ShoutCast: Meta     : '%1'")
                     .arg(mdata));
             LOG(VB_PLAYBACK, LOG_INFO,
                 QString("ShoutCast: Parsed as: '%1' by '%2'")
-                    .arg(rx.cap(m_metaTitlePos))
-                    .arg(rx.cap(m_metaArtistPos)));
+                    .arg(match.captured(m_metaTitlePos),
+                         match.captured(m_metaArtistPos)));
 
             if (m_metaTitlePos > 0)
-                result["title"] = rx.cap(m_metaTitlePos);
+                result["title"] = match.captured(m_metaTitlePos);
 
             if (m_metaArtistPos > 0)
-                result["artist"] = rx.cap(m_metaArtistPos);
+                result["artist"] = match.captured(m_metaArtistPos);
 
             if (m_metaAlbumPos > 0)
-                result["album"] = rx.cap(m_metaAlbumPos);
+                result["album"] = match.captured(m_metaAlbumPos);
         }
     }
 
@@ -175,7 +177,6 @@ static void myth_av_log(void *ptr, int level, const char* fmt, va_list vl)
         return;
 
     static QString   s_fullLine("");
-    static constexpr int kMsgLen = 255;
     static QMutex    s_stringLock;
     uint64_t   verbose_mask  = VB_GENERAL;
     LogLevel_t verbose_level = LOG_DEBUG;
@@ -212,22 +213,12 @@ static void myth_av_log(void *ptr, int level, const char* fmt, va_list vl)
     s_stringLock.lock();
     if (s_fullLine.isEmpty() && ptr) {
         AVClass* avc = *(AVClass**)ptr;
-        s_fullLine.sprintf("[%s @ %p] ", avc->item_name(ptr), avc);
+        s_fullLine = QString("[%1 @ %2] ")
+            .arg(avc->item_name(ptr))
+            .arg(reinterpret_cast<size_t>(avc),QT_POINTER_SIZE,8,QChar('0'));
     }
 
-    char str[kMsgLen+1];
-    int bytes = vsnprintf(str, kMsgLen+1, fmt, vl);
-
-    // check for truncated messages and fix them
-    if (bytes > kMsgLen)
-    {
-        LOG(VB_GENERAL, LOG_WARNING,
-            QString("Libav log output truncated %1 of %2 bytes written")
-                .arg(kMsgLen).arg(bytes));
-        str[kMsgLen-1] = '\n';
-    }
-
-    s_fullLine += QString(str);
+    s_fullLine += QString::asprintf(fmt, vl);
     if (s_fullLine.endsWith("\n"))
     {
         LOG(verbose_mask, verbose_level, s_fullLine.trimmed());
@@ -305,9 +296,9 @@ bool avfDecoder::initialize()
     {
         m_mdataTimer = new QTimer;
         m_mdataTimer->setSingleShot(false);
-        connect(m_mdataTimer, SIGNAL(timeout()), this, SLOT(checkMetatdata()));
+        connect(m_mdataTimer, &QTimer::timeout, this, &avfDecoder::checkMetatdata);
 
-        m_mdataTimer->start(500);
+        m_mdataTimer->start(500ms);
 
         // we don't get metadata updates for MMS streams so grab the metadata from the headers
         if (getURL().startsWith("mmsh://"))
@@ -322,7 +313,7 @@ bool avfDecoder::initialize()
             mdata.setArtist(tag->value);
 
             mdata.setAlbum("");
-            mdata.setLength(-1);
+            mdata.setLength(-1ms);
 
             DecoderHandlerEvent ev(DecoderHandlerEvent::Meta, mdata);
             dispatch(ev);
@@ -352,7 +343,7 @@ bool avfDecoder::initialize()
     }
 
     // Store the audio codec of the stream
-    m_audioDec = gCodecMap->getCodecContext
+    m_audioDec = m_codecMap.GetCodecContext
         (m_inputContext->getContext()->streams[selTrack]);
 
     // Store the input format of the context
@@ -422,7 +413,7 @@ void avfDecoder::deinit()
         for (uint i = 0; i < m_inputContext->getContext()->nb_streams; i++)
         {
             AVStream *st = m_inputContext->getContext()->streams[i];
-            gCodecMap->freeCodecContext(st);
+            m_codecMap.FreeCodecContext(st);
         }
     }
 
@@ -439,10 +430,13 @@ void avfDecoder::run()
         return;
     }
 
-    AVPacket pkt;
-    AVPacket tmp_pkt;
-    memset(&pkt, 0, sizeof(AVPacket));
-    av_init_packet(&pkt);
+    AVPacket *pkt = av_packet_alloc();
+    AVPacket *tmp_pkt = av_packet_alloc();
+    if ((pkt == nullptr) || (tmp_pkt == nullptr))
+    {
+        LOG(VB_GENERAL, LOG_ERR, "packet allocation failed");
+        return;
+    }
 
     m_stat = DecoderEvent::Decoding;
     {
@@ -470,7 +464,7 @@ void avfDecoder::run()
         while (!m_finish && !m_userStop && m_seekTime <= 0.0)
         {
             // Read a packet from the input context
-            int res = av_read_frame(m_inputContext->getContext(), &pkt);
+            int res = av_read_frame(m_inputContext->getContext(), pkt);
             if (res < 0)
             {
                 if (res != AVERROR_EOF)
@@ -483,11 +477,9 @@ void avfDecoder::run()
                 break;
             }
 
-            av_init_packet(&tmp_pkt);
-            tmp_pkt.data = pkt.data;
-            tmp_pkt.size = pkt.size;
+            av_packet_ref(tmp_pkt, pkt);
 
-            while (tmp_pkt.size > 0 && !m_finish &&
+            while (tmp_pkt->size > 0 && !m_finish &&
                    !m_userStop && m_seekTime <= 0.0)
             {
                 int data_size = 0;
@@ -495,32 +487,33 @@ void avfDecoder::run()
                 int ret = output()->DecodeAudio(m_audioDec,
                                                 m_outputBuffer,
                                                 data_size,
-                                                &tmp_pkt);
+                                                tmp_pkt);
 
                 if (ret < 0)
                     break;
 
                 // Increment the output pointer and count
-                tmp_pkt.size -= ret;
-                tmp_pkt.data += ret;
+                tmp_pkt->size -= ret;
+                tmp_pkt->data += ret;
 
                 if (data_size <= 0)
                     continue;
 
-                output()->AddData(m_outputBuffer, data_size, -1, 0);
+                output()->AddData(m_outputBuffer, data_size, -1ms, 0);
             }
 
-            av_packet_unref(&pkt);
+            av_packet_unref(pkt);
 
             // Wait until we need to decode or supply more samples
             while (!m_finish && !m_userStop && m_seekTime <= 0.0)
             {
-                int64_t buffered = output()->GetAudioBufferedTime();
+                std::chrono::milliseconds buffered = output()->GetAudioBufferedTime();
                 // never go below 1s buffered
-                if (buffered < 1000)
+                if (buffered < 1s)
                     break;
                 // wait
-                usleep((buffered - 1000) * 1000);
+                const struct timespec ns {0, (buffered.count() - 1000) * 1000000};
+                nanosleep(&ns, nullptr);
             }
         }
     }
@@ -545,6 +538,8 @@ void avfDecoder::run()
         dispatch(e);
     }
 
+    av_packet_free(&pkt);
+    av_packet_free(&tmp_pkt);
     deinit();
     RunEpilog();
 }
@@ -572,7 +567,7 @@ void avfDecoder::checkMetatdata(void)
             mdata.setTitle(meta_map["title"]);
             mdata.setArtist(meta_map["artist"]);
             mdata.setAlbum(meta_map["album"]);
-            mdata.setLength(-1);
+            mdata.setLength(-1ms);
 
             DecoderHandlerEvent ev(DecoderHandlerEvent::Meta, mdata);
             dispatch(ev);
@@ -592,14 +587,14 @@ void avfDecoder::checkMetatdata(void)
 
 bool avfDecoderFactory::supports(const QString &source) const
 {
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList list = extension().split("|", QString::SkipEmptyParts);
-    for (QStringList::const_iterator it = list.begin(); it != list.end(); ++it)
-    {
-        if (*it == source.right((*it).length()).toLower())
-            return true;
-    }
-
-    return false;
+#else
+    QStringList list = extension().split("|", Qt::SkipEmptyParts);
+#endif
+    return std::any_of(list.cbegin(), list.cend(),
+                       [source](const auto& str)
+                           { return str == source.right(str.length()).toLower(); } );
 }
 
 const QString &avfDecoderFactory::extension() const

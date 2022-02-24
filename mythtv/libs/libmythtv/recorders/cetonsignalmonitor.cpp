@@ -93,11 +93,10 @@ void CetonSignalMonitor::UpdateValues(void)
 
         // TODO dtv signals...
 
-        m_update_done = true;
+        m_updateDone = true;
         return;
     }
 
-    // cppcheck-suppress variableScope
     uint sig = 100;  // TODO find some way to actually monitor signal level
 
     // Set SignalMonitorValues from info from card.
@@ -105,7 +104,7 @@ void CetonSignalMonitor::UpdateValues(void)
     {
         QMutexLocker locker(&m_statusLock);
         m_signalStrength.SetValue(sig);
-        m_signalLock.SetValue(true);
+        m_signalLock.SetValue(static_cast<int>(true));
         // TODO add some way to indicate if there is actually a lock
         isLocked = m_signalLock.IsGood();
     }
@@ -125,5 +124,5 @@ void CetonSignalMonitor::UpdateValues(void)
         m_streamHandlerStarted = true;
     }
 
-    m_update_done = true;
+    m_updateDone = true;
 }

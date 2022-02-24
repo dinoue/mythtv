@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2011 Robert McNamara <rmcnamara@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +32,7 @@ class SERVICE_PUBLIC ArtworkInfoList : public QObject
 
     Q_CLASSINFO( "ArtworkInfos", "type=DTC::ArtworkInfo");
 
-    Q_PROPERTY( QVariantList ArtworkInfos     READ ArtworkInfos DESIGNABLE true )
+    Q_PROPERTY( QVariantList ArtworkInfos     READ ArtworkInfos )
 
     PROPERTYIMP_RO_REF( QVariantList, ArtworkInfos );
 

@@ -38,7 +38,7 @@ void MarkedFiles::Invert(const ImageIdList &all)
     QSet tmp;
     for (int tmpint : all)
         tmp.insert(tmpint);
-    for (int tmpint : *this)
+    for (int tmpint : qAsConst(*this))
         tmp.remove(tmpint);
     swap(tmp);
 }
@@ -50,7 +50,7 @@ void MarkedFiles::Invert(const ImageIdList &all)
 ImageListK FlatView::GetAllNodes() const
 {
     ImageListK files;
-    foreach (int id, m_sequence)
+    for (int id : qAsConst(m_sequence))
         files.append(m_images.value(id));
     return files;
 }
@@ -219,7 +219,7 @@ void FlatView::Populate(ImageList &files)
     if (files.isEmpty())
         return;
 
-    foreach (ImagePtrK im, files)
+    for (const QSharedPointer<ImageItem> & im : qAsConst(files))
     {
         // Add image to view
         m_images.insert(im->m_id, im);
@@ -232,7 +232,7 @@ void FlatView::Populate(ImageList &files)
     if (files.size() == 1 || m_order == kOrdered || m_order == kShuffle)
     {
         // Default sequence is ordered
-        foreach (ImagePtrK im, files)
+        for (const QSharedPointer<ImageItem> & im : qAsConst(files))
             m_sequence.append(im->m_id);
     }
 
@@ -251,6 +251,7 @@ void FlatView::Populate(ImageList &files)
             rands.resize(files.size());
             QRandomGenerator::global()->fillRange(rands.data(), rands.size());
 #else
+            // cppcheck-suppress qsrandCalled
             qsrand(QTime::currentTime().msec());
 #endif
             // An image is not a valid candidate for its successor
@@ -261,6 +262,7 @@ void FlatView::Populate(ImageList &files)
 #if QT_VERSION >= QT_VERSION_CHECK(5,10,0)
                 int rand = rands[count] % range;
 #else
+                // cppcheck-suppress qrandCalled
                 int rand = qrand() % range;
 #endif
                 // Avoid consecutive repeats
@@ -276,6 +278,7 @@ void FlatView::Populate(ImageList &files)
 #if QT_VERSION >= QT_VERSION_CHECK(5,10,0)
             auto *randgen = QRandomGenerator::global();
 #else
+            // cppcheck-suppress qsrandCalled
             qsrand(QTime::currentTime().msec());
 #endif
             for (int count = 0; count < files.size(); ++count)
@@ -284,6 +287,7 @@ void FlatView::Populate(ImageList &files)
                 // generateDouble() returns in the range [0, 1)
                 double randWeight = randgen->generateDouble() * maxWeight;
 #else
+                // cppcheck-suppress qrandCalled
                 double randWeight = qrand() * maxWeight / RAND_MAX;
 #endif
                 WeightList::iterator it =
@@ -317,15 +321,11 @@ WeightList FlatView::CalculateSeasonalWeights(ImageList &files)
         ImagePtrK im = files.at(i);
         double weight = 0;
 
-        if (im->m_date == 0)
+        if (im->m_date == 0s)
             weight = DEFAULT_WEIGHT;
         else
         {
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-            QDateTime timestamp = QDateTime::fromTime_t(im->m_date);
-#else
-            QDateTime timestamp = QDateTime::fromSecsSinceEpoch(im->m_date);
-#endif
+            QDateTime timestamp = QDateTime::fromSecsSinceEpoch(im->m_date.count());
             QDateTime curYearAnniversary =
                     QDateTime(QDate(now.date().year(),
                                     timestamp.date().month(),
@@ -462,7 +462,7 @@ void FlatView::Cache(int id, int parent, const QString &url, const QString &thum
 QString DirCacheEntry::ToString(int id) const
 {
     QStringList ids;
-    foreach (const auto & thumb, m_thumbs)
+    for (const auto & thumb : qAsConst(m_thumbs))
         ids << QString::number(thumb.first);
     return QString("Dir %1 (%2, %3) Thumbs %4 (%5) Parent %6")
             .arg(id).arg(m_fileCount).arg(m_dirCount).arg(ids.join(","))
@@ -526,7 +526,7 @@ bool DirectoryView::LoadFromDb(int parentId)
     }
 
     // Populate all subdirs
-    foreach (ImagePtr im, dirs)
+    for (const ImagePtr & im : qAsConst(dirs))
     {
         if (im)
             // Load sufficient thumbs from each dir as subsequent dirs may be empty
@@ -544,7 +544,7 @@ bool DirectoryView::LoadFromDb(int parentId)
     if (!m_marked.isEmpty())
     {
         QSet<int> ids;
-        foreach (ImagePtrK im, images)
+        for (const QSharedPointer<ImageItem> & im : qAsConst(images))
             ids.insert(im->m_id);
         m_marked.intersect(ids);
     }
@@ -609,10 +609,12 @@ void DirectoryView::PopulateThumbs(ImageItem &parent, int thumbsNeeded,
     ImagePtr userIm;
     if (parent.m_userThumbnail != 0)
     {
-        foreach (ImagePtr im, files + dirs)
+        ImageList images = files + dirs;
+        // ImageItem has been explicitly marked Q_DISABLE_COPY
+        for (const ImagePtr & im : qAsConst(images))
         {
             if (im && im->m_id == parent.m_userThumbnail)
-            {
+            { // cppcheck-suppress useStlAlgorithm
                 userIm = im;
                 break;
             }
@@ -658,7 +660,7 @@ void DirectoryView::PopulateThumbs(ImageItem &parent, int thumbsNeeded,
         else
         {
             // Recursively load subdir thumbs to try to get 1 thumb from each
-            foreach (ImagePtr im, thumbDirs)
+            for (const ImagePtr & im : qAsConst(thumbDirs))
             {
                 if (!im)
                     continue;
@@ -683,7 +685,7 @@ void DirectoryView::PopulateThumbs(ImageItem &parent, int thumbsNeeded,
             int i = 0;
             while (thumbsNeeded > 0 && ++i < kMaxFolderThumbnails)
             {
-                foreach (ImagePtrK im, thumbDirs)
+                for (const QSharedPointer<ImageItem> & im : qAsConst(thumbDirs))
                 {
                     if (i < im->m_thumbNails.size())
                     {
@@ -813,7 +815,7 @@ MenuSubjects DirectoryView::GetMenuSubjects()
     // unhiddenMarked is true if 1 or more marked items are not hidden
     bool hiddenMarked   = false;
     bool unhiddenMarked = false;
-    foreach (int id, m_marked)
+    for (int id : qAsConst(m_marked))
     {
         ImagePtrK im = m_images.value(id);
         if (!im)
@@ -870,7 +872,7 @@ void DirectoryView::Cache(ImageItemK &dir, int thumbCount)
     m_dirCache.insert(dir.m_id, cacheEntry);
 
     // Cache images used by dir thumbnails
-    foreach (const ThumbPair &thumb, dir.m_thumbNails)
+    for (const ThumbPair & thumb : qAsConst(dir.m_thumbNails))
     {
         // Do not overwrite any existing image url nor parent.
         // Image url is cached when image is displayed as a child, but not as a

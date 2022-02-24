@@ -25,7 +25,7 @@ class QUdpSocket;
 class QTimer;
 class AudioOutput;
 class ServerPool;
-class _NetStream;
+class RaopNetStream;
 
 using RawHash = QHash<QString,QString>;
 
@@ -54,7 +54,7 @@ class MTV_PUBLIC MythRAOPConnection : public QObject
    ~MythRAOPConnection() override;
     bool Init(void);
     QTcpSocket *GetSocket()   { return m_socket;   }
-    int         GetDataPort() { return m_dataPort; }
+    int         GetDataPort() const { return m_dataPort; }
     bool        HasAudio()    { return m_audio;    }
     static QMap<QString,QString> decodeDMAP(const QByteArray &dmap);
     static RSA *LoadKey(void);
@@ -70,18 +70,18 @@ class MTV_PUBLIC MythRAOPConnection : public QObject
 
   private:
     void     ProcessSync(const QByteArray &buf);
-    void     SendResendRequest(uint64_t timestamp,
+    void     SendResendRequest(std::chrono::milliseconds timestamp,
                                uint16_t expected, uint16_t got);
-    void     ExpireResendRequests(uint64_t timestamp);
+    void     ExpireResendRequests(std::chrono::milliseconds timestamp);
     uint32_t decodeAudioPacket(uint8_t type, const QByteArray *buf,
                                QList<AudioData> *dest);
-    int      ExpireAudio(uint64_t timestamp);
+    int      ExpireAudio(std::chrono::milliseconds timestamp);
     void     ResetAudio(void);
     void     ProcessRequest(const QStringList &header,
                             const QByteArray &content);
-    static void  FinishResponse(_NetStream *stream, QTcpSocket *socket,
+    static void  FinishResponse(RaopNetStream *stream, QTcpSocket *socket,
                                 QString &option, QString &cseq, QString &responseData);
-    void     FinishAuthenticationResponse(_NetStream *stream, QTcpSocket *socket,
+    void     FinishAuthenticationResponse(RaopNetStream *stream, QTcpSocket *socket,
                                           QString &cseq);
 
     static RawHash  FindTags(const QStringList &lines);
@@ -96,17 +96,20 @@ class MTV_PUBLIC MythRAOPConnection : public QObject
     // time sync
     void     SendTimeRequest(void);
     void     ProcessTimeResponse(const QByteArray &buf);
-    static uint64_t NTPToLocal(uint32_t sec, uint32_t ticks);
+    static std::chrono::milliseconds NTPToLocal(uint32_t sec, uint32_t ticks);
+    static void microsecondsToNTP(std::chrono::microseconds usec, uint32_t &ntpSec, uint32_t &ntpTicks);
+    static void timevalToNTP(timeval t, uint32_t &ntpSec, uint32_t &ntpTicks);
 
     // incoming data packet
     static bool GetPacketType(const QByteArray &buf, uint8_t &type,
                           uint16_t &seq, uint64_t &timestamp);
 
     // utility functions
-    int64_t     AudioCardLatency(void);
+    std::chrono::milliseconds AudioCardLatency(void);
     static QStringList splitLines(const QByteArray &lines);
     static QString     stringFromSeconds(int timeInSeconds);
-    uint64_t    framesToMs(uint64_t frames);
+    std::chrono::milliseconds framesToMs(uint64_t frames) const;
+    uint64_t MsToFrame(std::chrono::milliseconds millis) const;
 
     // notification functions
     void        SendNotification(bool update = false);
@@ -114,7 +117,7 @@ class MTV_PUBLIC MythRAOPConnection : public QObject
     QTimer         *m_watchdogTimer       {nullptr};
     // comms socket
     QTcpSocket     *m_socket              {nullptr};
-    _NetStream     *m_textStream          {nullptr};
+    RaopNetStream  *m_textStream          {nullptr};
     QByteArray      m_hardwareId;
     QStringList     m_incomingHeaders;
     QByteArray      m_incomingContent;
@@ -132,7 +135,7 @@ class MTV_PUBLIC MythRAOPConnection : public QObject
     QList<QTcpSocket *> m_eventClients;
 
     // incoming audio
-    QMap<uint16_t,uint64_t> m_resends;
+    QMap<uint16_t,std::chrono::milliseconds> m_resends;
     // crypto
     QByteArray      m_aesIV;
     AES_KEY         m_aesKey              {};
@@ -149,7 +152,7 @@ class MTV_PUBLIC MythRAOPConnection : public QObject
     int             m_framesPerPacket     {352};
     QTimer         *m_dequeueAudioTimer   {nullptr};
 
-    QMap<uint64_t, AudioPacket>  m_audioQueue;
+    QMap<std::chrono::milliseconds, AudioPacket>  m_audioQueue;
     uint32_t        m_queueLength         {0};
     bool            m_streamingStarted    {false};
     bool            m_allowVolumeControl  {true};
@@ -158,22 +161,22 @@ class MTV_PUBLIC MythRAOPConnection : public QObject
     uint16_t        m_seqNum              {0};
     // audio/packet sync
     uint16_t        m_lastSequence        {0};
-    uint64_t        m_lastTimestamp       {0};
-    uint64_t        m_currentTimestamp    {0};
+    std::chrono::milliseconds  m_lastTimestamp       {0ms};
+    std::chrono::milliseconds  m_currentTimestamp    {0ms};
     uint16_t        m_nextSequence        {0};
-    uint64_t        m_nextTimestamp       {0};
-    int64_t         m_bufferLength        {0};
-    uint64_t        m_timeLastSync        {0};
-    int64_t         m_cardLatency         {-1};
-    int64_t         m_adjustedLatency     {-1};
+    std::chrono::milliseconds  m_nextTimestamp       {0ms};
+    std::chrono::milliseconds  m_bufferLength        {0ms};
+    std::chrono::milliseconds  m_timeLastSync        {0ms};
+    std::chrono::milliseconds  m_cardLatency         {-1ms};
+    std::chrono::milliseconds  m_adjustedLatency     {-1ms};
     bool            m_audioStarted        {false};
 
     // clock sync
-    uint64_t        m_masterTimeStamp     {0};
-    uint64_t        m_deviceTimeStamp     {0};
-    uint64_t        m_networkLatency      {0};
-                    // difference in ms between reference
-    int64_t         m_clockSkew           {0};
+    std::chrono::milliseconds  m_networkLatency      {0ms};
+    // Difference in ms between reference. This value will typically
+    // be huge (~50 years)and meaningless as Apple products seem to
+    // only send uptimes, not wall times.
+    std::chrono::milliseconds  m_clockSkew           {0ms};
 
     // audio retry timer
     QTimer         *m_audioTimer          {nullptr};

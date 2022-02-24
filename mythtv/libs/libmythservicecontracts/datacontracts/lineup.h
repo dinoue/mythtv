@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2011 Robert McNamara <rmcnamara@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -33,12 +33,12 @@ class SERVICE_PUBLIC Lineup : public QObject
     Q_PROPERTY( QString         Postal          READ Postal           WRITE setPostal         )
     Q_PROPERTY( QString         Device          READ Device           WRITE setDevice         )
 
-    PROPERTYIMP    ( QString    , LineupId       )
-    PROPERTYIMP    ( QString    , Name           )
-    PROPERTYIMP    ( QString    , DisplayName    )
-    PROPERTYIMP    ( QString    , Type           )
-    PROPERTYIMP    ( QString    , Postal         )
-    PROPERTYIMP    ( QString    , Device         )
+    PROPERTYIMP_REF( QString    , LineupId       )
+    PROPERTYIMP_REF( QString    , Name           )
+    PROPERTYIMP_REF( QString    , DisplayName    )
+    PROPERTYIMP_REF( QString    , Type           )
+    PROPERTYIMP_REF( QString    , Postal         )
+    PROPERTYIMP_REF( QString    , Device         )
 
     public:
 
@@ -73,7 +73,7 @@ class SERVICE_PUBLIC LineupList : public QObject
 
     Q_CLASSINFO( "Lineups", "type=DTC::Lineup");
 
-    Q_PROPERTY( QVariantList Lineups READ Lineups DESIGNABLE true )
+    Q_PROPERTY( QVariantList Lineups READ Lineups )
 
     PROPERTYIMP_RO_REF( QVariantList, Lineups );
 
@@ -96,7 +96,7 @@ class SERVICE_PUBLIC LineupList : public QObject
             // We must make sure the object added to the QVariantList has
             // a parent of 'this'
 
-            Lineup *pObject = new Lineup( this );
+            auto *pObject = new Lineup( this );
             m_Lineups.append( QVariant::fromValue<QObject *>( pObject ));
 
             return pObject;

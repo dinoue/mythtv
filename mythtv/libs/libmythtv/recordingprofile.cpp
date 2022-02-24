@@ -140,7 +140,7 @@ class SampleRate : public MythUIComboBoxSetting, public CodecParamStorage
         }
 
         int which = getValueIndex(val);
-        setValue(max(which,0));
+        setValue(std::max(which,0));
 
         if (m_allowedRate.size() <= 1)
             setEnabled(false);
@@ -164,7 +164,7 @@ class SampleRate : public MythUIComboBoxSetting, public CodecParamStorage
         }
     }
 
-    vector<uint>    m_rates;
+    std::vector<uint> m_rates;
     QMap<uint,bool> m_allowedRate;
 };
 
@@ -338,7 +338,7 @@ class MPEG2AudioBitrateSettings : public GroupSetting
                               bool layer1, bool layer2, bool layer3,
                               uint default_layer)
     {
-        const QString layers[3] = { "Layer I", "Layer II", "Layer III", };
+        const std::array<const QString,3> layers { "Layer I", "Layer II", "Layer III", };
 
         setLabel(QObject::tr("Bitrate Settings"));
 
@@ -350,7 +350,7 @@ class MPEG2AudioBitrateSettings : public GroupSetting
         addTargetedChild(layers[1], new MPEG2audBitrateL2(parent));
         addTargetedChild(layers[2], new MPEG2audBitrateL3(parent));
 
-        uint desired_layer = max(min(3U, default_layer), 1U) - 1;
+        uint desired_layer = std::max(std::min(3U, default_layer), 1U) - 1;
         int which = audType->getValueIndex(layers[desired_layer]);
         if (which >= 0)
             audType->setValue(which);
@@ -444,11 +444,11 @@ class AudioCompressionSettings : public GroupSetting
                  * to the same setting configuration, so we need to do
                  * this in two passes. */
 
-                foreach (auto & option, options)
+                for (const auto & option : qAsConst(options))
                 {
                     if (option.m_category == DriverOption::AUDIO_ENCODING)
                     {
-                        foreach (const auto & Imenu, option.m_menu)
+                        for (const auto & Imenu : qAsConst(option.m_menu))
                         {
                             if (!Imenu.isEmpty())
                                 m_v4l2codecs << "V4L2:" + Imenu;
@@ -458,7 +458,7 @@ class AudioCompressionSettings : public GroupSetting
 
                 for (auto Icodec = m_v4l2codecs.begin(); Icodec < m_v4l2codecs.end(); ++Icodec)
                 {
-                    foreach (auto & option, options)
+                    for (const auto & option : qAsConst(options))
                     {
                         if (option.m_category == DriverOption::AUDIO_BITRATE_MODE)
                         {
@@ -483,7 +483,7 @@ class AudioCompressionSettings : public GroupSetting
                             bool layer2 = false;
                             bool layer3 = false;
 
-                            foreach (const auto & Imenu, option.m_menu)
+                            for (const auto & Imenu : qAsConst(option.m_menu))
                             {
                                 if (Imenu.indexOf("Layer III") >= 0)
                                     layer3 = true;
@@ -529,7 +529,7 @@ class AudioCompressionSettings : public GroupSetting
             }
             else if (groupType.startsWith("V4L2:"))
             {
-                foreach (auto & codec, m_v4l2codecs)
+                for (const auto & codec : qAsConst(m_v4l2codecs))
                     m_codecName->addSelection(codec);
             }
             else
@@ -810,7 +810,7 @@ class MPEG2streamType : public MythUIComboBoxSetting, public CodecParamStorage
 
         setLabel(QObject::tr("Stream Type"));
 
-        const QString options[9] = { "MPEG-2 PS", "MPEG-2 TS",
+        const std::array<const QString,9> options { "MPEG-2 PS", "MPEG-2 TS",
                                      "MPEG-1 VCD", "PES AV",
                                      "PES V", "PES A",
                                      "DVD", "DVD-Special 1", "DVD-Special 2" };
@@ -836,7 +836,7 @@ class MPEG2aspectRatio : public MythUIComboBoxSetting, public CodecParamStorage
 
         setLabel(QObject::tr("Aspect Ratio"));
 
-        const QString options[4] = { QObject::tr("Square"), "4:3",
+        const std::array<const QString,4> options { QObject::tr("Square"), "4:3",
                                      "16:9", "2.21:1" };
 
         for (uint idx = minopt; idx <= maxopt; ++idx)
@@ -983,11 +983,11 @@ class VideoCompressionSettings : public GroupSetting
                  * to the same setting configuration, so we need to do
                  * this in two passes. */
 
-                foreach (auto & option, options)
+                for (const auto & option : qAsConst(options))
                 {
                     if (option.m_category == DriverOption::VIDEO_ENCODING)
                     {
-                        foreach (const auto & Imenu, option.m_menu)
+                        for (const auto & Imenu : qAsConst(option.m_menu))
                         {
                             if (!Imenu.isEmpty())
                                 m_v4l2codecs << "V4L2:" + Imenu;
@@ -1118,6 +1118,12 @@ class VideoCompressionSettings : public GroupSetting
                         m_codecName->addTargetedChild(*Icodec, bit_medium);
                         m_codecName->addTargetedChild(*Icodec, bit_high);
                     }
+                    else
+                    {
+                        // These are only referenced when dynamic_res is true.
+                        delete bit_medium;
+                        delete bit_high;
+                    }
                 }
             }
         }
@@ -1134,7 +1140,7 @@ class VideoCompressionSettings : public GroupSetting
                m_codecName->addSelection("MPEG-4 AVC Hardware Encoder");
             else if (groupType.startsWith("V4L2:"))
             {
-                foreach (auto & codec, m_v4l2codecs)
+                for (const auto & codec : qAsConst(m_v4l2codecs))
                     m_codecName->addSelection(codec);
             }
             else if (groupType == "MPEG")
@@ -1215,10 +1221,10 @@ class TranscodeLossless : public MythUICheckBoxSetting, public CodecParamStorage
     };
 };
 
-class RecordingType : public MythUIComboBoxSetting, public CodecParamStorage
+class RecordingTypeStream : public MythUIComboBoxSetting, public CodecParamStorage
 {
   public:
-    explicit RecordingType(const RecordingProfile &parent) :
+    explicit RecordingTypeStream(const RecordingProfile &parent) :
         MythUIComboBoxSetting(this), CodecParamStorage(this, parent, "recordingtype")
     {
         setLabel(QObject::tr("Recording Type"));
@@ -1349,7 +1355,7 @@ class ImageSize : public GroupSetting
             else
                 defaultsize = QSize(480, 576);
         }
-        else if (tvFormat.toLower().startsWith("ntsc"))
+        else if (tvFormat.startsWith("ntsc", Qt::CaseInsensitive))
         {
             maxsize     = QSize(720, 480);
             defaultsize = (ivtv) ? QSize(720, 480) : QSize(480, 480);
@@ -1582,7 +1588,7 @@ void RecordingProfile::CompleteLoad(int profileId, const QString &type,
             QStringList devices = CardUtil::GetVideoDevices("V4L2ENC");
             if (!devices.isEmpty())
             {
-                foreach (auto & device, devices)
+                for (const auto & device : qAsConst(devices))
                 {
                     delete m_v4l2util;
                     m_v4l2util = new V4L2util(device);
@@ -1617,17 +1623,19 @@ void RecordingProfile::CompleteLoad(int profileId, const QString &type,
 
         if (!m_profileName.isEmpty() && m_profileName.startsWith("Transcoders"))
         {
-            connect(m_trResize,   SIGNAL(valueChanged   (const QString &)),
-                    this,         SLOT(  ResizeTranscode(const QString &)));
-            connect(m_trLossless, SIGNAL(valueChanged        (const QString &)),
-                    this,         SLOT(  SetLosslessTranscode(const QString &)));
-            connect(m_trFilters,  SIGNAL(valueChanged(const QString&)),
-                    this,         SLOT(FiltersChanged(const QString&)));
+            connect(m_trResize,   qOverload<const QString&>(&StandardSetting::valueChanged),
+                    this,         &RecordingProfile::ResizeTranscode);
+            connect(m_trLossless, qOverload<const QString&>(&StandardSetting::valueChanged),
+                    this,         &RecordingProfile::SetLosslessTranscode);
+            connect(m_trFilters,  qOverload<const QString&>(&StandardSetting::valueChanged),
+                    this,         &RecordingProfile::FiltersChanged);
         }
     }
-    else if (type.toUpper() == "DVB")
+
+    // Cards that can receive additional streams such as EIT and MHEG
+    if (CardUtil::IsEITCapable(type))
     {
-        addChild(new RecordingType(*this));
+        addChild(new RecordingTypeStream(*this));
     }
 
     if (CardUtil::IsTunerSharingCapable(type))
@@ -1658,13 +1666,13 @@ void RecordingProfileEditor::Load(void)
 {
     clearSettings();
     auto *newProfile = new ButtonStandardSetting(tr("(Create new profile)"));
-    connect(newProfile, SIGNAL(clicked()), SLOT(ShowNewProfileDialog()));
+    connect(newProfile, &ButtonStandardSetting::clicked, this, &RecordingProfileEditor::ShowNewProfileDialog);
     addChild(newProfile);
     RecordingProfile::fillSelections(this, m_group);
     StandardSetting::Load();
 }
 
-void RecordingProfileEditor::ShowNewProfileDialog()
+void RecordingProfileEditor::ShowNewProfileDialog() const
 {
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
     auto *settingdialog = new MythTextInputDialog(popupStack,
@@ -1672,8 +1680,8 @@ void RecordingProfileEditor::ShowNewProfileDialog()
 
     if (settingdialog->Create())
     {
-        connect(settingdialog, SIGNAL(haveResult(QString)),
-                SLOT(CreateNewProfile(QString)));
+        connect(settingdialog, &MythTextInputDialog::haveResult,
+                this, &RecordingProfileEditor::CreateNewProfile);
         popupStack->AddScreen(settingdialog);
     }
     else
@@ -1730,13 +1738,13 @@ void RecordingProfile::fillSelections(GroupSetting *setting, int group,
 {
     if (!group)
     {
-       for (uint i = 0; !availProfiles[i].isEmpty(); i++)
-       {
-           auto *profile = new GroupSetting();
-           profile->setLabel(availProfiles[i]);
-           setting->addChild(profile);
-       }
-       return;
+        for (const auto & name : kAvailProfiles)
+        {
+            auto *profile = new GroupSetting();
+            profile->setLabel(name);
+            setting->addChild(profile);
+        }
+        return;
     }
 
     MSqlQuery result(MSqlQuery::InitCon());
@@ -1759,7 +1767,6 @@ void RecordingProfile::fillSelections(GroupSetting *setting, int group,
 
     if (group == RecordingProfile::TranscoderGroup && foldautodetect)
     {
-        QString id = QString::number(RecordingProfile::kTranscoderAutodetect);
         auto *profile = new GroupSetting();
         profile->setLabel(QObject::tr("Autodetect"));
         setting->addChild(profile);
@@ -1808,8 +1815,8 @@ QMap< int, QString > RecordingProfile::GetProfiles(RecProfileGroup group)
 
     if (!group)
     {
-        for (uint i = 0; !availProfiles[i].isEmpty(); i++)
-            profiles[i] = availProfiles[i];
+        for (uint i = 0; !kAvailProfiles[i].isEmpty(); i++)
+            profiles[i] = kAvailProfiles[i];
         return profiles;
     }
 

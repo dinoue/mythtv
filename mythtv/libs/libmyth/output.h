@@ -5,8 +5,8 @@
 // warranty, or liability of any kind.
 //
 
-#ifndef   __output_h
-#define   __output_h
+#ifndef   OUTPUT_H
+#define   OUTPUT_H
 
 class OutputListeners;
 class OutputEvent;
@@ -18,6 +18,8 @@ class OutputEvent;
 
 #include "mythobservable.h"
 #include "mythexp.h"
+
+using namespace std::chrono_literals;
 
 class QObject;
 class Buffer;
@@ -31,7 +33,7 @@ class MPUBLIC OutputEvent : public MythEvent
   public:
     explicit OutputEvent(Type type) :
         MythEvent(type) {}
-    OutputEvent(long s, unsigned long w, int b, int f, int p, int c) :
+    OutputEvent(std::chrono::seconds s, unsigned long w, int b, int f, int p, int c) :
         MythEvent(Info), m_elaspedSeconds(s), m_writtenBytes(w),
         m_brate(b), m_freq(f), m_prec(p), m_chan(c) {}
     explicit OutputEvent(const QString &e) :
@@ -48,7 +50,7 @@ class MPUBLIC OutputEvent : public MythEvent
 
     const QString *errorMessage() const { return m_errorMsg; }
 
-    const long &elapsedSeconds() const { return m_elaspedSeconds; }
+    const std::chrono::seconds &elapsedSeconds() const { return m_elaspedSeconds; }
     const unsigned long &writtenBytes() const { return m_writtenBytes; }
     const int &bitrate() const { return m_brate; }
     const int &frequency() const { return m_freq; }
@@ -77,12 +79,17 @@ class MPUBLIC OutputEvent : public MythEvent
             m_errorMsg = new QString(*o.m_errorMsg);
         }
     }
-    OutputEvent &operator=(const OutputEvent&) = delete;
+
+  // No implicit copying.
+  public:
+    OutputEvent &operator=(const OutputEvent &other) = delete;
+    OutputEvent(OutputEvent &&) = delete;
+    OutputEvent &operator=(OutputEvent &&) = delete;
 
   private:
     QString       *m_errorMsg        {nullptr};
 
-    long           m_elaspedSeconds  {0};
+    std::chrono::seconds m_elaspedSeconds {0s};
     unsigned long  m_writtenBytes    {0};
     int            m_brate           {0};
     int            m_freq            {0};
@@ -110,7 +117,7 @@ public:
 protected:
     void error(const QString &e);
     void dispatchVisual(uchar *b, unsigned long b_len,
-                       unsigned long written, int chan, int prec);
+                        std::chrono::milliseconds timecode, int chan, int prec);
     void prepareVisuals();
 
 private:
@@ -123,4 +130,4 @@ private:
 };
 
 
-#endif // __output_h
+#endif // OUTPUT_H

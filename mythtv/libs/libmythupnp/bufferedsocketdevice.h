@@ -6,16 +6,15 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BUFFEREDSOCKETDEVICE_H__
-#define __BUFFEREDSOCKETDEVICE_H__
+#ifndef BUFFEREDSOCKETDEVICE_H
+#define BUFFEREDSOCKETDEVICE_H
 
 // C++ headers
 #include <deque>
-using namespace std;
 
 // Qt headers
 #include <QString>
@@ -47,11 +46,11 @@ class BufferedSocketDevice
 
         bool                    m_bHandleSocketDelete {true};
 
-        QHostAddress            m_DestHostAddress;
+        QHostAddress            m_destHostAddress;
         quint16                 m_nDestPort           {0};
 
         MMembuf                 m_bufRead;
-        deque<QByteArray*>      m_bufWrite;
+        std::deque<QByteArray*> m_bufWrite;
 
         int     ReadBytes      ( );
         bool    ConsumeWriteBuf( qulonglong nbytes );
@@ -80,7 +79,7 @@ class BufferedSocketDevice
         bool                AtEnd               ();
 
         qulonglong          BytesAvailable      (); 
-        qulonglong          WaitForMore         ( int msecs,
+        qulonglong          WaitForMore         ( std::chrono::milliseconds msecs,
                                                   bool *timeout = nullptr );
 
         qulonglong          BytesToWrite        () const;
@@ -100,7 +99,7 @@ class BufferedSocketDevice
 
         bool                CanReadLine         ();
         QString             ReadLine            ();
-        QString             ReadLine            ( int msecs );
+        QString             ReadLine            ( std::chrono::milliseconds msecs );
         qlonglong           ReadLine            ( char *data,
                                                   qulonglong maxlen );
 
@@ -116,4 +115,4 @@ class BufferedSocketDevice
         int                 socket              () { return( ( m_pSocket ) ? m_pSocket->socket() : 0 ); }
 };
 
-#endif
+#endif // BUFFEREDSOCKETDEVICE_H

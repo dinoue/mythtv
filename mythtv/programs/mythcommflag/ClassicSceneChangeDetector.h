@@ -1,5 +1,5 @@
-#ifndef _CLASSICSCENECHANGEDETECTOR_H_
-#define _CLASSICSCENECHANGEDETECTOR_H_
+#ifndef CLASSICSCENECHANGEDETECTOR_H
+#define CLASSICSCENECHANGEDETECTOR_H
 
 #include "SceneChangeDetectorBase.h"
 
@@ -13,7 +13,7 @@ class ClassicSceneChangeDetector : public SceneChangeDetectorBase
         unsigned int yspacing);
     virtual void deleteLater(void);
 
-    void processFrame(VideoFrame* frame) override; // SceneChangeDetectorBase
+    void processFrame(MythVideoFrame* frame) override; // SceneChangeDetectorBase
 
   private:
     ~ClassicSceneChangeDetector() override;
@@ -27,7 +27,6 @@ class ClassicSceneChangeDetector : public SceneChangeDetectorBase
     unsigned int  m_commdetectborder;
 };
 
-#endif
+#endif // CLASSICSCENECHANGEDETECTOR_H
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
-

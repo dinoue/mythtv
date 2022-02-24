@@ -1,7 +1,7 @@
 // -*- Mode: c++ -*-
 
-#ifndef _MYTHSETTINGS_H_
-#define _MYTHSETTINGS_H_
+#ifndef MYTHSETTINGS_H
+#define MYTHSETTINGS_H
 
 #include <utility>
 
@@ -137,6 +137,6 @@ bool check_settings(MythSettingList &database_settings,
 QStringList           GetSettingValueList(const QString &type);
 QString               StringMapToJSON(const QMap<QString,QString> &map);
 QString               StringListToJSON(const QString &key, const QStringList &sList);
-QMap<QString,QString> GetSettingsMap(MythSettingList &settings, const QString &hostname);
+QMap<QString,QString> GetSettingsMap(const MythSettingList &settings, const QString &hostname);
 
-#endif
+#endif // MYTHSETTINGS_H

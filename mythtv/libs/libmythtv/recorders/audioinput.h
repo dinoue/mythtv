@@ -18,8 +18,8 @@
  */
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
-#ifndef _AUDIOINPUT_H_
-#define _AUDIOINPUT_H_
+#ifndef AUDIOINPUT_H
+#define AUDIOINPUT_H
 
 #include <QString>
 #include <unistd.h>
@@ -45,11 +45,11 @@ class AudioInput
 
   protected:
     explicit AudioInput(const QString &device)
-        : m_audio_device(device.toLatin1()) {}
+        : m_audioDevice(device.toLatin1()) {}
 
-    QByteArray m_audio_device;
-    int        m_audio_channels    {0};
-    int        m_audio_sample_bits {0};
-    int        m_audio_sample_rate {0};
+    QByteArray m_audioDevice;
+    int        m_audioChannels    {0};
+    int        m_audioSampleBits  {0};
+    int        m_audioSampleRate  {0};
 };
-#endif /* _AUDIOINPUT_H_ */
+#endif /* AUDIOINPUT_H */

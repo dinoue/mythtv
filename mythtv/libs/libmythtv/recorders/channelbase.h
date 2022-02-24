@@ -129,7 +129,7 @@ class ChannelBase
     bool ChangeExternalChannel(const QString &changer,
                                const QString &freqid);
     bool ChangeInternalChannel(const QString &freqid,
-                               uint cardinputid);
+                               uint cardinputid) const;
 
     TVRec            *m_pParent        {nullptr};
     QString           m_curChannelName;
@@ -142,7 +142,7 @@ class ChannelBase
     QString           m_tuneToChannel;
     ChannelInfoList   m_channels; ///< channels across all inputs
 
-    QMutex            m_system_lock;
+    QMutex            m_systemLock;
     MythSystemLegacy *m_system         {nullptr};
     /// These get mapped from the GENERIC_EXIT_* to these values for use
     /// with the signalmonitor code.

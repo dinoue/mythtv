@@ -17,7 +17,8 @@
 #include <libcec/cec.h>
 #include <iostream>
 using namespace CEC;
-using namespace std;
+
+class MythMainWindow;
 
 class MythCECAdapter
 {
@@ -34,13 +35,13 @@ class MythCECAdapter
 
 #if CEC_LIB_VERSION_MAJOR <= 3
     static int  LogMessageCallback(void* /*unused*/, const cec_log_message Message);
-    static int  KeyPressCallback  (void* /*unused*/, const cec_keypress Keypress);
-    static int  CommandCallback   (void* /*unused*/, const cec_command Command);
+    static int  KeyPressCallback  (void* Adapter,    const cec_keypress Keypress);
+    static int  CommandCallback   (void* Adapter,    const cec_command Command);
     static int  AlertCallback     (void* /*unused*/, const libcec_alert Alert, const libcec_parameter Data);
 #else
     static void LogMessageCallback(void* /*unused*/, const cec_log_message* Message);
-    static void KeyPressCallback  (void* /*unused*/, const cec_keypress* Keypress);
-    static void CommandCallback   (void* /*unused*/, const cec_command* Command);
+    static void KeyPressCallback  (void* Adapter,    const cec_keypress* Keypress);
+    static void CommandCallback   (void* Adapter,    const cec_command* Command);
     static void AlertCallback     (void* /*unused*/, libcec_alert Alert, libcec_parameter Data);
 #endif
     static void SourceCallback    (void* /*unused*/, cec_logical_address Address, uint8_t Activated);
@@ -48,22 +49,24 @@ class MythCECAdapter
 
     MythCECAdapter() = default;
    ~MythCECAdapter();
-    void        Open          (void);
+    void        Open          (MythMainWindow* Window);
     void        Close         (void);
     void        Action        (const QString &Action);
+    void        IgnoreKeys    (bool Ignore);
 
   protected:
     void        HandleActions (MythCECActions Actions);
-    static int  HandleCommand (const cec_command &Command);
-    static int  HandleKeyPress(const cec_keypress &Key);
+    int         HandleCommand (const cec_command &Command);
+    int         HandleKeyPress(cec_keypress Key) const;
     static void HandleSource  (cec_logical_address Address, uint8_t Activated);
     static int  LogMessage    (const cec_log_message &Message);
-    static int  HandleAlert   (libcec_alert Alert, const libcec_parameter &Data);
+    static int  HandleAlert   (libcec_alert Alert, libcec_parameter Data);
 
   protected:
     ICECAdapter   *m_adapter            { nullptr };
     ICECCallbacks  m_callbacks;
     bool           m_valid              { false };
+    bool           m_ignoreKeys         { false };
     bool           m_powerOffTVAllowed  { false };
     bool           m_powerOffTVOnExit   { false };
     bool           m_powerOnTVAllowed   { false };

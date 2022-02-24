@@ -6,7 +6,7 @@
 //
 // Copyright (c) 2010 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -98,11 +98,11 @@ class SERVICE_PUBLIC MythServices : public Service  //, public QScriptable ???
 
         virtual DTC::TimeZoneInfo*  GetTimeZone         ( ) = 0;
 
-        virtual QString             GetFormatDate       ( const QDateTime Date,
-                                                          bool            ShortDate ) = 0;
-        virtual QString             GetFormatDateTime   ( const QDateTime DateTime,
-                                                          bool            ShortDate ) = 0;
-        virtual QString             GetFormatTime       ( const QDateTime Time ) = 0;
+        virtual QString             GetFormatDate       ( const QDateTime& Date,
+                                                          bool             ShortDate ) = 0;
+        virtual QString             GetFormatDateTime   ( const QDateTime& DateTime,
+                                                          bool             ShortDate ) = 0;
+        virtual QString             GetFormatTime       ( const QDateTime& Time ) = 0;
         virtual QDateTime           ParseISODateString  ( const QString   &DateTime ) = 0;
 
         virtual DTC::LogMessageList*  GetLogs ( const QString   &HostName,

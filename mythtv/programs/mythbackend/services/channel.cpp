@@ -72,8 +72,8 @@ DTC::ChannelInfoList* Channel::GetChannelInfoList( uint nSourceID,
 
     auto *pChannelInfos = new DTC::ChannelInfoList();
 
-    nStartIndex = (nStartIndex > 0) ? min( nStartIndex, nTotalAvailable ) : 0;
-    nCount      = (nCount > 0) ? min(nCount, (nTotalAvailable - nStartIndex)) :
+    nStartIndex = (nStartIndex > 0) ? std::min( nStartIndex, nTotalAvailable ) : 0;
+    nCount      = (nCount > 0) ? std::min(nCount, (nTotalAvailable - nStartIndex)) :
                                              (nTotalAvailable - nStartIndex);
 
     ChannelInfoList::iterator chanIt;
@@ -99,13 +99,13 @@ DTC::ChannelInfoList* Channel::GetChannelInfoList( uint nSourceID,
     if (nCount == 0)
         nTotalPages = 1;
     else
-        nTotalPages = (int)ceil((float)nTotalAvailable / nCount);
+        nTotalPages = (int)std::ceil((float)nTotalAvailable / nCount);
 
     if (nTotalPages == 1)
         nCurPage = 1;
     else
     {
-        nCurPage = (int)ceil((float)nStartIndex / nCount) + 1;
+        nCurPage = (int)std::ceil((float)nStartIndex / nCount) + 1;
     }
 
     pChannelInfos->setStartIndex    ( nStartIndex     );
@@ -188,17 +188,28 @@ bool Channel::UpdateDBChannel( uint          MplexID,
         channel.m_atscMinorChan = ATSCMinorChannel;
     if (HAS_PARAM("useeit"))
         channel.m_useOnAirGuide = UseEIT;
+
     if (HAS_PARAM("extendedvisible"))
+    {
+#ifndef _WIN32 // TODO Does not compile on Windows
         channel.m_visible = channelVisibleTypeFromString(ExtendedVisible);
+#else
+	Q_UNUSED(ExtendedVisible);
+#endif
+    }
     else if (HAS_PARAM("visible"))
     {
         if (channel.m_visible == kChannelVisible ||
             channel.m_visible == kChannelNotVisible)
+        {
             channel.m_visible =
                 (Visible ? kChannelVisible : kChannelNotVisible);
+        }
         else if ((channel.m_visible == kChannelAlwaysVisible && !Visible) ||
                  (channel.m_visible == kChannelNeverVisible && Visible))
+        {
             throw QString("Can't override Always/NeverVisible");
+        }
     }
     if (HAS_PARAM("frequencyid"))
         channel.m_freqId = FrequencyID;
@@ -245,10 +256,17 @@ bool Channel::AddDBChannel( uint          MplexID,
                             uint          ServiceType )
 {
     ChannelVisibleType chan_visible = kChannelVisible;
-    if (HAS_PARAM("extendedvisible"))
-        chan_visible = channelVisibleTypeFromString(ExtendedVisible);
-    else if (HAS_PARAM("visible"))
+
+    #ifdef _WIN32 // TODO Needs fixing for Windows
+	Q_UNUSED(ExtendedVisible);
         chan_visible = (Visible ? kChannelVisible : kChannelNotVisible);
+    #else
+        if (HAS_PARAM("extendedvisible"))
+            chan_visible = channelVisibleTypeFromString(ExtendedVisible);
+        else if (HAS_PARAM("visible"))
+            chan_visible = (Visible ? kChannelVisible : kChannelNotVisible);
+    #endif
+
     
     bool bResult = ChannelUtil::CreateChannel( MplexID, SourceID, ChannelID,
                              CallSign, ChannelName, ChannelNumber,
@@ -281,7 +299,8 @@ DTC::VideoSourceList* Channel::GetVideoSourceList()
 
     query.prepare("SELECT sourceid, name, xmltvgrabber, userid, "
                   "freqtable, lineupid, password, useeit, configpath, "
-                  "dvb_nit_id, bouquet_id, region_id, scanfrequency FROM videosource "
+                  "dvb_nit_id, bouquet_id, region_id, scanfrequency, "
+                  "lcnoffset FROM videosource "
                   "ORDER BY sourceid" );
 
     if (!query.exec())
@@ -315,6 +334,7 @@ DTC::VideoSourceList* Channel::GetVideoSourceList()
         pVideoSource->setBouquetId     ( query.value(10).toUInt()     );
         pVideoSource->setRegionId      ( query.value(11).toUInt()     );
         pVideoSource->setScanFrequency ( query.value(12).toUInt()     );
+        pVideoSource->setLCNOffset     ( query.value(13).toUInt()     );
     }
 
     pList->setAsOf          ( MythDate::current() );
@@ -338,7 +358,8 @@ DTC::VideoSource* Channel::GetVideoSource( uint nSourceID )
 
     query.prepare("SELECT name, xmltvgrabber, userid, "
                   "freqtable, lineupid, password, useeit, configpath, "
-                  "dvb_nit_id, bouquet_id, region_id, scanfrequency "
+                  "dvb_nit_id, bouquet_id, region_id, scanfrequency, "
+                  "lcnoffset "
                   "FROM videosource WHERE sourceid = :SOURCEID "
                   "ORDER BY sourceid" );
     query.bindValue(":SOURCEID", nSourceID);
@@ -371,6 +392,7 @@ DTC::VideoSource* Channel::GetVideoSource( uint nSourceID )
         pVideoSource->setBouquetId     ( query.value(9).toUInt()      );
         pVideoSource->setRegionId      ( query.value(10).toUInt()     );
         pVideoSource->setScanFrequency ( query.value(11).toUInt()     );
+        pVideoSource->setLCNOffset     ( query.value(12).toUInt()     );
     }
 
     return pVideoSource;
@@ -392,7 +414,8 @@ bool Channel::UpdateVideoSource( uint          nSourceId,
                                  int           nNITId,
                                  uint          nBouquetId,
                                  uint          nRegionId,
-                                 uint          nScanFrequency )
+                                 uint          nScanFrequency,
+                                 uint          nLCNOffset )
 {
 
     if (!HAS_PARAM("sourceid"))
@@ -460,6 +483,9 @@ bool Channel::UpdateVideoSource( uint          nSourceId,
     if ( HAS_PARAM("scanfrequency") )
         ADD_SQL(settings, bindings, "scanfrequency", "ScanFrequency", nScanFrequency)
 
+    if ( HAS_PARAM("lcnoffset") )
+        ADD_SQL(settings, bindings, "lcnoffset", "LCNOffset", nLCNOffset)
+
     if ( settings.isEmpty() )
     {
         LOG(VB_GENERAL, LOG_ERR, "No valid parameters were passed");
@@ -474,7 +500,7 @@ bool Channel::UpdateVideoSource( uint          nSourceId,
                   .arg(settings));
     bindings[":SOURCEID"] = nSourceId;
 
-    for (it = bindings.begin(); it != bindings.end(); ++it)
+    for (it = bindings.cbegin(); it != bindings.cend(); ++it)
         query.bindValue(it.key(), it.value());
 
     if (!query.exec())
@@ -502,11 +528,13 @@ int  Channel::AddVideoSource( const QString &sSourceName,
                               int           nNITId,
                               uint          nBouquetId,
                               uint          nRegionId,
-                              uint          nScanFrequency )
+                              uint          nScanFrequency,
+                              uint          nLCNOffset )
 {
     int nResult = SourceUtil::CreateSource(sSourceName, sGrabber, sUserId, sFreqTable,
                                        sLineupId, sPassword, bUseEIT, sConfigPath,
-                                       nNITId, nBouquetId, nRegionId, nScanFrequency);
+                                       nNITId, nBouquetId, nRegionId, nScanFrequency,
+                                       nLCNOffset);
 
     return nResult;
 }
@@ -601,9 +629,9 @@ DTC::VideoMultiplexList* Channel::GetVideoMultiplexList( uint nSourceID,
 
     auto *pVideoMultiplexes = new DTC::VideoMultiplexList();
 
-    nStartIndex   = (nStartIndex > 0) ? min( nStartIndex, muxCount ) : 0;
-    nCount        = (nCount > 0) ? min( nCount, muxCount ) : muxCount;
-    int nEndIndex = min((nStartIndex + nCount), muxCount );
+    nStartIndex   = (nStartIndex > 0) ? std::min( nStartIndex, muxCount ) : 0;
+    nCount        = (nCount > 0) ? std::min( nCount, muxCount ) : muxCount;
+    int nEndIndex = std::min((nStartIndex + nCount), muxCount );
 
     for( int n = nStartIndex; n < nEndIndex; n++)
     {
@@ -644,13 +672,13 @@ DTC::VideoMultiplexList* Channel::GetVideoMultiplexList( uint nSourceID,
     if (nCount == 0)
         totalPages = 1;
     else
-        totalPages = (int)ceil((float)muxCount / nCount);
+        totalPages = (int)std::ceil((float)muxCount / nCount);
 
     if (totalPages == 1)
         curPage = 1;
     else
     {
-        curPage = (int)ceil((float)nStartIndex / nCount) + 1;
+        curPage = (int)std::ceil((float)nStartIndex / nCount) + 1;
     }
 
     pVideoMultiplexes->setStartIndex    ( nStartIndex     );

@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2011 Robert McNamara <rmcnamara@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -41,16 +41,16 @@ class SERVICE_PUBLIC VideoMetadataInfoList : public QObject
     Q_PROPERTY( QString      Version        READ Version         WRITE setVersion        )
     Q_PROPERTY( QString      ProtoVer       READ ProtoVer        WRITE setProtoVer       )
 
-    Q_PROPERTY( QVariantList VideoMetadataInfos READ VideoMetadataInfos DESIGNABLE true )
+    Q_PROPERTY( QVariantList VideoMetadataInfos READ VideoMetadataInfos )
 
     PROPERTYIMP       ( int         , StartIndex      )
     PROPERTYIMP       ( int         , Count           )
     PROPERTYIMP       ( int         , CurrentPage     )
     PROPERTYIMP       ( int         , TotalPages      )
     PROPERTYIMP       ( int         , TotalAvailable  )
-    PROPERTYIMP       ( QDateTime   , AsOf            )
-    PROPERTYIMP       ( QString     , Version         )
-    PROPERTYIMP       ( QString     , ProtoVer        )
+    PROPERTYIMP_REF   ( QDateTime   , AsOf            )
+    PROPERTYIMP_REF   ( QString     , Version         )
+    PROPERTYIMP_REF   ( QString     , ProtoVer        )
 
     PROPERTYIMP_RO_REF( QVariantList, VideoMetadataInfos );
 
@@ -85,7 +85,7 @@ class SERVICE_PUBLIC VideoMetadataInfoList : public QObject
             // We must make sure the object added to the QVariantList has
             // a parent of 'this'
 
-            VideoMetadataInfo *pObject = new VideoMetadataInfo( this );
+            auto *pObject = new VideoMetadataInfo( this );
             m_VideoMetadataInfos.append( QVariant::fromValue<QObject *>( pObject ));
 
             return pObject;

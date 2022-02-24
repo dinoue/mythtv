@@ -2,12 +2,14 @@
 #include <cstdlib>
 #include "compat.h"
 
-#ifdef linux
+#include <QtGlobal>
+
+#ifdef __linux__
 #include <sys/vfs.h>
 #include <sys/sysinfo.h>
 #endif
 
-#if CONFIG_DARWIN
+#ifdef Q_OS_DARWIN
 #include <mach/mach.h>
 #endif
 
@@ -15,8 +17,6 @@
 #include <sys/param.h>
 #include <sys/mount.h>  // for struct statfs
 #endif
-
-using namespace std;
 
 #include <QList>
 #include <QString>
@@ -159,10 +159,10 @@ QList<FileSystemInfo> FileSystemInfo::RemoteGetInfo(MythSocket *sock)
     {
         int numdisks = strlist.size()/NUMDISKINFOLINES;
 
-        QStringList::const_iterator it = strlist.begin();
+        QStringList::const_iterator it = strlist.cbegin();
         for (int i = 0; i < numdisks; i++)
         {
-            fsInfo.FromStringList(it, strlist.end());
+            fsInfo.FromStringList(it, strlist.cend());
             fsInfos.append(fsInfo);
         }
     }
@@ -190,7 +190,7 @@ void FileSystemInfo::Consolidate(QList<FileSystemInfo> &disks,
             if (it2->getFSysID() != -1) // disk has already been matched
                 continue;
 
-            int bSize = max(32, max(it1->getBlockSize(), it2->getBlockSize())
+            int bSize = std::max(32, std::max(it1->getBlockSize(), it2->getBlockSize())
                                         / 1024);
             int64_t diffSize = it1->getTotalSpace() - it2->getTotalSpace();
             int64_t diffUsed = it1->getUsedSpace() - it2->getUsedSpace();
@@ -235,13 +235,13 @@ void FileSystemInfo::PopulateFSProp(void)
 
     if (statfs(getPath().toLocal8Bit().constData(), &statbuf) == 0)
     {
-#if CONFIG_DARWIN
+#ifdef Q_OS_DARWIN
         char *fstypename = statbuf.f_fstypename;
         if ((!strcmp(fstypename, "nfs")) ||     // NFS|FTP
             (!strcmp(fstypename, "afpfs")) ||   // AppleShare
             (!strcmp(fstypename, "smbfs")))     // SMB
                 setLocal(false);
-#elif __linux__
+#elif defined(__linux__)
         long fstype = statbuf.f_type;
         if ((fstype == 0x6969)  ||              // NFS
             (fstype == 0x517B)  ||              // SMB

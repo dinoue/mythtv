@@ -18,8 +18,6 @@
 #include "mythversion.h"
 #include "mythlogging.h"
 
-using namespace std;
-
 int MythPlugin::init(const char *libversion)
 {
     using PluginInitFunc = int (*)(const char *);
@@ -110,7 +108,7 @@ MythPluginManager::MythPluginManager()
             LOG(VB_GENERAL, LOG_WARNING,
                     "No libraries in plugins directory " + filterDir.path());
 
-        foreach (auto library, libraries)
+        for (auto library : qAsConst(libraries))
         {
             // pull out the base library name
             library = library.right(library.length() - prefixLength);
@@ -170,7 +168,7 @@ bool MythPluginManager::run_plugin(const QString &plugname)
         return true;
     }
 
-    bool res = m_dict[newname]->run();
+    bool res = m_dict[newname]->run() != 0;
 
     return res;
 }
@@ -188,7 +186,7 @@ bool MythPluginManager::config_plugin(const QString &plugname)
         return true;
     }
 
-    bool res = m_dict[newname]->config();
+    bool res = m_dict[newname]->config() != 0;
 
     return res;
 }
@@ -221,7 +219,7 @@ MythPlugin *MythPluginManager::GetPlugin(const QString &plugname)
 
 void MythPluginManager::DestroyAllPlugins(void)
 {
-    foreach (auto & it, m_dict)
+    for (auto *it : qAsConst(m_dict))
     {
         it->destroy();
         delete it;
@@ -234,7 +232,7 @@ void MythPluginManager::DestroyAllPlugins(void)
 QStringList MythPluginManager::EnumeratePlugins(void)
 {
     QStringList ret;
-    foreach (auto it, m_dict)
+    for (auto *it : qAsConst(m_dict))
         ret << it->getName();
     return ret;
 }

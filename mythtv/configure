@@ -11,6 +11,8 @@
 LC_ALL=C
 export LC_ALL
 
+CPP_STANDARD=c++17
+
 # make sure we are running under a compatible shell
 # try to make this part work with most shells
 
@@ -122,9 +124,8 @@ Advanced options (experts only):
   --disable-hdhomerun      disable support for HDHomeRun boxes
   --disable-vbox           disable support for V@Box TV Gateway boxes
   --disable-ceton          disable support for Ceton cards
+  --disable-satip          disable support for Sat>IP
   --disable-v4l2           disable Video4Linux support
-  --disable-ivtv           disable ivtv support (PVR-x50) req. v4l2 support
-  --disable-hdpvr          disable HD-PVR support
   --disable-dvb            disable DVB support
   --dvb-path=HDRLOC        location of directory containing
                            'linux/dvb/frontend.h', not the
@@ -132,16 +133,16 @@ Advanced options (experts only):
   --disable-asi            disable support for DVEO ASI recorder
   --disable-x11            disable X11 support
   --enable-opengles        link to OpenGL ES (auto)
+  --enable-vulkan          enable Vulkan rendering
+  --disable-waylandextras  disable optional Wayland integrations (requires Qt private headers)
+  --enable-libglslang      enable runtime GLSL compilation for Vulkan (development only)
   --x11-path=X11LOC        location of X11 include files [$x11_path_default]
-  --disable-xrandr         disable X11 resolution switching
   --disable-vdpau          disable NVidia VDPAU hardware acceleration.
   --disable-vaapi          disable VAAPI hardware accelerated video decoding
   --disable-nvdec          disable NVDEC (CUVID) hardware accelerated video decoding
   --disable-dxva2          disable hardware accelerated decoding on windows
   --disable-mediacodec     disable hardware accelerated decoding on android
   --disable-mmal           disable hardware accelerated decoding on Raspberry Pi
-  --disable-opengl-video   disable OpenGL based video display
-  --disable-opengl-themepainter disable OpenGL based theme painting
   --disable-libass         disable libass SSA/ASS subtitle support
   --disable-systemd_notify disable systemd notify support
   --disable-systemd_journal disable systemd journal support
@@ -213,7 +214,7 @@ die(){
 
 If you think configure made a mistake, make sure that you are using the latest
 version of MythTV from git.  If the latest version fails, report the problem to the
-mythtv-dev@mythtv.org mailing list or IRC #mythtv on irc.freenode.net
+mythtv-dev@mythtv.org mailing list or IRC #mythtv on irc.libera.chat
 EOF
     if disabled logging; then
         cat <<EOF
@@ -573,6 +574,10 @@ add_cflags_headers(){
 }
 
 add_cxxflags(){
+    append CXXFLAGS "$@"
+}
+
+add_ecxxflags(){
     append ECXXFLAGS "$@"
 }
 
@@ -1236,7 +1241,7 @@ check_python(){
     log check_python
     check_cmd $python <<EOF
 import sys
-if sys.version_info < (2,6):
+if sys.version_info < (3,6,0):
     sys.exit(1)
 EOF
 }
@@ -1666,11 +1671,15 @@ HEADERS_LIST="
     machine_ioctl_bt848_h
     machine_ioctl_meteor_h
     malloc_h
+    mntent_h
     opencv2_core_core_c_h
     OpenGL_gl3_h
     poll_h
+    pthread_h
     soundcard_h
     stdatomic_h
+    strings_h
+    sys_dl_h
     sys_mman_h
     sys_param_h
     sys_resource_h
@@ -1682,14 +1691,17 @@ HEADERS_LIST="
     udplite_h
     unistd_h
     valgrind_valgrind_h
+    vulkan_vulkan_core_h
     windows_h
     winsock2_h
+    wayland_client_h
 "
 
 INTRINSICS_LIST="
     intrinsics_neon
 "
 
+# unfortunately necessary because of internal FFmpeg header use
 COMPLEX_FUNCS="
     cabs
     cexp
@@ -1741,6 +1753,7 @@ SYSTEM_FUNCS="
     fork
     getaddrinfo
     gethrtime
+    getmntent_r
     getopt
     GetProcessAffinityMask
     GetProcessMemoryInfo
@@ -1783,6 +1796,7 @@ SYSTEM_FUNCS="
     VirtualAlloc
     wglGetProcAddress
     eglGetProcAddress
+    wl_surface_set_opaque_region
 "
 
 TOOLCHAIN_FEATURES="
@@ -1827,6 +1841,7 @@ TYPES_LIST="
     struct_sockaddr_sa_len
     struct_sockaddr_storage
     struct_stat_st_mtim_tv_nsec
+    struct_hdr_metadata_infoframe
 "
 
 HAVE_LIST="
@@ -1960,10 +1975,9 @@ MYTHTV_CONFIG_LIST='
     firewire
     frontend
     hdhomerun
+    satip
     vbox
     ceton
-    hdpvr
-    ivtv
     asi
     joystick_menu
     libcec
@@ -1981,16 +1995,15 @@ MYTHTV_CONFIG_LIST='
     qtwebkit
     qtscript
     qtdbus
+    sqlite3
     taglib
     v4l2
     v4l2prime
-    v4l1
     valgrind
     x11
-    libbluray_external
-    xrandr
-    profiletype
-    debugtype
+    system_libexiv2
+    system_libbluray
+    system_libudfread
     systemd_notify
     systemd_journal
     drm
@@ -1998,15 +2011,13 @@ MYTHTV_CONFIG_LIST='
 
 MYTHTV_HAVE_LIST='
     byteswap_h
-    cpu_clips_negative
-    cpu_clips_positive
+    bdj_j2me
     fe_can_2g_modulation
     ftime
     getifaddrs
     gettimeofday
     posix_fadvise
     libudev
-    libuuid
     stdint_h
     sync_file_range
     sys_endian_h
@@ -2047,6 +2058,11 @@ USING_LIST='
     vdpau
     mediacodec
     mmal
+    vulkan
+    libglslang
+    videotoolbox
+    waylandextras
+    qtprivateheaders
 '
 
 CMDLINE_SELECT="
@@ -2091,6 +2107,7 @@ MYTHTV_PATHS_LIST='
 '
 
 MYTHTV_CMDLINE_SET='
+    compile_type
     logging
     python
     qmake
@@ -2600,9 +2617,8 @@ ffserver_select="ffm_muxer rtp_protocol rtsp_demuxer"
 audio_oss_deps_any="soundcard_h sys_soundcard_h"
 dvb_deps="backend"
 firewire_deps="backend"
-ivtv_deps="backend v4l2"
-hdpvr_deps="backend v4l2"
 hdhomerun_deps="backend"
+satip_deps="backend"
 vbox_deps="backend"
 ceton_deps="backend"
 mpegtsraw_demuxer_deps="merge_libavformat_mpegts_c"
@@ -2612,9 +2628,9 @@ opengles_deps="GLES2_gl2_h"
 egl_deps="EGL_egl_h"
 v4l2_deps="linux_videodev2_h"
 v4l2prime_deps="v4l2 drm"
-v4l1_deps="backend v4l2 linux_videodev_h"
-xrandr_deps="x11"
+vulkan_deps="vulkan_vulkan_core_h"
 asi_deps="backend"
+waylandextras_deps="wayland_client_h"
 
 # default parameters
 
@@ -2626,7 +2642,7 @@ compile_type="profile"
 prefix_default="/usr/local"
 bindir_default='${prefix}/bin'
 datadir_default='${prefix}/share/mythtv'
-docdir_default='${prefix}/share/doc/ffmpeg'
+docdir_default='${prefix}/share/doc/mythtv'
 incdir_default='${prefix}/include/mythtv'
 libdir_default='${prefix}/lib'
 mandir_default='${prefix}/share/man'
@@ -2661,6 +2677,7 @@ python_default="python3"
 
 #Bluray
 bdj_type="j2se"
+disable bdj_j2me
 
 # machine
 arch_default=$(uname -m)
@@ -2750,10 +2767,9 @@ enable ffmpeg_pthreads
 enable firewire
 enable frontend
 enable hdhomerun
+enable satip
 enable vbox
 enable ceton
-enable hdpvr
-enable ivtv
 enable asi
 enable lamemp3
 enable libaom
@@ -2775,18 +2791,18 @@ enable opengl
 enable egl
 enable symbol_visibility
 enable deprecation_warnings
-enable v4l1
 enable v4l2
 enable v4l2prime
 enable x11
-enable xrandr
 disable indevs
 enable libfftw3
 enable taglib
-enable exiv2
 enable systemd_notify
 enable systemd_journal
-enable libbluray_external
+enable system_libexiv2
+enable system_libbluray
+enable system_libudfread
+enable waylandextras
 
 # mythtv paths
 dvb_path_default="${sysinclude:-$sysroot/usr/include}"
@@ -2981,7 +2997,7 @@ for opt do
         ;;
         --libdir-name=*) libdir_name=$optval
         ;;
-        --extra-cxxflags=*) add_cxxflags $optval
+        --extra-cxxflags=*) add_ecxxflags $optval
         ;;
         --firewire-sdk=*) firewiresdk_path="${optval}"
         ;;
@@ -3004,6 +3020,12 @@ for opt do
         --enable-mac-bundle) enable mac_bundle
         ;;
         --enable-opengles) enable opengles && disable opengl
+        ;;
+        --enable-vulkan) enable vulkan
+        ;;
+        --disable-waylandextras) disable waylandextras
+        ;;
+        --enable-libglslang) enable libglslang
         ;;
         --previous|--prev)
             echo "No history of previous configure parameters."
@@ -3252,7 +3274,7 @@ case "$toolchain" in
                 target_exec_args="--tool=massif --alloc-fn=av_malloc --alloc-fn=av_mallocz --alloc-fn=av_calloc --alloc-fn=av_fast_padded_malloc --alloc-fn=av_fast_malloc --alloc-fn=av_realloc_f --alloc-fn=av_fast_realloc --alloc-fn=av_realloc"
                 ;;
             valgrind-memcheck)
-                target_exec_args="--error-exitcode=1 --malloc-fill=0x2a --track-origins=yes --leak-check=full --gen-suppressions=all --suppressions=$source_path/tests/fate-valgrind.supp"
+                target_exec_args="--error-exitcode=1 --malloc-fill=0x2a --track-origins=yes --leak-check=full --gen-suppressions=all"
                 ;;
         esac
     ;;
@@ -3295,18 +3317,23 @@ case "$toolchain" in
         TMPDIR=.
     ;;
     gcov)
-        add_cflags  -fprofile-arcs -ftest-coverage
-        add_ldflags -fprofile-arcs -ftest-coverage
+        add_cflags   -fprofile-arcs -ftest-coverage
+        add_cxxflags -fprofile-arcs -ftest-coverage
+        add_ldflags  --coverage
     ;;
     llvm-cov)
-        add_cflags -fprofile-arcs -ftest-coverage
-        add_ldflags --coverage
+        add_cflags   -fprofile-instr-generate -fcoverage-mapping
+        add_cxxflags -fprofile-instr-generate -fcoverage-mapping
+        add_ldflags  --coverage
     ;;
     hardened)
-        add_cppflags -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
+        add_cppflags -O2 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
+        add_cxxflags -O2 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
         add_cflags   -fno-strict-overflow -fstack-protector-all
+        add_cxxflags -fno-strict-overflow -fstack-protector-all
         add_ldflags  -Wl,-z,relro -Wl,-z,now
         add_cflags   -fPIE
+        add_cxxflags -fPIE
         add_ldexeflags -fPIE -pie
     ;;
     ?*)
@@ -3333,7 +3360,6 @@ if enabled set_cc_default; then
     cc="$cc_default"
     cxx="$cxx_default"
 fi
-echo "cc_default $cc_default , ${cross_prefix_cc}"
 nm_default="${cross_prefix}${nm_default}"
 pkg_config_default="${cross_prefix}${pkg_config_default}"
 if ${cross_prefix}${ranlib_default} 2>&1 | grep -q "\-D "; then
@@ -4572,9 +4598,7 @@ if test "$?" != 0; then
     die "C compiler test failed."
 fi
 
-add_cppflags -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112
-#add_cxxflags -D__STDC_CONSTANT_MACROS
-check_cxxflags -std=c++11 || check_cxxflags -std=c++0x
+check_cxxflags -std=$CPP_STANDARD -faligned-new
 
 # some compilers silently accept -std=c11, so we also need to check that the
 # version macro is defined properly
@@ -4598,16 +4622,10 @@ fi
 
 
 check_cppflags -D_FILE_OFFSET_BITS=64
-check_cppflags -D_LARGEFILE_SOURCE
 check_cxx -D_FILE_OFFSET_BITS=64 <<EOF && add_cxxppflags -D_FILE_OFFSET_BITS=64
 #include <stdlib.h>
 EOF
-check_cxx -D_LARGEFILE_SOURCE <<EOF && add_cxxppflags -D_LARGEFILE_SOURCE
-#include <stdlib.h>
-EOF
 
-add_host_cppflags -D_ISOC99_SOURCE
-check_host_cflags -std=c99
 check_host_cflags -Wall
 check_host_cflags $host_cflags_speed
 
@@ -4699,7 +4717,7 @@ case $target_os in
         enabled_all suncc x86 &&
             echo "hwcap_1 = OVERRIDE;" > mapfile &&
             add_ldflags -Wl,-M,mapfile
-        add_cxxppflags -D__EXTENSIONS__ -D_XOPEN_SOURCE=600
+        add_cxxppflags -D__EXTENSIONS__
         nm_default='nm -P -g'
         version_script='-M'
         VERSION_SCRIPT_POSTPROCESS_CMD='perl $(SRC_PATH)/compat/solaris/make_sunver.pl - $(OBJS)'
@@ -4709,8 +4727,6 @@ case $target_os in
         oss_indev_extralibs="-lossaudio"
         oss_outdev_extralibs="-lossaudio"
         enabled gcc || check_ldflags -Wl,-zmuldefs
-        add_cppflags -D_XOPEN_SOURCE=600
-        add_cxxppflags -D_XOPEN_SOURCE=600
         ;;
     openbsd|bitrig)
         disable symver
@@ -4727,7 +4743,7 @@ case $target_os in
         append CCONFIG "freebsd"
         # Workaround compile errors from missing u_int/uint def
         CPPFLAGS=`echo $CPPFLAGS | sed 's/-D_POSIX_C_SOURCE=200112//'`
-        disable ivtv
+        # disable ivtv
         enable backend
         enable pic
         enable drm
@@ -4740,8 +4756,8 @@ case $target_os in
         enable  appleremote
         enable  backend
         enable  darwin
+        enable  videotoolbox
         disable dvb
-        disable v4l1
         disable v4l2
         disable v4l2prime
         disable x11
@@ -4791,13 +4807,11 @@ case $target_os in
             disable protocols
         fi
         disable symver
-        disable v4l1
         disable v4l2
         disable v4l2prime
         enable  windows
         disable x11
         disable qtdbus
-        disable libuuid
         disable ffserver
         ###### Standard ffmpeg configure stuff follows:
         if test $target_os = "mingw32ce"; then
@@ -4892,7 +4906,6 @@ case $target_os in
         enabled x86_64 && objformat="win64" || objformat="win32"
         enable dos_paths
         enabled shared && ! enabled small && check_cmd $windres --version && enable gnu_windres
-        add_cppflags -D_POSIX_C_SOURCE=200112 -D_XOPEN_SOURCE=600
         ;;
     *-dos|freedos|opendos)
         disable ffserver
@@ -4909,9 +4922,9 @@ case $target_os in
         enable backend
         ! disabled joystick_menu && enable joystick_menu
         enable libudev
-        enable libuuid
         enable pic
         enable drm
+        enable qtprivateheaders
 	if [ x`uname -m` = x"armv7l" ]; then
 	    disable vaapi
 	fi
@@ -4924,7 +4937,6 @@ case $target_os in
         strip="lxlite -CS"
         striptype=""
         objformat="aout"
-        add_cppflags -D_GNU_SOURCE
         add_ldflags -Zomf -Zbin-files -Zargs-wild -Zhigh-mem -Zmap
         SHFLAGS='$(SUBDIR)$(NAME).def -Zdll -Zomf'
         LIBSUF="_s.a"
@@ -5079,7 +5091,7 @@ EOF
         eval ${pfx}libc_type=bionic
     elif check_${pfx}cpp_condition sys/brand.h "defined LABELED_BRAND_NAME"; then
         eval ${pfx}libc_type=solaris
-        add_${pfx}cppflags -D__EXTENSIONS__ -D_XOPEN_SOURCE=600
+        add_${pfx}cppflags -D__EXTENSIONS__
     fi
     check_${pfx}cc <<EOF
 #include <time.h>
@@ -5142,16 +5154,20 @@ if test $target_os = android ; then
 fi
 
 append CCONFIG "$compile_type"
-if test x$compile_type = x"profile" ; then
+if test x$compile_type = x"release" ; then
     add_cflags   -DNDEBUG
     add_cxxflags -DNDEBUG
+    check_cxxflags -O2
+    enable debug
+elif test x$compile_type = x"profile" ; then
+    add_cflags   -DNDEBUG
+    add_cxxflags -DNDEBUG
+    check_cxxflags -O2
     enable debug
     disable stripping
-    enable profiletype
 elif test x$compile_type = x"debug"; then
     enable debug
     disable optimizations stripping
-    enable debugtype
 fi
 
 enabled silent_cc && append CCONFIG "silent"
@@ -5183,15 +5199,19 @@ enable_weak_pic() {
 
 enabled pic && enable_weak_pic
 
+version2num10(){
+    # accepts version as in 3.12.4 and turns it into 3012004 which can be compared as a number
+    echo $1 | awk -F. '{ print ( ( $1 * 1000 ) + $2 ) * 1000 + $3; };'
+}
+
 version2num(){
     # accepts version as in 1.10.4 and turns it into 0x010A04 which can be compared as a number
     echo $1 | awk -F. '{ print ( ( $1 * 256 ) + $2 ) * 256 + $3; };'
 }
 
 # Minimum supported Qt version
-QT_MIN_VERSION_STR="5.7"
-QT_MIN_VERSION=$(version2num $QT_MIN_VERSION_STR)
-QT_MIN_VERSION_HEX=$(printf "0x%06x" $QT_MIN_VERSION)
+QT5_MIN_VERSION_STR="5.9"
+QT6_MIN_VERSION_STR="6.0"
 
 # qmake-qt5 /usr/lib64/qt5/bin/qmake /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 if [ x"$qmake" = "xqmake" ]; then
@@ -5206,6 +5226,12 @@ for i in $CHECK_QMAKE; do
         qt_version_str=`$i -query QT_VERSION`
         qt_version=$(version2num $qt_version_str)
         qt_version_hex=$(printf "0x%06x" $qt_version)
+        case $qt_version_str in
+            6*) QT_MIN_VERSION_STR=$QT6_MIN_VERSION_STR ;;
+            *)  QT_MIN_VERSION_STR=$QT5_MIN_VERSION_STR ;;
+        esac
+        QT_MIN_VERSION=$(version2num $QT_MIN_VERSION_STR)
+        QT_MIN_VERSION_HEX=$(printf "0x%06x" $QT_MIN_VERSION)
         if [ $qt_version -ge $QT_MIN_VERSION ]; then
             found_qmake=$i
             check_cxxflags -DQT_DISABLE_DEPRECATED_BEFORE=$QT_MIN_VERSION_HEX
@@ -5218,7 +5244,7 @@ for i in $CHECK_QMAKE; do
     fi
 done
 if [ x"$found_qmake" = "x" ]; then
-    die "qmake for Qt $QT_MIN_VERSION_STR or newer not found.  Please specify the correct qmake with --qmake="
+    die "qmake for Qt $QT5_MIN_VERSION_STR or newer not found.  Please specify the correct qmake with --qmake="
 else
     qmake=$found_qmake
 fi
@@ -5584,57 +5610,7 @@ if ! disabled network; then
     fi
 fi
 
-# "CPU_CLIP" test for SRC / libsamplerate
-# test positive wrap
-check_exec -lm << EOF && enable cpu_clips_positive
-    #define _ISOC9X_SOURCE  1
-    #define _ISOC99_SOURCE  1
-    #define __USE_ISOC99    1
-    #define __USE_ISOC9X    1
-    #include <math.h>
-    int main (void)
-    {	double	fval ;
-        int k, ival ;
-
-        fval = 1.0 * 0x7FFFFFFF ;
-        for (k = 0 ; k < 100 ; k++)
-        {
-            ival = (lrint (fval)) >> 24 ;
-            if (ival != 127)
-                return 1 ;
-
-            fval *= 1.2499999 ;
-        } ;
-
-        return 0 ;
-    }
-EOF
-
-# test negative wrap
-check_exec -lm << EOF && enable cpu_clips_negative
-    #define	_ISOC9X_SOURCE	1
-    #define _ISOC99_SOURCE  1
-    #define __USE_ISOC99    1
-    #define __USE_ISOC9X    1
-    #include <math.h>
-    int main (void)
-    {
-        double	fval ;
-        int k, ival ;
-
-        fval = -8.0 * 0x10000000 ;
-        for (k = 0 ; k < 100 ; k++)
-        {
-            ival = (lrint (fval)) >> 24 ;
-            if (ival != -128)
-                return 1 ;
-
-            fval *= 1.2499999 ;
-        } ;
-
-        return 0 ;
-    }
-EOF
+use_pkg_config sqlite3 sqlite3 "sqlite3.h" sqlite3_load_extension && enable sqlite3
 require_pkg_config samplerate samplerate samplerate.h src_get_version -lm
 
 # required to compile inline sse with some compilers
@@ -5760,8 +5736,13 @@ check_header fcntl.h
 check_header io.h
 check_header mach/mach_time.h
 check_header malloc.h
+check_header mntent.h
+check_func_headers mntent.h getmntent_r
 check_header net/udplite.h
 check_header poll.h
+check_header pthread.h
+check_header strings.h
+check_header sys/dl.h
 check_header sys/mman.h
 check_header sys/param.h
 check_header sys/resource.h
@@ -5771,6 +5752,7 @@ check_header sys/un.h
 check_header termios.h
 check_header unistd.h
 check_header valgrind/valgrind.h
+check_header vulkan/vulkan_core.h
 check_func_headers VideoToolbox/VTCompressionSession.h VTCompressionSessionPrepareToEncodeFrames -framework VideoToolbox
 check_header windows.h
 check_header asm/types.h
@@ -5865,37 +5847,68 @@ fi
 
 enabled ffmpeg_pthreads && enable pthreads
 
-# Check for taglib for libmythmetadata
+# Check for taglib for libmythmetadata. MSYS2 uses taglib-config.cmd
+TAGLIB_CONFIG=""
 if enabled taglib; then
-    taglib_minor="0"
-    if test x`which taglib-config` != x"" ; then
-        taglib_minor=`taglib-config --version | cut -d. -f2`
-        if test x"$taglib_minor" = x"" ; then
-            echo "Can't find taglib-config. Assuming 1.7 or later."
-            taglib_minor="7"
-        fi
+    taglib_verstring="nothing"
+    taglib_version=0
+    if test $pkg_config ; then
+        taglib_verstring=`$pkg_config --modversion taglib`
+        taglib_version=$(version2num10 $taglib_verstring)
         if test $target_os = android ; then
-            tagprefix=`taglib-config --prefix`
+            tagprefix=`$pkg_config --variable=prefix taglib`
         else
-            tagprefix=${sysroot}`taglib-config --prefix`
+            tagprefix=${sysroot}`$pkg_config --variable=prefix taglib`
         fi
         tagincludes="-I${tagprefix}/include"
-        taglibs=`taglib-config --libs`
+        taglibs=`$pkg_config --libs taglib`
         if test $target_os = android ; then
             taglibs="$taglibs -lz -lm"
         fi
     fi
 
-    if test $taglib_minor -lt 7 || ! check_class_headers_cpp "taglib/fileref.h stdlib.h" TagLib::FileRef $tagincludes $taglibs -lstdc++; then
-        die "ERROR: cannot find taglib 1.7 or later."
+    if test $taglib_version -lt 1011001 || \
+            ! check_class_headers_cpp "taglib/fileref.h stdlib.h" TagLib::FileRef $tagincludes $taglibs -lstdc++; then
+        die "ERROR: cannot find taglib 1.11.1 or later (found $taglib_verstring)."
     fi
 fi
 
 # Attempt to use libudev for mediamonitor
-enabled libudev && check_lib udev libudev.h udev_new  || disable libudev
+enabled libudev && check_lib udev libudev.h udev_new -ludev || disable libudev
+
+# libexiv2
+if enabled system_libexiv2 ; then
+    if $(pkg-config --atleast-version="0.27.99" exiv2); then
+        use_pkg_config exiv2 exiv2 exiv2/exiv2.hpp versionNumber
+    elif [ $target_os != "android" ] ; then
+        disable system_libexiv2
+    fi
+fi
+
+# soundtouch
+if $($pkg_config --atleast-version="1.8.0" soundtouch); then
+    # use_pkg_config does not add cxxflags
+    add_cxxflags $($pkg_config --cflags soundtouch)
+    add_extralibs $($pkg_config --libs soundtouch)
+else
+    die "ERROR: cannot find soundtouch 1.8.0 or later."
+fi
+
+if [ $target_os = "linux" ] ; then
+    . /etc/os-release
+fi
+
+# libudfread
+if enabled system_libudfread ; then
+    if $(pkg-config --atleast-version="1.1.1" libudfread); then
+        use_pkg_config libudfread libudfread udfread/udfread.h udfread_init
+    else
+        disable system_libudfread
+    fi
+fi
 
 # libmythbluray!
-if enabled libbluray_external; then
+if enabled system_libbluray; then
     if $(pkg-config --atleast-version="0.9.3" libbluray); then
         use_pkg_config libbluray libbluray libbluray/bluray.h bd_open
     else
@@ -5906,10 +5919,9 @@ if enabled libbluray_external; then
                 # only those systems to reach the bottom of the
                 # following case statement.  This list should only
                 # shrink over time.
-                . /etc/os-release
                 case $ID in
-                    centos)
-                        if test $VERSION_ID -gt 8; then
+                    centos|rocky|almalinux)
+                        if test ${VERSION_ID%\.*} -gt 8; then
                             die "ERROR: can not find libbluray."
                         fi
                         ;;
@@ -5929,7 +5941,7 @@ if enabled libbluray_external; then
                         die "ERROR: can not find libbluray."
                         ;;
                 esac
-                disable libbluray_external
+                disable system_libbluray
                 ;;
             *)
                 # FreeBSD provides libbluray 1.0.2
@@ -5941,6 +5953,7 @@ if enabled libbluray_external; then
 fi
 
 antbin=""
+java_code_version=""
 if enabled bdjava; then
     enabled x86_64 && java_arch=amd64
     enabled x86_32 && java_arch=i386
@@ -5951,18 +5964,34 @@ if enabled bdjava; then
         die "ERROR: BD-J requires ANT, but ant was not found. Please install it."
     fi
 
-    if test "$bdj_type" = "j2me"; then
-        enable bdj_j2me
-    fi
-
     # Probably makes little sense to try to process Bluray menus without fontconfig
     enable fontconfig
+
+    if test "$bdj_type" = "j2me"; then
+        enable bdj_j2me
+    else
+        if test "x${JAVA_HOME}" = "x"; then
+            JAVAC=`which javac`
+        else
+            JAVAC=${JAVA_HOME}/bin/javac
+        fi
+
+        test -f ${JAVAC} -a -x ${JAVAC} || die "ERROR: javac not found but required by BD-J"
+
+        java_code_version=1.4
+
+        javac_version=`"${JAVAC}" -version 2>&1 | head -n 1`
+        
+        echo "${javac_version}" | grep -E -q '^javac\ (9|1[0-1])' && java_code_version=1.6
+        echo "${javac_version}" | grep -E -q '^javac\ (1[2-9])' && java_code_version=1.7
+    fi
 fi
 
 enabled pthreads &&
     check_builtin sem_timedwait semaphore.h "sem_t *s; sem_init(s,0,0); sem_timedwait(s,0); sem_destroy(s)"
 
-enabled  zlib && check_lib zlib   zlib.h      zlibVersion    -lz
+require zlib zlib.h zlibVersion -lz
+require zip zip.h zip_open -lzip
 
 # On some systems dynamic loading requires no extra linker flags
 check_lib libdl dlfcn.h "dlopen dlsym" || check_lib libdl dlfcn.h "dlopen dlsym" -ldl
@@ -6003,6 +6032,7 @@ enabled libxml2           && require_pkg_config libxml2 libxml-2.0 libxml/xmlver
 
 enabled drm && use_pkg_config libdrm libdrm xf86drm.h drmGetVersion || disable drm
 enabled drm && check_cpp_condition drm_fourcc.h 'defined(DRM_FORMAT_MOD_LINEAR)' || disable drm
+enabled drm && check_type drm_mode.h "struct hdr_metadata_infoframe"
 
 if enabled libmpeg2external; then
     check_lib libmpeg2external mpeg2dec/mpeg2.h mpeg2_init -lmpeg2 || disable libmpeg2external
@@ -6161,7 +6191,7 @@ check_func_headers "windows.h" CreateDIBSection "$gdigrab_indev_extralibs"
 
 # Check VA1 support before enabling in FFmpeg
 enabled libaom   && use_pkg_config libaom "aom >= 1.0.0" aom/aom_codec.h aom_codec_version || disable libaom
-enabled libdav1d && use_pkg_config libdav1d "dav1d >= 0.2.1" "dav1d/dav1d.h" dav1d_version || disable libdav1d
+enabled libdav1d && use_pkg_config libdav1d "dav1d >= 0.4.0" "dav1d/dav1d.h" dav1d_version || disable libdav1d
 
 enabled vaapi && enabled opengl &&
     check_header GL/glx.h &&
@@ -6263,9 +6293,6 @@ check_cxxflags -Wpointer-arith
 if disabled deprecation_warnings; then
     check_cxxflags -Wno-deprecated-declarations
 fi
-#needed for INT64_C in libs/libavformat under g++
-check_cxxflags -D__STDC_CONSTANT_MACROS
-check_cxxflags -D__STDC_LIMIT_MACROS
 
 # add some linker flags
 check_ldflags -Wl,--warn-common
@@ -6363,6 +6390,7 @@ check_optflags -fno-signed-zeros
 if enabled lto; then
     test "$cc_type" != "$ld_type" && die "LTO requires same compiler and linker"
     check_cflags  -flto
+    check_cxxflags -flto
     check_ldflags -flto $cpuflags
     disable inline_asm_direct_symbol_refs
 fi
@@ -6429,8 +6457,11 @@ if enabled systemd_journal ; then
 fi
 
 # Check that all MythTV build "requirements" are met:
-enabled exiv2 && $(pkg-config --exists exiv2) ||
-    die "ERROR! You must have the Exiv2 image tag reader library installed to compile MythTV."
+if enabled system_libexiv2 ; then
+    if ! $(pkg-config --exists exiv2) ; then
+       die "ERROR! You must have the Exiv2 image tag reader library installed to compile MythTV."
+    fi
+fi
 
 # Qt dependency checks
 if test $target_os = mingw32 ; then
@@ -6458,19 +6489,7 @@ EOF
 
 qt_compiler_check Q_COMPILER_NULLPTR && enable enforce_nullptr
 case "$cc_type" in
-    gcc)
-        # Gcc < 6 doesn't seem to ignore warnings in system headers
-        if [ $gxx_major -lt 6 ] ; then
-            disable enforce_nullptr
-        fi
-        ;;
     clang)
-        if [ $clangxx_major -lt 6 ]; then
-            # The zero-as-null-pointer-constant warning wasn't added
-            # until clang 5.0, and clang < 6 doesn't seem to ignore
-            # warnings in all system headers.
-            disable enforce_nullptr
-        fi
         # Clang on FreeBSD doesn't ignore warnings in system headers.
         # A trivial test shows that Clang defaults /usr/local/include
         # to a system directory, but somehow this gets messed up in
@@ -6497,10 +6516,8 @@ qt_opengles_check() {
     "qt_opengles_check $@" >> $logfile 2>&1
     check_ecxx ${qt_inc} <<EOF
 #include <QtCore/QtCore>
-#if QT_VERSION >= QT_VERSION_CHECK(5,8,0)
 #include <QtGui/qtguiglobal.h>
-#endif
-#if !defined(QT_OPENGL_ES_2)
+#if !defined(QT_OPENGL_ES_2) && (QT_FEATURE_opengles2 < 1)
 No OpenGL ES here!
 #endif
 int x;
@@ -6529,8 +6546,31 @@ disabled opengl || enabled opengles && {
                   }
 
 enabled opengles && enable opengl
-if disabled opengl; then
-    die "Neither OpenGL or OpenGLES found!"
+
+# Vulkan requires Qt >5.10 and the Vulkan headers - Qt dynamically loads the libs
+# (but we may need to link to Vulkan if we use any external/helper libraries (e.g. VMA).
+
+qt_vulkan_check() {
+    log "qt_vulkan_check $@"
+    "qt_vulkan_check $@" >> $logfile 2>&1
+    check_ecxx ${qt_inc} <<EOF
+#include <QtCore/QtCore>
+#include <QtGui/qtguiglobal.h>
+#if QT_CONFIG(vulkan) != 1
+No vulkan here!
+#endif
+int x;
+EOF
+}
+
+if enabled vulkan ; then
+    if !(qt_vulkan_check); then
+        disable vulkan && disable libglslang && echo Vulkan is not supported with this version of Qt
+    fi
+fi
+
+if ! (enabled opengl || enabled vulkan); then
+    die "Need either OpenGL, OpenGLES or Vulkan. None found!"
 fi
 
 enabled egl &&  { check_lib EGL EGL/egl.h eglGetProcAddress "-lEGL" ||
@@ -6539,19 +6579,43 @@ enabled egl &&  { check_lib EGL EGL/egl.h eglGetProcAddress "-lEGL" ||
                   }
                 }
 
+case $ID in
+    fedora|debian|raspbian)
+        EXTRA_GLSLANG_LIBS="-lMachineIndependent -lGenericCodeGen" ;;
+    ubuntu)
+        case $VERSION_ID in
+            2[1-9]*) EXTRA_GLSLANG_LIBS="-lMachineIndependent -lGenericCodeGen" ;;
+       esac
+esac
+
+enabled vulkan && enabled libglslang && require_cpp libglslang glslang/SPIRV/GlslangToSpv.h "glslang::TIntermediate*" -lglslang ${EXTRA_GLSLANG_LIBS:-} -lOSDependent -lHLSL -lOGLCompiler -lSPVRemapper -lSPIRV -lSPIRV-Tools-opt -lSPIRV-Tools -lpthread
+
+# Qt private headers are required for wayland extras and some DRM functionality on linux
+if enabled qtprivateheaders ; then
+cat >$TMPPRO <<EOF
+QT += gui-private
+EOF
+qt_private_headers_incpath=`${qmakeconf} -makefile -Wnone -nocache -nomoc -nodepend -norecursive -o - $TMPPRO 2>/dev/null | sed -n -e 's/^\s*INCPATH\s*=//p'`
+check_ecxx $qt_private_headers_incpath <<EOF || disable qtprivateheaders
+#include <QGuiApplication>
+#include <qpa/qplatformnativeinterface.h>
+int x;
+EOF
+fi
+
+# Check for Wayland support
+enabled waylandextras && enabled qtprivateheaders || disable waylandextras
+enabled waylandextras && use_pkg_config wayland_client wayland-client "wayland-client.h" wl_surface_set_opaque_region || disable waylandextras
+
 enable enforce_wshadow
 case $target_os in
     android)
         disable enforce_wshadow
         ;;
-    linux)
-        . /etc/os-release
-        if test $ID = "centos"; then
-            disable enforce_wshadow
-        fi
-        ;;
 esac
 
+# Omit Qt5 modules that aren't in Qt6.
+if [ $qt_version -lt $(version2num "6.0.0") ]; then
 if $(pkg-config --exists Qt5WebKit) || $(pkg-config --exists QtWebKit) ; then
     enable qtwebkit
 else
@@ -6573,6 +6637,7 @@ EOF
 fi
 
 enabled qtscript || die "Error! QtScript headers not found"
+fi
 
 # Check if Qt was built with DBus support:
 if ! disabled qtdbus; then
@@ -6673,29 +6738,15 @@ int main(void) {
 EOF
 
 if enabled taglib; then
-    taglib_include=`taglib-config --prefix`/include/taglib
-    taglib_libs=`taglib-config --libs`
+    taglib_include=`$pkg_config --variable=prefix taglib`/include/taglib
+    taglib_libs=`$pkg_config --libs taglib`
 fi
 
 enabled x11 && check_lib X11 "X11/Xdefs.h X11/Xlib.h" XQueryExtension  -lX11 || disable x11
-enabled xrandr && check_lib Xrandr "X11/Xdefs.h X11/Xlib.h X11/extensions/Xrandr.h" XRRSelectInput -lXrandr || disable xrandr
 
 if enabled x11; then
-    require libXxf86vm "X11/Xdefs.h X11/Xlib.h X11/extensions/xf86vmode.h" XF86VidModeSetClientVersion -lXxf86vm
-    require libXinerama X11/extensions/Xinerama.h XineramaQueryExtension -lXinerama
     require libXext "X11/Xdefs.h X11/Xlib.h X11/extensions/Xext.h" XMissingExtension -lXext
-fi
-
-# CoreVideo in only available on Mac OS 10.4, or on 10.3 with QuickTime 7.
-# This checks for it, and some other calls that the module needs
-if test $target_os = darwin; then
-    cat > $TMPC << EOF
-#include <AGL/agl.h>
-int main( void ) { return aglGetCGLContext(0,0L); }
-EOF
-    if $cc -o $TMPE $TMPC -framework AGL > /dev/null 2>&1; then
-        mac_corevideo="yes"
-    fi
+    require libXrandr "X11/Xdefs.h X11/Xlib.h X11/extensions/Xrandr.h" XRRSelectInput -lXrandr
 fi
 
 if test $target_os = darwin; then
@@ -6783,9 +6834,9 @@ elif enabled gcc; then
         check_cflags -Wshadow
     fi
 elif enabled llvm_gcc; then
-    check_cflags -mllvm -stack-alignment=16
+    check_cflags -mllvm -mstack-alignment=16
 elif enabled clang; then
-    check_cflags -mllvm -stack-alignment=16
+    check_cflags -mllvm -mstack-alignment=16
     check_cflags -mstack-alignment=16
     check_cflags -Qunused-arguments
     check_cflags -Werror=implicit-function-declaration
@@ -6895,7 +6946,7 @@ if enabled gxx; then
     #check_cxxflags -Wuseless-cast
 
     # Ubuntu 16.04 uses gcc 5.4.0 which complains about '[[clang::fallthrough]]'
-    gxx_major_version=$(echo $gxx_version | sed -e 's/\([[:digit:]]\)\{1,\}.*/\1/')
+    gxx_major_version=$(echo $gxx_version | sed -e 's/\([[:digit:]]\{1,\}\).*/\1/')
     if test $gxx_major_version -lt 7; then
         if enabled arm; then
             check_cxxflags -Wno-psabi
@@ -6912,11 +6963,14 @@ if enabled gxx; then
     if enabled enforce_nullptr; then
         check_cxxflags -Wzero-as-null-pointer-constant
     fi
-    # Ubuntu 16.04 has problems with this flag.  Its not GCC or Qt, as
-    # both older compilers and/or older Qt versions on other systems
-    # produce clean output.  This is a simple check to eliminate that
-    # specific version (and more, but it gets the job done).
-    if [ $qt_version -ge $(version2num "5.7.0") ]; then
+    # The Q_OBJECT macro gets included in every subclass that is based
+    # on QOBject, and has a couple of functions marked as "virtual"
+    # instead of "override". Apparently earlier version of GCC didn't
+    # warn about this because the errors were in the /usr/include
+    # directory. GCC11 does print these warnings. A ton of
+    # them. Disable this warning to make it easier to find real
+    # errors.
+    if [ $qt_version -ge $(version2num "11.0.0") ]; then
         check_cxxflags -Wsuggest-override
     fi
 elif enabled icpc; then
@@ -6928,7 +6982,6 @@ elif enabled icpc; then
     # 10181: ignore warning about -fomit-frame-pointer being ignored
     # 13200: ignore EMMS instruction required, RTjpegN.cpp does the right thing
     check_cxxflags -wd177,192,592,913,10181,13200
-    check_cxxflags -std=c++11
 elif enabled clangxx; then
     # The constant-logical-operand only gives use false positives
     # for constant logical operands meant to be optimized away.
@@ -6968,7 +7021,7 @@ fi
 
 # Check for python dependencies
 if enabled bindings_python; then
-    check_python               || disable_bindings_python "Python 2.6 or greater"
+    check_python               || disable_bindings_python "Python 3.6 or greater"
     check_py_lib MySQLdb       || disable_bindings_python "MySQLdb"
     check_py_lib lxml          || disable_bindings_python "lxml"
     check_py_lib requests      || disable_bindings_python "requests"
@@ -7000,6 +7053,9 @@ if enabled bindings_perl; then
     check_pl_lib "XML::Simple"  || disable_bindings_perl "XML::Simple"
 fi
 
+# Check for php dependencies
+# none at this time
+
 # nvdec processing
 here="$PWD"
 cd external/nv-codec-headers
@@ -7016,9 +7072,6 @@ else
     rm -rf install ffnvcodec.pc
 fi
 cd "$here"
-
-# Check for php dependencies
-# are none at this time
 
 case $target_os in
     osf1)
@@ -7200,6 +7253,7 @@ ffmpeg_optset arch cross_prefix sysroot sysinclude cc cxx ld cpu
 ffmpeg_optset extra_cxxflags extra_ldflags target_os
 ffmpeg_optset pkg_config prefix libdir as objcc dep_cc host_cc
 ffmpeg_optset host_ld
+ffmpeg_optset ar nm ranlib
 ffmpeg_optenable cross_compile libmp3lame libx264 libx265 libvpx libxvid
 ffmpeg_optenable vdpau libxml2 libass dxva2
 ffmpeg_optenable libbluray libfontconfig libfreetype libiec61883
@@ -7238,7 +7292,16 @@ if enabled gnutls; then
     ffopts="$ffopts --enable-gnutls"
 fi
 
+if enabled lto; then
+    ffopts="$ffopts --enable-lto"
+fi
+
 ffmpeg_extra_cflags="$extra_cflags -w"
+if test "$ID" = "raspbian"; then
+    case $cpu in
+        armv*) ffmpeg_extra_ldflags="$ffmpeg_extra_libs -latomic" ;;
+    esac
+fi
 
 ## Call FFmpeg configure here
 echo
@@ -7249,6 +7312,7 @@ eval ./configure \
 $ffopts \
 --extra-cflags='"$ffmpeg_extra_cflags"' \
 --extra-ldflags='"$ffmpeg_extra_ldflags"' \
+--extra-libs='"$ffmpeg_extra_ldflags"' \
 --enable-stripping \
 --strip='"echo skipping strip"' \
 --disable-manpages  \
@@ -7273,6 +7337,13 @@ if ! grep "^CONFIG_NVDEC=yes$" external/FFmpeg/ffbuild/config.mak ; then
     disable nvdec
 fi
 
+# If ffmpeg disabled videotoolbox then disable it
+if test x"$target_os" = x"darwin" ; then
+    if ! grep "^CONFIG_VIDEOTOOLBOX=yes$" external/FFmpeg/ffbuild/config.mak ; then
+        disable videotoolbox
+    fi
+fi
+
 if test "$quiet" != "yes"; then
 
 echo
@@ -7286,9 +7357,9 @@ echo "DistCC                    $distcc$distcc_txt"
 echo "qmake                     $(which $qmake)"
 echo "install prefix            $prefix"
 echo "runtime prefix            $runprefix"
-
+echo
 if enabled cpu_override && test x"$cpu" != x"generic"; then
-    echo "CPU                       $arch $subarch ($cpu)"
+    echo "CPU override              $arch $subarch ($cpu)"
 elif test x"$processor" != x"" ; then
     echo "CPU                       $arch $subarch ($processor)"
 else
@@ -7339,7 +7410,7 @@ if enabled ppc; then
     echo "PPC 4xx optimizations     ${ppc4xx-no}"
     echo "dcbzl available           ${dcbzl-no}"
 fi
-
+echo
 echo "Creating configuration files ..."
 
 fi # test "$quiet" != "yes"
@@ -7375,7 +7446,6 @@ if enabled source_path_used; then
         external/libmythbluray
         external/libmythdvdnav
         external/libudfread
-        external/libmythsoundtouch
     "
     FILES="
         Makefile
@@ -7393,7 +7463,6 @@ if enabled source_path_used; then
         external/libmythbluray/Makefile
         external/libmythdvdnav/Makefile
         external/libudfread/Makefile
-        external/libmythsoundtouch/Makefile
     "
     map 'mkdir -p $v' $DIRS;
     map 'test -f "$source_path/$v" && $ln_s "$source_path/$v" $v' $FILES
@@ -7402,23 +7471,22 @@ fi
 enabled stripping || strip="echo skipping strip"
 enabled stripping || striptype=""
 
-config_files="$TMPH $TMPMAK doc/config.texi"
+config_files="$TMPH $TMPMAK"
 
 if enabled backend; then
   echo "Video4Linux support       ${v4l2-no}"
-  echo "ivtv support              ${ivtv-no}"
-  echo "HD-PVR support            ${hdpvr-no}"
   echo "FireWire support          ${firewire-no}"
   echo "DVB support               ${dvb-no} [$dvb_path]"
   echo "DVB-S2 support            ${fe_can_2g_modulation-no}"
   echo "HDHomeRun support         ${hdhomerun-no}"
+  echo "Sat>IP support            ${satip-no}"
   echo "V@Box TV Gateway support  ${vbox-no}"
   echo "Ceton support             ${ceton-no}"
   echo "DVEO ASI support          ${asi-no}"
+  echo
 fi
 
 if enabled frontend; then
-  echo
   echo "# Sound Output Support"
   echo "PulseAudio support        ${audio_pulseoutput-no}"
   echo "OSS support               ${audio_oss-no}"
@@ -7431,14 +7499,19 @@ if enabled frontend; then
   echo "libfftw3 support          ${libfftw3-no}"
   echo
   echo "# Video Output Support"
-  echo "x11 support               ${x11-no}"
-if enabled x11 ; then
-  echo "xrandr support            ${xrandr-no}"
-  echo "VDPAU support             ${vdpau-no}"
+  echo "x11/xrandr support        ${x11-no}"
+  if enabled x11 ; then
+    echo "VDPAU support             ${vdpau-no}"
+    echo "NVDEC support             ${nvdec-no}"
+  fi
+  if test x"$target_os" = x"darwin" ; then
+    echo "VideoToolBox support      ${videotoolbox-no}"
+  fi
   echo "VAAPI support             ${vaapi-no}"
-  echo "NVDEC support             ${nvdec-no}"
-fi
   echo "DRM support               ${drm-no}"
+  if enabled drm; then
+    echo "DRM Qt integration        ${qtprivateheaders-no}"
+  fi
   echo "Video4Linux codecs        ${v4l2-no} (DRM ${v4l2prime-no})"
   echo "MMAL decoder support      ${mmal-no}"
   echo "OpenGL                    ${opengl-no} (OpenGLES ${opengles-no})"
@@ -7447,6 +7520,7 @@ fi
     echo "Windows (Direct3D)        yes"
     echo "DXVA2 support             ${dxva2-no}"
   fi
+  echo "Vulkan                    ${vulkan-no} (libglslang ${libglslang-no})"
   echo "MHEG support              ${mheg}"
   echo "libass subtitle support   ${libass-no}"
   echo
@@ -7455,6 +7529,8 @@ fi
 echo "# Misc Features"
 echo "Frontend                  ${frontend-no}"
 echo "Backend                   ${backend-no}"
+echo "Qt private headers        ${qtprivateheaders-no}"
+echo "Wayland extras            ${waylandextras-no}"
 echo "multi threaded libavcodec ${threads-no}"
 if enabled frontend; then
   echo "libxml2 support           ${libxml2-no} [$libxml2_path]"
@@ -7462,13 +7538,23 @@ fi
 echo "libdns_sd (Bonjour)       ${libdns_sd-no}"
 echo "libcrypto                 ${libcrypto-no}"
 echo "gnutls                    ${gnutls-no}"
-if enabled libbluray_external; then
+if enabled system_libexiv2; then
+    echo "exiv2 support             yes (system)"
+else
+    echo "exiv2 support             yes (internal)"
+fi
+if enabled system_libudfread; then
+    echo "udfread support           yes (system)"
+else
+    echo "udfread support           yes (internal)"
+fi
+if enabled system_libbluray; then
     echo "bluray support            yes (system)"
 else
     echo "bluray support            yes (internal)"
+    echo "BD-J (Bluray java)        ${bdjava-no}"
+    echo "BD-J type                 ${bdj_type}"
 fi
-echo "BD-J (Bluray java)        ${bdjava-no}"
-echo "BD-J type                 ${bdj_type}"
 echo "systemd_notify            ${systemd_notify-no}"
 echo "systemd_journal           ${systemd_journal-no}"
 echo
@@ -7493,6 +7579,7 @@ echo "libdav1d (AV1)            ${libdav1d-no}"
 echo ""
 
 echo "# Compilation Options"
+echo "C++ standard supported    ${CPP_STANDARD}"
 echo "Enforce c++11 nullptr     ${enforce_nullptr-no}"
 echo "Enforce shadowed vars     ${enforce_wshadow-no}"
 echo ""
@@ -7523,6 +7610,7 @@ QT_MIN_VERSION_HEX=$QT_MIN_VERSION_HEX
 QT_MIN_VERSION=$QT_MIN_VERSION
 MYTHTV_CONFIGURATION=$MYTHTV_CONFIGURATION
 MYTHTV_CONFIG_MAK=1
+COMPILE_TYPE=$compile_type
 PREFIX=$prefix
 prefix=$prefix
 LIBDIRNAME=$libdir_name
@@ -7560,7 +7648,9 @@ DEPX86ASMFLAGS=\$(X86ASMFLAGS)
 AR=$ar
 ARFLAGS=$arflags
 AR_O=$ar_o
+QMAKE_AR=$ar $arflags
 RANLIB=$ranlib
+QMAKE_RANLIB=$ranlib
 STRIP=$strip
 STRIPTYPE=$striptype
 NVCC=$nvcc
@@ -7663,6 +7753,7 @@ ANTBIN=$antbin
 BDJ_TYPE=$bdj_type
 JDK_HOME=$JDK_HOME
 JAVA_ARCH=$java_arch
+JAVA_CODE_VERSION=$java_code_version
 EOF
 
 get_version(){
@@ -7702,6 +7793,16 @@ if enabled drm; then
     echo "LIBDRM_CFLAGS=$($pkg_config --cflags $pkg_config_flags libdrm)" >> $TMPMAK
 fi
 
+if enabled waylandextras; then
+    echo "LIBWAYLAND_CFLAGS=$($pkg_config --cflags $pkg_config_flags wayland-client)" >> $TMPMAK
+fi
+
+if enabled system_libudfread; then
+    # from check_pkg_config via use_pkg_config above
+    echo "LIBUDFREAD_CFLAGS=$libudfread_cflags" >> $TMPMAK
+    echo "LIBUDFREAD_LIBS=$libudfread_extralibs" >> $TMPMAK
+fi
+
 if test $target_os = darwin; then
   # Qt, by default builds .app bundles everywhere. Prevent this.
   enabled mac_bundle || echo "CONFIG-=app_bundle" >> $TMPMAK
@@ -7714,6 +7815,7 @@ cat > $TMPH <<EOF
 #define QT_MIN_VERSION_STR "$QT_MIN_VERSION_STR"
 #define QT_MIN_VERSION_HEX $QT_MIN_VERSION_HEX
 #define QT_MIN_VERSION $QT_MIN_VERSION
+#define COMPILE_TYPE "$compile_type"
 #define av_restrict $_restrict
 #define EXTERN_PREFIX "${extern_prefix}"
 #define EXTERN_ASM ${extern_prefix}
@@ -7730,19 +7832,11 @@ cat > $TMPH <<EOF
 #define PYTHON_EXE "${python}"
 EOF
 
-# Code only checks whether HAVE_BDJ_J2ME is defined, not what value
-# it has been defined as so we mustn't define it if we don't have it.
-enabled bdj_j2me && echo "#define HAVE_BDJ_J2ME 1" >>$TMPH
-
 test -n "$assert_level" &&
     echo "#define ASSERT_LEVEL $assert_level" >>$TMPH
 
 test -n "$malloc_prefix" &&
     echo "#define MALLOC_PREFIX $malloc_prefix" >>$TMPH
-
-if enabled mac_corevideo; then
-  append CCONFIG "using_corevideo"
-fi
 
 if enabled cygwin ; then
   echo "#ifndef llrint" >> $TMPH
@@ -7759,12 +7853,6 @@ if enabled cygwin ; then
 fi
 
 enabled getenv || echo "#define getenv(x) NULL" >> $TMPH
-
-
-mkdir -p doc
-mkdir -p tests
-mkdir -p tests/api
-echo "@c auto-generated by configure - do not modify! " > doc/config.texi
 
 print_config ARCH_   "$config_files" $ARCH_LIST
 print_config HAVE_   "$config_files" $HAVE_LIST
@@ -7901,10 +7989,7 @@ EOF
 
 #echo "endif # FFMPEG_CONFIG_MAK" >> $TMPMAK
 
-# Should be done on all platforms, but for the time being limit it to mac only
-if enabled darwin; then
-  echo "QMAKE_LFLAGS+=\"$LDFLAGS\"" >> $TMPMAK
-fi
+echo "QMAKE_LFLAGS+=\"$LDFLAGS\"" >> $TMPMAK
 
 cp_if_changed $TMPH $MYTH_CONFIG_H
 
@@ -7936,19 +8021,23 @@ if [ -e libs/libmyth/mythconfig.h ] ; then
     rm -f libs/libmyth/mythconfig.h
 fi
 
-if ! enabled libbluray_external; then
+if ! enabled system_libudfread; then
+    echo "Configuring libudfread..."
+    (cd external/libudfread ; \
+           ${qmakeconf} -o Makefile)
+fi
+if ! enabled system_libbluray; then
     echo "Configuring libmythbluray..."
     (cd external/libmythbluray ; \
            ${qmakeconf} -o Makefile)
 fi
+if ! enabled system_libexiv2; then
+    echo "Configuring libexiv2..."
+    (cd external/libexiv2 ; \
+           ${qmakeconf} -o Makefile)
+fi
 echo "Configuring libmythdvdnav..."
 (cd external/libmythdvdnav ; \
-       ${qmakeconf} -o Makefile)
-echo "Configuring libudfread..."
-(cd external/libudfread ; \
-       ${qmakeconf} -o Makefile)
-echo "Configuring libmythsoundtouch..."
-(cd external/libmythsoundtouch ;
        ${qmakeconf} -o Makefile)
 
 test -n "$WARNINGS" && printf "\n$WARNINGS" || exit 0

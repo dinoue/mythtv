@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2010 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -33,43 +33,43 @@ class SERVICE_PUBLIC RecordingInfo : public QObject
     Q_PROPERTY( QDateTime        StartTs      READ StartTs      WRITE setStartTs    )
     Q_PROPERTY( QDateTime        EndTs        READ EndTs        WRITE setEndTs      )
 
-    Q_PROPERTY( qlonglong        FileSize     READ FileSize     WRITE setFileSize     DESIGNABLE SerializeDetails ) // v1.3
-    Q_PROPERTY( QString          FileName     READ FileName     WRITE setFileName     DESIGNABLE SerializeDetails ) // v1.3
-    Q_PROPERTY( QString          HostName     READ HostName     WRITE setHostName     DESIGNABLE SerializeDetails ) // v1.3
-    Q_PROPERTY( QDateTime        LastModified READ LastModified WRITE setLastModified DESIGNABLE SerializeDetails ) // v1.3
+    Q_PROPERTY( qlonglong        FileSize     READ FileSize     WRITE setFileSize     ) // v1.3
+    Q_PROPERTY( QString          FileName     READ FileName     WRITE setFileName     ) // v1.3
+    Q_PROPERTY( QString          HostName     READ HostName     WRITE setHostName     ) // v1.3
+    Q_PROPERTY( QDateTime        LastModified READ LastModified WRITE setLastModified ) // v1.3
 
-    Q_PROPERTY( int              RecordId     READ RecordId     WRITE setRecordId     DESIGNABLE SerializeDetails )
-    Q_PROPERTY( QString          RecGroup     READ RecGroup     WRITE setRecGroup     DESIGNABLE SerializeDetails )
-    Q_PROPERTY( QString          PlayGroup    READ PlayGroup    WRITE setPlayGroup    DESIGNABLE SerializeDetails )
-    Q_PROPERTY( QString          StorageGroup READ StorageGroup WRITE setStorageGroup DESIGNABLE SerializeDetails )
-    Q_PROPERTY( int              RecType      READ RecType      WRITE setRecType      DESIGNABLE SerializeDetails )
-    Q_PROPERTY( int              DupInType    READ DupInType    WRITE setDupInType    DESIGNABLE SerializeDetails )
-    Q_PROPERTY( int              DupMethod    READ DupMethod    WRITE setDupMethod    DESIGNABLE SerializeDetails )
-    Q_PROPERTY( int              EncoderId    READ EncoderId    WRITE setEncoderId    DESIGNABLE SerializeDetails )
-    Q_PROPERTY( QString          EncoderName  READ EncoderName  WRITE setEncoderName  DESIGNABLE SerializeDetails )
-    Q_PROPERTY( QString          Profile      READ Profile      WRITE setProfile      DESIGNABLE SerializeDetails )
+    Q_PROPERTY( int              RecordId     READ RecordId     WRITE setRecordId     )
+    Q_PROPERTY( QString          RecGroup     READ RecGroup     WRITE setRecGroup     )
+    Q_PROPERTY( QString          PlayGroup    READ PlayGroup    WRITE setPlayGroup    )
+    Q_PROPERTY( QString          StorageGroup READ StorageGroup WRITE setStorageGroup )
+    Q_PROPERTY( int              RecType      READ RecType      WRITE setRecType      )
+    Q_PROPERTY( int              DupInType    READ DupInType    WRITE setDupInType    )
+    Q_PROPERTY( int              DupMethod    READ DupMethod    WRITE setDupMethod    )
+    Q_PROPERTY( int              EncoderId    READ EncoderId    WRITE setEncoderId    )
+    Q_PROPERTY( QString          EncoderName  READ EncoderName  WRITE setEncoderName  )
+    Q_PROPERTY( QString          Profile      READ Profile      WRITE setProfile      )
 
     PROPERTYIMP     ( uint                   , RecordedId  )
     PROPERTYIMP_ENUM( RecStatus::Type        , Status      )
     PROPERTYIMP     ( int                    , Priority    )
-    PROPERTYIMP     ( QDateTime              , StartTs     )
-    PROPERTYIMP     ( QDateTime              , EndTs       )
+    PROPERTYIMP_REF ( QDateTime              , StartTs     )
+    PROPERTYIMP_REF ( QDateTime              , EndTs       )
 
     PROPERTYIMP     ( qlonglong              , FileSize    ) // v1.3
-    PROPERTYIMP     ( QString                , FileName    ) // v1.3
-    PROPERTYIMP     ( QString                , HostName    ) // v1.3
-    PROPERTYIMP     ( QDateTime              , LastModified) // v1.3
+    PROPERTYIMP_REF ( QString                , FileName    ) // v1.3
+    PROPERTYIMP_REF ( QString                , HostName    ) // v1.3
+    PROPERTYIMP_REF ( QDateTime              , LastModified) // v1.3
 
     PROPERTYIMP     ( int                    , RecordId    )
-    PROPERTYIMP     ( QString                , RecGroup    )
-    PROPERTYIMP     ( QString                , StorageGroup)
-    PROPERTYIMP     ( QString                , PlayGroup   )
+    PROPERTYIMP_REF ( QString                , RecGroup    )
+    PROPERTYIMP_REF ( QString                , StorageGroup)
+    PROPERTYIMP_REF ( QString                , PlayGroup   )
     PROPERTYIMP_ENUM( RecordingType          , RecType     )
     PROPERTYIMP_ENUM( RecordingDupInType     , DupInType   )
     PROPERTYIMP_ENUM( RecordingDupMethodType , DupMethod   )
     PROPERTYIMP     ( int                    , EncoderId   )
-    PROPERTYIMP     ( QString                , EncoderName )
-    PROPERTYIMP     ( QString                , Profile     )
+    PROPERTYIMP_REF ( QString                , EncoderName )
+    PROPERTYIMP_REF ( QString                , Profile     )
 
     // Used only by Serializer
     PROPERTYIMP( bool, SerializeDetails );

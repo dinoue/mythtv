@@ -74,17 +74,17 @@ bool ExportNative::Create(void)
         return false;
     }
 
-    connect(m_nextButton, SIGNAL(Clicked()), this, SLOT(handleNextPage()));
-    connect(m_prevButton, SIGNAL(Clicked()), this, SLOT(handlePrevPage()));
-    connect(m_cancelButton, SIGNAL(Clicked()), this, SLOT(handleCancel()));
+    connect(m_nextButton, &MythUIButton::Clicked, this, &ExportNative::handleNextPage);
+    connect(m_prevButton, &MythUIButton::Clicked, this, &ExportNative::handlePrevPage);
+    connect(m_cancelButton, &MythUIButton::Clicked, this, &ExportNative::handleCancel);
 
 
     getArchiveList();
-    connect(m_archiveButtonList, SIGNAL(itemSelected(MythUIButtonListItem *)),
-            this, SLOT(titleChanged(MythUIButtonListItem *)));
+    connect(m_archiveButtonList, &MythUIButtonList::itemSelected,
+            this, &ExportNative::titleChanged);
 
-    connect(m_addrecordingButton, SIGNAL(Clicked()), this, SLOT(handleAddRecording()));
-    connect(m_addvideoButton, SIGNAL(Clicked()), this, SLOT(handleAddVideo()));
+    connect(m_addrecordingButton, &MythUIButton::Clicked, this, &ExportNative::handleAddRecording);
+    connect(m_addvideoButton, &MythUIButton::Clicked, this, &ExportNative::handleAddVideo);
 
     BuildFocusList();
 
@@ -131,18 +131,16 @@ void ExportNative::updateSizeBar()
 {
     int64_t size = 0;
 
-    foreach (auto a, m_archiveList)
+    for (const auto *a : qAsConst(m_archiveList))
         size += a->size;
 
     m_usedSpace = size / 1024 / 1024;
     uint freeSpace = m_archiveDestination.freeSpace / 1024;
 
-    QString tmpSize;
-
     m_sizeBar->SetTotal(freeSpace);
     m_sizeBar->SetUsed(m_usedSpace);
 
-    tmpSize.sprintf("%0d Mb", freeSpace);
+    QString tmpSize = QString("%1 Mb").arg(freeSpace);
 
     if (m_maxsizeText)
         m_maxsizeText->SetText(tmpSize);
@@ -150,7 +148,7 @@ void ExportNative::updateSizeBar()
     if (m_minsizeText)
         m_minsizeText->SetText("0 Mb");
 
-    tmpSize.sprintf("%0d Mb", m_usedSpace);
+    tmpSize = QString("%1 Mb").arg(m_usedSpace);
 
     if (m_usedSpace > freeSpace)
     {
@@ -231,7 +229,7 @@ void ExportNative::updateArchiveList(void)
     }
     else
     {
-        foreach (auto a, m_archiveList)
+        for (auto *a : qAsConst(m_archiveList))
         {
             auto* item = new MythUIButtonListItem(m_archiveButtonList, a->title);
             item->SetData(QVariant::fromValue(a));
@@ -313,7 +311,7 @@ void ExportNative::saveConfiguration(void)
                     ":STARTTIME, :SIZE, :FILENAME, :HASCUTLIST, :DURATION, "
                     ":CUTDURATION, :VIDEOWIDTH, :VIDEOHEIGHT, :FILECODEC, "
                     ":VIDEOCODEC, :ENCODERPROFILE);");
-    foreach (auto a, m_archiveList)
+    for (const auto * a : qAsConst(m_archiveList))
     {
         query.bindValue(":TYPE", a->type);
         query.bindValue(":TITLE", a->title);
@@ -348,7 +346,7 @@ void ExportNative::ShowMenu()
 
     menuPopup->SetReturnEvent(this, "action");
 
-    menuPopup->AddButton(tr("Remove Item"), SLOT(removeItem()));
+    menuPopup->AddButton(tr("Remove Item"), &ExportNative::removeItem);
 }
 
 void ExportNative::removeItem()
@@ -382,7 +380,7 @@ void ExportNative::createConfigFile(const QString &filename)
     job.appendChild(media);
 
     // now loop though selected archive items and add them to the xml file
-    foreach (auto a, m_archiveList)
+    for (const auto * a : qAsConst(m_archiveList))
     {
         QDomElement file = doc.createElement("file");
         file.setAttribute("type", a->type.toLower() );
@@ -454,8 +452,8 @@ void ExportNative::handleAddRecording()
 
     auto *selector = new RecordingSelector(mainStack, &m_archiveList);
 
-    connect(selector, SIGNAL(haveResult(bool)),
-            this, SLOT(selectorClosed(bool)));
+    connect(selector, &RecordingSelector::haveResult,
+            this, &ExportNative::selectorClosed);
 
     if (selector->Create())
         mainStack->AddScreen(selector);
@@ -484,8 +482,8 @@ void ExportNative::handleAddVideo()
 
     auto *selector = new VideoSelector(mainStack, &m_archiveList);
 
-    connect(selector, SIGNAL(haveResult(bool)),
-            this, SLOT(selectorClosed(bool)));
+    connect(selector, &VideoSelector::haveResult,
+            this, &ExportNative::selectorClosed);
 
     if (selector->Create())
         mainStack->AddScreen(selector);

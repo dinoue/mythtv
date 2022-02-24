@@ -1,3 +1,6 @@
+#include <chrono>
+#include <utility>
+
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QImageReader>
@@ -5,21 +8,24 @@
 #include <QStringList>
 #include <QTimer>
 #include <QUrl>
-#include <utility>
 
 #include "mythlogging.h"
 
-#include "mythdialogbox.h"
-#include "mythmainwindow.h"
-#include "mythfontproperties.h"
-#include "mythuiutils.h"
-#include "mythuitext.h"
-#include "mythuiimage.h"
-#include "mythuibuttonlist.h"
-#include "mythuibutton.h"
-#include "mythuistatetype.h"
-#include "mythuifilebrowser.h"
 #include "mythcorecontext.h"
+#include "mythdialogbox.h"
+#include "mythfontproperties.h"
+#include "mythmainwindow.h"
+#include "mythuibutton.h"
+#include "mythuibuttonlist.h"
+#include "mythuifilebrowser.h"
+#include "mythuiimage.h"
+#include "mythuistatetype.h"
+#include "mythuitext.h"
+#include "mythuiutils.h"
+
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
+#define qEnvironmentVariable getenv
+#endif
 
 /////////////////////////////////////////////////////////////////////
 MFileInfo::MFileInfo(const QString& fileName, QString sgDir, bool isDir, qint64 size)
@@ -57,6 +63,15 @@ void MFileInfo::init(const QString& fileName, QString sgDir, bool isDir,
 
     if (!fileName.isEmpty())
         QFileInfo::setFile(fileName);
+}
+
+MFileInfo::MFileInfo(const MFileInfo& other)
+    : QFileInfo(other)
+{
+    QString sgDir = other.storageGroupDir();
+    bool isDir    = other.isDir();
+    qint64 size   = other.size();
+    init(other.filePath(), sgDir, isDir, size);
 }
 
 MFileInfo &MFileInfo::operator=(const MFileInfo &other)
@@ -148,7 +163,7 @@ MythUIFileBrowser::MythUIFileBrowser(MythScreenStack *parent,
 
     m_previewTimer = new QTimer(this);
     m_previewTimer->setSingleShot(true);
-    connect(m_previewTimer, SIGNAL(timeout()), SLOT(LoadPreview()));
+    connect(m_previewTimer, &QTimer::timeout, this, &MythUIFileBrowser::LoadPreview);
 }
 
 void MythUIFileBrowser::SetPath(const QString &startPath)
@@ -210,19 +225,19 @@ bool MythUIFileBrowser::Create()
         return false;
     }
 
-    connect(m_fileList, SIGNAL(itemClicked(MythUIButtonListItem *)),
-            SLOT(PathClicked(MythUIButtonListItem *)));
-    connect(m_fileList, SIGNAL(itemSelected(MythUIButtonListItem *)),
-            SLOT(PathSelected(MythUIButtonListItem *)));
-    connect(m_locationEdit, SIGNAL(LosingFocus()), SLOT(editLostFocus()));
-    connect(m_okButton, SIGNAL(Clicked()), SLOT(OKPressed()));
-    connect(m_cancelButton, SIGNAL(Clicked()), SLOT(cancelPressed()));
+    connect(m_fileList, &MythUIButtonList::itemClicked,
+            this, &MythUIFileBrowser::PathClicked);
+    connect(m_fileList, &MythUIButtonList::itemSelected,
+            this, &MythUIFileBrowser::PathSelected);
+    connect(m_locationEdit, &MythUIType::LosingFocus, this, &MythUIFileBrowser::editLostFocus);
+    connect(m_okButton, &MythUIButton::Clicked, this, &MythUIFileBrowser::OKPressed);
+    connect(m_cancelButton, &MythUIButton::Clicked, this, &MythUIFileBrowser::cancelPressed);
 
     if (m_backButton)
-        connect(m_backButton, SIGNAL(Clicked()), SLOT(backPressed()));
+        connect(m_backButton, &MythUIButton::Clicked, this, &MythUIFileBrowser::backPressed);
 
     if (m_homeButton)
-        connect(m_homeButton, SIGNAL(Clicked()), SLOT(homePressed()));
+        connect(m_homeButton, &MythUIButton::Clicked, this, &MythUIFileBrowser::homePressed);
 
     BuildFocusList();
     updateFileList();
@@ -251,7 +266,7 @@ void MythUIFileBrowser::PathSelected(MythUIButtonListItem *item)
     if (m_previewImage)
         m_previewImage->Reset();
 
-    MFileInfo finfo = item->GetData().value<MFileInfo>();
+    auto finfo = item->GetData().value<MFileInfo>();
 
     if (finfo.isParentDir())
     {
@@ -269,7 +284,7 @@ void MythUIFileBrowser::PathSelected(MythUIButtonListItem *item)
         if (IsImage(finfo.suffix()) && m_previewImage)
         {
             m_previewImage->SetFilename(finfo.absoluteFilePath());
-            m_previewTimer->start(250);
+            m_previewTimer->start(250ms);
         }
 
         if (m_infoText)
@@ -288,7 +303,7 @@ void MythUIFileBrowser::PathClicked(MythUIButtonListItem *item)
     if (!item)
         return;
 
-    MFileInfo finfo = item->GetData().value<MFileInfo>();
+    auto finfo = item->GetData().value<MFileInfo>();
 
     if (finfo.isFile())
     {
@@ -387,8 +402,7 @@ void MythUIFileBrowser::homePressed()
     }
     else
     {
-        char *home = getenv("HOME");
-        m_subDirectory = home;
+        m_subDirectory = qEnvironmentVariable("HOME");
     }
 
     updateFileList();
@@ -397,13 +411,15 @@ void MythUIFileBrowser::homePressed()
 void MythUIFileBrowser::OKPressed()
 {
     MythUIButtonListItem *item = m_fileList->GetItemCurrent();
-        MFileInfo finfo = item->GetData().value<MFileInfo>();
 
     if (m_retObject)
     {
         QString selectedPath = m_locationEdit->GetText();
+        QVariant vData;
+        if (item != nullptr)
+            vData = item->GetData();
         auto *dce = new DialogCompletionEvent(m_id, 0, selectedPath,
-                                              item->GetData());
+                                              vData);
         QCoreApplication::postEvent(m_retObject, dce);
     }
 
@@ -434,8 +450,7 @@ void MythUIFileBrowser::updateRemoteFileList()
     if (!m_baseDirectory.endsWith("/"))
         m_baseDirectory.append("/");
 
-    QString dirURL = QString("%1%2").arg(m_baseDirectory)
-                     .arg(m_subDirectory);
+    QString dirURL = QString("%1%2").arg(m_baseDirectory, m_subDirectory);
 
     if (!GetRemoteFileList(m_baseDirectory, sgdir, sgdirlist))
     {
@@ -456,7 +471,7 @@ void MythUIFileBrowser::updateRemoteFileList()
     {
         LOG(VB_GENERAL, LOG_ERR,
             QString("GetRemoteFileList failed for '%1' in '%2' SG dir")
-            .arg(dirURL).arg(m_storageGroupDir));
+            .arg(dirURL, m_storageGroupDir));
         return;
     }
 
@@ -510,16 +525,13 @@ void MythUIFileBrowser::updateRemoteFileList()
             m_backButton->SetEnabled(false);
     }
 
-    QStringList::const_iterator it = slist.begin();
-
-    while (it != slist.end())
+    for (const auto & line : qAsConst(slist))
     {
-        QStringList tokens = (*it).split("::");
+        QStringList tokens = line.split("::");
 
         if (tokens.size() < 2)
         {
-            LOG(VB_GENERAL, LOG_ERR, QString("failed to parse '%1'.").arg(*it));
-            ++it;
+            LOG(VB_GENERAL, LOG_ERR, QString("failed to parse '%1'.").arg(line));
             continue;
         }
 
@@ -529,13 +541,12 @@ void MythUIFileBrowser::updateRemoteFileList()
             dataName = m_baseDirectory;
         else if (m_subDirectory.isEmpty())
         {
-            dataName = QString("%1%2").arg(m_baseDirectory)
-                       .arg(displayName);
+            dataName = QString("%1%2").arg(m_baseDirectory, displayName);
         }
         else
         {
-            dataName = QString("%1%2/%3").arg(m_baseDirectory)
-                       .arg(m_subDirectory).arg(displayName);
+            dataName = QString("%1%2/%3")
+                       .arg(m_baseDirectory, m_subDirectory, displayName);
         }
 
         MFileInfo finfo(dataName, m_storageGroupDir);
@@ -570,7 +581,6 @@ void MythUIFileBrowser::updateRemoteFileList()
         else
         {
             // unknown type or filtered out
-            ++it;
             continue;
         }
 
@@ -585,8 +595,6 @@ void MythUIFileBrowser::updateRemoteFileList()
 
         item->SetText(dataName, "fullpath");
         item->DisplayState(type, "nodetype");
-
-        ++it;
     }
 }
 
@@ -619,18 +627,12 @@ void MythUIFileBrowser::updateLocalFileList()
     }
     else
     {
-        QFileInfoList::const_iterator it = list.begin();
-
-        while (it != list.end())
+        for (const auto & fi : qAsConst(list))
         {
-            const QFileInfo *fi = &(*it);
-            MFileInfo finfo(fi->filePath());
+            MFileInfo finfo(fi.filePath());
 
             if (finfo.fileName() == ".")
-            {
-                ++it;
                 continue;
-            }
 
             QString displayName = finfo.fileName();
             QString type;
@@ -638,10 +640,7 @@ void MythUIFileBrowser::updateLocalFileList()
             if (displayName == "..")
             {
                 if (m_subDirectory.endsWith("/"))
-                {
-                    ++it;
                     continue;
-                }
 
                 displayName = tr("Parent");
                 type = "upfolder";
@@ -672,8 +671,6 @@ void MythUIFileBrowser::updateLocalFileList()
             item->SetText(FormatSize(finfo.size()), "filesize");
             item->SetText(finfo.absoluteFilePath(), "fullpath");
             item->DisplayState(type, "nodetype");
-
-            ++it;
         }
     }
 

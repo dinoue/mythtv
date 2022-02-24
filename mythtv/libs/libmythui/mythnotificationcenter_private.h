@@ -172,8 +172,8 @@ public:
     void UpdatePlayback(float progress, const QString &text);
     void UpdateFrom(const MythNotificationScreen &s);
 
-    void SetSingleShotTimer(int s, bool update = false);
-    void SetErrorState(void);
+    void SetSingleShotTimer(std::chrono::seconds s, bool update = false);
+    void SetErrorState(void) const;
 
     // UI methods
     void AdjustYPosition(void);
@@ -205,7 +205,7 @@ public:
     QString                     m_origin;
     QString                     m_description;
     QString                     m_extra;
-    int                         m_duration        {-1};
+    std::chrono::seconds        m_duration        {-1s};
     float                       m_progress        {-1.0F};
     QString                     m_progresstext;
     bool                        m_fullscreen      {false};
@@ -252,11 +252,11 @@ public:
 
     void CheckDeletes()
     {
-        for (auto it = m_ToDelete.begin(); it != m_ToDelete.end(); ++it)
+        for (auto * screen : qAsConst(m_toDelete))
         {
-            (*it)->SetAlpha(0);
-            (*it)->SetVisible(false);
-            (*it)->Close();
+            screen->SetAlpha(0);
+            screen->SetVisible(false);
+            screen->Close();
         }
         MythScreenStack::CheckDeletes();
     }

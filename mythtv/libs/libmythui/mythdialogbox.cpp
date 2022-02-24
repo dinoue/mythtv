@@ -27,6 +27,8 @@
 QEvent::Type DialogCompletionEvent::kEventType =
     (QEvent::Type) QEvent::registerEventType();
 
+// Force this class to have a vtable so that dynamic_cast works.
+// NOLINTNEXTLINE(modernize-use-equals-default)
 DialogCompletionEvent::~DialogCompletionEvent()
 {
 }
@@ -55,19 +57,15 @@ MythMenu::~MythMenu(void)
     }
 }
 
-void MythMenu::AddItem(const QString& title, const char* slot, MythMenu *subMenu, bool selected, bool checked)
+void MythMenu::AddItemV(const QString &title, QVariant data, MythMenu *subMenu, bool selected, bool checked)
 {
-    auto *item = new MythMenuItem(title, slot, checked, subMenu);
+    auto *item = new MythMenuItem(title, checked, subMenu);
+    item->SetData(std::move(data));
     AddItem(item, selected, subMenu);
 }
 
-void MythMenu::AddItem(const QString &title, QVariant data, MythMenu *subMenu, bool selected, bool checked)
-{
-    auto *item = new MythMenuItem(title, std::move(data), checked, subMenu);
-    AddItem(item, selected, subMenu);
-}
-
-void MythMenu::AddItem(const QString &title, const MythUIButtonCallback &slot,
+// For non-class, static class, or lambda functions.
+void MythMenu::AddItem(const QString &title, const MythUICallbackNMF &slot,
                        MythMenu *subMenu, bool selected, bool checked)
 {
     auto *item = new MythMenuItem(title, slot, checked, subMenu);
@@ -87,7 +85,7 @@ void MythMenu::AddItem(MythMenuItem *item, bool selected, MythMenu *subMenu)
 
 void MythMenu::SetSelectedByTitle(const QString& title)
 {
-    foreach (auto & item, m_menuItems)
+    for (auto *item : qAsConst(m_menuItems))
     {
         if (!item)
             continue;
@@ -102,7 +100,7 @@ void MythMenu::SetSelectedByTitle(const QString& title)
 
 void MythMenu::SetSelectedByData(const QVariant& data)
 {
-    foreach (auto & item, m_menuItems)
+    for (auto *item : qAsConst(m_menuItems))
     {
         if (!item)
             continue;
@@ -139,7 +137,8 @@ bool MythDialogBox::Create(void)
         return false;
 
     bool err = false;
-    UIUtilW::Assign(this, m_titlearea, "title");
+    if (m_fullscreen)
+        UIUtilW::Assign(this, m_titlearea, "title");
     UIUtilE::Assign(this, m_textarea, "messagearea", &err);
     UIUtilE::Assign(this, m_buttonList, "list", &err);
 
@@ -159,8 +158,8 @@ bool MythDialogBox::Create(void)
     if (m_menu)
         updateMenu();
 
-    connect(m_buttonList, SIGNAL(itemClicked(MythUIButtonListItem*)),
-            SLOT(Select(MythUIButtonListItem*)));
+    connect(m_buttonList, &MythUIButtonList::itemClicked,
+            this, &MythDialogBox::Select);
 
     return true;
 }
@@ -214,7 +213,8 @@ void MythDialogBox::Select(MythUIButtonListItem* item)
     if (m_currentMenu)
     {
         auto *menuItem = item->GetData().value< MythMenuItem * >();
-
+        if (menuItem == nullptr)
+            return;
         if (menuItem->m_subMenu)
         {
             m_currentMenu->m_selectedItem = m_buttonList->GetCurrentPos();
@@ -232,10 +232,24 @@ void MythDialogBox::Select(MythUIButtonListItem* item)
                         Qt::QueuedConnection);
                 emit Selected();
             }
-            else if (menuItem->m_data.value<MythUIButtonCallback>())
+            else if (menuItem->m_data.value<MythUICallbackNMF>())
             {
                 connect(this, &MythDialogBox::Selected, m_currentMenu->m_retObject,
-                        menuItem->m_data.value<MythUIButtonCallback>(),
+                        menuItem->m_data.value<MythUICallbackNMF>(),
+                        Qt::QueuedConnection);
+                emit Selected();
+            }
+            else if (menuItem->m_data.value<MythUICallbackMF>())
+            {
+                connect(this, &MythDialogBox::Selected, m_currentMenu->m_retObject,
+                        menuItem->m_data.value<MythUICallbackMF>(),
+                        Qt::QueuedConnection);
+                emit Selected();
+            }
+            else if (menuItem->m_data.value<MythUICallbackMFc>())
+            {
+                connect(this, &MythDialogBox::Selected, m_currentMenu->m_retObject,
+                        menuItem->m_data.value<MythUICallbackMFc>(),
                         Qt::QueuedConnection);
                 emit Selected();
             }
@@ -254,10 +268,24 @@ void MythDialogBox::Select(MythUIButtonListItem* item)
                         Qt::QueuedConnection);
                 emit Selected();
             }
-            else if (item->GetData().value<MythUIButtonCallback>())
+            else if (item->GetData().value<MythUICallbackNMF>())
             {
                 connect(this, &MythDialogBox::Selected, m_retObject,
-                        item->GetData().value<MythUIButtonCallback>(),
+                        item->GetData().value<MythUICallbackNMF>(),
+                        Qt::QueuedConnection);
+                emit Selected();
+            }
+            else if (item->GetData().value<MythUICallbackMF>())
+            {
+                connect(this, &MythDialogBox::Selected, m_retObject,
+                        item->GetData().value<MythUICallbackMF>(),
+                        Qt::QueuedConnection);
+                emit Selected();
+            }
+            else if (item->GetData().value<MythUICallbackMFc>())
+            {
+                connect(this, &MythDialogBox::Selected, m_retObject,
+                        item->GetData().value<MythUICallbackMFc>(),
                         Qt::QueuedConnection);
                 emit Selected();
             }
@@ -266,8 +294,8 @@ void MythDialogBox::Select(MythUIButtonListItem* item)
         SendEvent(m_buttonList->GetItemPos(item), item->GetText(), item->GetData());
     }
 
-    if (m_ScreenStack)
-        m_ScreenStack->PopScreen(nullptr, false);
+    if (m_screenStack)
+        m_screenStack->PopScreen(nullptr, false);
 }
 
 void MythDialogBox::SetReturnEvent(QObject *retobject,
@@ -295,7 +323,7 @@ void MythDialogBox::SetText(const QString &text)
         m_textarea->SetText(text);
 }
 
-void MythDialogBox::AddButton(const QString &title, QVariant data, bool newMenu,
+void MythDialogBox::AddButtonV(const QString &title, QVariant data, bool newMenu,
                               bool setCurrent)
 {
     auto *button = new MythUIButtonListItem(m_buttonList, title);
@@ -309,22 +337,9 @@ void MythDialogBox::AddButton(const QString &title, QVariant data, bool newMenu,
     m_buttonList->GetVisibleCount();
 }
 
-void MythDialogBox::AddButton(const QString &title, const char *slot,
-                              bool newMenu, bool setCurrent)
+bool MythDialogBox::inputMethodEvent(QInputMethodEvent *event)
 {
-    auto *button = new MythUIButtonListItem(m_buttonList, title);
-
-    m_useSlots = true;
-
-    if (slot)
-        button->SetData(QVariant::fromValue(slot));
-    button->setDrawArrow(newMenu);
-
-    if (setCurrent)
-        m_buttonList->SetItemCurrent(button);
-    // GetVisibleCount here makes sure that the dialog size is
-    // calculated correctly
-    m_buttonList->GetVisibleCount();
+    return GetFocusWidget()->inputMethodEvent(event);
 }
 
 bool MythDialogBox::inputMethodEvent(QInputMethodEvent *event)
@@ -395,11 +410,11 @@ bool MythDialogBox::keyPressEvent(QKeyEvent *event)
 bool MythDialogBox::gestureEvent(MythGestureEvent *event)
 {
     bool handled = false;
-    if (event->gesture() == MythGestureEvent::Click)
+    if (event->GetGesture() == MythGestureEvent::Click)
     {
         switch (event->GetButton())
         {
-            case MythGestureEvent::RightButton :
+            case Qt::RightButton:
                 SendEvent(-2);
                 Close();
                 handled = true;
@@ -463,12 +478,12 @@ bool MythConfirmationDialog::Create(void)
 
     if (m_showCancel)
     {
-        connect(cancelButton, SIGNAL(Clicked()), SLOT(Cancel()));
+        connect(cancelButton, &MythUIButton::Clicked, this, &MythConfirmationDialog::Cancel);
     }
     else
         cancelButton->SetVisible(false);
 
-    connect(okButton, SIGNAL(Clicked()), SLOT(Confirm()));
+    connect(okButton, &MythUIButton::Clicked, this, &MythConfirmationDialog::Confirm);
 
     m_messageText->SetText(m_message);
 
@@ -553,8 +568,7 @@ void MythConfirmationDialog::sendResult(bool ok)
 /**
  * Non-blocking version of MythPopupBox::showOkPopup()
  */
-MythConfirmationDialog  *ShowOkPopup(const QString &message, QObject *parent,
-                                     const char *slot, bool showCancel)
+MythConfirmationDialog  *ShowOkPopup(const QString &message, bool showCancel)
 {
     QString                  LOC = "ShowOkPopup('" + message + "') - ";
     MythScreenStack         *stk = nullptr;
@@ -580,9 +594,6 @@ MythConfirmationDialog  *ShowOkPopup(const QString &message, QObject *parent,
     if (pop->Create())
     {
         stk->AddScreen(pop);
-        if (parent && slot)
-            QObject::connect(pop, SIGNAL(haveResult(bool)), parent, slot,
-                             Qt::QueuedConnection);
     }
     else
     {
@@ -635,8 +646,8 @@ bool MythTextInputDialog::Create(void)
     }
 
     if (cancelButton)
-        connect(cancelButton, SIGNAL(Clicked()), SLOT(Close()));
-    connect(okButton, SIGNAL(Clicked()), SLOT(sendResult()));
+        connect(cancelButton, &MythUIButton::Clicked, this, &MythScreenType::Close);
+    connect(okButton, &MythUIButton::Clicked, this, &MythTextInputDialog::sendResult);
 
     m_textEdit->SetFilter(m_filter);
     m_textEdit->SetText(m_defaultValue);
@@ -704,8 +715,8 @@ bool MythSpinBoxDialog::Create(void)
     }
 
     if (cancelButton)
-        connect(cancelButton, SIGNAL(Clicked()), SLOT(Close()));
-    connect(okButton, SIGNAL(Clicked()), SLOT(sendResult()));
+        connect(cancelButton, &MythUIButton::Clicked, this, &MythScreenType::Close);
+    connect(okButton, &MythUIButton::Clicked, this, &MythSpinBoxDialog::sendResult);
 
     messageText->SetText(m_message);
     BuildFocusList();
@@ -829,15 +840,15 @@ bool MythUISearchDialog::Create(void)
     }
 
     if (cancelButton)
-        connect(cancelButton, SIGNAL(Clicked()), SLOT(Close()));
+        connect(cancelButton, &MythUIButton::Clicked, this, &MythScreenType::Close);
 
-    connect(okButton, SIGNAL(Clicked()), SLOT(slotSendResult()));
+    connect(okButton, &MythUIButton::Clicked, this, &MythUISearchDialog::slotSendResult);
 
-    connect(m_itemList, SIGNAL(itemClicked(MythUIButtonListItem*)),
-            SLOT(slotSendResult()));
+    connect(m_itemList, &MythUIButtonList::itemClicked,
+            this, &MythUISearchDialog::slotSendResult);
 
     m_textEdit->SetText(m_defaultValue);
-    connect(m_textEdit, SIGNAL(valueChanged()), SLOT(slotUpdateList()));
+    connect(m_textEdit, &MythUITextEdit::valueChanged, this, &MythUISearchDialog::slotUpdateList);
 
     m_titleText->SetText(m_title);
     if (m_matchesText)
@@ -879,10 +890,8 @@ void MythUISearchDialog::slotUpdateList(void)
 {
     m_itemList->Reset();
 
-    for (int x = 0; x < m_list.size(); x++)
+    for (const QString& item : qAsConst(m_list))
     {
-        QString item = m_list.at(x);
-
         if (m_matchAnywhere)
         {
             if (!item.contains(m_textEdit->GetText(), Qt::CaseInsensitive))
@@ -1044,7 +1053,7 @@ bool MythTimeInputDialog::Create()
     if (messageText && !m_message.isEmpty())
         messageText->SetText(m_message);
 
-    connect(okButton, SIGNAL(Clicked()), SLOT(okClicked()));
+    connect(okButton, &MythUIButton::Clicked, this, &MythTimeInputDialog::okClicked);
 
     BuildFocusList();
 

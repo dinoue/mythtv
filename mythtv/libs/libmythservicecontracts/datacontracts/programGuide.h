@@ -6,7 +6,7 @@
 //                                                                            
 // Copyright (c) 2010 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -54,18 +54,18 @@ class SERVICE_PUBLIC ProgramGuide : public QObject
     Q_PROPERTY( QString       Version        READ Version        WRITE setVersion        )
     Q_PROPERTY( QString       ProtoVer       READ ProtoVer       WRITE setProtoVer       )
 
-    Q_PROPERTY( QVariantList Channels READ Channels DESIGNABLE true )
+    Q_PROPERTY( QVariantList Channels READ Channels )
 
-    PROPERTYIMP       ( QDateTime   , StartTime     )
-    PROPERTYIMP       ( QDateTime   , EndTime       )
+    PROPERTYIMP_REF   ( QDateTime   , StartTime     )
+    PROPERTYIMP_REF   ( QDateTime   , EndTime       )
     PROPERTYIMP       ( bool        , Details       )
 
     PROPERTYIMP       ( int         , StartIndex    )
     PROPERTYIMP       ( int         , Count         )
     PROPERTYIMP       ( int         , TotalAvailable)
-    PROPERTYIMP       ( QDateTime   , AsOf          )
-    PROPERTYIMP       ( QString     , Version       )
-    PROPERTYIMP       ( QString     , ProtoVer      )
+    PROPERTYIMP_REF   ( QDateTime   , AsOf          )
+    PROPERTYIMP_REF   ( QString     , Version       )
+    PROPERTYIMP_REF   ( QString     , ProtoVer      )
 
     PROPERTYIMP_RO_REF( QVariantList, Channels      )
 
@@ -102,7 +102,7 @@ class SERVICE_PUBLIC ProgramGuide : public QObject
             // We must make sure the object added to the QVariantList has
             // a parent of 'this'
 
-            ChannelInfo *pObject = new ChannelInfo( this );
+            auto *pObject = new ChannelInfo( this );
             Channels().append( QVariant::fromValue<QObject *>( pObject ));
 
             return pObject;

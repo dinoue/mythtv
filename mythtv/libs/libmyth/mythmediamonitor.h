@@ -3,7 +3,11 @@
 
 #include <QStringList>
 #include <QPointer>
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
 #include <QMutex>
+#else
+#include <QRecursiveMutex>
+#endif
 #include <QWaitCondition>
 #include <QList>
 #include <QDateTime>
@@ -16,10 +20,11 @@
 
 // Adding member initializers caused compilation to fail with an error
 // that it cannot convert a brace-enclosed initializer list to MHData.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 struct MHData
 {
-    void   (*callback)(MythMediaDevice *mediadevice); // NOLINT(cppcoreguidelines-pro-type-member-init)
-    int      MythMediaType;                           // NOLINT(cppcoreguidelines-pro-type-member-init)
+    void   (*callback)(MythMediaDevice *mediadevice);
+    int      MythMediaType;
     QString  destination;
     QString  description;
 };
@@ -29,13 +34,13 @@ class MonitorThread : public MThread
 {
   public:
     MonitorThread(MediaMonitor* pMon,  unsigned long interval);
-    ~MonitorThread() override { wait(); m_Monitor = nullptr; }
-    void setMonitor(MediaMonitor* pMon) { m_Monitor = pMon; }
+    ~MonitorThread() override { wait(); m_monitor = nullptr; }
+    void setMonitor(MediaMonitor* pMon) { m_monitor = pMon; }
     void run(void) override; // MThread
 
   protected:
-    QPointer<MediaMonitor> m_Monitor;
-    unsigned long m_Interval;
+    QPointer<MediaMonitor> m_monitor;
+    unsigned long m_interval;
     QDateTime m_lastCheckTime;
 };
 
@@ -47,7 +52,7 @@ class MPUBLIC MediaMonitor : public QObject
 
   public:
     virtual void deleteLater(void);
-    bool IsActive(void) const { return m_Active; }
+    bool IsActive(void) const { return m_active; }
 
     virtual void StartMonitoring(void);
     void StopMonitoring(void);
@@ -88,7 +93,7 @@ class MPUBLIC MediaMonitor : public QObject
     virtual QStringList GetCDROMBlockDevices(void) = 0;
 
   public slots:
-    void mediaStatusChanged(MythMediaStatus oldStatus, MythMediaDevice* pMedia);
+    void mediaStatusChanged(MythMediaStatus oldStatus, MythMediaDevice* pMedia) const;
 
   protected:
     MediaMonitor(QObject *par, unsigned long interval, bool allowEject);
@@ -112,19 +117,23 @@ class MPUBLIC MediaMonitor : public QObject
                                       bool showUsable = false);
 
   protected:
-    QMutex                       m_DevicesLock;
-    QList<MythMediaDevice*>      m_Devices;
-    QList<MythMediaDevice*>      m_RemovedDevices;
-    QMap<MythMediaDevice*, int>  m_UseCount;
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
+    QMutex                       m_devicesLock {QMutex::Recursive};
+#else
+    QRecursiveMutex              m_devicesLock;
+#endif
+    QList<MythMediaDevice*>      m_devices;
+    QList<MythMediaDevice*>      m_removedDevices;
+    QMap<MythMediaDevice*, int>  m_useCount;
 
     // List of devices/mountpoints that the user doesn't want to monitor:
-    QStringList                  m_IgnoreList;
+    QStringList                  m_ignoreList;
 
-    bool volatile                m_Active {false};      ///< Was MonitorThread started?
+    bool volatile                m_active {false};      ///< Was MonitorThread started?
     QWaitCondition               m_wait;
-    MonitorThread               *m_Thread {nullptr};
-    unsigned long                m_MonitorPollingInterval;
-    bool                         m_AllowEject;
+    MonitorThread               *m_thread {nullptr};
+    unsigned long                m_monitorPollingInterval;
+    bool                         m_allowEject;
 
     QMap<QString, MHData>        m_handlerMap;  ///< Registered Media Handlers
 

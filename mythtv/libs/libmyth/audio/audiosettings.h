@@ -6,8 +6,8 @@
  * Licensed under the GPL v2 or a later version at your choosing.
  */
 
-#ifndef _AUDIO_SETTINGS_H_
-#define _AUDIO_SETTINGS_H_
+#ifndef AUDIO_SETTINGS_H
+#define AUDIO_SETTINGS_H
 
 #include <utility>
 
@@ -29,6 +29,7 @@ class MPUBLIC AudioSettings
 {
   public:
     AudioSettings() = default;
+    AudioSettings &operator=(const AudioSettings &) = delete;
     AudioSettings(const AudioSettings &other);
     AudioSettings(
         QString                 main_device,
@@ -41,7 +42,7 @@ class MPUBLIC AudioSettings
         bool                    set_initial_vol,
         bool                    use_passthru,
         int                     upmixer_startup = 0,
-        AudioOutputSettings     *custom = nullptr);
+        const AudioOutputSettings *custom = nullptr);
 
     AudioSettings(AudioFormat   format,
                   int           channels,
@@ -91,4 +92,4 @@ class MPUBLIC AudioSettings
     AudioOutputSettings *m_custom         {nullptr};
 };
 
-#endif // _AUDIO_SETTINGS_H_
+#endif // AUDIO_SETTINGS_H

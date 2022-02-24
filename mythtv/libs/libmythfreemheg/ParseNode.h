@@ -45,7 +45,7 @@ class MHParseNode
     virtual ~MHParseNode() = default;
     enum NodeType m_nNodeType;
 
-    static void Failure(const char *p); // Report a parse failure.
+    [[noreturn]] static void Failure(const char *p); // Report a parse failure.
 
     // Destructors - extract data and raise an exception if the Node Type is wrong.
 
@@ -125,7 +125,7 @@ class MHPBool: public MHParseNode
 class MHPString: public MHParseNode
 {
   public:
-    explicit MHPString(MHOctetString &pSrc): MHParseNode(PNString) { m_Value.Copy(pSrc); }
+    explicit MHPString(const MHOctetString &pSrc): MHParseNode(PNString) { m_Value.Copy(pSrc); }
 
   public:
     MHOctetString m_Value;

@@ -1,9 +1,8 @@
-#ifndef _NEWSARTICLE_H_
-#define _NEWSARTICLE_H_
+#ifndef NEWSARTICLE_H
+#define NEWSARTICLE_H
 
 // C++ headers
 #include <vector>
-using namespace std;
 
 // QT headers
 #include <QString>
@@ -11,7 +10,7 @@ using namespace std;
 class NewsArticle
 {
   public:
-    using List = vector<NewsArticle>;
+    using List = std::vector<NewsArticle>;
 
     NewsArticle(QString title, QString desc, QString articleURL,
                 QString thumbnail, QString mediaURL, QString enclosure);
@@ -37,4 +36,4 @@ class NewsArticle
     QString   m_enclosureType;
 };
 
-#endif // _NEWSARTICLE_H_
+#endif // NEWSARTICLE_H

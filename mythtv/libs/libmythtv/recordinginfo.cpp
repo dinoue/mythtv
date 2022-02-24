@@ -11,7 +11,6 @@
 #include "recordinginfo.h"
 #include "recordingrule.h"
 #include "scheduledrecording.h"
-#include "mythmiscutil.h"
 #include "mythdate.h"
 #include "mythcorecontext.h"
 #include "programinfoupdater.h"
@@ -20,6 +19,10 @@
 #include "mythlogging.h"
 
 #define LOC      QString("RecordingInfo(%1): ").arg(GetBasename())
+
+const QRegularExpression RecordingInfo::kReSearchTypeName { R"(\s*\(.*\)$)" };
+const QRegularExpression RecordingInfo::kReLeadingAnd
+        { R"(^\s*AND\s*)", QRegularExpression::CaseInsensitiveOption };
 
 static inline QString null_to_empty(const QString &str)
 {
@@ -70,7 +73,7 @@ RecordingInfo::RecordingInfo(
     const QDateTime &_recendts,
 
     float _stars,
-    const QDate &_originalAirDate,
+    QDate _originalAirDate,
 
     bool _repeat,
 
@@ -124,7 +127,7 @@ RecordingInfo::RecordingInfo(
 
     m_recPriority = _recpriority;
 
-    m_stars = clamp(_stars, 0.0F, 1.0F);
+    m_stars = std::clamp(_stars, 0.0F, 1.0F);
     m_originalAirDate = _originalAirDate;
     if (m_originalAirDate.isValid() && m_originalAirDate < QDate(1895, 12, 28))
         m_originalAirDate = QDate();
@@ -146,9 +149,9 @@ RecordingInfo::RecordingInfo(
     m_inputId = _inputid;
     m_findId = _findid;
 
-    m_properties = ((_subtitleType    << kSubtitlePropertyOffset) |
-                  (_videoproperties << kVideoPropertyOffset)  |
-                  _audioproperties);
+    m_videoProperties = _videoproperties;
+    m_audioProperties = _audioproperties;
+    m_subtitleProperties = _subtitleType;
 
     if (m_recStartTs >= m_recEndTs)
     {
@@ -236,7 +239,7 @@ RecordingInfo::RecordingInfo(
  */
 RecordingInfo::RecordingInfo(
     uint _chanid, const QDateTime &desiredts,
-    bool genUnknown, uint maxHours, LoadStatus *status)
+    bool genUnknown, std::chrono::hours maxHours, LoadStatus *status)
 {
     ProgramList schedList;
     ProgramList progList;
@@ -257,12 +260,12 @@ RecordingInfo::RecordingInfo(
     {
         ProgramInfo *pginfo = progList[0];
 
-        if (maxHours > 0)
+        if (maxHours > 0h)
         {
-            if (desiredts.secsTo(
-                    pginfo->GetScheduledEndTime()) > (int)maxHours * 3600)
+            auto maxSecs = duration_cast<std::chrono::seconds>(maxHours);
+            if (desiredts.secsTo(pginfo->GetScheduledEndTime()) > maxSecs.count())
             {
-                pginfo->SetScheduledEndTime(desiredts.addSecs(maxHours * 3600));
+                pginfo->SetScheduledEndTime(desiredts.addSecs(maxSecs.count()));
                 pginfo->SetRecordingEndTime(pginfo->GetScheduledEndTime());
             }
         }
@@ -341,11 +344,13 @@ RecordingInfo::RecordingInfo(
     QDateTime nextstart = m_startTs;
     querystr = "WHERE program.chanid    = :CHANID  AND "
                "      program.starttime > :STARTTS "
-               "GROUP BY program.starttime ORDER BY program.starttime LIMIT 1 ";
+               "GROUP BY program.starttime ORDER BY program.starttime ";
     bindings[":CHANID"]  = QString::number(_chanid);
     bindings[":STARTTS"] = desiredts.addSecs(50 - desiredts.time().second());
 
-    LoadFromProgram(progList, querystr, bindings, schedList);
+    const uint limit = 1;
+    uint count = 0;
+    LoadFromProgram(progList, querystr, bindings, schedList, 0, limit, count);
 
     if (!progList.empty())
         nextstart = (*progList.begin())->GetScheduledStartTime();
@@ -367,7 +372,7 @@ void RecordingInfo::clone(const RecordingInfo &other,
                           bool ignore_non_serialized_data)
 {
     bool is_same =
-        (m_chanId && m_recStartTs.isValid() && m_startTs.isValid() &&
+        ((m_chanId != 0U) && m_recStartTs.isValid() && m_startTs.isValid() &&
          m_chanId     == other.GetChanID() &&
          m_recStartTs == other.GetRecordingStartTime() &&
          m_startTs    == other.GetScheduledStartTime());
@@ -402,7 +407,7 @@ void RecordingInfo::clone(const ProgramInfo &other,
                           bool ignore_non_serialized_data)
 {
     bool is_same =
-        (m_chanId && m_recStartTs.isValid() && m_startTs.isValid() &&
+        ((m_chanId != 0U) && m_recStartTs.isValid() && m_startTs.isValid() &&
          m_chanId     == other.GetChanID() &&
          m_recStartTs == other.GetRecordingStartTime() &&
          m_startTs    == other.GetScheduledStartTime());
@@ -624,9 +629,8 @@ void RecordingInfo::ApplyRecordRecGroupChange(const QString &newrecgroup)
     }
 
     LOG(VB_GENERAL, LOG_NOTICE,
-            QString("ApplyRecordRecGroupChange: %1 to %2 (%3)").arg(m_recGroup)
-                                                               .arg(newrecgroup)
-                                                               .arg(newrecgroupid));
+            QString("ApplyRecordRecGroupChange: %1 to %2 (%3)")
+                .arg(m_recGroup, newrecgroup, QString::number(newrecgroupid)));
 
     query.prepare("UPDATE recorded"
                   " SET recgroup = :RECGROUP, "
@@ -676,9 +680,8 @@ void RecordingInfo::ApplyRecordRecGroupChange(int newrecgroupid)
     }
 
     LOG(VB_GENERAL, LOG_NOTICE,
-            QString("ApplyRecordRecGroupChange: %1 to %2 (%3)").arg(m_recGroup)
-                                                               .arg(newrecgroup)
-                                                               .arg(newrecgroupid));
+            QString("ApplyRecordRecGroupChange: %1 to %2 (%3)")
+                .arg(m_recGroup, newrecgroup).arg(newrecgroupid));
 }
 
 /** \fn RecordingInfo::ApplyRecordPlayGroupChange(const QString &newplaygroup)
@@ -930,32 +933,10 @@ bool RecordingInfo::QueryRecordedIdForKey(int & recordedid,
  */
 void RecordingInfo::StartedRecording(const QString& ext)
 {
-    QString dirname = m_pathname;
-
-    if (!m_record)
-    {
-        m_record = new RecordingRule();
-        m_record->LoadByProgram(this);
-    }
-
     m_hostname = gCoreContext->GetHostName();
-    m_pathname = CreateRecordBasename(ext);
 
-    int count = 0;
-    while (!InsertProgram(this, m_record) && count < 50)
-    {
-        m_recStartTs = m_recStartTs.addSecs(1);
-        m_pathname = CreateRecordBasename(ext);
-        count++;
-    }
-
-    if (count >= 50)
-    {
-        LOG(VB_GENERAL, LOG_ERR, "Couldn't insert program");
+    if (!InsertRecording(ext))
         return;
-    }
-
-    m_pathname = dirname + "/" + m_pathname;
 
     LOG(VB_FILE, LOG_INFO, LOC + QString("StartedRecording: Recording to '%1'")
                              .arg(m_pathname));
@@ -1005,16 +986,53 @@ void RecordingInfo::StartedRecording(const QString& ext)
     if (!query.exec() || !query.isActive())
         MythDB::DBError("Copy program ratings on record", query);
 
-    // File
-    if (!GetRecordingFile())
-        LoadRecordingFile();
-    RecordingFile *recFile = GetRecordingFile();
-    recFile->m_fileName = GetBasename();
-    recFile->m_storageDeviceID = GetHostname();
-    recFile->m_storageGroup = GetStorageGroup();
-    recFile->Save();
+    InsertFile();
+}
 
-    SendAddedEvent();
+bool RecordingInfo::InsertRecording(const QString &ext, bool force_match)
+{
+    QString dirname = m_pathname;
+
+#if 1
+    if (!dirname.isEmpty())
+    {
+        LOG(VB_GENERAL, LOG_DEBUG, LOC +
+            QString("InsertRecording: m_pathname was '%1'. "
+                    "This is usually blank.").arg(dirname));
+    }
+#endif
+
+    m_pathname = CreateRecordBasename(ext);
+
+    if (!m_record)
+    {
+        m_record = new RecordingRule();
+        m_record->LoadByProgram(this);
+    }
+
+    int count = 0;
+    while (!InsertProgram(this, m_record) && count < 50)
+    {
+        if (force_match)
+        {
+            LOG(VB_GENERAL, LOG_ERR, "Failed to insert new recording.");
+            return false;
+        }
+
+        m_recStartTs = m_recStartTs.addSecs(1);
+        m_pathname = CreateRecordBasename(ext);
+        ++count;
+    }
+
+    if (count >= 50)
+    {
+        LOG(VB_GENERAL, LOG_ERR, "Could not insert program");
+        return false;
+    }
+
+    m_pathname = dirname + "/" + m_pathname;
+
+    return true;
 }
 
 bool RecordingInfo::InsertProgram(RecordingInfo *pg,
@@ -1092,6 +1110,10 @@ bool RecordingInfo::InsertProgram(RecordingInfo *pg,
     {
         query.bindValue(":ORIGAIRDATE", pg->m_originalAirDate);
     // If there is no originalairdate use "year"
+    }
+    else if (pg->m_year == pg->m_recStartTs.date().year())
+    {
+        query.bindValue(":ORIGAIRDATE", pg->m_recStartTs.date());
     }
     else if (pg->m_year >= 1895)
     {
@@ -1174,6 +1196,20 @@ bool RecordingInfo::InsertProgram(RecordingInfo *pg,
     return ok;
 }
 
+void RecordingInfo::InsertFile(void)
+{
+    // File
+    if (!GetRecordingFile())
+        LoadRecordingFile();
+    RecordingFile *recFile = GetRecordingFile();
+    recFile->m_fileName = GetBasename();
+    recFile->m_storageDeviceID = GetHostname();
+    recFile->m_storageGroup = GetStorageGroup();
+    recFile->Save();
+
+    SendAddedEvent();
+}
+
 /**
  *  \brief If not a premature stop, adds program to history of recorded
  *         programs.
@@ -1202,26 +1238,17 @@ void RecordingInfo::FinishedRecording(bool allowReRecord)
     {
         m_recStatus = RecStatus::Recorded;
 
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        uint starttime = m_recStartTs.toTime_t();
-        uint endtime   = m_recEndTs.toTime_t();
-        int64_t duration = ((int64_t)endtime - (int64_t)starttime) * 1000000;
-#else
         qint64 starttime = m_recStartTs.toSecsSinceEpoch();
         qint64 endtime   = m_recEndTs.toSecsSinceEpoch();
-        int64_t duration = (endtime - starttime) * 1000000;
-#endif
-        SaveTotalDuration(duration);
+        SaveTotalDuration(std::chrono::seconds(endtime - starttime));
 
         QString msg = "Finished recording";
         QString msg_subtitle = m_subtitle.isEmpty() ? "" :
                                         QString(" \"%1\"").arg(m_subtitle);
         QString details = QString("%1%2: channel %3")
-                                        .arg(m_title)
-                                        .arg(msg_subtitle)
-                                        .arg(m_chanId);
+            .arg(m_title, msg_subtitle, QString::number(m_chanId));
 
-        LOG(VB_GENERAL, LOG_INFO, QString("%1 %2").arg(msg).arg(details));
+        LOG(VB_GENERAL, LOG_INFO, QString("%1 %2").arg(msg, details));
     }
 
     SendUpdateEvent();
@@ -1279,7 +1306,7 @@ void RecordingInfo::AddHistory(bool resched, bool forcedup, bool future)
                         !future) ? RecStatus::PreviousRecording : GetRecordingStatus();
     LOG(VB_SCHEDULE, LOG_INFO, QString("AddHistory: %1/%2, %3, %4, %5/%6")
         .arg(int(rs)).arg(int(m_oldrecstatus)).arg(future).arg(dup)
-        .arg(GetScheduledStartTime(MythDate::ISODate)).arg(GetTitle()));
+        .arg(GetScheduledStartTime(MythDate::ISODate), GetTitle()));
     if (!future)
         m_oldrecstatus = GetRecordingStatus();
     if (dup)

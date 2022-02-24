@@ -2,8 +2,6 @@
 
 """API Client."""
 
-from __future__ import print_function
-from __future__ import absolute_import
 from os import fdopen
 
 from xml.etree import ElementTree
@@ -28,7 +26,7 @@ from ._version import __version__
 # an HTTP POST is potentially dangerous.                     #
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #
 
-MYTHTV_VERSION_LIST = ('0.27', '0.28', '29', '30', '31')
+MYTHTV_VERSION_LIST = ('0.27', '0.28', '29', '30', '31', '32')
 
 
 class Send(object):
@@ -62,7 +60,7 @@ class Send(object):
 
         logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-    def send(self, endpoint='', postdata=None, rest='', opts=None):
+    def send(self, endpoint='', postdata=None, jsondata=None, rest='', opts=None):
         """
         Form a URL and send it to the back/frontend.  Parameter/option checking
         and session creation (if required) is done here. Error handling is done
@@ -212,6 +210,7 @@ class Send(object):
 
         self.endpoint = endpoint
         self.postdata = postdata
+        self.jsondata = jsondata
         self.rest = rest
         self.opts = opts
 
@@ -241,6 +240,9 @@ class Send(object):
         try:
             if self.postdata:
                 response = self.session.post(url, data=self.postdata,
+                                             timeout=self.opts['timeout'])
+            elif self.jsondata:
+                response = self.session.post(url, json=self.jsondata,
                                              timeout=self.opts['timeout'])
             else:
                 response = self.session.get(url, timeout=self.opts['timeout'])

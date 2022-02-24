@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _MythExternControl_H_
-#define _MythExternControl_H_
+#ifndef MYTHEXTERNCONTROL_H
+#define MYTHEXTERNCONTROL_H
 
 #include "MythExternRecApp.h"
 
@@ -143,9 +143,9 @@ class MythExternControl : public QObject
     void Close(void);
     void StartStreaming(const QString & serial);
     void StopStreaming(const QString & serial, bool silent);
-    void LockTimeout(const QString & serial) const;
-    void HasTuner(const QString & serial) const;
-    void HasPictureAttributes(const QString & serial) const;
+    void LockTimeout(const QString & serial);
+    void HasTuner(const QString & serial);
+    void HasPictureAttributes(const QString & serial);
     void SetBlockSize(const QString & serial, int blksz);
     void TuneChannel(const QString & serial, const QString & channum);
     void TuneStatus(const QString & serial);
@@ -171,20 +171,20 @@ class MythExternControl : public QObject
     QString      m_desc;
 
     std::atomic<bool> m_run              {true};
-    std::atomic<bool> m_commands_running {true};
-    std::atomic<bool> m_buffer_running   {true};
-    std::mutex   m_run_mutex;
-    std::condition_variable m_run_cond;
-    std::mutex   m_msg_mutex;
+    std::atomic<bool> m_commandsRunning  {true};
+    std::atomic<bool> m_bufferRunning    {true};
+    std::mutex   m_runMutex;
+    std::condition_variable m_runCond;
+    std::mutex   m_msgMutex;
 
     bool         m_fatal                 {false};
     QString      m_errmsg;
 
-    std::mutex        m_flow_mutex;
-    std::condition_variable m_flow_cond;
+    std::mutex        m_flowMutex;
+    std::condition_variable m_flowCond;
     std::atomic<bool> m_streaming        {false};
     std::atomic<bool> m_xon              {false};
     std::atomic<bool> m_ready            {false};
 };
 
-#endif
+#endif // MYTHEXTERNCONTROL_H

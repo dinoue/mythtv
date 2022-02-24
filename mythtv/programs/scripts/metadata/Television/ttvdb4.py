@@ -19,16 +19,13 @@ from configparser import ConfigParser
 
 __title__ = "TheTVDatabaseV4"
 __author__ = "Roland Ernst"
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 
 
 def print_etree(etostr):
     """lxml.etree.tostring is a bytes object in python3, and a str in python2.
     """
-    if sys.version_info[0] == 2:
-        sys.stdout.write(etostr)
-    else:
-        sys.stdout.write(etostr.decode("utf-8"))
+    sys.stdout.write(etostr.decode("utf-8"))
 
 
 def _parse_config(config):
@@ -187,10 +184,7 @@ def main():
         os.makedirs(cachedir)
 
     if not args.debug and not args.doctest:
-        if sys.version_info[0] == 2:
-            cache_name = os.path.join(cachedir, 'py2ttvdb4')
-        else:
-            cache_name = os.path.join(cachedir, 'py3ttvdb4')
+        cache_name = os.path.join(cachedir, 'py3ttvdb4')
         import requests_cache
         requests_cache.install_cache(cache_name, backend='sqlite', expire_after=3600)
 
@@ -235,10 +229,7 @@ def main():
                 print("0000: Init: Local config file '%s' created." % local_config_file)
 
     # storage for authentication bearer token
-    if sys.version_info[0] == 2:
-        config_dict['auth_file'] = os.path.join(cachedir, "py2ttvdb4_bearer.pickle")
-    else:
-        config_dict['auth_file'] = os.path.join(cachedir, "py3ttvdb4_bearer.pickle")
+    config_dict['auth_file'] = os.path.join(cachedir, "py3ttvdb4_bearer.pickle")
 
     cmd_args["config"] = config_dict
     if args.debug:
@@ -249,10 +240,7 @@ def main():
         import doctest
         try:
             with open("ttvdb4_doctests") as f:
-                if sys.version_info[0] == 2:
-                    dtests = b"".join(f.readlines()).decode('utf-8')
-                else:
-                    dtests = "".join(f.readlines())
+                dtests = "".join(f.readlines())
             main.__doc__ += dtests
         except IOError:
             pass

@@ -1,5 +1,5 @@
-#ifndef _HISTOGRAM_H_
-#define _HISTOGRAM_H_
+#ifndef HISTOGRAM_H
+#define HISTOGRAM_H
 
 #include "mythframe.h"
 
@@ -9,7 +9,7 @@ public:
     Histogram() = default;
     ~Histogram() = default;
 
-    void generateFromImage(VideoFrame* frame, unsigned int frameWidth,
+    void generateFromImage(MythVideoFrame* frame, unsigned int frameWidth,
              unsigned int frameHeight, unsigned int minScanX,
              unsigned int maxScanX, unsigned int minScanY,
              unsigned int maxScanY, unsigned int XSpacing,
@@ -21,13 +21,12 @@ public:
     // do not override default copy constructor, as the default copy
     // constructor will do just fine.
 private:
-    int m_data[256] {0};
+    std::array<int,256> m_data {0};
 
     // prevent division by 0 in case a virgin histogram gets used.
     unsigned int m_numberOfSamples {1};
 };
 
-#endif
+#endif // HISTOGRAM_H
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
-

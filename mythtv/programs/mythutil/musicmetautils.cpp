@@ -10,6 +10,7 @@
 #include "storagegroup.h"
 #include "musicmetadata.h"
 #include "metaio.h"
+#include "mythchrono.h"
 #include "mythcontext.h"
 #include "musicfilescanner.h"
 #include "musicutils.h"
@@ -132,6 +133,7 @@ static int ExtractImage(const MythUtilCommandLineParser &cmdline)
     if (!image->m_embedded || !tagger->supportsEmbeddedImages())
     {
         LOG(VB_GENERAL, LOG_ERR, QString("Either the image isn't embedded or the tagger doesn't support embedded images"));
+        delete tagger;
         return GENERIC_EXIT_NOT_OK;
     }
 
@@ -149,6 +151,7 @@ static int ExtractImage(const MythUtilCommandLineParser &cmdline)
     if (!QDir(path).exists())
     {
         LOG(VB_GENERAL, LOG_ERR, "Cannot find a directory in the 'MusicArt' storage group to save to");
+        delete tagger;
         return GENERIC_EXIT_NOT_OK;
     }
 
@@ -266,13 +269,13 @@ static int CalcTrackLength(const MythUtilCommandLineParser &cmdline)
         return GENERIC_EXIT_NOT_OK;;
     }
 
-    int duration = 0;
+    std::chrono::seconds duration = 0s;
     long long time = 0;
 
     for (uint i = 0; i < inputFC->nb_streams; i++)
     {
         AVStream *st = inputFC->streams[i];
-        char buf[256];
+        std::array<char,256> buf {};
 
         const AVCodec *pCodec = avcodec_find_decoder(st->codecpar->codec_id);
         if (!pCodec)
@@ -283,26 +286,32 @@ static int CalcTrackLength(const MythUtilCommandLineParser &cmdline)
         }
         AVCodecContext *avctx = avcodec_alloc_context3(pCodec);
         avcodec_parameters_to_context(avctx, st->codecpar);
-        av_codec_set_pkt_timebase(avctx, st->time_base);
+        avctx->pkt_timebase = st->time_base;
 
-        avcodec_string(buf, sizeof(buf), avctx, static_cast<int>(false));
+        avcodec_string(buf.data(), buf.size(), avctx, static_cast<int>(false));
 
         switch (inputFC->streams[i]->codecpar->codec_type)
         {
             case AVMEDIA_TYPE_AUDIO:
             {
-                AVPacket pkt;
-                av_init_packet(&pkt);
-
-                while (av_read_frame(inputFC, &pkt) >= 0)
+                AVPacket *pkt = av_packet_alloc();
+                if (pkt == nullptr)
                 {
-                    if (pkt.stream_index == (int)i)
-                        time = time + pkt.duration;
-
-                    av_packet_unref(&pkt);
+                    LOG(VB_GENERAL, LOG_ERR, "packet allocation failed");
+                    break;
                 }
 
-                duration = time * av_q2d(inputFC->streams[i]->time_base);
+                while (av_read_frame(inputFC, pkt) >= 0)
+                {
+                    if (pkt->stream_index == (int)i)
+                        time = time + pkt->duration;
+
+                    av_packet_unref(pkt);
+                }
+
+                av_packet_free(&pkt);
+
+                duration = secondsFromFloat(time * av_q2d(inputFC->streams[i]->time_base));
                 break;
             }
 
@@ -319,13 +328,14 @@ static int CalcTrackLength(const MythUtilCommandLineParser &cmdline)
     avformat_close_input(&inputFC);
     inputFC = nullptr;
 
-    if (mdata->Length() / 1000 != duration)
+    std::chrono::seconds dbLength = duration_cast<std::chrono::seconds>(mdata->Length());
+    if (dbLength != duration)
     {
         LOG(VB_GENERAL, LOG_INFO, QString("The length of this track in the database was %1s "
-                                          "it is now %2s").arg(mdata->Length() / 1000).arg(duration));
+                                          "it is now %2s").arg(dbLength.count()).arg(duration.count()));
 
         // update the track length in the database
-        mdata->setLength(duration * 1000);
+        mdata->setLength(duration);
         mdata->dumpToDatabase();
 
         // tell any clients that the metadata for this track has changed
@@ -334,7 +344,7 @@ static int CalcTrackLength(const MythUtilCommandLineParser &cmdline)
     else
     {
         LOG(VB_GENERAL, LOG_INFO, QString("The length of this track is unchanged %1s")
-                                          .arg(mdata->Length() / 1000));
+                                          .arg(dbLength.count()));
     }
 
     return GENERIC_EXIT_OK;
@@ -476,14 +486,11 @@ static int FindLyrics(const MythUtilCommandLineParser &cmdline)
     }
 
     QStringList scripts;
-    QFileInfoList::const_iterator it = list.begin();
 
-    while (it != list.end())
+    for (const auto& fi : qAsConst(list))
     {
-        const QFileInfo *fi = &(*it);
-        ++it;
-        LOG(VB_GENERAL, LOG_NOTICE, QString("Found lyric script at: %1").arg(fi->filePath()));
-        scripts.append(fi->filePath());
+        LOG(VB_GENERAL, LOG_NOTICE, QString("Found lyric script at: %1").arg(fi.filePath()));
+        scripts.append(fi.filePath());
     }
 
     QMap<int, LyricsGrabber> grabberMap;
@@ -491,8 +498,9 @@ static int FindLyrics(const MythUtilCommandLineParser &cmdline)
     // query the grabbers to get their priority
     for (int x = 0; x < scripts.count(); x++)
     {
+        QStringList args { scripts.at(x), "-v" };
         QProcess p;
-        p.start(QString("%1 %2 -v").arg(PYTHON_EXE).arg(scripts.at(x)));
+        p.start(PYTHON_EXE, args);
         p.waitForFinished(-1);
         QString result = p.readAllStandardOutput();
 
@@ -536,8 +544,12 @@ static int FindLyrics(const MythUtilCommandLineParser &cmdline)
         gCoreContext->SendMessage(QString("MUSIC_LYRICS_STATUS %1 %2").arg(songID).arg(statusMessage));
 
         QProcess p;
-        p.start(QString("%1 %2 --artist=\"%3\" --album=\"%4\" --title=\"%5\" --filename=\"%6\"")
-                        .arg(PYTHON_EXE).arg(grabber.m_filename).arg(artist).arg(album).arg(title).arg(filename));
+        QStringList args { grabber.m_filename,
+                           QString(R"(--artist="%1")").arg(artist),
+                           QString(R"(--album="%1")").arg(album),
+                           QString(R"(--title="%1")").arg(title),
+                           QString(R"(--filename="%1")").arg(filename) };
+        p.start(PYTHON_EXE, args);
         p.waitForFinished(-1);
         QString result = p.readAllStandardOutput();
 

@@ -1,8 +1,6 @@
 #include <QStringList>
 #include <utility>
 
-using namespace std;
-
 #include "compat.h"
 #include "playbacksock.h"
 #include "programinfo.h"
@@ -221,22 +219,22 @@ bool PlaybackSock::FillProgramInfo(ProgramInfo &pginfo,
     return false;
 }
 
-QStringList PlaybackSock::GetSGFileList(QString &host, QString &groupname,
-                                        QString &directory, bool fileNamesOnly)
+QStringList PlaybackSock::GetSGFileList(const QString &host, const QString &groupname,
+                                        const QString &directory, bool fileNamesOnly)
 {
     QStringList strlist(QString("QUERY_SG_GETFILELIST"));
     strlist << host;
     strlist << groupname;
     strlist << directory;
-    strlist << QString::number(fileNamesOnly);
+    strlist << QString::number(static_cast<int>(fileNamesOnly));
 
     SendReceiveStringList(strlist);
 
     return strlist;
 }
 
-QStringList PlaybackSock::GetSGFileQuery(QString &host, QString &groupname,
-                                         QString &filename)
+QStringList PlaybackSock::GetSGFileQuery(const QString &host, const QString &groupname,
+                                         const QString &filename)
 {
     QStringList strlist(QString("QUERY_SG_FILEQUERY"));
     strlist << host;
@@ -286,16 +284,24 @@ QStringList PlaybackSock::GenPreviewPixmap(const QString &token,
 
 QStringList PlaybackSock::GenPreviewPixmap(const QString &token,
                                            const ProgramInfo *pginfo,
-                                           bool               time_fmt_sec,
-                                           long long          time,
+                                           std::chrono::seconds time,
+                                           long long          frame,
                                            const QString     &outputFile,
-                                           const QSize       &outputSize)
+                                           const QSize        outputSize)
 {
     QStringList strlist(QString("QUERY_GENPIXMAP2"));
     strlist += token;
     pginfo->ToStringList(strlist);
-    strlist.push_back(time_fmt_sec ? "s" : "f");
-    strlist.push_back(QString::number(time));
+    if (time != std::chrono::seconds::max())
+    {
+        strlist.push_back("s");
+        strlist.push_back(QString::number(time.count()));
+    }
+    else
+    {
+        strlist.push_back("f");
+        strlist.push_back(QString::number(frame));
+    }
     strlist.push_back((outputFile.isEmpty()) ? "<EMPTY>" : outputFile);
     strlist.push_back(QString::number(outputSize.width()));
     strlist.push_back(QString::number(outputSize.height()));
@@ -314,11 +320,7 @@ QDateTime PlaybackSock::PixmapLastModified(const ProgramInfo *pginfo)
 
     if (!strlist.empty() && !strlist[0].isEmpty() && (strlist[0] != "BAD"))
     {
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        return MythDate::fromTime_t(strlist[0].toUInt());
-#else
         return MythDate::fromSecsSinceEpoch(strlist[0].toLongLong());
-#endif
     }
 
     return QDateTime();
@@ -340,12 +342,12 @@ bool PlaybackSock::CheckFile(ProgramInfo *pginfo)
 }
 
 bool PlaybackSock::IsBusy(int capturecardnum, InputInfo *busy_input,
-                          int time_buffer)
+                          std::chrono::seconds time_buffer)
 {
     QStringList strlist(QString("QUERY_REMOTEENCODER %1").arg(capturecardnum));
 
     strlist << "IS_BUSY";
-    strlist << QString::number(time_buffer);
+    strlist << QString::number(time_buffer.count());
 
     if (!SendReceiveStringList(strlist, 1))
     {
@@ -358,13 +360,13 @@ bool PlaybackSock::IsBusy(int capturecardnum, InputInfo *busy_input,
 
     if (!strlist.isEmpty())
     {
-        QStringList::const_iterator it = strlist.begin();
+        QStringList::const_iterator it = strlist.cbegin();
         state = ((*it).toInt() != 0);
 
         if (busy_input)
         {
             ++it;
-            if (!busy_input->FromStringList(it, strlist.end()))
+            if (!busy_input->FromStringList(it, strlist.cend()))
             {
                 LOG(VB_GENERAL, LOG_ERR, LOC + "IsBusy: "
                     "Failed to parse response to " +
@@ -455,13 +457,8 @@ RecStatus::Type PlaybackSock::StartRecording(int capturecardnum,
     if (SendReceiveStringList(strlist, 3))
     {
         pginfo->SetRecordingID(strlist[1].toUInt());
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        pginfo->SetRecordingStartTime(
-            MythDate::fromTime_t(strlist[2].toUInt()));
-#else
         pginfo->SetRecordingStartTime(
             MythDate::fromSecsSinceEpoch(strlist[2].toLongLong()));
-#endif
         return RecStatus::Type(strlist[0].toInt());
     }
 
@@ -486,29 +483,29 @@ RecStatus::Type PlaybackSock::GetRecordingStatus(int capturecardnum)
 }
 
 void PlaybackSock::RecordPending(int capturecardnum, const ProgramInfo *pginfo,
-                                 int secsleft, bool hasLater)
+                                 std::chrono::seconds secsleft, bool hasLater)
 {
     QStringList strlist(QString("QUERY_REMOTEENCODER %1").arg(capturecardnum));
     strlist << "RECORD_PENDING";
-    strlist << QString::number(secsleft);
-    strlist << QString::number(hasLater);
+    strlist << QString::number(secsleft.count());
+    strlist << QString::number(static_cast<int>(hasLater));
     pginfo->ToStringList(strlist);
 
     SendReceiveStringList(strlist);
 }
 
-int PlaybackSock::SetSignalMonitoringRate(int capturecardnum,
-                                          int rate, int notifyFrontend)
+std::chrono::milliseconds PlaybackSock::SetSignalMonitoringRate(int capturecardnum,
+                                          std::chrono::milliseconds rate, int notifyFrontend)
 {
     QStringList strlist(QString("QUERY_REMOTEENCODER %1").arg(capturecardnum));
     strlist << "SET_SIGNAL_MONITORING_RATE";
-    strlist << QString::number(rate);
+    strlist << QString::number(rate.count());
     strlist << QString::number(notifyFrontend);
 
     if (SendReceiveStringList(strlist, 1))
-        return strlist[0].toInt();
+        return std::chrono::milliseconds(strlist[0].toInt());
 
-    return -1;
+    return -1ms;
 }
 
 void PlaybackSock::SetNextLiveTVDir(int capturecardnum, const QString& dir)
@@ -526,7 +523,7 @@ void PlaybackSock::CancelNextRecording(int capturecardnum, bool cancel)
                         .arg(capturecardnum));
 
     strlist << "CANCEL_NEXT_RECORDING";
-    strlist << QString::number(cancel);
+    strlist << QString::number(static_cast<int>(cancel));
 
     SendReceiveStringList(strlist);
 }

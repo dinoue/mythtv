@@ -7,12 +7,12 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __HTTPSERVER_H__
-#define __HTTPSERVER_H__
+#ifndef HTTPSERVER_H
+#define HTTPSERVER_H
 
 // POSIX headers
 #include <sys/types.h>
@@ -35,14 +35,11 @@
 #include <QSslSocket>
 
 // MythTV headers
-#include "mythqtcompat.h"
 #include "serverpool.h"
 #include "httprequest.h"
 #include "mthreadpool.h"
 #include "upnputil.h"
 #include "compat.h"
-
-using TaskTime = struct timeval;
 
 class HttpWorkerThread;
 class QScriptEngine;
@@ -160,7 +157,7 @@ class UPNP_PUBLIC HttpServer : public ServerPool
     const QString m_privateToken; // Private token; Used to salt digest auth nonce, changes on backend restart
 
   protected slots:
-    void newTcpConnection(qt_socket_fd_t socket) override; // QTcpServer
+    void newTcpConnection(qintptr socket) override; // QTcpServer
 
   private:
     void LoadSSLConfig();
@@ -184,7 +181,7 @@ class HttpWorker : public QRunnable
      * \param type       The type of connection - Plain TCP, SSL or other?
      * \param sslConfig  The SSL configuration (for SSL sockets)
      */
-    HttpWorker(HttpServer &httpServer, qt_socket_fd_t sock, PoolServerType type
+    HttpWorker(HttpServer &httpServer, qintptr sock, PoolServerType type
 #ifndef QT_NO_OPENSSL
                , const QSslConfiguration& sslConfig
 #endif
@@ -194,8 +191,8 @@ class HttpWorker : public QRunnable
 
   protected:
     HttpServer &m_httpServer; 
-    qt_socket_fd_t m_socket;
-    int         m_socketTimeout;
+    qintptr m_socket;
+    std::chrono::milliseconds m_socketTimeout;
     PoolServerType m_connectionType;
 
 #ifndef QT_NO_OPENSSL
@@ -204,4 +201,4 @@ class HttpWorker : public QRunnable
 };
 
 
-#endif
+#endif // HTTPSERVER_H

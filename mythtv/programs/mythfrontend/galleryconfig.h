@@ -10,11 +10,12 @@ class GallerySettings : public GroupSetting
 {
     Q_OBJECT
 
-    StandardSetting *DirOrder();
-    StandardSetting *ImageOrder();
-    StandardSetting *DateFormat();
-    StandardSetting *Exclusions (bool enabled);
-    StandardSetting *ClearDb    (bool enabled);
+    StandardSetting *DirOrder() const;
+    StandardSetting *ImageOrder() const;
+    StandardSetting *ImageMaximumSize() const;
+    StandardSetting *DateFormat() const;
+    StandardSetting *Exclusions (bool enabled) const;
+    StandardSetting *ClearDb    (bool enabled) const;
     void             ShowConfirmDialog();
 
 signals:
@@ -22,6 +23,11 @@ signals:
     void DateChanged();
     void OrderChanged();
     void ExclusionsChanged();
+
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+private slots:
+    void ImageSizeChanged();
+#endif
 
 public:
     explicit GallerySettings(bool enable);

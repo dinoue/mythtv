@@ -283,7 +283,7 @@ public:
     bool        UpdateDbImage(ImageItemK &im) const;
     QStringList RemoveFromDB(const ImageList &imList) const;
 
-    bool SetHidden(bool hide, QString ids) const;
+    bool SetHidden(bool hide, const QString &ids) const;
     bool SetCover(int dir, int id) const;
     bool SetOrientation(int id, int orientation) const;
 
@@ -292,7 +292,7 @@ public:
     void ClearDb(int devId, const QString &action);
 
     // ImageReader support
-    int  GetChildren(QString ids, ImageList &files, ImageList &dirs,
+    int  GetChildren(const QString &ids, ImageList &files, ImageList &dirs,
                      const QString &refine = "") const;
     bool GetImageTree(int id, ImageList &files, const QString &refine) const;
     int  GetDirectory(int id, ImagePtr &parent, ImageList &files, ImageList &dirs,
@@ -326,7 +326,7 @@ protected:
     ImageDbLocal();
     ~ImageDbLocal() override          { DropTable(); }
     bool CreateTable();
-    bool m_DbExists { false };
+    bool m_dbExists { false };
 
 private:
     void DropTable();
@@ -384,7 +384,7 @@ protected:
     ImageManagerBe()
     {
         // Cleanup & terminate child threads before application exits
-        connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(deleteLater()));
+        connect(qApp, &QCoreApplication::aboutToQuit, this, &QObject::deleteLater);
     }
 
     //! BE Gallery instance
@@ -402,8 +402,8 @@ class META_PUBLIC ImageDbReader : protected ImageHandler<ImageDbLocal>
 public:
     ~ImageDbReader() override { delete m_remote; }
 
-    int  GetType()        { return m_showType; }
-    bool GetVisibility()  { return m_showHidden; }
+    int  GetType() const        { return m_showType; }
+    bool GetVisibility() const  { return m_showHidden; }
 
     void SetType(int showType)
     { m_showType = showType; SetRefinementClause(); }
@@ -504,7 +504,7 @@ protected:
           m_dateFormat(std::move(dateFormat))
     {
         // Cleanup & terminate child threads before application exits
-        connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(deleteLater()));
+        connect(qApp, &QCoreApplication::aboutToQuit, this, &QObject::deleteLater);
     }
 
     //! FE Gallery instance

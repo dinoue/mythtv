@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2015 Bill Meek, from: 2010 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -29,9 +29,9 @@ class SERVICE_PUBLIC BuildInfo : public QObject
     Q_PROPERTY( bool    LibX264      READ LibX264     WRITE setLibX264   )
     Q_PROPERTY( bool    LibDNS_SD    READ LibDNS_SD   WRITE setLibDNS_SD )
 
-    PROPERTYIMP( QString , Version   )
-    PROPERTYIMP( bool    , LibX264   )
-    PROPERTYIMP( bool    , LibDNS_SD );
+    PROPERTYIMP_REF( QString , Version   )
+    PROPERTYIMP    ( bool    , LibX264   )
+    PROPERTYIMP    ( bool    , LibDNS_SD );
 
     public:
 

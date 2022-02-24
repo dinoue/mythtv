@@ -4,8 +4,8 @@
  * \author Copyright (C) 2006, Yeasah Pell
  */
 
-#ifndef _DISEQCSETTINGS_H_
-#define _DISEQCSETTINGS_H_
+#ifndef DISEQCSETTINGS_H
+#define DISEQCSETTINGS_H
 
 #include "diseqc.h"
 #include "standardsettings.h"
@@ -39,6 +39,7 @@ class SwitchConfig : public DiseqcConfigBase
     void Load(void) override; // StandardSetting
 
   public slots:
+    void update(const QString &/*value*/);
     void update(void);
 
   private:
@@ -60,7 +61,7 @@ class RotorPosMap : public GroupSetting
     void Save(void) override; // StandardSetting
 
   private slots:
-    void valueChanged(StandardSetting *setting);
+    void newValue(StandardSetting *setting);
 
   protected:
     void PopulateList(void);
@@ -114,6 +115,7 @@ class LNBConfig : public DiseqcConfigBase
 
   public slots:
     void SetPreset(const QString &value);
+    void UpdateType(const QString &value);
     void UpdateType(void);
 
   private:
@@ -182,5 +184,4 @@ class DTVDeviceConfigGroup : public GroupSetting
     bool                m_switchesEnabled;
 };
 
-#endif // _DISEQCSETTINGS_H_
-
+#endif // DISEQCSETTINGS_H

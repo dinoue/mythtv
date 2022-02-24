@@ -1,5 +1,5 @@
-#ifndef _IDLESCREEN_H_
-#define _IDLESCREEN_H_
+#ifndef IDLESCREEN_H
+#define IDLESCREEN_H
 
 #include <mythscreentype.h>
 // libmyth
@@ -44,7 +44,7 @@ class IdleScreen : public MythScreenType
     MythUIButtonList *m_conflictingRecordings {nullptr};
     MythUIText       *m_conflictWarning       {nullptr};
 
-    int             m_secondsToShutdown       {-1};
+    std::chrono::seconds  m_secondsToShutdown {-1s};
 
     QMutex          m_schedUpdateMutex;
     bool            m_pendingSchedUpdate      {false};
@@ -52,4 +52,4 @@ class IdleScreen : public MythScreenType
     bool            m_hasConflicts            {false};
 };
 
-#endif
+#endif // IDLESCREEN_H

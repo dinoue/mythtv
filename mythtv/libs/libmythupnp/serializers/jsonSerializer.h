@@ -6,12 +6,12 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __JSONSERIALIZER_H__
-#define __JSONSERIALIZER_H__
+#ifndef JSONSERIALIZER_H
+#define JSONSERIALIZER_H
 
 #include <QTextStream>
 #include <QStringList>
@@ -33,7 +33,7 @@ class UPNP_PUBLIC JSONSerializer : public Serializer
 
     protected:
 
-        QTextStream   m_Stream;
+        QTextStream   m_stream;
         bool          m_bCommaNeeded {false};
 
         void BeginSerialize( QString &sName ) override; // Serializer
@@ -59,11 +59,11 @@ class UPNP_PUBLIC JSONSerializer : public Serializer
     public:
 
                  JSONSerializer( QIODevice *pDevice, const QString &sRequestName )
-                     : m_Stream( pDevice ) { Q_UNUSED(sRequestName) }
+                     : m_stream( pDevice ) { Q_UNUSED(sRequestName) }
         virtual ~JSONSerializer() = default;
 
         QString GetContentType() override; // Serializer
 
 };
 
-#endif
+#endif // JSONSERIALIZER_H

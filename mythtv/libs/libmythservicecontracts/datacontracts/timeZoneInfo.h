@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // Program Name: timeZoneInfo.h
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -29,9 +29,9 @@ class SERVICE_PUBLIC TimeZoneInfo : public QObject
     Q_PROPERTY( QDateTime  CurrentDateTime READ CurrentDateTime
                                            WRITE setCurrentDateTime )
 
-    PROPERTYIMP( QString  , TimeZoneID      )
-    PROPERTYIMP( int      , UTCOffset       )
-    PROPERTYIMP( QDateTime, CurrentDateTime );
+    PROPERTYIMP_REF( QString  , TimeZoneID      )
+    PROPERTYIMP    ( int      , UTCOffset       )
+    PROPERTYIMP_REF( QDateTime, CurrentDateTime );
 
     public:
 
@@ -40,8 +40,7 @@ class SERVICE_PUBLIC TimeZoneInfo : public QObject
         Q_INVOKABLE TimeZoneInfo(QObject *parent = nullptr)
             : QObject             ( parent ),
               m_TimeZoneID        (        ),
-              m_UTCOffset         ( 0      ),
-              m_CurrentDateTime   (        )
+              m_UTCOffset         ( 0      )
         {
         }
 

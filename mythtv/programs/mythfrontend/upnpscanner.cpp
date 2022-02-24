@@ -1,5 +1,9 @@
 #include <QCoreApplication>
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#include <QStringConverter>
+#else
 #include <QTextCodec>
+#endif
 
 #include "mythcorecontext.h"
 #include "mythlogging.h"
@@ -56,7 +60,7 @@ MediaServerItem* MediaServerItem::Find(QString &id)
     return nullptr;
 }
 
-bool MediaServerItem::Add(MediaServerItem &item)
+bool MediaServerItem::Add(const MediaServerItem &item)
 {
     if (m_id == item.m_parentid)
     {
@@ -73,23 +77,20 @@ void MediaServerItem::Reset(void)
 }
 
 /**
- * \class MediaServer
+ * \class UpnpMediaServer
  *  A simple wrapper containing details about a UPnP Media Server
  */
-class MediaServer : public MediaServerItem
+class UpnpMediaServer : public MediaServerItem
 {
   public:
-    MediaServer()
+    UpnpMediaServer()
      : MediaServerItem(QString("0"), QString(), QString(), QString()),
-       m_controlURL(QUrl()),
-       m_eventSubURL(QUrl()), m_eventSubPath(QString()),
        m_friendlyName(QString("Unknown"))
     {
     }
-    explicit MediaServer(QUrl URL)
+    explicit UpnpMediaServer(QUrl URL)
      : MediaServerItem(QString("0"), QString(), QString(), QString()),
-       m_url(std::move(URL)), m_controlURL(QUrl()),
-       m_eventSubURL(QUrl()), m_eventSubPath(QString()),
+       m_serverURL(std::move(URL)),
        m_friendlyName(QString("Unknown"))
     {
     }
@@ -106,7 +107,7 @@ class MediaServer : public MediaServerItem
         return result;
     }
 
-    QUrl    m_url;
+    QUrl    m_serverURL;
     int     m_connectionAttempts {0};
     QUrl    m_controlURL;
     QUrl    m_eventSubURL;
@@ -120,7 +121,11 @@ class MediaServer : public MediaServerItem
 UPNPScanner* UPNPScanner::gUPNPScanner        = nullptr;
 bool         UPNPScanner::gUPNPScannerEnabled = false;
 MThread*     UPNPScanner::gUPNPScannerThread  = nullptr;
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
 QMutex*      UPNPScanner::gUPNPScannerLock    = new QMutex(QMutex::Recursive);
+#else
+QRecursiveMutex* UPNPScanner::gUPNPScannerLock = new QRecursiveMutex();
+#endif
 
 /**
  * \class UPNPScanner
@@ -179,8 +184,8 @@ UPNPScanner* UPNPScanner::Instance(UPNPSubscription *sub)
     {
         gUPNPScanner->moveToThread(gUPNPScannerThread->qthread());
         QObject::connect(
-            gUPNPScannerThread->qthread(), SIGNAL(started()),
-            gUPNPScanner,                  SLOT(Start()));
+            gUPNPScannerThread->qthread(), &QThread::started,
+            gUPNPScanner,                  &UPNPScanner::Start);
         gUPNPScannerThread->start(QThread::LowestPriority);
     }
 
@@ -219,7 +224,7 @@ void UPNPScanner::GetInitialMetadata(VideoMetadataListManager::metadata_list* li
     mediaservers->setPathRoot();
 
     m_lock.lock();
-    QMutableHashIterator<QString,MediaServer*> it(m_servers);
+    QMutableHashIterator<QString,UpnpMediaServer*> it(m_servers);
     while (it.hasNext())
     {
         it.next();
@@ -252,7 +257,7 @@ void UPNPScanner::GetMetadata(VideoMetadataListManager::metadata_list* list,
 
     int count = 0;
     while (!m_scanComplete && (count++ < 300))
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(100ms);
 
     // some scans may just take too long (PlayOn)
     if (!m_scanComplete)
@@ -265,7 +270,7 @@ void UPNPScanner::GetMetadata(VideoMetadataListManager::metadata_list* list,
     mediaservers->setPathRoot();
 
     m_lock.lock();
-    QMutableHashIterator<QString,MediaServer*> it(m_servers);
+    QMutableHashIterator<QString,UpnpMediaServer*> it(m_servers);
     while (it.hasNext())
     {
         it.next();
@@ -281,7 +286,7 @@ void UPNPScanner::GetMetadata(VideoMetadataListManager::metadata_list* list,
 bool UPNPScanner::GetMetadata(QVariant &data)
 {
     // we need a USN and objectID
-    if (!data.canConvert(QVariant::StringList))
+    if (!data.canConvert<QStringList>())
         return false;
 
     QStringList list = data.toStringList();
@@ -310,7 +315,7 @@ bool UPNPScanner::GetMetadata(QVariant &data)
     LOG(VB_GENERAL, LOG_INFO, "START");
     while (!found && (count++ < 100)) // 10 seconds
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(100ms);
         m_lock.lock();
         if (m_servers.contains(usn))
         {
@@ -392,7 +397,7 @@ QMap<QString,QString> UPNPScanner::ServerList(void)
 {
     QMap<QString,QString> servers;
     m_lock.lock();
-    QHashIterator<QString,MediaServer*> it(m_servers);
+    QHashIterator<QString,UpnpMediaServer*> it(m_servers);
     while (it.hasNext())
     {
         it.next();
@@ -413,8 +418,8 @@ void UPNPScanner::Start()
 
     // create our network handler
     m_network = new QNetworkAccessManager();
-    connect(m_network, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(replyFinished(QNetworkReply*)));
+    connect(m_network, &QNetworkAccessManager::finished,
+            this, &UPNPScanner::replyFinished);
 
     // listen for SSDP updates
     SSDP::AddListener(this);
@@ -426,12 +431,12 @@ void UPNPScanner::Start()
     // create our update timer (driven by AddServer and ParseDescription)
     m_updateTimer = new QTimer(this);
     m_updateTimer->setSingleShot(true);
-    connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(Update()));
+    connect(m_updateTimer, &QTimer::timeout, this, &UPNPScanner::Update);
 
     // create our watchdog timer (checks for stale servers)
     m_watchdogTimer = new QTimer(this);
-    connect(m_watchdogTimer, SIGNAL(timeout()), this, SLOT(CheckStatus()));
-    m_watchdogTimer->start(1000 * 10); // every 10s
+    connect(m_watchdogTimer, &QTimer::timeout, this, &UPNPScanner::CheckStatus);
+    m_watchdogTimer->start(10s);
 
     // avoid connecting to the master backend
     m_masterHost = gCoreContext->GetMasterServerIP();
@@ -461,7 +466,7 @@ void UPNPScanner::Stop(void)
         m_watchdogTimer->stop();
 
     // cleanup our servers and subscriptions
-    QHashIterator<QString,MediaServer*> it(m_servers);
+    QHashIterator<QString,UpnpMediaServer*> it(m_servers);
     while (it.hasNext())
     {
         it.next();
@@ -474,13 +479,13 @@ void UPNPScanner::Stop(void)
     m_servers.clear();
 
     // cleanup the network
-    foreach (QNetworkReply *reply, m_descriptionRequests)
+    for (QNetworkReply *reply : qAsConst(m_descriptionRequests))
     {
         reply->abort();
         delete reply;
     }
     m_descriptionRequests.clear();
-    foreach (QNetworkReply *reply, m_browseRequests)
+    for (QNetworkReply *reply : qAsConst(m_browseRequests))
     {
         reply->abort();
         delete reply;
@@ -517,7 +522,7 @@ void UPNPScanner::Update(void)
     // if our network queue is full, then we may need to come back later
     bool reschedule = false;
 
-    QHashIterator<QString,MediaServer*> it(m_servers);
+    QHashIterator<QString,UpnpMediaServer*> it(m_servers);
     while (it.hasNext())
     {
         it.next();
@@ -558,17 +563,16 @@ void UPNPScanner::CheckStatus(void)
     // Remove stale servers - the SSDP cache code does not send out removal
     // notifications for expired (rather than explicitly closed) connections
     m_lock.lock();
-    QMutableHashIterator<QString,MediaServer*> it(m_servers);
+    QMutableHashIterator<QString,UpnpMediaServer*> it(m_servers);
     while (it.hasNext())
     {
         it.next();
         // FIXME UPNP version comparision done wrong, we are using urn:schemas-upnp-org:device:MediaServer:4 ourselves
         if (!SSDP::Find("urn:schemas-upnp-org:device:MediaServer:1", it.key()))
         {
-            LOG(VB_UPNP, LOG_INFO, LOC +
-                QString("%1 no longer in SSDP cache. Removing")
-                    .arg(it.value()->m_url.toString()));
-            MediaServer* last = it.value();
+            LOG(VB_UPNP, LOG_INFO, LOC + QString("%1 no longer in SSDP cache. Removing")
+                .arg(it.value()->m_serverURL.toString()));
+            UpnpMediaServer* last = it.value();
             it.remove();
             delete last;
         }
@@ -593,7 +597,7 @@ void UPNPScanner::replyFinished(QNetworkReply *reply)
     {
         LOG(VB_UPNP, LOG_ERR, LOC +
             QString("Network request for '%1' returned error '%2'")
-                .arg(url.toString()).arg(reply->errorString()));
+                .arg(url.toString(), reply->errorString()));
     }
 
     bool description = false;
@@ -666,7 +670,7 @@ void UPNPScanner::customEvent(QEvent *event)
             {
                 url = m_servers[usn]->m_controlURL;
                 LOG(VB_GENERAL, LOG_INFO, QString("UPNP_BROWSEOBJECT: %1->%2")
-                    .arg(m_servers[usn]->m_friendlyName).arg(objectid));
+                    .arg(m_servers[usn]->m_friendlyName, objectid));
             }
             m_lock.unlock();
             if (!url.isEmpty())
@@ -695,7 +699,7 @@ void UPNPScanner::customEvent(QEvent *event)
             {
                 m_scanComplete &= m_servers[usn]->ResetContent(newid);
                 LOG(VB_GENERAL, LOG_INFO, LOC +
-                    QString("New SystemUpdateID '%1' for %2").arg(id).arg(usn));
+                    QString("New SystemUpdateID '%1' for %2").arg(id, usn));
                 Debug();
             }
         }
@@ -725,11 +729,11 @@ void UPNPScanner::timerEvent(QTimerEvent * event)
     if (id)
         killTimer(id);
 
-    int timeout = 0;
+    std::chrono::seconds timeout = 0s;
     QString usn;
 
     m_lock.lock();
-    QHashIterator<QString,MediaServer*> it(m_servers);
+    QHashIterator<QString,UpnpMediaServer*> it(m_servers);
     while (it.hasNext())
     {
         it.next();
@@ -743,12 +747,12 @@ void UPNPScanner::timerEvent(QTimerEvent * event)
     }
     m_lock.unlock();
 
-    if (timeout > 0)
+    if (timeout > 0s)
     {
         ScheduleRenewal(usn, timeout);
         LOG(VB_GENERAL, LOG_INFO, LOC +
             QString("Re-subscribed for %1 seconds to %2")
-                .arg(timeout).arg(usn));
+                .arg(timeout.count()).arg(usn));
     }
 }
 
@@ -759,7 +763,7 @@ void UPNPScanner::ScheduleUpdate(void)
 {
     m_lock.lock();
     if (m_updateTimer && !m_updateTimer->isActive())
-        m_updateTimer->start(200);
+        m_updateTimer->start(200ms);
     m_lock.unlock();
 }
 
@@ -770,12 +774,11 @@ void UPNPScanner::ScheduleUpdate(void)
 void UPNPScanner::CheckFailure(const QUrl &url)
 {
     m_lock.lock();
-    QHashIterator<QString,MediaServer*> it(m_servers);
+    QHashIterator<QString,UpnpMediaServer*> it(m_servers);
     while (it.hasNext())
     {
         it.next();
-        if (it.value()->m_url == url &&
-            it.value()->m_connectionAttempts == MAX_ATTEMPTS)
+        if (it.value()->m_serverURL == url && it.value()->m_connectionAttempts == MAX_ATTEMPTS)
         {
             Debug();
             break;
@@ -792,7 +795,7 @@ void UPNPScanner::Debug(void)
     m_lock.lock();
     LOG(VB_UPNP, LOG_INFO, LOC + QString("%1 media servers discovered:")
                                    .arg(m_servers.size()));
-    QHashIterator<QString,MediaServer*> it(m_servers);
+    QHashIterator<QString,UpnpMediaServer*> it(m_servers);
     while (it.hasNext())
     {
         it.next();
@@ -807,10 +810,10 @@ void UPNPScanner::Debug(void)
         LOG(VB_UPNP, LOG_INFO, LOC +
             QString("'%1' Connected: %2 Subscribed: %3 SystemUpdateID: "
                     "%4 timerId: %5")
-                .arg(it.value()->m_friendlyName).arg(status)
-                .arg(it.value()->m_subscribed ? "Yes" : "No")
-                .arg(it.value()->m_systemUpdateID)
-                .arg(it.value()->m_renewalTimerId));
+                .arg(it.value()->m_friendlyName, status,
+                     it.value()->m_subscribed ? "Yes" : "No",
+                     QString::number(it.value()->m_systemUpdateID),
+                     QString::number(it.value()->m_renewalTimerId)));
     }
     m_lock.unlock();
 }
@@ -827,7 +830,7 @@ void UPNPScanner::BrowseNextContainer(void)
 {
     QMutexLocker locker(&m_lock);
 
-    QHashIterator<QString,MediaServer*> it(m_servers);
+    QHashIterator<QString,UpnpMediaServer*> it(m_servers);
     bool complete = true;
     while (it.hasNext())
     {
@@ -882,7 +885,11 @@ void UPNPScanner::SendBrowseRequest(const QUrl &url, const QString &objectid)
 
     QByteArray body;
     QTextStream data(&body);
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     data.setCodec(QTextCodec::codecForName("UTF-8"));
+#else
+    data.setEncoding(QStringConverter::Utf8);
+#endif
     data << "<?xml version=\"1.0\"?>\r\n";
     data << "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n";
     data << "  <s:Body>\r\n";
@@ -935,7 +942,7 @@ void UPNPScanner::AddServer(const QString &usn, const QString &url)
     m_lock.lock();
     if (!m_servers.contains(usn))
     {
-        m_servers.insert(usn, new MediaServer(url));
+        m_servers.insert(usn, new UpnpMediaServer(url));
         LOG(VB_GENERAL, LOG_INFO, LOC + QString("Adding: %1").arg(usn));
         ScheduleUpdate();
     }
@@ -951,7 +958,7 @@ void UPNPScanner::RemoveServer(const QString &usn)
     if (m_servers.contains(usn))
     {
         LOG(VB_GENERAL, LOG_INFO, LOC + QString("Removing: %1").arg(usn));
-        MediaServer* old = m_servers[usn];
+        UpnpMediaServer* old = m_servers[usn];
         if (old->m_renewalTimerId)
             killTimer(old->m_renewalTimerId);
         m_servers.remove(usn);
@@ -965,21 +972,17 @@ void UPNPScanner::RemoveServer(const QString &usn)
 }
 
 /**
- * \fn UPNPScanner::ScheduleRenewal(const QString&, int)
  *  Creates a QTimer to trigger a subscription renewal for a given media server.
  */
-void UPNPScanner::ScheduleRenewal(const QString &usn, int timeout)
+void UPNPScanner::ScheduleRenewal(const QString &usn, std::chrono::seconds timeout)
 {
     // sanitise the timeout
-    int renew = timeout - 10;
-    if (renew < 10)
-        renew = 10;
-    if (renew > 43200)
-        renew = 43200;
+    std::chrono::seconds twelvehours { 12h };
+    std::chrono::seconds renew = std::clamp(timeout - 10s, 10s, twelvehours);
 
     m_lock.lock();
     if (m_servers.contains(usn))
-        m_servers[usn]->m_renewalTimerId = startTimer(renew * 1000);
+        m_servers[usn]->m_renewalTimerId = startTimer(renew);
     m_lock.unlock();
 }
 
@@ -1031,8 +1034,8 @@ void UPNPScanner::ParseBrowse(const QUrl &url, QNetworkReply *reply)
     // determine the 'server' which requested the browse
     m_lock.lock();
 
-    MediaServer* server = nullptr;
-    QHashIterator<QString,MediaServer*> it(m_servers);
+    UpnpMediaServer* server = nullptr;
+    QHashIterator<QString,UpnpMediaServer*> it(m_servers);
     while (it.hasNext())
     {
         it.next();
@@ -1285,22 +1288,22 @@ bool UPNPScanner::ParseDescription(const QUrl &url, QNetworkReply *reply)
     QString fulleventURL = URLBase + "/" + eventURL;
 
     LOG(VB_UPNP, LOG_INFO, LOC + QString("Control URL for %1 at %2")
-            .arg(friendlyName).arg(controlURL));
+            .arg(friendlyName, controlURL));
     LOG(VB_UPNP, LOG_INFO, LOC + QString("Event URL for %1 at %2")
-            .arg(friendlyName).arg(fulleventURL));
+            .arg(friendlyName, fulleventURL));
 
     // update the server details. If the server has gone away since the request
     // was posted, this will silently fail and we won't try again
     QString usn;
     QUrl qeventurl = QUrl(fulleventURL);
-    int timeout = 0;
+    std::chrono::seconds timeout = 0s;
 
     m_lock.lock();
-    QHashIterator<QString,MediaServer*> it(m_servers);
+    QHashIterator<QString,UpnpMediaServer*> it(m_servers);
     while (it.hasNext())
     {
         it.next();
-        if (it.value()->m_url == url)
+        if (it.value()->m_serverURL == url)
         {
             usn = it.key();
             QUrl qcontrolurl(controlURL);
@@ -1316,14 +1319,14 @@ bool UPNPScanner::ParseDescription(const QUrl &url, QNetworkReply *reply)
     if (m_subscription && !usn.isEmpty())
     {
         timeout = m_subscription->Subscribe(usn, qeventurl, eventURL);
-        m_servers[usn]->m_subscribed = (timeout > 0);
+        m_servers[usn]->m_subscribed = (timeout > 0s);
     }
     m_lock.unlock();
 
-    if (timeout > 0)
+    if (timeout > 0s)
     {
         LOG(VB_GENERAL, LOG_INFO, LOC +
-            QString("Subscribed for %1 seconds to %2") .arg(timeout).arg(usn));
+            QString("Subscribed for %1 seconds to %2") .arg(timeout.count()).arg(usn));
         ScheduleRenewal(usn, timeout);
         // we only scan servers we are subscribed to - and the scan is now
         // incomplete

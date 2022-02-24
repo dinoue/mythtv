@@ -1,12 +1,11 @@
 // -*- Mode: c++ -*-
-#ifndef _PRIVATE_DESCRIPTORS_H_
-#define _PRIVATE_DESCRIPTORS_H_
+#ifndef PREMIERE_DESCRIPTORS_H
+#define PREMIERE_DESCRIPTORS_H
 
 // C++ headers
 #include <cinttypes>
 #include <cstdint>
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QString>
@@ -54,8 +53,8 @@ class PremiereContentTransmissionDescriptor : public MPEGDescriptor
     virtual bool Parse(void);
 
     uint                           m_transmissionCount { 0 };
-    mutable vector<const uint8_t*> m_datePtrs;
-    mutable vector<const uint8_t*> m_timePtrs;
+    mutable std::vector<const uint8_t*> m_datePtrs;
+    mutable std::vector<const uint8_t*> m_timePtrs;
 };
 
-#endif // _PRIVATE_DESCRIPTORS_H_
+#endif // PREMIERE_DESCRIPTORS_H

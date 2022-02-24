@@ -6,7 +6,7 @@
 //                                                                            
 // Copyright (c) 2007 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -27,6 +27,8 @@
 #include "mythconfig.h" // for HAVE_GETIFADDRS
 #include "mythlogging.h"
 #include "httprequest.h"
+#include "mythcorecontext.h"
+#include "configuration.h"
 
 // POSIX headers 2, needs to be after compat.h for OS X
 #ifndef _WIN32
@@ -44,7 +46,11 @@
 
 QString LookupUDN( const QString &sDeviceType )
 {
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList sList = sDeviceType.split(':', QString::SkipEmptyParts);
+#else
+    QStringList sList = sDeviceType.split(':', Qt::SkipEmptyParts);
+#endif
     QString     sLoc  = "LookupUDN(" + sDeviceType + ')';
 
     if (sList.size() <= 2) 
@@ -55,8 +61,9 @@ QString LookupUDN( const QString &sDeviceType )
     }
 
     sList.removeLast();
+    Configuration *pConfig = MythCoreContext::GetConfiguration();
     QString sName = "UPnP/UDN/" + sList.last();
-    QString sUDN  = UPnp::GetConfiguration()->GetValue( sName, "" );
+    QString sUDN  = pConfig->GetValue( sName, "" );
 
     LOG(VB_UPNP, LOG_INFO, sLoc + " sName=" + sName + ", sUDN=" + sUDN);
 
@@ -68,53 +75,11 @@ QString LookupUDN( const QString &sDeviceType )
         // DLNA compliant, we need to remove them
         sUDN = sUDN.mid(1, 36);
 
-        Configuration *pConfig = UPnp::GetConfiguration();
-
         pConfig->SetValue( sName, sUDN );
         pConfig->Save();
     }
 
     return( sUDN );
-}
-
-/////////////////////////////////////////////////////////////////////////////
-//           
-/////////////////////////////////////////////////////////////////////////////
-
-bool operator< ( TaskTime t1, TaskTime t2 )
-{
-    return (t1.tv_sec  < t2.tv_sec) ||
-          ((t1.tv_sec == t2.tv_sec) && (t1.tv_usec < t2.tv_usec));
-}
-
-/////////////////////////////////////////////////////////////////////////////
-//           
-/////////////////////////////////////////////////////////////////////////////
-
-bool operator== ( TaskTime t1, TaskTime t2 )
-{
-    return (t1.tv_sec == t2.tv_sec) && (t1.tv_usec == t2.tv_usec);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-//           
-/////////////////////////////////////////////////////////////////////////////
-
-void AddMicroSecToTaskTime( TaskTime &t, suseconds_t uSecs )
-{
-    uSecs += t.tv_usec;
-
-    t.tv_sec  += (uSecs / 1000000);
-    t.tv_usec  = (uSecs % 1000000);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-//           
-/////////////////////////////////////////////////////////////////////////////
-
-void AddSecondsToTaskTime( TaskTime &t, long nSecs )
-{
-    t.tv_sec  += nSecs;
 }
 
 /**
@@ -136,34 +101,34 @@ QStringList GetSourceProtocolInfos()
         QString flags = DLNA::FlagsString(DLNA::ktm_s | DLNA::ktm_b | DLNA::kv1_5_flag);
         if (*it == "video/mpeg")
         {
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=MPEG_PS_PAL;" + flags);
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=MPEG_PS_NTSC;" + flags);
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=MPEG_PS_SD_DTS;" + flags);
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=AVC_TS_NA_ISO;" + flags);
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=MPEG_TS_HD_NA_ISO;" + flags);
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=MPEG_TS_SD_NA_ISO;" + flags);
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=AVC_TS_EU_ISO;" + flags);
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=MPEG_TS_SD_EU_ISO;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=MPEG_PS_PAL;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=MPEG_PS_NTSC;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=MPEG_PS_SD_DTS;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=AVC_TS_NA_ISO;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=MPEG_TS_HD_NA_ISO;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=MPEG_TS_SD_NA_ISO;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=AVC_TS_EU_ISO;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=MPEG_TS_SD_EU_ISO;" + flags);
         }
         else if (*it == "audio/mpeg")
         {
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=MP3;" + flags); // Technically we don't actually serve these
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=MP3X;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=MP3;" + flags); // Technically we don't actually serve these
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=MP3X;" + flags);
         }
         else if (*it == "audio/mp4")
         {
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=AAC_ISO_320;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=AAC_ISO_320;" + flags);
         }
         else if (*it == "audio/vnd.dolby.dd-raw")
         {
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=AC3;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=AC3;" + flags);
         }
         else if (*it == "audio/x-ms-wma")
         {
-            protocolList << protocolStr.arg(*it).arg("DLNA.ORG_PN=WMAFULL;" + flags);
+            protocolList << protocolStr.arg(*it, "DLNA.ORG_PN=WMAFULL;" + flags);
         }
         else
-            protocolList << protocolStr.arg(*it).arg("*");
+            protocolList << protocolStr.arg(*it, "*");
     }
 
     return protocolList;

@@ -25,9 +25,6 @@ struct SeekAmount
     int amount;
 };
 
-extern struct SeekAmount SeekAmounts[];
-extern int SeekAmountsCount;
-
 class MythUIButton;
 class MythUItext;
 class MythUIImage;
@@ -65,7 +62,7 @@ class ThumbFinder : public MythScreenType
     void updateCurrentPos(void);
     bool seekToFrame(int frame, bool checkPos = true);
     static QString createThumbDir(void);
-    QString frameToTime(int64_t frame, bool addFrame = false);
+    QString frameToTime(int64_t frame, bool addFrame = false) const;
 
     // avcodec stuff
     bool initAVCodec(const QString &inFile);
@@ -80,10 +77,10 @@ class ThumbFinder : public MythScreenType
 
     RemoteAVFormatContext m_inputFC      {nullptr};
     AVCodecContext  *m_codecCtx          {nullptr};
+    MythCodecMap     m_codecMap          {};
     AVCodec         *m_codec             {nullptr};
     MythAVFrame      m_frame;
     MythAVCopy       m_copy;
-    QScopedPointer<MythPictureDeinterlacer> m_deinterlacer;
 
     float            m_fps               {0.0F};
     unsigned char   *m_outputbuf         {nullptr};
@@ -91,7 +88,7 @@ class ThumbFinder : public MythScreenType
     int              m_frameWidth        { 0};
     int              m_frameHeight       { 0};
     int              m_videostream       { 0};
-    int              m_currentSeek       { 0};
+    size_t           m_currentSeek       { 0};
     int64_t          m_startTime         {-1}; // in time_base units
     int64_t          m_startPTS          {-1}; // in time_base units
     int64_t          m_currentPTS        {-1}; // in time_base units

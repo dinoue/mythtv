@@ -25,7 +25,7 @@
 #include "ExternalStreamHandler.h"
 #include "ExternalRecorder.h"
 #include "ExternalChannel.h"
-#include "ringbuffer.h"
+#include "io/mythmediabuffer.h"
 #include "tv_rec.h"
 
 #define LOC QString("ExternalRec[%1](%2): ") \
@@ -69,14 +69,13 @@ void ExternalRecorder::run(void)
         const ProgramAssociationTable *pat = m_channel->GetGeneratedPAT();
         const ProgramMapTable         *pmt = m_channel->GetGeneratedPMT();
         m_streamData->Reset(pat->ProgramNumber(0));
-        m_streamData->HandleTables(MPEG_PAT_PID, *pat);
+        m_streamData->HandleTables(PID::MPEG_PAT_PID, *pat);
         m_streamData->HandleTables(pat->ProgramPID(0), *pmt);
         LOG(VB_GENERAL, LOG_INFO, LOC + "PMT set");
     }
 
     StartNewFile();
 
-    m_h264Parser.Reset();
     m_waitForKeyframeOption = true;
     m_seenSps = false;
 
@@ -123,8 +122,6 @@ void ExternalRecorder::run(void)
 
 bool ExternalRecorder::Open(void)
 {
-    QString result;
-
     if (IsOpen())
     {
         LOG(VB_GENERAL, LOG_WARNING, LOC + "Card already open");
@@ -151,14 +148,13 @@ bool ExternalRecorder::Open(void)
         return true;
     }
 
+    Close();
     LOG(VB_GENERAL, LOG_ERR, LOC + "Open failed");
     return false;
 }
 
 void ExternalRecorder::Close(void)
 {
-    QString result;
-
     LOG(VB_RECORD, LOG_INFO, LOC + "Close() -- begin");
 
     if (IsOpen())
@@ -168,7 +164,7 @@ void ExternalRecorder::Close(void)
     LOG(VB_RECORD, LOG_INFO, LOC + "Close() -- end");
 }
 
-bool ExternalRecorder::PauseAndWait(int timeout)
+bool ExternalRecorder::PauseAndWait(std::chrono::milliseconds timeout)
 {
     QMutexLocker locker(&m_pauseLock);
     if (m_requestPause)
@@ -193,6 +189,9 @@ bool ExternalRecorder::PauseAndWait(int timeout)
 
         // The SignalMonitor will StartStreaming
 
+        if (m_h2645Parser != nullptr)
+            m_h2645Parser->Reset();
+
         if (m_streamData)
             m_streamData->Reset(m_streamData->DesiredProgram());
 
@@ -202,7 +201,7 @@ bool ExternalRecorder::PauseAndWait(int timeout)
     }
 
     // Always wait a little bit, unless woken up
-    m_unpauseWait.wait(&m_pauseLock, timeout);
+    m_unpauseWait.wait(&m_pauseLock, timeout.count());
 
     return IsPaused(true);
 }

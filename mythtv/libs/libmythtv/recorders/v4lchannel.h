@@ -1,26 +1,21 @@
 // -*- Mode: c++ -*-
 
-#ifndef CHANNEL_H
-#define CHANNEL_H
+#ifndef V4LCHANNEL_H
+#define V4LCHANNEL_H
 
 #include <utility>
 
 // MythTV headers
 #include "dtvchannel.h"
+#include "frequencies.h"
 
 #ifdef USING_V4L2
-#include "videodev2.h" // needed for v4l2_std_id type
-#else
-using v4l2_std_id = uint64_t;
+#include <linux/videodev2.h>
 #endif
-
-using namespace std;
 
 #define FAKE_VIDEO 0
 
 class TVRec;
-
-using VidModV4L2 = QMap<int,v4l2_std_id>;
 
 /** \class V4LChannel
  *  \brief Implements tuning for TV cards using the V4L driver API,
@@ -101,8 +96,7 @@ class V4LChannel : public DTVChannel
     QString           m_driverName;
     QMap<QString,int> m_pictAttrDefault;
 
-    struct CHANLIST *m_curList            {nullptr};
-    int              m_totalChannels      {0};
+    CHANLIST_vec     m_curList            {};
 
     bool             m_hasStreamIO        {false};
     bool             m_hasStdIO           {false};

@@ -8,6 +8,8 @@
 
 #include "tvremoteutil.h"
 
+using namespace std::chrono_literals;
+
 class LCDServer;
 class LCDTextItem;
 class LCDMenuItem;
@@ -30,7 +32,7 @@ class LCDProcClient : public QObject
     bool SetupLCD(void);
     void reset(void);
 
-    void setStartupMessage(QString msg, uint messagetime);
+    void setStartupMessage(QString msg, std::chrono::seconds messagetime);
 
     // Used to actually connect to an LCD device       
     bool connectToHost(const QString &hostname, unsigned int port);
@@ -58,8 +60,8 @@ class LCDProcClient : public QObject
     void updateLEDs(int mask);
     void stopAll(void);
 
-    int  getLCDWidth(void) { return m_lcdWidth; }
-    int  getLCDHeight(void) { return m_lcdHeight; }
+    int  getLCDWidth(void) const { return m_lcdWidth; }
+    int  getLCDHeight(void) const { return m_lcdHeight; }
 
   private slots: 
     void veryBadThings(QAbstractSocket::SocketError error); // Communication Errors
@@ -97,7 +99,7 @@ class LCDProcClient : public QObject
     void outputScrollerText(const QString& theScreen, const QString& theText,
                          const QString& widget = "scroller", int top = 1, int bottom = 1);
 
-    QStringList formatScrollerText(const QString &text);
+    QStringList formatScrollerText(const QString &text) const;
     void outputText(QList<LCDTextItem> *textItems);
 
     void sendToServer(const QString &someText);
@@ -106,7 +108,7 @@ class LCDProcClient : public QObject
     void setPriority(const QString &screen, PRIORITY priority);
 
     void setHeartbeat (const QString &screen, bool onoff);
-    QString expandString(const QString &aString);
+    QString expandString(const QString &aString) const;
 
     void init();
     void loadSettings();   //reload the settings from the db
@@ -224,18 +226,18 @@ class LCDProcClient : public QObject
     bool                m_lcdBacklightOn        {true};
     bool                m_lcdHeartbeatOn        {true};
     bool                m_lcdBigClock           {true};
-    int                 m_lcdPopupTime          {0};
+    std::chrono::milliseconds m_lcdPopupTime    {0ms};
     QString             m_lcdShowMusicItems;
     QString             m_lcdKeyString;
     LCDServer *         m_parentLCDServer       {nullptr};
     QString             m_startupMessage;
-    uint                m_startupShowTime       {0};
+    std::chrono::seconds m_startupShowTime      {0s};
 
     bool                m_isRecording           {false};
     bool                m_isTimeVisible         {false};
     int                 m_lcdTunerNo            {0};
 
-    vector<TunerStatus> m_tunerList;
+    std::vector<TunerStatus> m_tunerList;
 };
 
 #endif

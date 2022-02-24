@@ -6,7 +6,7 @@
 //
 // Copyright (c) 2006 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -32,17 +32,17 @@ class UPNP_PUBLIC SubscriberInfo
     public:
         SubscriberInfo()
         {
-            memset( &m_ttExpires, 0, sizeof( m_ttExpires ) );
-            memset( &m_ttLastNotified, 0, sizeof( m_ttLastNotified ) );
+            m_ttExpires = 0us;
+            m_ttLastNotified = 0us;
             m_sUUID = QUuid::createUuid().toString();
             m_sUUID = m_sUUID.mid( 1, m_sUUID.length() - 2);
         }
 
-        SubscriberInfo( const QString &url, unsigned long duration )
+        SubscriberInfo( const QString &url, std::chrono::seconds duration )
             : m_nDuration( duration )
         {
-            memset( &m_ttExpires, 0, sizeof( m_ttExpires ) );
-            memset( &m_ttLastNotified, 0, sizeof( m_ttLastNotified ) );
+            m_ttExpires = 0us;
+            m_ttLastNotified = 0us;
             m_sUUID = QUuid::createUuid().toString();
             m_sUUID = m_sUUID.mid( 1, m_sUUID.length() - 2);
             m_qURL = url;
@@ -65,18 +65,13 @@ class UPNP_PUBLIC SubscriberInfo
         QString             m_sUUID;
         QUrl                m_qURL;
         unsigned short      m_nKey      {0};
-        unsigned long       m_nDuration {0};       // Seconds
+        std::chrono::seconds m_nDuration {0s};
 
     protected:
 
-        void SetExpireTime( unsigned long nSecs )
+        void SetExpireTime( std::chrono::seconds secs )
         {
-            TaskTime tt;
-            gettimeofday( (&tt), nullptr );
-
-            AddMicroSecToTaskTime( tt, (nSecs * 1000000) );
-
-            m_ttExpires = tt;
+            m_ttExpires = nowAsDuration<std::chrono::microseconds>() + secs;
         }
 
 
@@ -104,7 +99,7 @@ class UPNP_PUBLIC  StateVariableBase
         {
             m_bNotify = bNotify;
             m_sName   = sName;
-            gettimeofday( (&m_ttLastChanged), nullptr );
+            m_ttLastChanged = nowAsDuration<std::chrono::microseconds>();
         }
         virtual ~StateVariableBase() = default;
 
@@ -155,7 +150,7 @@ class UPNP_PUBLIC  StateVariable : public StateVariableBase
             if ( m_value != value )
             {
                 m_value = value;
-                gettimeofday( (&m_ttLastChanged), nullptr );
+                m_ttLastChanged = nowAsDuration<std::chrono::microseconds>();
             }
         }
 };
@@ -181,7 +176,7 @@ class UPNP_PUBLIC StateVariables
         StateVariables() = default;
         virtual ~StateVariables()
         {
-            foreach (auto & it, m_map)
+            for (const auto *it : qAsConst(m_map))
                 delete it;
             m_map.clear();
         }
@@ -258,9 +253,9 @@ class UPNP_PUBLIC  Eventing : public HttpServerExtension,
         QMutex              m_mutex;
 
         QString             m_sEventMethodName;
-        Subscribers         m_Subscribers;
+        Subscribers         m_subscribers;
 
-        int                 m_nSubscriptionDuration {1800};
+        std::chrono::seconds m_nSubscriptionDuration {30min};
 
         short               m_nHoldCount            {0};
 

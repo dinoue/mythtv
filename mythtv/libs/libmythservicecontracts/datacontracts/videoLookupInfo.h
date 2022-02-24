@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2011 Robert McNamara <rmcnamara@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -33,9 +33,9 @@ class SERVICE_PUBLIC ArtworkItem : public QObject
     Q_PROPERTY( int             Width           READ Width            WRITE setWidth          )
     Q_PROPERTY( int             Height          READ Height           WRITE setHeight         )
 
-    PROPERTYIMP    ( QString    , Type           )
-    PROPERTYIMP    ( QString    , Url            )
-    PROPERTYIMP    ( QString    , Thumbnail      )
+    PROPERTYIMP_REF( QString    , Type           )
+    PROPERTYIMP_REF( QString    , Url            )
+    PROPERTYIMP_REF( QString    , Thumbnail      )
     PROPERTYIMP    ( int        , Width          )
     PROPERTYIMP    ( int        , Height          );
 
@@ -94,29 +94,29 @@ class SERVICE_PUBLIC VideoLookup : public QObject
     Q_PROPERTY( QString         IMDB            READ IMDB             WRITE setIMDB           )
     Q_PROPERTY( QString         TMSRef          READ TMSRef           WRITE setTMSRef         )
 
-    Q_PROPERTY( QVariantList Artwork    READ Artwork DESIGNABLE true )
+    Q_PROPERTY( QVariantList Artwork    READ Artwork )
 
-    PROPERTYIMP    ( QString    , Title          )
-    PROPERTYIMP    ( QString    , SubTitle       )
+    PROPERTYIMP_REF( QString    , Title          )
+    PROPERTYIMP_REF( QString    , SubTitle       )
     PROPERTYIMP    ( int        , Season         )
     PROPERTYIMP    ( int        , Episode        )
     PROPERTYIMP    ( int        , Year           )
-    PROPERTYIMP    ( QString    , Tagline        )
-    PROPERTYIMP    ( QString    , Description    )
-    PROPERTYIMP    ( QString    , Certification  )
-    PROPERTYIMP    ( QString    , Inetref        )
-    PROPERTYIMP    ( QString    , Collectionref  )
-    PROPERTYIMP    ( QString    , HomePage       )
-    PROPERTYIMP    ( QDateTime  , ReleaseDate    )
+    PROPERTYIMP_REF( QString    , Tagline        )
+    PROPERTYIMP_REF( QString    , Description    )
+    PROPERTYIMP_REF( QString    , Certification  )
+    PROPERTYIMP_REF( QString    , Inetref        )
+    PROPERTYIMP_REF( QString    , Collectionref  )
+    PROPERTYIMP_REF( QString    , HomePage       )
+    PROPERTYIMP_REF( QDateTime  , ReleaseDate    )
     PROPERTYIMP    ( float      , UserRating     )
     PROPERTYIMP    ( int        , Length         )
-    PROPERTYIMP    ( QString    , Language       )
-    PROPERTYIMP    ( QStringList, Countries      )
+    PROPERTYIMP_REF( QString    , Language       )
+    PROPERTYIMP_REF( QStringList, Countries      )
     PROPERTYIMP    ( float      , Popularity     )
     PROPERTYIMP    ( int        , Budget         )
     PROPERTYIMP    ( int        , Revenue        )
-    PROPERTYIMP    ( QString    , IMDB           )
-    PROPERTYIMP    ( QString    , TMSRef         )
+    PROPERTYIMP_REF( QString    , IMDB           )
+    PROPERTYIMP_REF( QString    , TMSRef         )
 
     PROPERTYIMP_RO_REF( QVariantList, Artwork)
 
@@ -164,7 +164,7 @@ class SERVICE_PUBLIC VideoLookup : public QObject
 
         ArtworkItem *AddNewArtwork()
         {
-            ArtworkItem *pObject = new ArtworkItem( this );
+            auto *pObject = new ArtworkItem( this );
             Artwork().append( QVariant::fromValue<QObject *>( pObject ));
 
             return pObject;

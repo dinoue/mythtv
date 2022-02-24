@@ -2,29 +2,36 @@
 #define MYTHMISCUTIL_H_
 
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <ctime>
 
 #include <QString>
 #include <QDir>
 
+#ifdef _WIN32
+    #undef mkdir
+#endif
+
 #include "mythbaseexp.h"
 #include "mythsystem.h"
 
-class QStringList;
-class QFile;
-
-MBASE_PUBLIC bool getUptime(time_t &uptime);
+MBASE_PUBLIC bool getUptime(std::chrono::seconds &uptime);
 MBASE_PUBLIC bool getMemStats(
     int &totalMB, int &freeMB, int &totalVM, int &freeVM);
+using loadArray = std::array<double,3>;
+MBASE_PUBLIC loadArray getLoadAvgs(void);
 
 MBASE_PUBLIC bool hasUtf8(const char *str);
 #define M_QSTRING_UNICODE(str) hasUtf8(str) ? QString::fromUtf8(str) : str
 
-MBASE_PUBLIC bool ping(const QString &host, int timeout);
+MBASE_PUBLIC bool ping(const QString &host, std::chrono::milliseconds timeout);
 MBASE_PUBLIC bool telnet(const QString &host, int port);
 
+namespace MythFile
+{
 MBASE_PUBLIC long long copy(QFile &dst, QFile &src, uint block_size = 0);
+} // namespace MythFile
 MBASE_PUBLIC QString createTempFile(
     QString name_template = "/tmp/mythtv_XXXXXX", bool dir = false);
 MBASE_PUBLIC bool makeFileAccessible(const QString& filename);
@@ -36,27 +43,6 @@ MBASE_PUBLIC QString getSymlinkTarget(const QString &start_file,
                                       QStringList   *intermediaries = nullptr,
                                       unsigned       maxLinks       = 255);
 
-MBASE_PUBLIC void wrapList(QStringList &list, int width);
-
-inline float clamp(float val, float minimum, float maximum)
-{
-    return std::min(std::max(val, minimum), maximum);
-}
-inline int   clamp(int val, int minimum, int maximum)
-{
-    return std::min(std::max(val, minimum), maximum);
-}
-inline float lerp(float r, float a, float b)
-{
-    return ((1.0F - r) * a) + (r * b);
-}
-inline int   lerp(float r, int a, int b)
-{
-    return (int) lerp(r, (float) a, (float) b);
-}
-inline float sq(float a) { return a*a; }
-inline int   sq(int   a) { return a*a; }
-
 static inline QString xml_bool_to_string(bool val)
 {
     return (val) ? "true" : "false";
@@ -67,7 +53,7 @@ MBASE_PUBLIC QString xml_indent(uint level);
 MBASE_PUBLIC bool IsMACAddress(const QString& MAC);
 MBASE_PUBLIC bool WakeOnLAN(const QString& MAC);
 MBASE_PUBLIC bool MythWakeup(const QString &wakeUpCommand,
-    uint flags = kMSNone, uint timeout = 0);
+    uint flags = kMSNone, std::chrono::seconds timeout = 0s);
 
 MBASE_PUBLIC QString FileHash(const QString& filename);
 

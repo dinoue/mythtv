@@ -4,7 +4,6 @@
 // C++
 #include <algorithm>
 #include <unistd.h> // for sleep()
-using std::max;
 
 // QT
 #include <QApplication>
@@ -63,6 +62,8 @@ MetadataFactorySingleResult::~MetadataFactorySingleResult()
 QEvent::Type MetadataFactoryMultiResult::kEventType =
     (QEvent::Type) QEvent::registerEventType();
 
+// Force this class to have a vtable so that dynamic_cast works.
+// NOLINTNEXTLINE(modernize-use-equals-default)
 MetadataFactoryMultiResult::~MetadataFactoryMultiResult()
 {
 }
@@ -70,6 +71,8 @@ MetadataFactoryMultiResult::~MetadataFactoryMultiResult()
 QEvent::Type MetadataFactoryVideoChanges::kEventType =
     (QEvent::Type) QEvent::registerEventType();
 
+// Force this class to have a vtable so that dynamic_cast works.
+// NOLINTNEXTLINE(modernize-use-equals-default)
 MetadataFactoryVideoChanges::~MetadataFactoryVideoChanges()
 {
 }
@@ -250,7 +253,7 @@ MetadataLookupList MetadataFactory::SynchronousLookup(MetadataLookup *lookup)
     while (m_returnList.isEmpty() && m_sync)
     {
         sleep(1);
-        qApp->processEvents();
+        QCoreApplication::processEvents();
     }
 
     m_sync = false;
@@ -422,7 +425,7 @@ void MetadataFactory::OnVideoResult(MetadataLookup *lookup)
         metadata->SetUserRating(lookup->GetUserRating());
     if (metadata->GetRating() == VIDEO_RATING_DEFAULT)
         metadata->SetRating(lookup->GetCertification());
-    if (metadata->GetLength() == 0)
+    if (metadata->GetLength() == 0min)
         metadata->SetLength(lookup->GetRuntime());
     if (metadata->GetSeason() == 0)
         metadata->SetSeason(lookup->GetSeason());
@@ -439,26 +442,19 @@ void MetadataFactory::OnVideoResult(MetadataLookup *lookup)
     QList<PersonInfo> actors = lookup->GetPeople(kPersonActor);
     QList<PersonInfo> gueststars = lookup->GetPeople(kPersonGuestStar);
 
-    for (QList<PersonInfo>::const_iterator p = gueststars.begin();
-        p != gueststars.end(); ++p)
-    {
-        actors.append(*p);
-    }
+    for (const auto& actor : qAsConst(gueststars))
+        actors.append(actor);
 
     VideoMetadata::cast_list cast;
     QStringList cl;
 
-    for (QList<PersonInfo>::const_iterator p = actors.begin();
-        p != actors.end(); ++p)
-    {
-        cl.append((*p).name);
-    }
+    for (const auto& actor : qAsConst(actors))
+        cl.append(actor.name);
 
-    for (QStringList::const_iterator p = cl.begin();
-        p != cl.end(); ++p)
+    for (const auto& name : qAsConst(cl))
     {
-        QString cn = (*p).trimmed();
-        if (cn.length())
+        QString cn = name.trimmed();
+        if (!cn.isEmpty())
         {
             cast.push_back(VideoMetadata::cast_list::
                         value_type(-1, cn));
@@ -471,11 +467,10 @@ void MetadataFactory::OnVideoResult(MetadataLookup *lookup)
     VideoMetadata::genre_list video_genres;
     QStringList genres = lookup->GetCategories();
 
-    for (QStringList::const_iterator p = genres.begin();
-        p != genres.end(); ++p)
+    for (const auto& str : qAsConst(genres))
     {
-        QString genre_name = (*p).trimmed();
-        if (genre_name.length())
+        QString genre_name = str.trimmed();
+        if (!genre_name.isEmpty())
         {
             video_genres.push_back(
                     VideoMetadata::genre_list::value_type(-1, genre_name));
@@ -488,11 +483,10 @@ void MetadataFactory::OnVideoResult(MetadataLookup *lookup)
     VideoMetadata::country_list video_countries;
     QStringList countries = lookup->GetCountries();
 
-    for (QStringList::const_iterator p = countries.begin();
-        p != countries.end(); ++p)
+    for (const auto& str : qAsConst(countries))
     {
-        QString country_name = (*p).trimmed();
-        if (country_name.length())
+        QString country_name = str.trimmed();
+        if (!country_name.isEmpty())
         {
             video_countries.push_back(
                     VideoMetadata::country_list::value_type(-1,
@@ -502,7 +496,7 @@ void MetadataFactory::OnVideoResult(MetadataLookup *lookup)
 
     metadata->SetCountries(video_countries);
 
-    ArtworkMap map = lookup->GetDownloads();
+    DownloadMap map = lookup->GetDownloads();
 
     QUrl coverurl(map.value(kArtworkCoverart).url);
     if (!coverurl.path().isEmpty())
@@ -640,10 +634,9 @@ void MetadataFactory::customEvent(QEvent *levent)
             VideoMetadataListManager::loadAllFromDatabase(ml);
             m_mlm->setList(ml);
 
-            for (QList<int>::const_iterator it = additions.begin();
-                it != additions.end(); ++it)
+            for (int id : qAsConst(additions))
             {
-                VideoMetadata *metadata = m_mlm->byID(*it).get();
+                VideoMetadata *metadata = m_mlm->byID(id).get();
 
                 if (metadata)
                     Lookup(metadata, true, true);

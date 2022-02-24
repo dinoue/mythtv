@@ -103,9 +103,9 @@ bool AudioSetupWizard::Create()
     // I hate to SetText but it's the only way to make it reliably bi-modal
     m_testSpeakerButton->SetText(tr("Test Speakers"));
 
-    connect(m_testSpeakerButton, SIGNAL(Clicked()), this, SLOT(toggleSpeakers()));
-    connect(m_nextButton, SIGNAL(Clicked()), this, SLOT(slotNext()));
-    connect(m_prevButton, SIGNAL(Clicked()), this, SLOT(slotPrevious()));
+    connect(m_testSpeakerButton, &MythUIButton::Clicked, this, &AudioSetupWizard::toggleSpeakers);
+    connect(m_nextButton, &MythUIButton::Clicked, this, &AudioSetupWizard::slotNext);
+    connect(m_prevButton, &MythUIButton::Clicked, this, &AudioSetupWizard::slotPrevious);
 
     QString message = tr("Discovering audio devices...");
     LoadInBackground(message);
@@ -138,14 +138,8 @@ void AudioSetupWizard::Init(void)
 
     if (!current.isEmpty())
     {
-        foreach (const auto & ao, *m_outputlist)
-        {
-            if (ao.m_name == current)
-            {
-                found = true;
-                break;
-            }
-        }
+        auto samename = [current](const auto & ao){ return ao.m_name == current; };
+        found = std::any_of(m_outputlist->cbegin(), m_outputlist->cend(), samename);
         if (!found)
         {
             AudioOutput::AudioDeviceConfig *adc =
@@ -163,7 +157,7 @@ void AudioSetupWizard::Init(void)
             delete adc;
         }
     }
-    foreach (const auto & ao, *m_outputlist)
+    for (const auto & ao : qAsConst(*m_outputlist))
     {
         QString name = ao.m_name;
         auto *output = new MythUIButtonListItem(m_audioDeviceButtonList, name);
@@ -180,11 +174,10 @@ void AudioSetupWizard::Init(void)
     // Update list for default audio device
     UpdateCapabilities();
 
-    connect(m_ac3Check,
-            SIGNAL(valueChanged()), SLOT(UpdateCapabilitiesAC3()));
-    connect(m_audioDeviceButtonList,
-            SIGNAL(itemSelected(MythUIButtonListItem*)),
-            SLOT(UpdateCapabilities(MythUIButtonListItem*)));
+    connect(m_ac3Check, &MythUICheckBox::valueChanged,
+            this, &AudioSetupWizard::UpdateCapabilitiesAC3);
+    connect(m_audioDeviceButtonList, &MythUIButtonList::itemSelected,
+            this, qOverload<MythUIButtonListItem*>(&AudioSetupWizard::UpdateCapabilities));
 }
 
 AudioOutputSettings AudioSetupWizard::UpdateCapabilities(bool restore, bool AC3)
@@ -195,14 +188,11 @@ AudioOutputSettings AudioSetupWizard::UpdateCapabilities(bool restore, bool AC3)
 
     AudioOutputSettings settings;
 
-    foreach (const auto & ao, *m_outputlist)
-    {
-        if (ao.m_name == out)
-        {
-            settings = ao.m_settings;
-            break;
-        }
-    }
+    auto samename = [out](const auto & ao){ return ao.m_name == out; };
+    // NOLINTNEXTLINE(readability-qualified-auto) // qt6
+    const auto ao = std::find_if(m_outputlist->cbegin(), m_outputlist->cend(), samename);
+    if (ao != m_outputlist->cend())
+        settings = ao->m_settings;
 
     realmax_speakers = max_speakers = settings.BestSupportedChannels();
 

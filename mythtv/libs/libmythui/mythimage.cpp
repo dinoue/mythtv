@@ -7,7 +7,6 @@
 
 // QT headers
 #include <QImageReader>
-#include <QMatrix>
 #include <QNetworkReply>
 #include <QPainter>
 #include <QRgb>
@@ -31,8 +30,8 @@ MythImage::MythImage(MythPainter *parent, const char *name) :
     if (!parent)
         LOG(VB_GENERAL, LOG_ERR, "Image created without parent!");
 
-    m_Parent = parent;
-    m_FileName = "";
+    m_parent = parent;
+    m_fileName = "";
 
     if (!s_ui)
         s_ui = GetMythUI();
@@ -40,8 +39,8 @@ MythImage::MythImage(MythPainter *parent, const char *name) :
 
 MythImage::~MythImage()
 {
-    if (m_Parent)
-        m_Parent->DeleteFormatImage(this);
+    if (m_parent)
+        m_parent->DeleteFormatImage(this);
 }
 
 int MythImage::IncrRef(void)
@@ -143,7 +142,7 @@ void MythImage::Orientation(int orientation)
     }
 }
 
-void MythImage::Resize(const QSize &newSize, bool preserveAspect)
+void MythImage::Resize(QSize newSize, bool preserveAspect)
 {
     if ((size() == newSize) && !isNull())
         return;
@@ -195,23 +194,23 @@ void MythImage::Reflect(ReflectAxis axis, int shear, int scale, int length,
     }
 
     QImage alphaChannel(mirrorImage.size(), QImage::Format_ARGB32);
-    MakeGradient(alphaChannel, QColor("#AAAAAA"), QColor("#000000"), 255,
+    MakeGradient(alphaChannel, QColor(0xAA, 0xAA, 0xAA), QColor(0x00, 0x00, 0x00), 255,
                  BoundaryWanted::No, fillDirection);
     mirrorImage.setAlphaChannel(alphaChannel);
 
-    QMatrix shearMatrix;
+    QTransform shearTransform;
     if (axis == ReflectAxis::Vertical)
     {
-        shearMatrix.scale(1,(float)scale/100);
-        shearMatrix.shear((float)shear/100,0);
+        shearTransform.scale(1,(float)scale/100);
+        shearTransform.shear((float)shear/100,0);
     }
     else if (axis == ReflectAxis::Horizontal)
     {
-        shearMatrix.scale((float)scale/100,1);
-        shearMatrix.shear(0,(float)shear/100);
+        shearTransform.scale((float)scale/100,1);
+        shearTransform.shear(0,(float)shear/100);
     }
 
-    mirrorImage = mirrorImage.transformed(shearMatrix, Qt::SmoothTransformation);
+    mirrorImage = mirrorImage.transformed(shearTransform, Qt::SmoothTransformation);
 
     QSize newsize;
     if (axis == ReflectAxis::Vertical)
@@ -314,7 +313,7 @@ bool MythImage::Load(const QString &filename)
         QString mythUrl = RemoteFile::FindFile(fname, url.host(), url.userName());
         if (!mythUrl.isEmpty())
         {
-            auto *rf = new RemoteFile(mythUrl, false, false, 0);
+            auto *rf = new RemoteFile(mythUrl, false, false, 0ms);
 
             QByteArray data;
             bool ret = rf->SaveAs(data);
@@ -417,7 +416,7 @@ void MythImage::MakeGradient(QImage &image, const QColor &begin,
 }
 
 MythImage *MythImage::Gradient(MythPainter *painter,
-                               const QSize & size, const QColor &begin,
+                               QSize size, const QColor &begin,
                                const QColor &end, uint alpha,
                                FillDirection direction)
 {
@@ -433,39 +432,6 @@ MythImage *MythImage::Gradient(MythPainter *painter,
     ret->m_gradAlpha = alpha;
     ret->m_gradDirection = direction;
     return ret;
-}
-
-#define SCALEBITS 8
-#define ONE_HALF (1 << (SCALEBITS - 1))
-#define FIX(x)   ((int) ((x) * (1L<<SCALEBITS) /*+ 0.5*/))
-
-void MythImage::ConvertToYUV(void)
-{
-    if (m_isYUV)
-        return;
-
-    m_isYUV = true;
-
-    for (int i = 0; i < height(); i ++)
-    {
-        QRgb *data = (QRgb*)scanLine(i);
-        for (int j = 0; j < width(); j++)
-        {
-            int r = qRed(data[j]);
-            int g = qGreen(data[j]);
-            int b = qBlue(data[j]);
-            int a = qAlpha(data[j]);
-
-            int r1 = (FIX(0.299) * r + FIX(0.587) * g +
-                      FIX(0.114) * b + ONE_HALF) >> SCALEBITS;
-            int g1 = ((- FIX(0.169) * r - FIX(0.331) * g +
-                       FIX(0.499) * b + ONE_HALF) >> SCALEBITS) + 128;
-            int b1 = ((FIX(0.499) * r - FIX(0.418) * g -
-                       FIX(0.0813) * b + ONE_HALF) >> SCALEBITS) + 128;
-
-            data[j] = qRgba(r1, g1, b1, a);
-        }
-    }
 }
 
 MythImageReader::MythImageReader(QString fileName)

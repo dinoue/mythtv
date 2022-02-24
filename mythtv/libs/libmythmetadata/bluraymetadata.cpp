@@ -1,12 +1,10 @@
-#include "config.h"
-
 // Qt headers
 #include <QHash>
 #include <QCoreApplication>
 #include <QStringList>
 
-#if CONFIG_LIBBLURAY_EXTERNAL
-#include "libbluray/meta_data.h"
+#ifdef HAVE_LIBBLURAY
+#include <libbluray/meta_data.h>
 #else
 #include "libbluray/bdnav/meta_data.h"
 #endif
@@ -59,8 +57,7 @@ bool BlurayMetadata::ParseDisc(void)
         for (unsigned i = 0; i < metadata->thumb_count; i++)
         {
             QString filepath = QString("%1/BDMV/META/DL/%2")
-                                   .arg(m_path)
-                                   .arg(metadata->thumbnails[i].path);
+                                   .arg(m_path, metadata->thumbnails[i].path);
             m_images.append(filepath);
         }
     }
@@ -99,6 +96,6 @@ void BlurayMetadata::toMap(InfoMap &metadataMap)
                                                             .arg(m_discnumber)
                                                             .arg(m_disctotal);
 
-    metadataMap["numtitles"] = m_titles.count();
-    metadataMap["numthumbs"] = m_images.count();
+    metadataMap["numtitles"] = QString::number(m_titles.count());
+    metadataMap["numthumbs"] = QString::number(m_images.count());
 }

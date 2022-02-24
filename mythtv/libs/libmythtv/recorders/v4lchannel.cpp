@@ -14,7 +14,6 @@
 // C++ headers
 #include <algorithm>
 #include <iostream>
-using namespace std;
 
 #include "videodev2.h" // our copy
 
@@ -86,7 +85,7 @@ bool V4LChannel::Open(void)
         m_hasStreamIO = false; // driver workaround, see #9825, #10519 and #12336
 
     LOG(VB_CHANNEL, LOG_INFO, LOC + QString("Device name '%1' driver '%2'.")
-            .arg(m_deviceName).arg(m_driverName));
+            .arg(m_deviceName, m_driverName));
 
     LOG(VB_CHANNEL, LOG_INFO, LOC +
         QString("v4l2: stream io: %2 std io: %3 async io: %4 "
@@ -252,9 +251,9 @@ bool V4LChannel::InitializeInputs(void)
     // print it
     LOG(VB_CHANNEL, LOG_INFO, LOC +
         QString("Input #%1: '%2' schan(%3) tun(%4) v4l2(%6)")
-        .arg(m_inputId).arg(m_name).arg(m_startChanNum)
-        .arg(m_tuneToChannel)
-        .arg(mode_to_format(m_videoModeV4L2)));
+        .arg(QString::number(m_inputId), m_name, m_startChanNum,
+             m_tuneToChannel,
+             mode_to_format(m_videoModeV4L2)));
 
     return valid_cnt != 0U;
 }
@@ -283,7 +282,7 @@ void V4LChannel::SetFormat(const QString &format)
     }
 
     LOG(VB_CHANNEL, LOG_INFO, LOC + QString("SetFormat(%1) fmt(%2) input(%3)")
-            .arg(format).arg(fmt).arg(inputNum));
+            .arg(format, fmt, QString::number(inputNum)));
 
     if (!SetInputAndFormat(inputNum, fmt))
         LOG(VB_GENERAL, LOG_ERR, LOC + "Failed to set format." + ENO);
@@ -298,8 +297,7 @@ int V4LChannel::SetDefaultFreqTable(const QString &name)
 
 void V4LChannel::SetFreqTable(const int index)
 {
-    m_curList = chanlists[index].list;
-    m_totalChannels = chanlists[index].count;
+    m_curList = gChanLists[index].list;
 }
 
 int V4LChannel::SetFreqTable(const QString &tablename)
@@ -307,15 +305,14 @@ int V4LChannel::SetFreqTable(const QString &tablename)
     const QString& name = tablename;
     bool use_default = (name.toLower() == "default" || name.isEmpty());
 
-    int i = 0;
-    char *listname = (char *)chanlists[i].name;
-
-    m_curList = nullptr;
-    while (listname != nullptr)
+    m_curList.clear();
+    for (size_t i = 0; i < gChanLists.size(); i++)
     {
+        char *listname = (char *)gChanLists[i].name;
+
         if (use_default)
         {
-            if (i == m_defaultFreqTable)
+            if (i == static_cast<size_t>(m_defaultFreqTable))
             {
                 SetFreqTable(i);
                 return i;
@@ -326,21 +323,19 @@ int V4LChannel::SetFreqTable(const QString &tablename)
             SetFreqTable(i);
             return i;
         }
-        i++;
-        listname = (char *)chanlists[i].name;
     }
 
     LOG(VB_CHANNEL, LOG_ERR,
         QString("Channel(%1)::SetFreqTable(): Invalid "
                 "frequency table name %2, using %3.").
-            arg(m_device).arg(name).arg((char *)chanlists[1].name));
+            arg(m_device, name, (char *)gChanLists[1].name));
     SetFreqTable(1);
     return 1;
 }
 
 int V4LChannel::GetCurrentChannelNum(const QString &channame)
 {
-    for (int i = 0; i < m_totalChannels; i++)
+    for (size_t i = 0; i < m_curList.size(); i++)
     {
         if (channame == m_curList[i].name)
             return i;
@@ -358,14 +353,14 @@ bool V4LChannel::Tune(const QString &freqid, int finetune)
     int i = GetCurrentChannelNum(freqid);
     LOG(VB_CHANNEL, LOG_INFO,
         QString("Channel(%1)::Tune(%2): curList[%3].freq(%4)")
-            .arg(m_device).arg(freqid).arg(i)
+            .arg(m_device, freqid, QString::number(i))
             .arg((i != -1) ? m_curList[i].freq : -1));
 
     if (i == -1)
     {
         LOG(VB_GENERAL, LOG_ERR,
             QString("Channel(%1)::Tune(%2): Error, failed to find channel.")
-                .arg(m_device).arg(freqid));
+                .arg(m_device, freqid));
         return false;
     }
 
@@ -644,8 +639,8 @@ bool V4LChannel::InitPictureAttribute(const QString &db_col_name)
     int dfield = m_pictAttrDefault[db_col_name];
     int field  = (cfield + sfield + dfield) & 0xFFFF;
     int value0 = (int) ((scl_range * field) + qctrl.minimum);
-    int value1 = min(value0, qctrl.maximum);
-    ctrl.value = max(value1, qctrl.minimum);
+    int value1 = std::min(value0, qctrl.maximum);
+    ctrl.value = std::max(value1, qctrl.minimum);
 
 #if DEBUG_ATTRIB
     LOG(VB_CHANNEL, LOG_DEBUG, loc + QString(" %1\n\t\t\t"
@@ -720,7 +715,7 @@ static int get_v4l2_attribute_value(int videofd, int v4l2_attrib)
     }
 
     float mult = 65535.0 / (qctrl.maximum - qctrl.minimum);
-    return min(max((int)(mult * (ctrl.value - qctrl.minimum)), 0), 65525);
+    return std::min(std::max((int)(mult * (ctrl.value - qctrl.minimum)), 0), 65525);
 }
 
 static int set_v4l2_attribute_value(int videofd, int v4l2_attrib, int newvalue)
@@ -738,8 +733,8 @@ static int set_v4l2_attribute_value(int videofd, int v4l2_attrib, int newvalue)
 
     float mult = (qctrl.maximum - qctrl.minimum) / 65535.0;
     ctrl.value = (int)(mult * newvalue + qctrl.minimum);
-    ctrl.value = min(ctrl.value, qctrl.maximum);
-    ctrl.value = max(ctrl.value, qctrl.minimum);
+    ctrl.value = std::min(ctrl.value, qctrl.maximum);
+    ctrl.value = std::max(ctrl.value, qctrl.minimum);
 
     if (ioctl(videofd, VIDIOC_S_CTRL, &ctrl) < 0)
     {
@@ -776,7 +771,7 @@ int V4LChannel::ChangePictureAttribute(
     // make sure we are within bounds (wrap around for hue)
     if (V4L2_CID_HUE == v4l2_attrib)
         new_value &= 0xffff;
-    new_value = min(max(new_value, 0), 65535);
+    new_value = std::min(std::max(new_value, 0), 65535);
 
 #if DEBUG_ATTRIB
     LOG(VB_CHANNEL, LOG_DEBUG,

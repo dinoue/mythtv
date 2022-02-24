@@ -1,17 +1,23 @@
-#ifndef _ATSC_HUFFMAN_H_
-#define _ATSC_HUFFMAN_H_
+#ifndef ATSC_HUFFMAN_H
+#define ATSC_HUFFMAN_H
 
-// POSIX header
-#include <unistd.h>
+// C++ headers
+#include <array>
+#include <vector>
 
 // Qt header
 #include <QString>
 
+// MythTV
+#include "mythtvexp.h"
+
+MTV_PUBLIC
 QString atsc_huffman1_to_string(const unsigned char *compressed,
                                 uint size, uint table);
 
+MTV_PUBLIC
 QString atsc_huffman2_to_string(const unsigned char *compressed,
                                 uint length, uint table);
 
 
-#endif //_ATSC_HUFFMAN_H_
+#endif //ATSC_HUFFMAN_H

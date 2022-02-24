@@ -6,7 +6,6 @@
 #include <fcntl.h>
 #include <utility>
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QWaitCondition>
@@ -60,7 +59,7 @@ class MBASE_PUBLIC ThreadedFileWriter
 
     void SetWriteBufferMinWriteSize(uint newMinSize = kMinWriteSize);
 
-    void Sync(void);
+    void Sync(void) const;
     void Flush(void);
     bool SetBlocking(bool block = true);
     bool WritesFailing(void) const { return m_ignoreWrites; }
@@ -88,7 +87,7 @@ class MBASE_PUBLIC ThreadedFileWriter
     class TFWBuffer
     {
       public:
-        vector<char> data;
+        std::vector<char> data;
         QDateTime    lastUsed;
     };
     mutable QMutex    m_bufLock;

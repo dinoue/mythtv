@@ -1,6 +1,5 @@
 
 #include <algorithm>
-using namespace std;
 
 #include "mythconfig.h"
 
@@ -9,8 +8,8 @@ using namespace std;
 #include "decoderbase.h"
 #include "programinfo.h"
 #include "iso639.h"
-#include "DVD/dvdringbuffer.h"
-#include "Bluray/bdringbuffer.h"
+#include "DVD/mythdvdbuffer.h"
+#include "Bluray/mythbdbuffer.h"
 #include "mythcodeccontext.h"
 
 #define LOC QString("Dec: ")
@@ -24,14 +23,20 @@ DecoderBase::DecoderBase(MythPlayer *parent, const ProgramInfo &pginfo)
       m_languagePreference(iso639_get_language_key_list())
 {
     ResetTracks();
-    m_tracks[kTrackTypeAudio].push_back(StreamInfo(0, 0, 0, 0, 0));
-    m_tracks[kTrackTypeCC608].push_back(StreamInfo(0, 0, 0, 1, 0));
-    m_tracks[kTrackTypeCC608].push_back(StreamInfo(0, 0, 2, 3, 0));
+    m_tracks[kTrackTypeAudio].emplace_back(0, 0, 0, 0, 0);
+    m_tracks[kTrackTypeCC608].emplace_back(0, 0, 0, 1, 0);
+    m_tracks[kTrackTypeCC608].emplace_back(0, 0, 2, 3, 0);
 }
 
 DecoderBase::~DecoderBase()
 {
     delete m_playbackInfo;
+}
+
+void DecoderBase::SetRenderFormats(const VideoFrameTypes* RenderFormats)
+{
+    if (RenderFormats != nullptr)
+        m_renderFormats = RenderFormats;
 }
 
 void DecoderBase::SetProgramInfo(const ProgramInfo &pginfo)
@@ -103,7 +108,7 @@ bool DecoderBase::PosMapFromDb(void)
         if (m_fps < 26 && m_fps > 24)
            m_keyframeDist = 12;
         auto totframes =
-            (long long)(m_ringBuffer->DVD()->GetTotalTimeOfTitle() * m_fps);
+            (long long)(m_ringBuffer->DVD()->GetTotalTimeOfTitle().count() * m_fps);
         posMap[totframes] = m_ringBuffer->DVD()->GetTotalReadPosition();
     }
     else if (m_ringBuffer && m_ringBuffer->IsBD())
@@ -113,7 +118,7 @@ bool DecoderBase::PosMapFromDb(void)
         if (m_fps < 26 && m_fps > 24)
            m_keyframeDist = 12;
         auto totframes =
-            (long long)(m_ringBuffer->BD()->GetTotalTimeOfTitle() * m_fps);
+            (long long)(m_ringBuffer->BD()->GetTotalTimeOfTitle().count() * m_fps);
         posMap[totframes] = m_ringBuffer->BD()->GetTotalReadPosition();
 #if 0
         LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
@@ -174,8 +179,7 @@ bool DecoderBase::PosMapFromDb(void)
     m_frameToDurMap.clear();
     m_durToFrameMap.clear();
 
-    for (frm_pos_map_t::const_iterator it = posMap.begin();
-         it != posMap.end(); ++it)
+    for (auto it = posMap.cbegin(); it != posMap.cend(); ++it)
     {
         PosMapEntry e = {it.key(), it.key() * m_keyframeDist, *it};
         m_positionMap.push_back(e);
@@ -192,8 +196,7 @@ bool DecoderBase::PosMapFromDb(void)
     }
 
     uint64_t last = 0;
-    for (frm_pos_map_t::const_iterator it = durMap.begin();
-         it != durMap.end(); ++it)
+    for (auto it = durMap.cbegin(); it != durMap.cend(); ++it)
     {
         m_frameToDurMap[it.key()] = it.value();
         m_durToFrameMap[it.value()] = it.key();
@@ -242,8 +245,7 @@ bool DecoderBase::PosMapFromEnc(void)
     long long last_index = 0;
     if (!m_positionMap.empty())
         last_index = m_positionMap.back().index;
-    for (frm_pos_map_t::const_iterator it = posMap.begin();
-         it != posMap.end(); ++it)
+    for (auto it = posMap.cbegin(); it != posMap.cend(); ++it)
     {
         if (it.key() <= last_index)
             continue;
@@ -265,12 +267,12 @@ bool DecoderBase::PosMapFromEnc(void)
     bool isEmpty = m_frameToDurMap.empty();
     if (!isEmpty)
     {
-        frm_pos_map_t::const_iterator it = m_frameToDurMap.end();
+        frm_pos_map_t::const_iterator it = m_frameToDurMap.cend();
         --it;
         last_index = it.key();
     }
-    for (frm_pos_map_t::const_iterator it = durMap.begin();
-         it != durMap.end(); ++it)
+    for (frm_pos_map_t::const_iterator it = durMap.cbegin();
+         it != durMap.cend(); ++it)
     {
         if (!isEmpty && it.key() <= last_index)
             continue; // we released the m_positionMapLock for a few ms...
@@ -280,7 +282,7 @@ bool DecoderBase::PosMapFromEnc(void)
 
     if (!m_frameToDurMap.empty())
     {
-        frm_pos_map_t::const_iterator it = m_frameToDurMap.end();
+        frm_pos_map_t::const_iterator it = m_frameToDurMap.cend();
         --it;
         LOG(VB_PLAYBACK, LOG_INFO, LOC +
             QString("Duration map filled from Encoder to: %1").arg(it.key()));
@@ -374,7 +376,7 @@ bool DecoderBase::SyncPositionMap(void)
     if (ret_val && m_keyframeDist > 0)
     {
         long long totframes = 0;
-        int length = 0;
+        std::chrono::seconds length = 0s;
 
         if (m_ringBuffer && m_ringBuffer->IsDVD())
         {
@@ -392,8 +394,8 @@ bool DecoderBase::SyncPositionMap(void)
         {
             QMutexLocker locker(&m_positionMapLock);
             totframes = m_positionMap.back().index * m_keyframeDist;
-            if (m_fps)
-                length = (int)((totframes * 1.0) / m_fps);
+            if (m_fps != 0.0)
+                length = secondsFromFloat((totframes * 1.0) / m_fps);
         }
 
         m_parent->SetFileLength(length, totframes);
@@ -403,7 +405,7 @@ bool DecoderBase::SyncPositionMap(void)
         LOG(VB_PLAYBACK, LOG_INFO, LOC +
             QString("SyncPositionMap, new totframes: %1, new length: %2, "
                     "posMap size: %3")
-                .arg(totframes).arg(length).arg(new_posmap_size));
+                .arg(totframes).arg(length.count()).arg(new_posmap_size));
     }
     m_recordingHasPositionMap |= (0 != new_posmap_size);
     {
@@ -474,8 +476,8 @@ bool DecoderBase::FindPosition(long long desired_value, bool search_adjusted,
             upper++;
     }
     // keep in bounds
-    lower = max(lower, 0LL);
-    upper = min(upper, size - 1LL);
+    lower = std::max(lower, 0LL);
+    upper = std::min(upper, size - 1LL);
 
     upper_bound = upper;
     lower_bound = lower;
@@ -523,8 +525,7 @@ uint64_t DecoderBase::SavePositionMapDelta(long long first, long long last)
     }
 
     frm_pos_map_t durMap;
-    for (frm_pos_map_t::const_iterator it = m_frameToDurMap.begin();
-         it != m_frameToDurMap.end(); ++it)
+    for (auto it = m_frameToDurMap.cbegin(); it != m_frameToDurMap.cend(); ++it)
     {
         if (it.key() < first)
             continue;
@@ -569,7 +570,7 @@ bool DecoderBase::DoRewind(long long desiredFrame, bool discardFrames)
     // And flush pre-seek frame if we are allowed to and need to..
     int normalframes = (uint64_t)(desiredFrame - (m_framesPlayed - 1)) > m_seekSnap
         ? desiredFrame - m_framesPlayed : 0;
-    normalframes = max(normalframes, 0);
+    normalframes = std::max(normalframes, 0);
     SeekReset(m_lastKey, normalframes, true, discardFrames);
 
     if (discardFrames || (m_ringBuffer && m_ringBuffer->IsDisc()))
@@ -721,7 +722,7 @@ bool DecoderBase::DoFastForward(long long desiredFrame, bool discardFrames)
 
     if (m_ringBuffer->IsDVD() &&
         !m_ringBuffer->IsInDiscMenuOrStillFrame() &&
-        m_ringBuffer->DVD()->TitleTimeLeft() < 5)
+        m_ringBuffer->DVD()->TitleTimeLeft() < 5s)
     {
         return false;
     }
@@ -732,7 +733,7 @@ bool DecoderBase::DoFastForward(long long desiredFrame, bool discardFrames)
     // that point the decoding is more than one frame ahead of display.
     if (desiredFrame+1 < m_framesPlayed)
         return DoRewind(desiredFrame, discardFrames);
-    desiredFrame = max(desiredFrame, m_framesPlayed);
+    desiredFrame = std::max(desiredFrame, m_framesPlayed);
 
     // Save rawframe state, for later restoration...
     bool oldrawstate = m_getRawFrames;
@@ -800,7 +801,7 @@ bool DecoderBase::DoFastForward(long long desiredFrame, bool discardFrames)
     // And flush pre-seek frame if we are allowed to and need to..
     int normalframes = (uint64_t)(desiredFrame - (m_framesPlayed - 1)) > m_seekSnap
         ? desiredFrame - m_framesPlayed : 0;
-    normalframes = max(normalframes, 0);
+    normalframes = std::max(normalframes, 0);
     SeekReset(m_lastKey, normalframes, needflush, discardFrames);
 
     if (discardFrames || m_transcoding)
@@ -905,38 +906,47 @@ bool DecoderBase::GetWaitForChange(void) const
     return m_waitingForChange;
 }
 
-QStringList DecoderBase::GetTracks(uint type) const
+uint DecoderBase::GetTrackCount(uint Type)
 {
+    QMutexLocker locker(&m_trackLock);
+    return static_cast<uint>(m_tracks[Type].size());
+}
+
+void DecoderBase::SetDecodeAllSubtitles(bool DecodeAll)
+{
+    m_trackLock.lock();
+    m_decodeAllSubtitles = DecodeAll;
+    m_trackLock.unlock();
+}
+
+QStringList DecoderBase::GetTracks(uint Type)
+{
+    QMutexLocker locker(&m_trackLock);
     QStringList list;
-
-    QMutexLocker locker(avcodeclock);
-
-    for (size_t i = 0; i < m_tracks[type].size(); i++)
-        list += GetTrackDesc(type, i);
-
+    for (size_t i = 0; i < m_tracks[Type].size(); i++)
+        list += GetTrackDesc(Type, static_cast<uint>(i));
     return list;
 }
 
-int DecoderBase::GetTrackLanguageIndex(uint type, uint trackNo) const
+int DecoderBase::GetTrackLanguageIndex(uint Type, uint TrackNo)
 {
-    if (trackNo >= m_tracks[type].size())
+    QMutexLocker locker(&m_trackLock);
+    if (TrackNo >= m_tracks[Type].size())
         return 0;
-
-    return m_tracks[type][trackNo].m_language_index;
+    return static_cast<int>(m_tracks[Type][TrackNo].m_language_index);
 }
 
-QString DecoderBase::GetTrackDesc(uint type, uint trackNo) const
+QString DecoderBase::GetTrackDesc(uint Type, uint TrackNo)
 {
-    if (trackNo >= m_tracks[type].size())
+    QMutexLocker locker(&m_trackLock);
+    if (TrackNo >= m_tracks[Type].size())
         return "";
 
-    QMutexLocker locker(avcodeclock);
-
-    QString type_msg = toString((TrackType)type);
-    int lang = m_tracks[type][trackNo].m_language;
-    int hnum = trackNo + 1;
-    if (kTrackTypeCC608 == type)
-        hnum = m_tracks[type][trackNo].m_stream_id;
+    QString type_msg = toString(static_cast<TrackType>(Type));
+    int lang = m_tracks[Type][TrackNo].m_language;
+    int hnum = static_cast<int>(TrackNo + 1);
+    if (kTrackTypeCC608 == Type)
+        hnum = m_tracks[Type][TrackNo].m_stream_id;
 
     if (!lang)
         return type_msg + QString(" %1").arg(hnum);
@@ -944,53 +954,84 @@ QString DecoderBase::GetTrackDesc(uint type, uint trackNo) const
     return type_msg + QString(" %1: %2").arg(hnum).arg(lang_msg);
 }
 
-int DecoderBase::SetTrack(uint type, int trackNo)
+int DecoderBase::GetTrack(uint Type)
 {
-    if (trackNo >= (int)m_tracks[type].size())
-        return -1;
-
-    QMutexLocker locker(avcodeclock);
-
-    m_currentTrack[type] = max(-1, trackNo);
-
-    if (m_currentTrack[type] < 0)
-        m_selectedTrack[type].m_av_stream_index = -1;
-    else
-    {
-        m_wantedTrack[type]   = m_tracks[type][m_currentTrack[type]];
-        m_selectedTrack[type] = m_tracks[type][m_currentTrack[type]];
-    }
-
-    return m_currentTrack[type];
+    QMutexLocker locker(&m_trackLock);
+    return m_currentTrack[Type];
 }
 
-StreamInfo DecoderBase::GetTrackInfo(uint type, uint trackNo) const
+int DecoderBase::SetTrack(uint Type, int TrackNo)
 {
-    // This locker causes a deadlock with DVDRingBuffer
-    // which is waiting while holding the lock.
-    // QMutexLocker locker(avcodeclock);
+    QMutexLocker locker(&m_trackLock);
+    if (TrackNo >= static_cast<int>(m_tracks[Type].size()))
+        return -1;
 
-    if (trackNo >= m_tracks[type].size())
+    m_currentTrack[Type] = std::max(-1, TrackNo);
+    if (m_currentTrack[Type] < 0)
+    {
+        m_selectedTrack[Type].m_av_stream_index = -1;
+    }
+    else
+    {
+        m_wantedTrack[Type]   = m_tracks[Type][static_cast<size_t>(m_currentTrack[Type])];
+        m_selectedTrack[Type] = m_tracks[Type][static_cast<size_t>(m_currentTrack[Type])];
+    }
+
+    return m_currentTrack[Type];
+}
+
+StreamInfo DecoderBase::GetTrackInfo(uint Type, uint TrackNo)
+{
+    QMutexLocker locker(&m_trackLock);
+    if (TrackNo >= m_tracks[Type].size())
     {
         StreamInfo si;
         return si;
     }
-
-    return m_tracks[type][trackNo];
+    return m_tracks[Type][TrackNo];
 }
 
-bool DecoderBase::InsertTrack(uint type, const StreamInfo &info)
+int DecoderBase::ChangeTrack(uint Type, int Dir)
 {
-    QMutexLocker locker(avcodeclock);
+    QMutexLocker locker(&m_trackLock);
 
-    for (auto & i : m_tracks[type])
-        if (info.m_stream_id == i.m_stream_id)
-            return false;
+    int next_track = -1;
+    int size = static_cast<int>(m_tracks[Type].size());
+    if (size)
+    {
+        if (Dir > 0)
+            next_track = (std::max(-1, m_currentTrack[Type]) + 1) % size;
+        else
+            next_track = (std::max(+0, m_currentTrack[Type]) + size - 1) % size;
+    }
+    return SetTrack(Type, next_track);
+}
 
-    m_tracks[type].push_back(info);
+int DecoderBase::NextTrack(uint Type)
+{
+    QMutexLocker locker(&m_trackLock);
+
+    int next_track = -1;
+    int size = static_cast<int>(m_tracks[Type].size());
+    if (size)
+        next_track = (std::max(0, m_currentTrack[Type]) + 1) % size;
+    return next_track;
+}
+
+bool DecoderBase::InsertTrack(uint Type, const StreamInfo &Info)
+{
+    QMutexLocker locker(&m_trackLock);
+
+    if (std::any_of(m_tracks[Type].cbegin(), m_tracks[Type].cend(),
+                    [&](const StreamInfo& Si) { return Si.m_stream_id == Info.m_stream_id; } ))
+    {
+        return false;
+    }
+
+    m_tracks[Type].push_back(Info);
 
     if (m_parent)
-        m_parent->TracksChanged(type);
+        emit m_parent->SignalTracksChanged(Type);
 
     return true;
 }
@@ -1010,41 +1051,38 @@ bool DecoderBase::InsertTrack(uint type, const StreamInfo &info)
  *
  *  \return track if a track was selected, -1 otherwise
  */
-int DecoderBase::AutoSelectTrack(uint type)
+int DecoderBase::AutoSelectTrack(uint Type)
 {
-    uint numStreams = m_tracks[type].size();
+    QMutexLocker locker(&m_trackLock);
 
-    if ((m_currentTrack[type] >= 0) &&
-        (m_currentTrack[type] < (int)numStreams))
-    {
-        return m_currentTrack[type]; // track already selected
-    }
+    uint numStreams = static_cast<uint>(m_tracks[Type].size());
+
+    if ((m_currentTrack[Type] >= 0) && (m_currentTrack[Type] < static_cast<int>(numStreams)))
+        return m_currentTrack[Type]; // track already selected
 
     if (!numStreams)
     {
-        m_currentTrack[type] = -1;
-        m_selectedTrack[type].m_av_stream_index = -1;
-        return -1; // no tracks available
+        m_currentTrack[Type] = -1;
+        m_selectedTrack[Type].m_av_stream_index = -1;
+        return -1;
     }
 
     int selTrack = (1 == numStreams) ? 0 : -1;
 
-    if ((selTrack < 0) &&
-        m_wantedTrack[type].m_language>=-1)
+    if ((selTrack < 0) && m_wantedTrack[Type].m_language>=-1)
     {
         LOG(VB_PLAYBACK, LOG_INFO, LOC + "Trying to reselect track");
         // Try to reselect user selected track stream.
         // This should find the stream after a commercial
         // break and in some cases after a channel change.
-        int  wlang = m_wantedTrack[type].m_language;
-        uint windx = m_wantedTrack[type].m_language_index;
+        int  wlang = m_wantedTrack[Type].m_language;
+        uint windx = m_wantedTrack[Type].m_language_index;
         for (uint i = 0; i < numStreams; i++)
         {
-            if (wlang == m_tracks[type][i].m_language)
+            if (wlang == m_tracks[Type][i].m_language)
             {
-                selTrack = i;
-
-                if (windx == m_tracks[type][i].m_language_index)
+                selTrack = static_cast<int>(i);
+                if (windx == m_tracks[Type][i].m_language_index)
                     break;
             }
         }
@@ -1057,8 +1095,7 @@ int DecoderBase::AutoSelectTrack(uint type)
         // in order of most preferred to least preferred language.
         // Third attribute is track order, preferring the earliest
         // track.
-        LOG(VB_PLAYBACK, LOG_INFO,
-            LOC + "Trying to select track (w/lang & forced)");
+        LOG(VB_PLAYBACK, LOG_INFO, LOC + "Trying to select track (w/lang & forced)");
         const int kForcedWeight   = (1 << 20);
         const int kLanguageWeight = (1 << 10);
         const int kPositionWeight = (1 << 0);
@@ -1066,47 +1103,55 @@ int DecoderBase::AutoSelectTrack(uint type)
         selTrack = 0;
         for (uint i = 0; i < numStreams; i++)
         {
-            int forced = (type == kTrackTypeSubtitle &&
-                          m_tracks[type][i].m_forced &&
-                          m_parent->ForcedSubtitlesFavored());
-            int position = numStreams - i;
+            bool forced = (Type == kTrackTypeSubtitle &&
+                           m_tracks[Type][i].m_forced &&
+                           m_parent->ForcedSubtitlesFavored());
+            int position = static_cast<int>(numStreams) - static_cast<int>(i);
             int language = 0;
-            for (uint j = 0;
-                 (language == 0) && (j < m_languagePreference.size()); ++j)
+            for (uint j = 0; (language == 0) && (j < m_languagePreference.size()); ++j)
             {
-                if (m_tracks[type][i].m_language == m_languagePreference[j])
-                    language = m_languagePreference.size() - j;
+                if (m_tracks[Type][i].m_language == m_languagePreference[j])
+                    language = static_cast<int>(m_languagePreference.size()) - static_cast<int>(j);
             }
-            int score = kForcedWeight * forced
-                + kLanguageWeight * language
-                + kPositionWeight * position;
+            int score = (kForcedWeight * static_cast<int>(forced)) +
+                        (kLanguageWeight * language) +
+                        (kPositionWeight * position);
             if (score > bestScore)
             {
                 bestScore = score;
-                selTrack = i;
+                selTrack = static_cast<int>(i);
             }
         }
     }
 
-    int oldTrack = m_currentTrack[type];
-    m_currentTrack[type] = selTrack;
-    StreamInfo tmp = m_tracks[type][m_currentTrack[type]];
-    m_selectedTrack[type] = tmp;
+    int oldTrack = m_currentTrack[Type];
+    m_currentTrack[Type] = selTrack;
+    StreamInfo tmp = m_tracks[Type][static_cast<size_t>(m_currentTrack[Type])];
+    m_selectedTrack[Type] = tmp;
 
-    if (m_wantedTrack[type].m_av_stream_index < 0)
-        m_wantedTrack[type] = tmp;
+    if (m_wantedTrack[Type].m_av_stream_index < 0)
+        m_wantedTrack[Type] = tmp;
 
-    int lang = m_tracks[type][m_currentTrack[type]].m_language;
-    LOG(VB_PLAYBACK, LOG_INFO, LOC +
-        QString("Selected track #%1 (type %2) in the %3 language(%4)")
-            .arg(m_currentTrack[type]+1)
-            .arg(type)
-            .arg(iso639_key_toName(lang)).arg(lang));
+    int lang = m_tracks[Type][static_cast<size_t>(m_currentTrack[Type])].m_language;
+    LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("Selected track #%1 (type %2) in the %3 language(%4)")
+            .arg(m_currentTrack[Type]+1).arg(Type).arg(iso639_key_toName(lang)).arg(lang));
 
-    if (m_parent && (oldTrack != m_currentTrack[type]))
-        m_parent->TracksChanged(type);
+    if (m_parent && (oldTrack != m_currentTrack[Type]))
+        emit m_parent->SignalTracksChanged(Type);
 
     return selTrack;
+}
+
+void DecoderBase::AutoSelectTracks(void)
+{
+    for (uint i = 0; i < kTrackTypeCount; i++)
+        AutoSelectTrack(i);
+}
+
+void DecoderBase::ResetTracks(void)
+{
+    QMutexLocker locker(&m_trackLock);
+    std::fill(m_currentTrack.begin(), m_currentTrack.end(), -1);
 }
 
 QString toString(TrackType type)
@@ -1198,7 +1243,7 @@ void DecoderBase::SaveTotalDuration(void)
     if (!m_playbackInfo || av_q2d(m_totalDuration) == 0)
         return;
 
-    m_playbackInfo->SaveTotalDuration(1000000 * av_q2d(m_totalDuration));
+    m_playbackInfo->SaveTotalDuration(millisecondsFromFloat(1000 * av_q2d(m_totalDuration)));
 }
 
 void DecoderBase::SaveTotalFrames(void)
@@ -1263,7 +1308,7 @@ uint64_t DecoderBase::TranslatePosition(const frm_pos_map_t &map,
 
 // Convert from an absolute frame number (not cutlist adjusted) to its
 // cutlist-adjusted position in milliseconds.
-uint64_t DecoderBase::TranslatePositionFrameToMs(long long position,
+std::chrono::milliseconds DecoderBase::TranslatePositionFrameToMs(long long position,
                                                  float fallback_framerate,
                                                  const frm_dir_map_t &cutlist)
 {
@@ -1275,7 +1320,7 @@ uint64_t DecoderBase::TranslatePositionFrameToMs(long long position,
     // somewhat arbitrary value).
     if (!m_frameToDurMap.empty())
     {
-        frm_pos_map_t::const_iterator it = m_frameToDurMap.end();
+        frm_pos_map_t::const_iterator it = m_frameToDurMap.cend();
         --it;
         if (position > it.key())
         {
@@ -1285,20 +1330,20 @@ uint64_t DecoderBase::TranslatePositionFrameToMs(long long position,
                 SyncPositionMap();
         }
     }
-    return TranslatePositionAbsToRel(cutlist, position, m_frameToDurMap,
-                                     1000 / fallback_framerate);
+    return std::chrono::milliseconds(TranslatePositionAbsToRel(cutlist, position, m_frameToDurMap,
+                                     1000 / fallback_framerate));
 }
 
 // Convert from a cutlist-adjusted position in milliseconds to its
 // absolute frame number (not cutlist-adjusted).
-uint64_t DecoderBase::TranslatePositionMsToFrame(uint64_t dur_ms,
+uint64_t DecoderBase::TranslatePositionMsToFrame(std::chrono::milliseconds dur_ms,
                                                  float fallback_framerate,
                                                  const frm_dir_map_t &cutlist)
 {
     QMutexLocker locker(&m_positionMapLock);
     // Convert relative position in milliseconds (cutlist-adjusted) to
     // its absolute position in milliseconds (not cutlist-adjusted).
-    uint64_t ms = TranslatePositionRelToAbs(cutlist, dur_ms, m_frameToDurMap,
+    uint64_t ms = TranslatePositionRelToAbs(cutlist, dur_ms.count(), m_frameToDurMap,
                                             1000 / fallback_framerate);
     // Convert absolute position in milliseconds to its absolute frame
     // number.
@@ -1400,17 +1445,13 @@ DecoderBase::TranslatePositionRelToAbs(const frm_dir_map_t &deleteMap,
  * \note Most hardware decoders will only provide one software frame format.
  * \note Currently only the OpenGL renderer supports anything other than FMT_YV12/AV_PIX_FMT_YUV420P
 */
-AVPixelFormat DecoderBase::GetBestVideoFormat(AVPixelFormat* Formats)
+AVPixelFormat DecoderBase::GetBestVideoFormat(AVPixelFormat* Formats, const VideoFrameTypes* RenderFormats)
 {
-    if (m_parent)
+    for (AVPixelFormat *format = Formats; *format != AV_PIX_FMT_NONE; format++)
     {
-        VideoFrameType* mythfmts = m_parent->DirectRenderFormats();
-        for (AVPixelFormat *format = Formats; *format != AV_PIX_FMT_NONE; format++)
-        {
-            for (VideoFrameType* mythfmt = mythfmts; *mythfmt != FMT_NONE; mythfmt++)
-                if (FrameTypeToPixelFormat(*mythfmt) == *format)
-                    return *format;
-        }
+        for (auto fmt : *RenderFormats)
+            if (MythAVUtil::FrameTypeToPixelFormat(fmt) == *format)
+                return *format;
     }
     return AV_PIX_FMT_NONE;
 }

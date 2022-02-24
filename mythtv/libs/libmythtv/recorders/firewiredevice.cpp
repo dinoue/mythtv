@@ -24,8 +24,8 @@
 
 static void fw_init(QMap<uint64_t,QString> &id_to_model);
 
-QMap<uint64_t,QString> FirewireDevice::s_id_to_model;
-QMutex                 FirewireDevice::s_static_lock;
+QMap<uint64_t,QString> FirewireDevice::s_idToModel;
+QMutex                 FirewireDevice::s_staticLock;
 
 FirewireDevice::FirewireDevice(uint64_t guid, uint subunitid, uint speed) :
     m_guid(guid),           m_subunitid(subunitid),
@@ -54,10 +54,7 @@ void FirewireDevice::RemoveListener(TSDataListener *listener)
     {
         it = find(m_listeners.begin(), m_listeners.end(), listener);
         if (it != m_listeners.end())
-        {
-            m_listeners.erase(it);
-            it = m_listeners.begin();
-        }
+            it = m_listeners.erase(it);
     }
     while (it != m_listeners.end());
 
@@ -69,8 +66,8 @@ bool FirewireDevice::SetPowerState(bool on)
 {
     QMutexLocker locker(&m_lock);
 
-    vector<uint8_t> cmd;
-    vector<uint8_t> ret;
+    std::vector<uint8_t> cmd;
+    std::vector<uint8_t> ret;
 
     cmd.push_back(kAVCControlCommand);
     cmd.push_back(kAVCSubunitTypeUnit | kAVCSubunitIdIgnore);
@@ -103,8 +100,8 @@ FirewireDevice::PowerState FirewireDevice::GetPowerState(void)
 {
     QMutexLocker locker(&m_lock);
 
-    vector<uint8_t> cmd;
-    vector<uint8_t> ret;
+    std::vector<uint8_t> cmd;
+    std::vector<uint8_t> ret;
 
     cmd.push_back(kAVCStatusInquiryCommand);
     cmd.push_back(kAVCSubunitTypeUnit | kAVCSubunitIdIgnore);
@@ -162,10 +159,11 @@ bool FirewireDevice::SetChannel(const QString &panel_model,
         return false;
     }
 
-    int digit[3];
-    digit[0] = (channel % 1000) / 100;
-    digit[1] = (channel % 100)  / 10;
-    digit[2] = (channel % 10);
+    std::array<uint,3> digit {
+        (channel % 1000) / 100,
+        (channel % 100)  / 10,
+        (channel % 10)
+    };
 
     if (m_subunitid >= kAVCSubunitIdExtended)
     {
@@ -175,8 +173,8 @@ bool FirewireDevice::SetChannel(const QString &panel_model,
         return false;
     }
 
-    vector<uint8_t> cmd;
-    vector<uint8_t> ret;
+    std::vector<uint8_t> cmd;
+    std::vector<uint8_t> ret;
 
     if ((panel_model.toUpper() == "SA GENERIC") ||
         (panel_model.toUpper() == "SA4200HD") ||
@@ -224,16 +222,16 @@ bool FirewireDevice::SetChannel(const QString &panel_model,
 
     // the PACE is obviously not a Motorola channel changer, but the
     // same commands work for it as the Motorola.
-    bool is_mot = ((panel_model.toUpper().startsWith("DCT-")) ||
-                   (panel_model.toUpper().startsWith("DCH-")) ||
-                   (panel_model.toUpper().startsWith("DCX-")) ||
-                   (panel_model.toUpper().startsWith("QIP-")) ||
-                   (panel_model.toUpper().startsWith("MOTO")) ||
-                   (panel_model.toUpper().startsWith("PACE-")));
+    bool is_mot = ((panel_model.startsWith("DCT-", Qt::CaseInsensitive)) ||
+                   (panel_model.startsWith("DCH-", Qt::CaseInsensitive)) ||
+                   (panel_model.startsWith("DCX-", Qt::CaseInsensitive)) ||
+                   (panel_model.startsWith("QIP-", Qt::CaseInsensitive)) ||
+                   (panel_model.startsWith("MOTO", Qt::CaseInsensitive)) ||
+                   (panel_model.startsWith("PACE-", Qt::CaseInsensitive)));
 
     if (is_mot && !alt_method)
     {
-        for (int d : digit)
+        for (uint d : digit)
         {
             cmd.clear();
             cmd.push_back(kAVCControlCommand);
@@ -248,7 +246,7 @@ bool FirewireDevice::SetChannel(const QString &panel_model,
             if (!SendAVCCommand(cmd, ret, -1))
                 return false;
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            std::this_thread::sleep_for(500ms);
         }
 
         SetLastChannel(channel);
@@ -311,7 +309,7 @@ void FirewireDevice::BroadcastToListeners(
     if ((dataSize >= TSPacket::kSize) && (data[0] == SYNC_BYTE) &&
         ((data[1] & 0x1f) == 0) && (data[2] == 0))
     {
-        ProcessPATPacket(*((const TSPacket*)data));
+        ProcessPATPacket(*(reinterpret_cast<const TSPacket*>(data)));
     }
 
     for (auto & listener : m_listeners)
@@ -320,11 +318,11 @@ void FirewireDevice::BroadcastToListeners(
 
 void FirewireDevice::SetLastChannel(const uint channel)
 {
-    m_buffer_cleared = (channel == m_last_channel);
-    m_last_channel   = channel;
+    m_bufferCleared = (channel == m_lastChannel);
+    m_lastChannel   = channel;
 
     LOG(VB_GENERAL, LOG_INFO, QString("SetLastChannel(%1): cleared: %2")
-            .arg(channel).arg(m_buffer_cleared ? "yes" : "no"));
+            .arg(channel).arg(m_bufferCleared ? "yes" : "no"));
 }
 
 void FirewireDevice::ProcessPATPacket(const TSPacket &tspacket)
@@ -334,12 +332,12 @@ void FirewireDevice::ProcessPATPacket(const TSPacket &tspacket)
     {
         PSIPTable pes(tspacket);
         uint crc = pes.CalcCRC();
-        m_buffer_cleared |= (crc != m_last_crc);
-        m_last_crc = crc;
+        m_bufferCleared |= (crc != m_lastCrc);
+        m_lastCrc = crc;
 #if 0
         LOG(VB_RECORD, LOG_DEBUG, LOC +
             QString("ProcessPATPacket: CRC 0x%1 cleared: %2")
-                .arg(crc,0,16).arg(m_buffer_cleared ? "yes" : "no"));
+                .arg(crc,0,16).arg(m_bufferCleared ? "yes" : "no"));
 #endif
     }
     else
@@ -350,20 +348,20 @@ void FirewireDevice::ProcessPATPacket(const TSPacket &tspacket)
 
 QString FirewireDevice::GetModelName(uint vendor_id, uint model_id)
 {
-    QMutexLocker locker(&s_static_lock);
-    if (s_id_to_model.empty())
-        fw_init(s_id_to_model);
+    QMutexLocker locker(&s_staticLock);
+    if (s_idToModel.empty())
+        fw_init(s_idToModel);
 
-    QString ret = s_id_to_model[(((uint64_t) vendor_id) << 32) | model_id];
+    QString ret = s_idToModel[(((uint64_t) vendor_id) << 32) | model_id];
 
     if (ret.isEmpty())
         return "MOTO GENERIC";
     return ret;
 }
 
-vector<AVCInfo> FirewireDevice::GetSTBList(void)
+std::vector<AVCInfo> FirewireDevice::GetSTBList(void)
 {
-    vector<AVCInfo> list;
+    std::vector<AVCInfo> list;
 
 #ifdef USING_LINUX_FIREWIRE
     list = LinuxFirewireDevice::GetSTBList();
@@ -396,7 +394,7 @@ vector<AVCInfo> FirewireDevice::GetSTBList(void)
 
 static void fw_init(QMap<uint64_t,QString> &id_to_model)
 {
-    const uint64_t sa_vendor_ids[] =
+    const std::array<const uint64_t,16> sa_vendor_ids
     {
         0x0a73,    0x0f21,    0x11e6,    0x14f8,    0x1692,    0x1868,
         0x1947,    0x1ac3,    0x1bd7,    0x1cea,    0x1e6b,    0x21be,
@@ -411,7 +409,7 @@ static void fw_init(QMap<uint64_t,QString> &id_to_model)
         id_to_model[vendor_id << 32 | 0x22ce] = "SA8300HD";
     }
 
-    const uint64_t motorola_vendor_ids[] =
+    const std::array<uint64_t,59> motorola_vendor_ids
     {
         /* DCH-3200, DCX-3200 */
         0x1c11,    0x1cfb,    0x1fc4,    0x23a3,    0x23ee,    0x25f1,
@@ -441,7 +439,6 @@ static void fw_init(QMap<uint64_t,QString> &id_to_model)
         0x1626,    0x18c0,    0x1ade,    0x1cfb,    0x2040,    0x2180,
         0x2210,    0x230b,    0x2375,    0x2395,    0x23a2,    0x23ed,
         0x23ee,    0x23a0,    0x23a1,
-
     };
 
     for (uint64_t vendor_id : motorola_vendor_ids)
@@ -469,7 +466,7 @@ static void fw_init(QMap<uint64_t,QString> &id_to_model)
         id_to_model[vendor_id << 32 | 0x0001] = "QIP-7100";
     }
 
-    const uint64_t pace_vendor_ids[] =
+    const std::array<const uint64_t,2> pace_vendor_ids
     {
         /* PACE 550-HD & 779 */
         0x1cc3, 0x5094,

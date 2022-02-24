@@ -11,13 +11,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <QtGlobal>
 #include <QKeyEvent>
 #include <QEvent>
-#include <QTextCodec>
 #include <QWidget>
 #include <QApplication>
 #include <QString>
-#include <QRegExp>
 #include <QFileInfo>
 #include <QDir>
 
@@ -43,8 +42,6 @@
 #define LOC_WARN QString("MythScreenWizard, Warning: ")
 #define LOC_ERR  QString("MythScreenWizard, Error: ")
 
-using namespace std;
-
 namespace
 {
     void cleanup()
@@ -55,8 +52,6 @@ namespace
         gContext = nullptr;
 
         ReferenceCounter::PrintDebug();
-
-        delete qApp;
 
         SignalHandler::Done();
     }
@@ -82,7 +77,6 @@ static bool resetTheme(QString themedir, const QString badtheme)
     MythTranslation::reload();
     GetMythUI()->LoadQtConfig();
     GetMythMainWindow()->Init();
-    GetMythMainWindow()->ReinitDone();
 
     return RunMenu(themedir, themename);
 }
@@ -121,8 +115,8 @@ int main(int argc, char **argv)
         return GENERIC_EXIT_OK;
     }
 
-    MythDisplay::ConfigureQtGUI();
-    new QApplication(argc, argv);
+    MythDisplay::ConfigureQtGUI(1, cmdline);
+    QApplication a(argc, argv);
     QCoreApplication::setApplicationName(MYTH_APPNAME_MYTHSCREENWIZARD);
 
     QString mask("general");
@@ -136,7 +130,7 @@ int main(int argc, char **argv)
     QList<int> signallist;
     signallist << SIGINT << SIGTERM << SIGSEGV << SIGABRT << SIGBUS << SIGFPE
                << SIGILL;
-#if ! CONFIG_DARWIN
+#ifndef Q_OS_DARWIN
     signallist << SIGRTMIN;
 #endif
     SignalHandler::Init(signallist);
@@ -146,11 +140,6 @@ int main(int argc, char **argv)
 
     if ((retval = cmdline.ConfigureLogging()) != GENERIC_EXIT_OK)
         return retval;
-
-    if (!cmdline.toString("display").isEmpty())
-    {
-        MythUIHelper::SetX11Display(cmdline.toString("display"));
-    }
 
     gContext = new MythContext(MYTH_BINARY_VERSION);
     if (!gContext->Init(true, false, true))
@@ -177,8 +166,6 @@ int main(int argc, char **argv)
     gCoreContext->OverrideSettingForSession("GuiHeight",  "0");
 
     cmdline.ApplySettingsOverride();
-
-    GetMythUI()->LoadQtConfig();
 
     QString themename = gCoreContext->GetSetting("Theme", DEFAULT_UI_THEME);
     QString themedir = GetMythUI()->FindThemeDir(themename);
@@ -214,7 +201,7 @@ int main(int argc, char **argv)
 */
 
     startAppearWiz(GuiOffsetX, GuiOffsetY, GuiWidth, GuiHeight);
-    int exitCode = qApp->exec();
+    int exitCode = QCoreApplication::exec();
 
 /*
     if (sysEventHandler)

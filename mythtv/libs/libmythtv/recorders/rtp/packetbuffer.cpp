@@ -9,19 +9,25 @@
 
 // MythTV headers
 #include "packetbuffer.h"
-#include "compat.h" // for random on windows
+#include "mythrandom.h"
 
 PacketBuffer::PacketBuffer(unsigned int bitrate) :
     m_bitrate(bitrate),
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
     m_next_empty_packet_key(0ULL)
 {
     while (!m_next_empty_packet_key)
     {
         m_next_empty_packet_key =
-            (random() << 24) ^ (random() << 16) ^
-            (random() << 8) ^ random();
+            (MythRandom() << 24) ^ (MythRandom() << 16) ^
+            (MythRandom() << 8) ^ MythRandom();
     }
 }
+#else
+    m_next_empty_packet_key(MythRandom64())
+{
+}
+#endif
 
 bool PacketBuffer::HasAvailablePacket(void) const
 {

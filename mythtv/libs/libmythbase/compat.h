@@ -2,11 +2,12 @@
 // Simple header which encapsulates platform incompatibilities, so we
 // do not need to litter the codebase with ifdefs.
 
-#ifndef __COMPAT_H__
-#define __COMPAT_H__
+#ifndef COMPAT_H
+#define COMPAT_H
 
 #ifdef __cplusplus
 #    include <cstdio>         // for snprintf(), used by inline dlerror()
+#    include <QtGlobal>       // for Q_OS_XXX
 #else
 #    include <stdio.h>        // for snprintf(), used by inline dlerror()
 #endif
@@ -49,11 +50,13 @@
 #    include <sys/wait.h>     // For WIFEXITED on Mac OS X
 #endif
 
-#ifdef _WIN32
-#    include <cstdlib>       // for rand()
-#    include <ctime>
-#    include <sys/time.h>
-#    include <sys/types.h>    // suseconds_t
+#ifdef _MSC_VER
+    #include <cstdlib>       // for rand()
+    #include <ctime>
+    #include <sys/time.h>
+#endif
+#if defined(USING_MINGW)
+    #include <time.h>
 #endif
 
 #ifdef _MSC_VER
@@ -137,18 +140,23 @@
 //used in videodevice only - that code is not windows-compatible anyway
 #    define minor(X) 0
 
-    using uint = unsigned int;
+	#if defined(__cplusplus)
+            using uint = unsigned int;
+        #else
+            typedef unsigned int uint;
+   #endif
 #endif
 
 #if defined(__cplusplus) && defined(_WIN32)
 #   include <QtGlobal>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5,10,0)
+#if QT_VERSION >= QT_VERSION_CHECK(5,10,0) && !defined(USING_MINGW)
     #include <QRandomGenerator>
     static inline void srandom(unsigned int /*seed*/) { }
     static inline long int random(void)
         { return QRandomGenerator::global()->generate64(); }
 #else
+    // cppcheck-suppress qsrandCalled
     static inline void srandom(unsigned int seed) { qsrand(seed); }
     static inline long int random(void) { return qrand(); }
 #endif
@@ -156,11 +164,6 @@
 #   define setenv(x, y, z) ::SetEnvironmentVariableA(x, y)
 #   define unsetenv(x) 0
 
-    inline unsigned sleep(unsigned int x)
-    {
-        Sleep(x * 1000);
-        return 0;
-    }
 
     struct statfs {
     //   long    f_type;     /* type of filesystem */
@@ -220,8 +223,6 @@
 #    define SIGCONT 18
 #    define SIGSTOP 19
 
-#    define S_IRGRP 0
-#    define S_IROTH 0
 #    define O_SYNC 0
 
     #define mkfifo(path, mode) \
@@ -263,7 +264,7 @@
 #    define seteuid(x) 0
 #endif // _WIN32
 
-#if defined(_WIN32) && !defined(gmtime_r)
+#if defined(_MSC_VER) && !defined(gmtime_r)
 // FFmpeg libs already have a workaround, use it if the headers are included,
 // use this otherwise.
 static __inline struct tm *gmtime_r(const time_t *timep, struct tm *result)
@@ -280,7 +281,7 @@ static __inline struct tm *gmtime_r(const time_t *timep, struct tm *result)
 }
 #endif
 
-#if defined(_WIN32) && !defined(localtime_r)
+#if defined(_MSC_VER) && !defined(localtime_r)
 // FFmpeg libs already have a workaround, use it if the headers are included,
 // use this otherwise.
 static __inline struct tm *localtime_r(const time_t *timep, struct tm *result)
@@ -297,26 +298,6 @@ static __inline struct tm *localtime_r(const time_t *timep, struct tm *result)
 #endif
 
 #ifdef _WIN32
-#    define    timeradd(a, b, result)                    \
-    do {                                                \
-      (result)->tv_sec = (a)->tv_sec + (b)->tv_sec;     \
-      (result)->tv_usec = (a)->tv_usec + (b)->tv_usec;  \
-      if ((result)->tv_usec >= 1000000)                 \
-      {                                                 \
-          ++(result)->tv_sec;                           \
-          (result)->tv_usec -= 1000000;                 \
-      }                                                 \
-  } while (0)
-#    define    timersub(a, b, result)                    \
-    do {                                                \
-      (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;     \
-      (result)->tv_usec = (a)->tv_usec - (b)->tv_usec;  \
-      if ((result)->tv_usec < 0) {                      \
-          --(result)->tv_sec;                           \
-         (result)->tv_usec += 1000000;                  \
-      }                                                 \
-  } while (0)
-
 // TODO this stuff is not implemented yet
 #    define daemon(x, y) -1
 #    define getloadavg(x, y) -1
@@ -328,22 +309,16 @@ static __inline struct tm *localtime_r(const time_t *timep, struct tm *result)
 #    define WEXITSTATUS(w) (((w) >> 8) & 0xff)
 #    define WTERMSIG(w)    ((w) & 0x7f)
 
-    using suseconds_t = long;
-
 #endif // _WIN32
 
 #include <sys/param.h>  // Defines BSD on FreeBSD, Mac OS X
 
 #include "mythconfig.h"
 
-#if CONFIG_DARWIN && ! defined (_SUSECONDS_T)
-    using suseconds_t = int32_t;   // 10.3 or earlier don't have this
-#endif
-
 // Libdvdnav now uses off64_t lseek64(), which BSD/Darwin doesn't have.
 // Luckily, its lseek() is already 64bit compatible
 #ifdef BSD
-    typedef off_t off64_t; //NOLINT(modernize-use-using)included from C code
+    typedef off_t off64_t; //NOLINT(modernize-use-using) included from dvdnav C code
     #define lseek64(f,o,w) lseek(f,o,w)
 #endif
 
@@ -355,47 +330,7 @@ static __inline struct tm *localtime_r(const time_t *timep, struct tm *result)
 #  endif
 #endif
 
-#ifdef _WIN32
-#    define fseeko(stream, offset, whence) fseeko64(stream, offset, whence)
-#    define ftello(stream) ftello64(stream)
-#endif
-
-#if defined(USING_MINGW) && defined(FILENAME_MAX)
-#    include <cerrno>
-#    include <cstddef>
-#    include <cstring>
-#    include <dirent.h>
-    static inline int readdir_r(
-        DIR *dirp, struct dirent *entry, struct dirent **result)
-    {
-        errno = 0;
-        struct dirent *tmp = readdir(dirp);
-        if (tmp && entry)
-        {
-            int offset = offsetof(struct dirent, d_name);
-            memcpy(entry, tmp, offset);
-            strncpy(entry->d_name, tmp->d_name, FILENAME_MAX);
-            tmp->d_name[strlen(entry->d_name)] = '\0';
-            if (result)
-                *result = entry;
-            return 0;
-        }
-        else
-        {
-            if (result)
-                *result = nullptr;
-            return errno;
-        }
-    }
-#endif
-
-#ifdef _WIN32
-#    define PREFIX64 "I64"
-#else
-#    define PREFIX64 "ll"
-#endif
-
-#ifdef ANDROID
+#ifdef Q_OS_ANDROID
 #ifndef S_IREAD
 #define S_IREAD S_IRUSR
 #endif
@@ -418,4 +353,8 @@ static __inline struct tm *localtime_r(const time_t *timep, struct tm *result)
 #   define LZO_COMPILE_TIME_ASSERT( a )
 #endif
 
-#endif // __COMPAT_H__
+#ifndef O_NONBLOCK
+#   define O_NONBLOCK    04000
+#endif
+
+#endif // COMPAT_H

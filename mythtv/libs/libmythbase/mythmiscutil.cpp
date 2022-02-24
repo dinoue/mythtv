@@ -1,13 +1,15 @@
+#ifdef _WIN32
+    #include <sys/stat.h>
+#endif
 
 #include "mythmiscutil.h"
 
 // C++ headers
+#include <array>
 #include <cerrno>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
-
-using namespace std;
 
 // POSIX
 #include <unistd.h>
@@ -16,14 +18,15 @@ using namespace std;
 
 // System specific C headers
 #include "compat.h"
+#include <QtGlobal>
 
-#ifdef linux
+#ifdef __linux__
 #include <sys/vfs.h>
 #include <sys/sysinfo.h>
 #include <sys/stat.h> // for umask, chmod
 #endif
 
-#if CONFIG_DARWIN
+#ifdef Q_OS_DARWIN
 #include <mach/mach.h>
 #endif
 
@@ -45,6 +48,8 @@ using namespace std;
 #include <QUrl>
 #include <QHostAddress>
 #include <QDataStream>
+#include <QRegularExpression>
+#include <QRegularExpressionMatchIterator>
 
 // Myth headers
 #include "mythcorecontext.h"
@@ -54,13 +59,16 @@ using namespace std;
 #include "mythcoreutil.h"
 #include "mythsystemlegacy.h"
 
-#include "mythconfig.h" // for CONFIG_DARWIN
+
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
+#define qEnvironmentVariable getenv
+#endif
 
 /** \fn getUptime(time_t&)
  *  \brief Returns uptime statistics.
  *  \return true if successful, false otherwise.
  */
-bool getUptime(time_t &uptime)
+bool getUptime(std::chrono::seconds &uptime)
 {
 #ifdef __linux__
     struct sysinfo sinfo {};
@@ -69,27 +77,25 @@ bool getUptime(time_t &uptime)
         LOG(VB_GENERAL, LOG_ERR, "sysinfo() error");
         return false;
     }
-    uptime = sinfo.uptime;
+    uptime = std::chrono::seconds(sinfo.uptime);
 
-#elif defined(__FreeBSD__) || CONFIG_DARWIN
+#elif defined(__FreeBSD__) || defined(Q_OS_DARWIN)
 
-    int            mib[2];
+    std::array<int,2> mib { CTL_KERN, KERN_BOOTTIME };
     struct timeval bootTime;
     size_t         len;
 
     // Uptime is calculated. Get this machine's boot time
     // and subtract it from the current machine time
     len    = sizeof(bootTime);
-    mib[0] = CTL_KERN;
-    mib[1] = KERN_BOOTTIME;
-    if (sysctl(mib, 2, &bootTime, &len, nullptr, 0) == -1)
+    if (sysctl(mib.data(), 2, &bootTime, &len, nullptr, 0) == -1)
     {
         LOG(VB_GENERAL, LOG_ERR, "sysctl() error");
         return false;
     }
-    uptime = time(nullptr) - bootTime.tv_sec;
+    uptime = std::chrono::seconds(time(nullptr) - bootTime.tv_sec);
 #elif defined(_WIN32)
-    uptime = ::GetTickCount() / 1000;
+    uptime = std::chrono::seconds(::GetTickCount() / 1000);
 #else
     // Hmmm. Not Linux, not FreeBSD or Darwin. What else is there :-)
     LOG(VB_GENERAL, LOG_NOTICE, "Unknown platform. How do I get the uptime?");
@@ -122,7 +128,7 @@ bool getMemStats(int &totalMB, int &freeMB, int &totalVM, int &freeVM)
     totalVM = (int)((sinfo.totalswap * sinfo.mem_unit)/MB);
     freeVM  = (int)((sinfo.freeswap  * sinfo.mem_unit)/MB);
     return true;
-#elif CONFIG_DARWIN
+#elif defined(Q_OS_DARWIN)
     mach_port_t             mp;
     mach_msg_type_number_t  count;
     vm_size_t               pageSize;
@@ -164,6 +170,22 @@ bool getMemStats(int &totalMB, int &freeMB, int &totalVM, int &freeVM)
     Q_UNUSED(freeVM);
     return false;
 #endif
+}
+
+/** \fn getLoadAvgs()
+ *  \brief Returns the system load averages.
+ *  \return A std::array<double,3> containing the system load
+ *          averages.  If the system call fails or is unsupported,
+ *          returns array containing all -1.
+ */
+loadArray getLoadAvgs (void)
+{
+#if !defined(_WIN32) && !defined(Q_OS_ANDROID)
+    loadArray loads {};
+    if (getloadavg(loads.data(), loads.size()) != -1)
+        return loads;
+#endif
+    return {-1, -1, -1};
 }
 
 /**
@@ -225,11 +247,11 @@ bool hasUtf8(const char *str)
  * determine what parameter that platform's ping requires to specify
  * the timeout and add another case to the \#ifdef statement.
  */
-bool ping(const QString &host, int timeout)
+bool ping(const QString &host, std::chrono::milliseconds timeout)
 {
 #ifdef _WIN32
     QString cmd = QString("%systemroot%\\system32\\ping.exe -w %1 -n 1 %2>NUL")
-                  .arg(timeout*1000).arg(host);
+                  .arg(timeout.count()) .arg(host);
 
     return myth_system(cmd, kMSDontBlockInputDevs | kMSDontDisableDrawing |
                          kMSProcessEvents) == GENERIC_EXIT_OK;
@@ -237,20 +259,22 @@ bool ping(const QString &host, int timeout)
     QString addrstr =
         MythCoreContext::resolveAddress(host, gCoreContext->ResolveAny, true);
     QHostAddress addr = QHostAddress(addrstr);
-#if defined(__FreeBSD__) || CONFIG_DARWIN
+#if defined(__FreeBSD__) || defined(Q_OS_DARWIN)
     QString timeoutparam("-t");
 #else
     // Linux, NetBSD, OpenBSD
     QString timeoutparam("-w");
-#endif
+#endif // UNIX-like
     QString pingcmd =
         addr.protocol() == QAbstractSocket::IPv6Protocol ? "ping6" : "ping";
     QString cmd = QString("%1 %2 %3 -c 1  %4  >/dev/null 2>&1")
-                  .arg(pingcmd).arg(timeoutparam).arg(timeout).arg(host);
+                  .arg(pingcmd, timeoutparam,
+                       QString::number(duration_cast<std::chrono::seconds>(timeout).count()),
+                       host);
 
     return myth_system(cmd, kMSDontBlockInputDevs | kMSDontDisableDrawing |
                          kMSProcessEvents) == GENERIC_EXIT_OK;
-#endif
+#endif // _WIN32
 }
 
 /**
@@ -266,7 +290,7 @@ bool telnet(const QString &host, int port)
     return connected;
 }
 
-/** \fn copy(QFile&,QFile&,uint)
+/**
  *  \brief Copies src file to dst file.
  *
  *   If the dst file is open, it must be open for writing.
@@ -287,7 +311,7 @@ bool telnet(const QString &host, int port)
  *                    otherwise the default of 16 KB will be used.
  *  \return bytes copied on success, -1 on failure.
  */
-long long copy(QFile &dst, QFile &src, uint block_size)
+long long MythFile::copy(QFile &dst, QFile &src, uint block_size)
 {
     uint buflen = (block_size < 1024) ? (16 * 1024) : block_size;
     char *buf = new char[buflen];
@@ -437,18 +461,18 @@ bool makeFileAccessible(const QString& filename)
 QString getResponse(const QString &query, const QString &def)
 {
     QByteArray tmp = query.toLocal8Bit();
-    cout << tmp.constData();
+    std::cout << tmp.constData();
 
     tmp = def.toLocal8Bit();
-    if (def.size())
-        cout << " [" << tmp.constData() << "]  ";
+    if (!def.isEmpty())
+        std::cout << " [" << tmp.constData() << "]  ";
     else
-        cout << "  ";
+        std::cout << "  ";
 
     if (!isatty(fileno(stdin)) || !isatty(fileno(stdout)))
     {
-        cout << endl << "[console is not interactive, using default '"
-             << tmp.constData() << "']" << endl;
+        std::cout << std::endl << "[console is not interactive, using default '"
+             << tmp.constData() << "']" << std::endl;
         return def;
     }
 
@@ -554,7 +578,7 @@ bool IsMACAddress(const QString& MAC)
             LOG(VB_NETWORK, LOG_ERR,
                 QString("IsMACAddress(%1) = false, unable to "
                         "convert part '%2' to integer.")
-                    .arg(MAC).arg(tokens[y]));
+                    .arg(MAC, tokens[y]));
             return false;
         }
 
@@ -615,10 +639,9 @@ QString FileHash(const QString& filename)
 
 bool WakeOnLAN(const QString& MAC)
 {
-    char msg[1024] = "\xFF\xFF\xFF\xFF\xFF\xFF";
-    int  msglen = 6;
+    std::vector<char> msg(6, static_cast<char>(0xFF));
+    std::array<char,6> macaddr {};
     QStringList tokens = MAC.split(':');
-    int macaddr[6];
 
     if (tokens.size() != 6)
     {
@@ -640,21 +663,22 @@ bool WakeOnLAN(const QString& MAC)
         }
     }
 
+    msg.reserve(1024);
     for (int x = 0; x < 16; x++)
-        for (int y : macaddr)
-            msg[msglen++] = y;
+        msg.insert(msg.end(), macaddr.cbegin(), macaddr.cend());
 
     LOG(VB_NETWORK, LOG_INFO,
             QString("WakeOnLan(): Sending WOL packet to %1").arg(MAC));
 
     QUdpSocket udp_socket;
+    qlonglong msglen = msg.size();
     return udp_socket.writeDatagram(
-        msg, msglen, QHostAddress::Broadcast, 32767) == msglen;
+        msg.data(), msglen, QHostAddress::Broadcast, 32767) == msglen;
 }
 
 // Wake up either by command or by MAC address
 // return true = success
-bool MythWakeup(const QString &wakeUpCommand, uint flags, uint timeout)
+bool MythWakeup(const QString &wakeUpCommand, uint flags, std::chrono::seconds timeout)
 {
     if (!IsMACAddress(wakeUpCommand))
         return myth_system(wakeUpCommand, flags, timeout) == 0U;
@@ -668,7 +692,7 @@ bool IsPulseAudioRunning(void)
     return false;
 #else
 
-#if CONFIG_DARWIN || (__FreeBSD__) || defined(__OpenBSD__)
+#if defined(Q_OS_DARWIN) || defined(__FreeBSD__) || defined(__OpenBSD__)
     const char *command = "ps -ax | grep -i pulseaudio | grep -v grep > /dev/null";
 #else
     const char *command = "ps ch -C pulseaudio -o pid > /dev/null";
@@ -733,17 +757,17 @@ void myth_yield(void)
 #include <asm/unistd.h>
 
 #if defined(__i386__)
-# define __NR_ioprio_set  289
-# define __NR_ioprio_get  290
+# define NR_ioprio_set  289
+# define NR_ioprio_get  290
 #elif defined(__ppc__)
-# define __NR_ioprio_set  273
-# define __NR_ioprio_get  274
+# define NR_ioprio_set  273
+# define NR_ioprio_get  274
 #elif defined(__x86_64__)
-# define __NR_ioprio_set  251
-# define __NR_ioprio_get  252
+# define NR_ioprio_set  251
+# define NR_ioprio_get  252
 #elif defined(__ia64__)
-# define __NR_ioprio_set  1274
-# define __NR_ioprio_get  1275
+# define NR_ioprio_set  1274
+# define NR_ioprio_get  1275
 #endif
 
 #define IOPRIO_BITS             (16)
@@ -764,17 +788,17 @@ bool myth_ioprio(int val)
     int new_ioprio = IOPRIO_PRIO_VALUE(new_ioclass, new_iodata);
 
     int pid = getpid();
-    int old_ioprio = syscall(__NR_ioprio_get, IOPRIO_WHO_PROCESS, pid);
+    int old_ioprio = syscall(NR_ioprio_get, IOPRIO_WHO_PROCESS, pid);
     if (old_ioprio == new_ioprio)
         return true;
 
-    int ret = syscall(__NR_ioprio_set, IOPRIO_WHO_PROCESS, pid, new_ioprio);
+    int ret = syscall(NR_ioprio_set, IOPRIO_WHO_PROCESS, pid, new_ioprio);
 
     if (-1 == ret && EPERM == errno && IOPRIO_CLASS_BE != new_ioclass)
     {
         new_iodata = (new_ioclass == IOPRIO_CLASS_RT) ? 0 : 7;
         new_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, new_iodata);
-        ret = syscall(__NR_ioprio_set, IOPRIO_WHO_PROCESS, pid, new_ioprio);
+        ret = syscall(NR_ioprio_set, IOPRIO_WHO_PROCESS, pid, new_ioprio);
     }
 
     return 0 == ret;
@@ -833,14 +857,12 @@ bool MythRemoveDirectory(QDir &aDir)
 void setHttpProxy(void)
 {
     QString       LOC = "setHttpProxy() - ";
-    QNetworkProxy p;
-
 
     // Set http proxy for the application if specified in environment variable
-    QString var(getenv("http_proxy"));
+    QString var(qEnvironmentVariable("http_proxy"));
     if (var.isEmpty())
-        var = getenv("HTTP_PROXY");  // Sadly, some OS envs are case sensitive
-    if (var.length())
+        var = qEnvironmentVariable("HTTP_PROXY");  // Sadly, some OS envs are case sensitive
+    if (!var.isEmpty())
     {
         if (!var.startsWith("http://"))   // i.e. just a host name
             var.prepend("http://");
@@ -864,7 +886,7 @@ void setHttpProxy(void)
                 QString("assuming port %1 on host %2") .arg(port).arg(host));
             url.setPort(port);
         }
-        else if (!ping(host, 1))
+        else if (!ping(host, 1s))
         {
             LOG(VB_GENERAL, LOG_ERR, LOC +
                 QString("cannot locate host %1").arg(host) +
@@ -882,7 +904,8 @@ void setHttpProxy(void)
                 .arg(url.userName()).arg(url.password())
                 .arg(host).arg(port));
 #endif
-        p = QNetworkProxy(QNetworkProxy::HttpCachingProxy,
+        QNetworkProxy p =
+            QNetworkProxy(QNetworkProxy::HttpCachingProxy,
                           host, port, url.userName(), url.password());
         QNetworkProxy::setApplicationProxy(p);
         return;
@@ -897,7 +920,7 @@ void setHttpProxy(void)
 
     proxies = QNetworkProxyFactory::systemProxyForQuery(query);
 
-    Q_FOREACH (p, proxies)
+    for (const auto& p : qAsConst(proxies))
     {
         QString host = p.hostName();
         int     port = p.port();
@@ -923,7 +946,7 @@ void setHttpProxy(void)
         if (!p.user().isEmpty())
         {
             url = "http://%1:%2@%3:%4",
-            url = url.arg(p.user()).arg(p.password());
+            url = url.arg(p.user(), p.password());
         }
         else
         {
@@ -940,60 +963,14 @@ void setHttpProxy(void)
     LOG(VB_NETWORK, LOG_ERR, LOC + "failed to find a network proxy");
 }
 
-void wrapList(QStringList &list, int width)
-{
-    // if this is triggered, something has gone seriously wrong
-    // the result won't really be usable, but at least it won't crash
-    width = max(width, 5);
-
-    for (int i = 0; i < list.size(); i++)
-    {
-        QString string = list.at(i);
-
-        if( string.size() <= width )
-            continue;
-
-        QString left   = string.left(width);
-        bool inserted  = false;
-
-        while( !inserted && !left.endsWith(" " ))
-        {
-            if( string.mid(left.size(), 1) == " " )
-            {
-                list.replace(i, left);
-                list.insert(i+1, string.mid(left.size()).trimmed());
-                inserted = true;
-            }
-            else
-            {
-                left.chop(1);
-                if( !left.contains(" ") )
-                {
-                    // Line is too long, just hyphenate it
-                    list.replace(i, left + "-");
-                    list.insert(i+1, string.mid(left.size()));
-                    inserted = true;
-                }
-            }
-        }
-
-        if( !inserted )
-        {
-            left.chop(1);
-            list.replace(i, left);
-            list.insert(i+1, string.mid(left.size()).trimmed());
-        }
-    }
-}
-
 QString xml_indent(uint level)
 {
     static QReadWriteLock s_rwLock;
     static QMap<uint,QString> s_cache;
 
     s_rwLock.lockForRead();
-    QMap<uint,QString>::const_iterator it = s_cache.find(level);
-    if (it != s_cache.end())
+    QMap<uint,QString>::const_iterator it = s_cache.constFind(level);
+    if (it != s_cache.constEnd())
     {
         QString tmp = *it;
         s_rwLock.unlock();
@@ -1090,9 +1067,9 @@ int naturalCompare(const QString &_a, const QString &_b, Qt::CaseSensitivity cas
         }
 
         // compare these sequences
-        const QStringRef& subA(a.midRef(begSeqA - a.unicode(), currA - begSeqA));
-        const QStringRef& subB(b.midRef(begSeqB - b.unicode(), currB - begSeqB));
-        const int cmp = QStringRef::localeAwareCompare(subA, subB);
+        const QString& subA(a.mid(begSeqA - a.unicode(), currA - begSeqA));
+        const QString& subB(b.mid(begSeqB - b.unicode(), currB - begSeqB));
+        const int cmp = QString::localeAwareCompare(subA, subB);
 
         if (cmp != 0)
         {

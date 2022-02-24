@@ -1,8 +1,7 @@
-#ifndef _HTTPTSSTREAMHANDLER_H_
-#define _HTTPTSSTREAMHANDLER_H_
+#ifndef HTTPTSSTREAMHANDLER_H
+#define HTTPTSSTREAMHANDLER_H
 
 #include <vector>
-using namespace std;
 
 #include <QString>
 #include <QMutex>
@@ -68,4 +67,4 @@ class MTV_PUBLIC HTTPReader : public QObject
     int                     m_size       {0};
 };
 
-#endif // _HTTPTSSTREAMHANDLER_H_
+#endif // HTTPTSSTREAMHANDLER_H

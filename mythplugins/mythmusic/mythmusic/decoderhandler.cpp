@@ -205,17 +205,25 @@ void DecoderHandler::stop(void)
 
 void DecoderHandler::customEvent(QEvent *event)
 {
+    if (event == nullptr)
+        return;
+
     if (auto *dhe = dynamic_cast<DecoderHandlerEvent*>(event))
     {
         // Proxy all DecoderHandlerEvents
-        return dispatch(*dhe);
+        dispatch(*dhe);
+        return;
     }
     if (event->type() == MythEvent::MythEventMessage)
     {
         auto *me = dynamic_cast<MythEvent *>(event);
         if (me == nullptr)
             return;
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
         QStringList tokens = me->Message().split(" ", QString::SkipEmptyParts);
+#else
+        QStringList tokens = me->Message().split(" ", Qt::SkipEmptyParts);
+#endif
 
         if (tokens.isEmpty())
             return;
@@ -258,7 +266,7 @@ void DecoderHandler::createPlaylist(const QUrl &url)
     QString extension = QFileInfo(url.path()).suffix();
     LOG(VB_NETWORK, LOG_INFO,
         QString("File %1 has extension %2")
-            .arg(QFileInfo(url.path()).fileName()).arg(extension));
+            .arg(QFileInfo(url.path()).fileName(), extension));
 
     if (extension == "pls" || extension == "m3u" || extension == "asx")
     {
@@ -321,7 +329,7 @@ void DecoderHandler::createPlaylistFromRemoteUrl(const QUrl &url)
             m_state = STOPPED;
         }
 
-        qApp->processEvents();
+        QCoreApplication::processEvents();
         usleep(500);
     }
 }
@@ -352,7 +360,7 @@ void DecoderHandler::doConnectDecoder(const QUrl &url, const QString &format)
 void DecoderHandler::doFailed(const QUrl &url, const QString &message)
 {
     LOG(VB_NETWORK, LOG_ERR,
-        QString("DecoderHandler error: '%1' - %2").arg(message).arg(url.toString()));
+        QString("DecoderHandler error: '%1' - %2").arg(message, url.toString()));
     DecoderHandlerEvent ev(DecoderHandlerEvent::Error, new QString(message));
     dispatch(ev);
 }

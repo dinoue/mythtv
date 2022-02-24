@@ -2,6 +2,8 @@ include ../../config.mak
 
 ifdef INSTALL_ROOT
 	ROOT_FLAGS = --root="$(INSTALL_ROOT)"
+else
+	ROOT_FLAGS = --root="/"
 endif
 
 REAL_PREFIX = $(PREFIX)
@@ -22,14 +24,9 @@ python_build: setup.py
 	$(PYTHON) setup.py build --mythtv-prefix="$(REAL_PREFIX)"
 
 install: setup.py
-	$(PYTHON) setup.py install --install-layout=deb --skip-build $(ROOT_FLAGS) $(PREFIX_FLAGS)
+	$(PYTHON) setup.py install --skip-build $(ROOT_FLAGS) $(PREFIX_FLAGS)
 
-ifdef INSTALL_ROOT
 uninstall:
-	$(warning make -C bindings/python uninstall is not supported with $$(INSTALL_ROOT))
-else
-uninstall: setup.py
-	$(PYTHON) setup.py uninstall $(PREFIX_FLAGS)
-endif
+	$(warning make -C bindings/python uninstall is not supported for python bindings)
 
 .PHONY: all clean distclean install python_build uninstall

@@ -6,7 +6,7 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -31,6 +31,7 @@
 #include <QStringList>
 
 // MythTV headers
+#include "mythrandom.h"
 #include "mmulticastsocketdevice.h"
 #include "mythlogging.h"
 
@@ -43,7 +44,7 @@ MMulticastSocketDevice::MMulticastSocketDevice(
     m_address(sAddress), m_port(nPort)
 {
 #if 0
-    ttl = UPnp::GetConfiguration()->GetValue( "UPnP/TTL", 4 );
+    ttl = gCoreContext->GetConfiguration()->GetValue( "UPnP/TTL", 4 );
 #endif
 
     if (ttl == 0)
@@ -94,7 +95,7 @@ qint64 MMulticastSocketDevice::writeBlock(
     if (host.toString() == "239.255.255.250")
     {
         int retx = 0;
-        foreach (const auto & address, m_localAddresses)
+        for (const auto & address : qAsConst(m_localAddresses))
         {
             if (address.protocol() != QAbstractSocket::IPv4Protocol)
                 continue; // skip IPv6 addresses
@@ -116,7 +117,11 @@ qint64 MMulticastSocketDevice::writeBlock(
             LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("writeBlock on %1 %2")
                     .arg((*it).toString()).arg((retx==(int)len)?"ok":"err"));
 #endif
-            std::this_thread::sleep_for(std::chrono::milliseconds(5 + (random() % 5)));
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
+            std::this_thread::sleep_for(std::chrono::milliseconds(5 + (MythRandom() % 5)));
+#else
+            std::this_thread::sleep_for(std::chrono::milliseconds(MythRandom(5, 9)));
+#endif
         }
         return retx;
     }

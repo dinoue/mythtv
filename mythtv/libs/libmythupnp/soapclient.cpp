@@ -6,11 +6,14 @@
 //                                                                            
 // Copyright (c) 2007 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
 #include <QBuffer>
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#include <QStringConverter>
+#endif
 
 #include "soapclient.h"
 
@@ -81,7 +84,11 @@ bool SOAPClient::Init(const QUrl    &url,
 QDomNode SOAPClient::FindNode(
     const QString &sName, const QDomNode &baseNode) const
 {
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList parts = sName.split('/', QString::SkipEmptyParts);
+#else
+    QStringList parts = sName.split('/', Qt::SkipEmptyParts);
+#endif
     return FindNodeInternal(parts, baseNode);
 }
 
@@ -202,7 +209,7 @@ QDomDocument SOAPClient::SendSOAPRequest(const QString &sMethod,
     QHash<QByteArray, QByteArray> headers;
 
     headers.insert("Content-Type", "text/xml; charset=\"utf-8\"");
-    QString soapHeader = QString("\"%1#%2\"").arg(m_sNamespace).arg(sMethod);
+    QString soapHeader = QString("\"%1#%2\"").arg(m_sNamespace, sMethod);
     headers.insert("SOAPACTION", soapHeader.toUtf8());
     headers.insert("User-Agent", "Mozilla/9.876 (X11; U; Linux 2.2.12-20 i686, en) "
                                  "Gecko/25250101 Netscape/5.432b1");
@@ -213,7 +220,11 @@ QDomDocument SOAPClient::SendSOAPRequest(const QString &sMethod,
     QByteArray  aBuffer;
     QTextStream os( &aBuffer );
 
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     os.setCodec("UTF-8");
+#else
+    os.setEncoding(QStringConverter::Utf8);
+#endif
 
     os << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"; 
     os << "<s:Envelope "
@@ -244,7 +255,7 @@ QDomDocument SOAPClient::SendSOAPRequest(const QString &sMethod,
     // --------------------------------------------------------------
 
     LOG(VB_UPNP, LOG_DEBUG,
-        QString("SOAPClient(%1) sending:\n %2").arg(url.toString()).arg(aBuffer.constData()));
+        QString("SOAPClient(%1) sending:\n %2").arg(url.toString(), aBuffer.constData()));
 
     QString sXml;
 
@@ -275,8 +286,8 @@ QDomDocument SOAPClient::SendSOAPRequest(const QString &sMethod,
         nErrCode = UPnPResult_MythTV_XmlParseError;
         LOG(VB_UPNP, LOG_ERR,
             QString("SendSOAPRequest(%1) - Invalid response from %2. Error %3: %4. Response: %5")
-                .arg(sMethod).arg(url.toString())
-                .arg(nErrCode).arg(sErrDesc).arg(sXml));
+                .arg(sMethod, url.toString(),
+                     QString::number(nErrCode), sErrDesc, sXml));
         return xmlResult;
     }
 

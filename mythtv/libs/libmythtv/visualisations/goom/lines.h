@@ -8,16 +8,17 @@
 
 #include "graphic.h"
 #include "goomconfig.h"
+#include "goom_core.h"
 
-typedef struct _GMUNITPOINTER
+struct GMUnitPointer
 {
 	float   x;
 	float   y;
 	float   angle;
-} GMUnitPointer;
+};
 
 // tableau de points
-typedef struct _GMLINE
+struct GMLine
 {
 	GMUnitPointer *points;
 	GMUnitPointer *points2;
@@ -35,7 +36,7 @@ typedef struct _GMLINE
 
 	float   power;
 	float   powinc;
-} GMLine;
+};
 
 // les ID possibles
 #define GML_CIRCLE 0
@@ -66,4 +67,4 @@ void    goom_lines_set_res (GMLine * gml, int rx, int ry);
 
 void    goom_lines_free (GMLine ** gml);
 
-void    goom_lines_draw (GMLine * line, const gint16 data[512], unsigned int *p);
+void    goom_lines_draw (GMLine * line, const GoomSingleData& data, unsigned int *p);

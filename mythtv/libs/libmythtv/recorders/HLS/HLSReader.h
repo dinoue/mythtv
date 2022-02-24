@@ -1,5 +1,5 @@
-#ifndef _HLS_Reader_h_
-#define _HLS_Reader_h_
+#ifndef HLS_READER_H
+#define HLS_READER_H
 
 #include <QObject>
 #include <QString>
@@ -38,7 +38,7 @@ class MTV_PUBLIC  HLSReader
 
   public:
     using StreamContainer = QMap<QString, HLSRecStream* >;
-    using SegmentContainer = QList<HLSRecSegment>;
+    using SegmentContainer = QVector<HLSRecSegment>;
 
     HLSReader(void) = default;
     ~HLSReader(void);
@@ -72,8 +72,8 @@ class MTV_PUBLIC  HLSReader
     void Cancel(bool quiet = false);
     bool LoadSegments(MythSingleDownload& downloader);
     uint PercentBuffered(void) const;
-    int  TargetDuration(void) const
-    { return (m_curstream ? m_curstream->TargetDuration() : 0); }
+    std::chrono::seconds TargetDuration(void) const
+    { return (m_curstream ? m_curstream->TargetDuration() : 0s); }
 
     void AllowPlaylistSwitch(void) { m_bandwidthCheck = true; }
 
@@ -89,7 +89,7 @@ class MTV_PUBLIC  HLSReader
     // Downloading
     bool LoadSegments(HLSRecStream & hlsstream);
     int DownloadSegmentData(MythSingleDownload& downloader, HLSRecStream* hls,
-			    HLSRecSegment& segment, int playlist_size);
+			    const HLSRecSegment& segment, int playlist_size);
 
     // Debug
     void EnableDebugging(void);
@@ -129,4 +129,4 @@ class MTV_PUBLIC  HLSReader
     QMutex             m_bufLock;
 };
 
-#endif
+#endif // HLS_READER_H

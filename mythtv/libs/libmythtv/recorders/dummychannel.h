@@ -11,14 +11,12 @@
 #include "tv_rec.h"
 #include "channelbase.h"
 
-using namespace std;
-
 class DummyChannel : public ChannelBase
 {
   public:
     explicit DummyChannel(TVRec *parent): ChannelBase(parent)
         { (void)parent; m_curChannelName.clear(); m_curInputName.clear(); }
-    ~DummyChannel(void) override { }
+    ~DummyChannel(void) override = default;
 
     bool IsTunable(const QString &/*channum*/) const override // ChannelBase
         { return true; }

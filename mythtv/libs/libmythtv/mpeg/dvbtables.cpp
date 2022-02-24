@@ -32,13 +32,13 @@ QString NetworkInformationTable::toString(void) const
     QString str = QString("NIT: NetID(%1) transports(%2)\n")
         .arg(NetworkID()).arg(TransportStreamCount());
     str.append(QString("Section (%1) Last Section (%2) IsCurrent (%3)\n")
-        .arg(Section()).arg(LastSection()).arg(IsCurrent()));
+        .arg(Section()).arg(LastSection()).arg(static_cast<int>(IsCurrent())));
 
     if (0 != NetworkDescriptorsLength())
     {
         str.append(QString("Network descriptors length: %1\n")
                    .arg(NetworkDescriptorsLength()));
-        vector<const unsigned char*> desc =
+        std::vector<const unsigned char*> desc =
             MPEGDescriptor::Parse(NetworkDescriptors(),
                                   NetworkDescriptorsLength());
         uint priv_dsid = 0;
@@ -62,7 +62,7 @@ QString NetworkInformationTable::toString(void) const
         {
             str.append(QString("  Transport descriptors length: %1\n")
                        .arg(TransportDescriptorsLength(i)));
-            vector<const unsigned char*> desc =
+            std::vector<const unsigned char*> desc =
                 MPEGDescriptor::Parse(TransportDescriptors(i),
                                       TransportDescriptorsLength(i));
             uint priv_dsid = 0;
@@ -131,22 +131,22 @@ QString ServiceDescriptionTable::toString(void) const
         .arg(TSID(), 0, 16).arg(OriginalNetworkID(), 0, 16)
         .arg(ServiceCount());
     str.append(QString("Section (%1) Last Section (%2) IsCurrent (%3)\n")
-        .arg(Section()).arg(LastSection()).arg(IsCurrent()));
+        .arg(Section()).arg(LastSection()).arg(static_cast<int>(IsCurrent())));
 
     for (uint i = 0; i < ServiceCount(); i++)
     {
         str.append(QString("  Service #%1 SID(0x%2) ")
                    .arg(i, 2, 10).arg(ServiceID(i), 0, 16));
         str.append(QString("eit_schd(%1) eit_pf(%2) encrypted(%3)\n")
-                   .arg(HasEITSchedule(i) ? "t" : "f")
-                   .arg(HasEITPresentFollowing(i) ? "t" : "f")
-                   .arg(IsEncrypted(i) ? "t" : "f"));
+                   .arg(HasEITSchedule(i) ? "t" : "f",
+                        HasEITPresentFollowing(i) ? "t" : "f",
+                        IsEncrypted(i) ? "t" : "f"));
 
         if (0 != ServiceDescriptorsLength(i))
         {
             str.append(QString("  Service descriptors length: %1\n")
                        .arg(ServiceDescriptorsLength(i)));
-            vector<const unsigned char*> desc =
+            std::vector<const unsigned char*> desc =
                 MPEGDescriptor::Parse(ServiceDescriptors(i),
                                       ServiceDescriptorsLength(i));
             uint priv_dsid = 0;
@@ -172,6 +172,21 @@ ServiceDescriptor *ServiceDescriptionTable::GetServiceDescriptor(uint i) const
 
     if (desc)
         return new ServiceDescriptor(desc, _dvbkind);
+
+    return nullptr;
+}
+
+ServiceRelocatedDescriptor *ServiceDescriptionTable::GetServiceRelocatedDescriptor(uint i) const
+{
+    desc_list_t parsed =
+        MPEGDescriptor::Parse(ServiceDescriptors(i),
+                              ServiceDescriptorsLength(i));
+
+    const unsigned char *desc =
+        MPEGDescriptor::FindExtension(parsed, DescriptorID::service_relocated);
+
+    if (desc)
+        return new ServiceRelocatedDescriptor(desc);
 
     return nullptr;
 }
@@ -204,13 +219,13 @@ QString BouquetAssociationTable::toString(void) const
         .arg(BouquetID(), 0, 16).arg(TransportStreamCount());
 
     str.append(QString("Section (%1) Last Section (%2) IsCurrent (%3)\n")
-        .arg(Section()).arg(LastSection()).arg(IsCurrent()));
+        .arg(Section()).arg(LastSection()).arg(static_cast<int>(IsCurrent())));
 
     if (0 != BouquetDescriptorsLength())
     {
         str.append(QString("Bouquet descriptors length: %1\n")
                    .arg(BouquetDescriptorsLength()));
-        vector<const unsigned char*> desc =
+        std::vector<const unsigned char*> desc =
             MPEGDescriptor::Parse(BouquetDescriptors(),
                                   BouquetDescriptorsLength());
         uint priv_dsid = 0;
@@ -234,7 +249,7 @@ QString BouquetAssociationTable::toString(void) const
         {
             str.append(QString("  Transport descriptors length: %1\n")
                        .arg(TransportDescriptorsLength(i)));
-            vector<const unsigned char*> desc =
+            std::vector<const unsigned char*> desc =
                 MPEGDescriptor::Parse(TransportDescriptors(i),
                                       TransportDescriptorsLength(i));
             uint priv_dsid = 0;
@@ -306,11 +321,7 @@ QDateTime dvbdate2qt(const unsigned char *buf, DVBKind dvbkind)
         secsSince1970 += byteBCD2int(buf[2]) * 3600;
         secsSince1970 += byteBCD2int(buf[3]) * 60;
         secsSince1970 += byteBCD2int(buf[4]);
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        return MythDate::fromTime_t(secsSince1970);
-#else
         return MythDate::fromSecsSinceEpoch(secsSince1970);
-#endif
     }
 
     // Original function taken from dvbdate.c in linuxtv-apps code

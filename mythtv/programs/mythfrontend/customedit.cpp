@@ -33,7 +33,7 @@ CustomEdit::CustomEdit(MythScreenStack *parent, ProgramInfo *pginfo)
         m_pginfo = new ProgramInfo();
 
     m_baseTitle = m_pginfo->GetTitle();
-    m_baseTitle.remove(QRegExp(" \\(.*\\)$"));
+    m_baseTitle.remove(RecordingInfo::kReSearchTypeName);
 
     m_seSuffix = QString(" (%1)").arg(tr("stored search"));
     m_exSuffix = QString(" (%1)").arg(tr("stored example"));
@@ -72,25 +72,25 @@ bool CustomEdit::Create()
         return false;
     }
 
-    connect(m_ruleList, SIGNAL(itemSelected(MythUIButtonListItem *)),
-                SLOT(ruleChanged(MythUIButtonListItem *)));
-    connect(m_titleEdit, SIGNAL(valueChanged(void)), this,
-                SLOT(textChanged(void)));
+    connect(m_ruleList, &MythUIButtonList::itemSelected,
+                this, &CustomEdit::ruleChanged);
+    connect(m_titleEdit, &MythUITextEdit::valueChanged, this,
+                &CustomEdit::textChanged);
     m_titleEdit->SetMaxLength(128);
     m_subtitleEdit->SetMaxLength(128);
-    connect(m_descriptionEdit, SIGNAL(valueChanged(void)), this,
-                SLOT(textChanged(void)));
+    connect(m_descriptionEdit, &MythUITextEdit::valueChanged, this,
+                &CustomEdit::textChanged);
     m_descriptionEdit->SetMaxLength(0);
 
-    connect(m_clauseList, SIGNAL(itemSelected(MythUIButtonListItem *)),
-                SLOT(clauseChanged(MythUIButtonListItem *)));
-    connect(m_clauseList, SIGNAL(itemClicked(MythUIButtonListItem *)),
-                SLOT(clauseClicked(MythUIButtonListItem *)));
+    connect(m_clauseList, &MythUIButtonList::itemSelected,
+                this, &CustomEdit::clauseChanged);
+    connect(m_clauseList, &MythUIButtonList::itemClicked,
+                this, &CustomEdit::clauseClicked);
 
-    connect(m_testButton, SIGNAL(Clicked()), SLOT(testClicked()));
-    connect(m_recordButton, SIGNAL(Clicked()), SLOT(recordClicked()));
-    connect(m_storeButton, SIGNAL(Clicked()), SLOT(storeClicked()));
-    connect(m_cancelButton, SIGNAL(Clicked()), SLOT(Close()));
+    connect(m_testButton, &MythUIButton::Clicked, this, &CustomEdit::testClicked);
+    connect(m_recordButton, &MythUIButton::Clicked, this, &CustomEdit::recordClicked);
+    connect(m_storeButton, &MythUIButton::Clicked, this, &CustomEdit::storeClicked);
+    connect(m_cancelButton, &MythUIButton::Clicked, this, &MythScreenType::Close);
 
     loadData();
     BuildFocusList();
@@ -123,10 +123,11 @@ void CustomEdit::loadData(void)
 
     if (result.exec())
     {
+        // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks)
         while (result.next())
         {
             QString trimTitle = result.value(1).toString();
-            trimTitle.remove(QRegExp(" \\(.*\\)$"));
+            trimTitle.remove(RecordingInfo::kReSearchTypeName);
 
             rule.recordid = result.value(0).toString();
             rule.title = trimTitle;
@@ -153,66 +154,72 @@ void CustomEdit::loadData(void)
 
 QString CustomEdit::evaluate(QString clause)
 {
-    int e0=0;
-    while (true) {
-        int s0 = clause.indexOf (QRegExp("\\{[A-Z]+\\}"), e0);
+    static const QRegularExpression replacement { "\\{([A-Z]+)\\}" };
 
-        if (s0 < 0)
+    while (true) {
+        QRegularExpressionMatch match;
+        if (!clause.contains(replacement, &match))
             break;
 
-        e0 = clause.indexOf ("}", s0);
-
-        QString mid = clause.mid(s0 + 1, e0 - s0 - 1);
+        QString mid = match.captured(1);
         QString repl = "";
 
-        if (!mid.compare("TITLE")) {
+        if (mid.compare("TITLE") == 0) {
             repl = m_pginfo->GetTitle();
             repl.replace("\'","\'\'");
-        } else if (!mid.compare("SUBTITLE")) {
+        } else if (mid.compare("SUBTITLE") == 0) {
             repl = m_pginfo->GetSubtitle();
             repl.replace("\'","\'\'");
-        } else if (!mid.compare("DESCR")) {
+        } else if (mid.compare("DESCR") == 0) {
             repl = m_pginfo->GetDescription();
             repl.replace("\'","\'\'");
-        } else if (!mid.compare("SERIESID")) {
+        } else if (mid.compare("SERIESID") == 0) {
             repl = QString("%1").arg(m_pginfo->GetSeriesID());
-        } else if (!mid.compare("PROGID")) {
+        } else if (mid.compare("PROGID") == 0) {
             repl = m_pginfo->GetProgramID();
-        } else if (!mid.compare("SEASON")) {
+        } else if (mid.compare("SEASON") == 0) {
             repl = QString::number(m_pginfo->GetSeason());
-        } else if (!mid.compare("EPISODE")) {
+        } else if (mid.compare("EPISODE") == 0) {
             repl = QString::number(m_pginfo->GetEpisode());
-        } else if (!mid.compare("CATEGORY")) {
+        } else if (mid.compare("CATEGORY") == 0) {
             repl = m_pginfo->GetCategory();
-        } else if (!mid.compare("CHANID")) {
+        } else if (mid.compare("CHANID") == 0) {
             repl = QString("%1").arg(m_pginfo->GetChanID());
-        } else if (!mid.compare("CHANNUM")) {
+        } else if (mid.compare("CHANNUM") == 0) {
             repl = m_pginfo->GetChanNum();
-        } else if (!mid.compare("SCHEDID")) {
+        } else if (mid.compare("SCHEDID") == 0) {
             repl = m_pginfo->GetChannelSchedulingID();
-        } else if (!mid.compare("CHANNAME")) {
+        } else if (mid.compare("CHANNAME") == 0) {
             repl = m_pginfo->GetChannelName();
-        } else if (!mid.compare("DAYNAME")) {
+        } else if (mid.compare("DAYNAME") == 0) {
             repl = m_pginfo->GetScheduledStartTime().toString("dddd");
-        } else if (!mid.compare("STARTDATE")) {
+        } else if (mid.compare("STARTDATE") == 0) {
             repl = m_pginfo->GetScheduledStartTime().toString("yyyy-mm-dd hh:mm:ss");
-        } else if (!mid.compare("ENDDATE")) {
+        } else if (mid.compare("ENDDATE") == 0) {
             repl = m_pginfo->GetScheduledEndTime().toString("yyyy-mm-dd hh:mm:ss");
-        } else if (!mid.compare("STARTTIME")) {
+        } else if (mid.compare("STARTTIME") == 0) {
             repl = m_pginfo->GetScheduledStartTime().toString("hh:mm");
-        } else if (!mid.compare("ENDTIME")) {
+        } else if (mid.compare("ENDTIME") == 0) {
             repl = m_pginfo->GetScheduledEndTime().toString("hh:mm");
-        } else if (!mid.compare("STARTSEC")) {
+        } else if (mid.compare("STARTSEC") == 0) {
             QDateTime date = m_pginfo->GetScheduledStartTime();
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
             QDateTime midnight = QDateTime(date.date());
+#else
+            QDateTime midnight = date.date().startOfDay();
+#endif
             repl = QString("%1").arg(midnight.secsTo(date));
-        } else if (!mid.compare("ENDSEC")) {
+        } else if (mid.compare("ENDSEC") == 0) {
             QDateTime date = m_pginfo->GetScheduledEndTime();
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
             QDateTime midnight = QDateTime(date.date());
+#else
+            QDateTime midnight = date.date().startOfDay();
+#endif
             repl = QString("%1").arg(midnight.secsTo(date));
         }
         // unknown tags are simply removed
-        clause.replace(s0, e0 - s0 + 1, repl);
+        clause.replace(match.capturedStart(), match.capturedLength(), repl);
     }
     return clause;
 }
@@ -578,7 +585,7 @@ void CustomEdit::ruleChanged(MythUIButtonListItem *item)
 
     m_currentRuleItem = item;
 
-    CustomRuleInfo rule = item->GetData().value<CustomRuleInfo>();
+    auto rule = item->GetData().value<CustomRuleInfo>();
 
     m_titleEdit->SetText(rule.title);
     m_descriptionEdit->SetText(rule.description);
@@ -603,12 +610,10 @@ void CustomEdit::clauseChanged(MythUIButtonListItem *item)
     if (!item)
         return;
 
-    CustomRuleInfo rule = item->GetData().value<CustomRuleInfo>();
+    auto rule = item->GetData().value<CustomRuleInfo>();
 
     QString msg = (m_evaluate) ? evaluate(rule.description) : rule.description;
-    msg.replace('\n', ' ');
-    msg.replace(QRegExp(" [ ]*"), " ");
-    msg = QString("\"%1\"").arg(msg);
+    msg = QString("\"%1\"").arg(msg.simplified());
     m_clauseText->SetText(msg);
 
     bool hastitle = !m_titleEdit->GetText().isEmpty();
@@ -623,12 +628,12 @@ void CustomEdit::clauseClicked(MythUIButtonListItem *item)
     if (!item)
         return;
 
-    CustomRuleInfo rule = item->GetData().value<CustomRuleInfo>();
+    auto rule = item->GetData().value<CustomRuleInfo>();
 
     QString clause;
     QString desc = m_descriptionEdit->GetText();
 
-    if (desc.contains(QRegExp("\\S")))
+    if (desc.contains(QRegularExpression("\\S")))
         clause = "AND ";
     clause += (m_evaluate) ? evaluate(rule.description) : rule.description;
 
@@ -678,7 +683,7 @@ void CustomEdit::recordClicked(void)
     auto *record = new RecordingRule();
 
     MythUIButtonListItem* item = m_ruleList->GetItemCurrent();
-    CustomRuleInfo rule = item->GetData().value<CustomRuleInfo>();
+    auto rule = item->GetData().value<CustomRuleInfo>();
 
     int cur_recid = rule.recordid.toInt();
     if (cur_recid > 0)
@@ -700,7 +705,7 @@ void CustomEdit::recordClicked(void)
     if (schededit->Create())
     {
         mainStack->AddScreen(schededit);
-        connect(schededit, SIGNAL(ruleSaved(int)), SLOT(scheduleCreated(int)));
+        connect(schededit, &ScheduleEditor::ruleSaved, this, &CustomEdit::scheduleCreated);
     }
     else
         delete schededit;
@@ -724,8 +729,8 @@ void CustomEdit::storeClicked(void)
     if (query.exec() && query.next())
         exampleExists = true;
 
-    QString msg = QString("%1: %2\n\n").arg(tr("Current Example"))
-                                       .arg(m_titleEdit->GetText());
+    QString msg = QString("%1: %2\n\n").arg(tr("Current Example"),
+                                            m_titleEdit->GetText());
 
     if (!m_subtitleEdit->GetText().isEmpty())
         msg += m_subtitleEdit->GetText() + "\n\n";
@@ -758,8 +763,8 @@ void CustomEdit::storeClicked(void)
         if (m_clauseList->GetCurrentPos() >= m_maxex)
         {
             MythUIButtonListItem* item = m_clauseList->GetItemCurrent();
-            QString str = QString("%1 \"%2\"").arg(tr("Delete"))
-                                      .arg(item->GetText());
+            QString str = QString("%1 \"%2\"").arg(tr("Delete"),
+                                                   item->GetText());
             storediag->AddButton(str);
         }
         mainStack->AddScreen(storediag);
@@ -776,7 +781,7 @@ bool CustomEdit::checkSyntax(void)
 
     QString desc = evaluate(m_descriptionEdit->GetText());
     QString from = m_subtitleEdit->GetText();
-    if (desc.contains(QRegExp("^\\s*AND\\s", Qt::CaseInsensitive)))
+    if (desc.contains(RecordingInfo::kReLeadingAnd))
     {
         msg = tr("Power Search rules no longer require a leading \"AND\".");
     }
@@ -789,7 +794,7 @@ bool CustomEdit::checkSyntax(void)
     {
         MSqlQuery query(MSqlQuery::InitCon());
         query.prepare(QString("SELECT NULL FROM (program,channel) "
-                              "%1 WHERE\n%2").arg(from).arg(desc));
+                              "%1 WHERE\n%2").arg(from, desc));
 
         if (query.exec())
         {

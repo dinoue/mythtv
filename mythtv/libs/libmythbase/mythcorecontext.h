@@ -1,9 +1,12 @@
 #ifndef MYTHCORECONTEXT_H_
 #define MYTHCORECONTEXT_H_
 
+#include <vector>
+
+#include <QHostAddress>
+#include <QMetaMethod>
 #include <QObject>
 #include <QString>
-#include <QHostAddress>
 
 #include "mythdb.h"
 #include "mythbaseexp.h"
@@ -12,6 +15,8 @@
 #include "mythlogging.h"
 #include "mythlocale.h"
 #include "mythsession.h"
+
+class Configuration;
 
 #define MYTH_APPNAME_MYTHBACKEND "mythbackend"
 #define MYTH_APPNAME_MYTHJOBQUEUE "mythjobqueue"
@@ -38,6 +43,13 @@ class MythCoreContextPrivate;
 class MythSocket;
 class MythScheduler;
 class MythPluginManager;
+
+class MythCoreContext;
+using CoreWaitSigFn = void (MythCoreContext::*)(void);
+struct CoreWaitInfo {
+    const char *name;
+    CoreWaitSigFn fn;
+};
 
 /** \class MythCoreContext
  *  \brief This class contains the runtime context for MythTV.
@@ -72,15 +84,15 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
                                      const QString &announcement,
                                      bool *proto_mismatch = nullptr,
                                      int maxConnTry = -1,
-                                     int setup_timeout = -1);
+                                     std::chrono::milliseconds setup_timeout = -1ms);
 
     MythSocket *ConnectEventSocket(const QString &hostname, int port);
 
     bool SetupCommandSocket(MythSocket *serverSock, const QString &announcement,
-                            uint timeout_in_ms, bool &proto_mismatch);
+                            std::chrono::milliseconds timeout, bool &proto_mismatch);
 
     bool CheckProtoVersion(MythSocket *socket,
-                           uint timeout_ms = kMythSocketLongTimeout,
+                           std::chrono::milliseconds timeout = kMythSocketLongTimeout,
                            bool error_dialog_desired = false);
 
     static QString GenMythURL(const QString& host = QString(), int port = 0,
@@ -141,6 +153,12 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
     void SaveSetting(const QString &key, int newValue);
     void SaveSetting(const QString &key, const QString &newValue);
     QString GetSetting(const QString &key, const QString &defaultval = "");
+    // No conversion between duration ratios. Just extract the number.
+    template <typename T>
+        typename std::enable_if_t<std::chrono::__is_duration<T>::value, void>
+        SaveDurSetting(const QString &key, T newValue)
+        { SaveSetting(key, static_cast<int>(newValue.count())); }
+
     bool SaveSettingOnHost(const QString &key, const QString &newValue,
                            const QString &host);
     void SaveBoolSetting(const QString &key, bool newValue)
@@ -149,6 +167,10 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
     // Convenience setting query methods
     bool GetBoolSetting(const QString &key, bool defaultval = false);
     int GetNumSetting(const QString &key, int defaultval = 0);
+    template <typename T>
+        typename std::enable_if_t<std::chrono::__is_duration<T>::value, T>
+        GetDurSetting(const QString &key, T defaultval = T::zero())
+    { return T(GetNumSetting(key, static_cast<int>(defaultval.count()))); }
     int GetBoolSetting(const QString &key, int defaultval) = delete;
     bool GetNumSetting(const QString &key, bool defaultvalue) = delete;
     double GetFloatSetting(const QString &key, double defaultval = 0.0);
@@ -182,8 +204,10 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
     int GetMasterServerStatusPort(void);
     int GetBackendServerPort(void);
     int GetBackendServerPort(const QString &host);
+    static void ClearBackendServerPortCache();
     int GetBackendStatusPort(void);
     int GetBackendStatusPort(const QString &host);
+    static QHash<QString,int> s_serverPortCache;
 
     bool GetScopeForAddress(QHostAddress &addr) const;
     void SetScopeForAddress(const QHostAddress &addr);
@@ -217,7 +241,28 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
     void ResetLanguage(void);
     void ResetSockets(void);
 
-    void RegisterForPlayback(QObject *sender, const char *method);
+    static void           SetConfiguration( Configuration *pConfig );
+    static Configuration* GetConfiguration();
+    static Configuration   *g_pConfig;
+
+    using PlaybackStartCb = void (QObject::*)(void);
+
+    /**
+     * \fn void MythCoreContext::RegisterForPlayback(QObject *sender, void (QObject::*method)(void) )
+     * Register sender for TVPlaybackAboutToStart signal. Method will be called upon
+     * the signal being emitted.
+     * sender must call MythCoreContext::UnregisterForPlayback upon deletion
+     */
+    void RegisterForPlayback(QObject *sender, PlaybackStartCb method);
+
+    template <class OBJ, typename SLOT>
+    typename std::enable_if_t<std::is_member_function_pointer_v<SLOT>, void>
+    RegisterForPlayback(OBJ *sender, SLOT method)
+    {
+        RegisterForPlayback(qobject_cast<QObject*>(sender),
+                            static_cast<PlaybackStartCb>(method));
+    }
+
     void UnregisterForPlayback(QObject *sender);
     void WantingPlayback(QObject *sender);
     bool InWantingPlayback(void);
@@ -240,11 +285,17 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
     void UnregisterFileForWrite(const QString &file);
     bool IsRegisteredFileForWrite(const QString &file);
 
+    // Test Harness help
+    void setTestIntSettings(QMap<QString,int>& overrides);
+    void setTestFloatSettings(QMap<QString,double>& overrides);
+    void setTestStringSettings(QMap<QString,QString>& overrides);
+
     // signal related methods
-    void WaitUntilSignals(const char *signal1, ...);
+    void WaitUntilSignals(std::vector<CoreWaitInfo> & sigs) const;
     void emitTVPlaybackStarted(void)            { emit TVPlaybackStarted(); }
     void emitTVPlaybackStopped(void)            { emit TVPlaybackStopped(); }
-    void emitTVPlaybackSought(qint64 position)  { emit TVPlaybackSought(position); }
+    void emitTVPlaybackSought(qint64 position)  { emit TVPlaybackSought(position);
+                                                  emit TVPlaybackSought();}
     void emitTVPlaybackPaused(void)             { emit TVPlaybackPaused(); }
     void emitTVPlaybackUnpaused(void)           { emit TVPlaybackUnpaused(); }
     void emitTVPlaybackAborted(void)            { emit TVPlaybackAborted(); }
@@ -257,6 +308,7 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
     //// InWantingPlayback() and treat it accordingly
     void TVPlaybackStopped(void);
     void TVPlaybackSought(qint64 position);
+    void TVPlaybackSought(void);
     void TVPlaybackPaused(void);
     void TVPlaybackUnpaused(void);
     void TVPlaybackAborted(void);
@@ -271,13 +323,20 @@ class MBASE_PUBLIC MythCoreContext : public QObject, public MythObservable, publ
     void connectionFailed(MythSocket *sock) override { (void)sock; } //MythSocketCBs
     void connectionClosed(MythSocket *sock) override; // MythSocketCBs
     void readyRead(MythSocket *sock) override; // MythSocketCBs
+
+    QMap<QString,int>     m_testOverrideInts    {};
+    QMap<QString,double>  m_testOverrideFloats  {};
+    QMap<QString,QString> m_testOverrideStrings {};
+
+  private:
+    bool m_dvbv3                {false};
+  public:
+    void SetDVBv3(bool dvbv3)   { m_dvbv3 = dvbv3; }
+    bool GetDVBv3(void) const   { return m_dvbv3; }
 };
 
 /// This global variable contains the MythCoreContext instance for the app
 extern MBASE_PUBLIC MythCoreContext *gCoreContext;
-
-/// This global variable is used to makes certain calls to avlib threadsafe.
-extern MBASE_PUBLIC QMutex *avcodeclock;
 
 #endif
 

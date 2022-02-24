@@ -6,12 +6,12 @@
 //                                                                            
 // Copyright (c) 2007 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef _UPNPIMPL_H_
-#define _UPNPIMPL_H_
+#ifndef UPNPSERVICEIMPL_H
+#define UPNPSERVICEIMPL_H
 
 #include <utility>
 
@@ -78,4 +78,4 @@ class UPNP_PUBLIC UPnPFeatureList
 
 };
 
-#endif /// _UPNPIMPL_H_
+#endif // UPNPSERVICEIMPL_H

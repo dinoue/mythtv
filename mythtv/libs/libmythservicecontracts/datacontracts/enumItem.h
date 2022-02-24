@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2014 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -26,9 +26,9 @@ class SERVICE_PUBLIC EnumItem : public QObject
     Q_PROPERTY( int             Value           READ Value       WRITE setValue  )
     Q_PROPERTY( QString         Desc            READ Desc        WRITE setDesc   )
 
-    PROPERTYIMP    ( QString    , Key       )
+    PROPERTYIMP_REF( QString    , Key       )
     PROPERTYIMP    ( int        , Value     )
-    PROPERTYIMP    ( QString    , Desc      );
+    PROPERTYIMP_REF( QString    , Desc      );
 
     public:
 

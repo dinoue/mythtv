@@ -18,6 +18,7 @@ void MythFrontendCommandLineParser::LoadArguments(void)
     addDisplay();
     addUPnP();
     addLogging();
+    addPlatform();
 
     add(QStringList{"-r", "--reset"}, "reset", false,
         "Resets appearance settings and language.", "");
@@ -44,6 +45,9 @@ void MythFrontendCommandLineParser::LoadArguments(void)
                "          the primary database schema. Use mythtv-setup\n"
                "          or restart your primary backend to have it\n"
                "          perform the task automatically.", "0.25");
+
+    add(QStringList{"-vrr", "--vrr"}, "vrr", 0U,
+                    "Try to enable (1) or disable (0) variable refresh rate (FreeSync or GSync)","");
 }
 
 QString MythFrontendCommandLineParser::GetHelpHeader(void) const

@@ -179,7 +179,7 @@ namespace
             for (ParentalLevel i = level;
                     i <= ParentalLevel::plHigh && i.good(); ++i)
             {
-                pws::const_iterator p = m_passwords.find(i.GetLevel());
+                auto p = m_passwords.find(i.GetLevel());
                 if (p != m_passwords.end() && !p->second.isEmpty())
                     ret.push_back(p->second);
             }
@@ -193,7 +193,7 @@ namespace
             for (ParentalLevel i = level;
                     i >= ParentalLevel::plLow && i.good(); --i)
             {
-                pws::const_iterator p = m_passwords.find(i.GetLevel());
+                auto p = m_passwords.find(i.GetLevel());
                 if (p != m_passwords.end() && !p->second.isEmpty())
                 {
                     ret = p->second;
@@ -267,7 +267,7 @@ class ParentalLevelChangeCheckerPrivate : public QObject
         int last_parent_lvl = gCoreContext->GetNumSetting("VideoPasswordLevel",
                                                           -1);
 
-        if (!last_time_stamp.length() || last_parent_lvl == -1)
+        if (last_time_stamp.isEmpty() || last_parent_lvl == -1)
         {
             LOG(VB_GENERAL, LOG_ERR,
                 QString("%1: Could not read password/pin time "
@@ -297,7 +297,7 @@ class ParentalLevelChangeCheckerPrivate : public QObject
         if (m_validPasswords.empty())
         {
             QString pw = m_pm.FirstAtOrBelow(which_level.GetLevel());
-            if (pw.length())
+            if (!pw.isEmpty())
                 m_validPasswords.push_back(pw);
         }
 
@@ -313,9 +313,9 @@ class ParentalLevelChangeCheckerPrivate : public QObject
         auto *pwd = new MythTextInputDialog(popupStack,
                         tr("Parental PIN:"), FilterNone, true);
 
-        connect(pwd, SIGNAL(haveResult(QString)),
-                SLOT(OnPasswordEntered(QString)));
-        connect(pwd, SIGNAL(Exiting()), SLOT(OnPasswordExit()));
+        connect(pwd, &MythTextInputDialog::haveResult,
+                this, &ParentalLevelChangeCheckerPrivate::OnPasswordEntered);
+        connect(pwd, &MythScreenType::Exiting, this, &ParentalLevelChangeCheckerPrivate::OnPasswordExit);
 
         if (pwd->Create())
             popupStack->AddScreen(pwd, false);
@@ -328,7 +328,7 @@ class ParentalLevelChangeCheckerPrivate : public QObject
     {
         m_passwordOK = false;
 
-        foreach (auto & valid_pwd, m_validPasswords)
+        for (const auto& valid_pwd : qAsConst(m_validPasswords))
         {
             if (password != valid_pwd)
                 continue;
@@ -359,8 +359,8 @@ class ParentalLevelChangeCheckerPrivate : public QObject
 ParentalLevelChangeChecker::ParentalLevelChangeChecker()
 {
     m_private = new ParentalLevelChangeCheckerPrivate(this);
-    connect(m_private, SIGNAL(SigDone(bool, ParentalLevel::Level)),
-            SLOT(OnResultReady(bool, ParentalLevel::Level)));
+    connect(m_private, &ParentalLevelChangeCheckerPrivate::SigDone,
+            this, &ParentalLevelChangeChecker::OnResultReady);
 }
 
 void ParentalLevelChangeChecker::Check(ParentalLevel::Level fromLevel,

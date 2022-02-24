@@ -4,7 +4,6 @@
 // C++ headers
 #include <cstdint>
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QMutex>
@@ -14,7 +13,7 @@ using namespace std;
 #include "referencecounter.h"
 
 class ProgramInfo;
-class RingBuffer;
+class MythMediaBuffer;
 class MythSocket;
 class QString;
 
@@ -24,7 +23,7 @@ class FileTransfer : public ReferenceCounter
 
   public:
     FileTransfer(QString &filename, MythSocket *remote,
-                 bool usereadahead, int timeout_ms);
+                 bool usereadahead, std::chrono::milliseconds timeout);
     FileTransfer(QString &filename, MythSocket *remote, bool write);
 
     MythSocket *getSocket() { return m_sock; }
@@ -54,13 +53,13 @@ class FileTransfer : public ReferenceCounter
     QWaitCondition  m_readsUnlockedCond;
 
     ProgramInfo    *m_pginfo            {nullptr};
-    RingBuffer     *m_rbuffer           {nullptr};
+    MythMediaBuffer* m_rbuffer          {nullptr};
     MythSocket     *m_sock              {nullptr};
     bool            m_ateof             {false};
 
-    vector<char>    m_requestBuffer;
+    std::vector<char> m_requestBuffer;
 
-    QMutex          m_lock              {QMutex::NonRecursive};
+    QMutex          m_lock;
 
     bool            m_writemode         {false};
 };

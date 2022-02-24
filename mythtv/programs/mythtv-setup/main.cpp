@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 
+#include <QtGlobal>
 #include <QString>
 #include <QDir>
 #include <QMap>
@@ -47,8 +48,6 @@
 #include "cleanupguard.h"
 #include "mythdisplay.h"
 
-using namespace std;
-
 ExitPrompter   *exitPrompt  = nullptr;
 StartPrompter  *startPrompt = nullptr;
 
@@ -61,8 +60,6 @@ static void cleanup()
 
     delete gContext;
     gContext = nullptr;
-
-    delete qApp;
 
     SignalHandler::Done();
 }
@@ -200,21 +197,20 @@ static bool resetTheme(QString themedir, const QString &badtheme)
 
     LOG(VB_GENERAL, LOG_ERR,
         QString("Overriding broken theme '%1' with '%2'")
-                .arg(badtheme).arg(themename));
+                .arg(badtheme, themename));
 
     gCoreContext->OverrideSettingForSession("Theme", themename);
     themedir = GetMythUI()->FindThemeDir(themename);
 
     MythTranslation::reload();
-    GetMythUI()->LoadQtConfig();
     GetMythMainWindow()->Init();
-    GetMythMainWindow()->ReinitDone();
 
     return RunMenu(themedir, themename);
 }
 
 static int reloadTheme(void)
 {
+    GetMythUI()->InitThemeHelper();
     QString themename = gCoreContext->GetSetting("Theme", DEFAULT_UI_THEME);
     QString themedir = GetMythUI()->FindThemeDir(themename);
     if (themedir.isEmpty())
@@ -227,15 +223,9 @@ static int reloadTheme(void)
     MythTranslation::reload();
 
     GetMythMainWindow()->SetEffectsEnabled(false);
-
-    GetMythUI()->LoadQtConfig();
-
     if (menu)
-    {
         menu->Close();
-    }
     GetMythMainWindow()->Init();
-    GetMythMainWindow()->ReinitDone();
     GetMythMainWindow()->SetEffectsEnabled(true);
 
     if (!RunMenu(themedir, themename) && !resetTheme(themedir, themename))
@@ -247,7 +237,6 @@ static int reloadTheme(void)
 int main(int argc, char *argv[])
 {
     QString geometry;
-    QString display;
     bool    doScan   = false;
     bool    doScanList = false;
     bool    doScanSaveOnly = false;
@@ -294,16 +283,17 @@ int main(int argc, char *argv[])
         use_display = false;
     }
 
+    std::unique_ptr<QCoreApplication> app {nullptr};
     CleanupGuard callCleanup(cleanup);
 
     if (use_display)
     {
-        MythDisplay::ConfigureQtGUI();
-        new QApplication(argc, argv);
+        MythDisplay::ConfigureQtGUI(1, cmdline);
+        app = std::make_unique<QApplication>(argc, argv);
     }
     else
     {
-        new QCoreApplication(argc, argv);
+        app = std::make_unique<QCoreApplication>(argc, argv);
     }
     QCoreApplication::setApplicationName(MYTH_APPNAME_MYTHTV_SETUP);
 
@@ -311,15 +301,13 @@ int main(int argc, char *argv[])
     QList<int> signallist;
     signallist << SIGINT << SIGTERM << SIGSEGV << SIGABRT << SIGBUS << SIGFPE
                << SIGILL;
-#if ! CONFIG_DARWIN
+#ifndef Q_OS_DARWIN
     signallist << SIGRTMIN;
 #endif
     SignalHandler::Init(signallist);
     SignalHandler::SetHandler(SIGHUP, logSigHup);
 #endif
 
-    if (cmdline.toBool("display"))
-        display = cmdline.toString("display");
     if (cmdline.toBool("geometry"))
         geometry = cmdline.toString("geometry");
 
@@ -384,15 +372,8 @@ int main(int argc, char *argv[])
     if (cmdline.toBool("inputname"))
         scanInputName = cmdline.toString("inputname");
 
-    if (!display.isEmpty())
-    {
-        MythUIHelper::SetX11Display(display);
-    }
-
     if (!geometry.isEmpty())
-    {
-        MythUIHelper::ParseGeometryOverride(geometry);
-    }
+        MythMainWindow::ParseGeometryOverride(geometry);
 
     gContext = new MythContext(MYTH_BINARY_VERSION);
 
@@ -415,10 +396,7 @@ int main(int argc, char *argv[])
 
     if (use_display)
     {
-        GetMythUI()->LoadQtConfig();
-
         QString fileprefix = GetConfDir();
-
         QDir dir(fileprefix);
         if (!dir.exists())
             dir.mkdir(fileprefix);
@@ -438,15 +416,15 @@ int main(int argc, char *argv[])
 
         if (!okCardID)
         {
-            cerr << "You must enter a valid cardid to scan." << endl;
-            vector<uint> cardids = CardUtil::GetInputIDs();
+            std::cerr << "You must enter a valid cardid to scan." << std::endl;
+            std::vector<unsigned int> cardids = CardUtil::GetInputIDs();
             if (cardids.empty())
             {
-                cerr << "But no cards have been defined on this host"
-                     << endl;
+                std::cerr << "But no cards have been defined on this host"
+                          << std::endl;
                 return GENERIC_EXIT_INVALID_CMDLINE;
             }
-            cerr << "Valid cards: " << endl;
+            std::cerr << "Valid cards: " << std::endl;
             for (uint id : cardids)
             {
                 fprintf(stderr, "%5u: %s %s\n", id,
@@ -458,11 +436,11 @@ int main(int argc, char *argv[])
 
         if (!okInputName)
         {
-            cerr << "You must enter a valid input to scan this card."
-                 << endl;
-            cerr << "Valid input: "
-                 << CardUtil::GetInputName(scanCardId).toLatin1().constData()
-                 << endl;
+            std::cerr << "You must enter a valid input to scan this card."
+                      << std::endl;
+            std::cerr << "Valid input: "
+                      << CardUtil::GetInputName(scanCardId).toLatin1().constData()
+                      << std::endl;
             return GENERIC_EXIT_INVALID_CMDLINE;
         }
     }
@@ -476,7 +454,7 @@ int main(int argc, char *argv[])
         {
             ChannelScannerCLI scanner(doScanSaveOnly, scanInteractive);
 
-            int scantype = ScanTypeSetting::FullScan_ATSC;
+            int scantype { ScanTypeSetting::FullScan_ATSC };
             if (frequencyStandard == "atsc")
                 scantype = ScanTypeSetting::FullScan_ATSC; // NOLINT(bugprone-branch-clone)
             else if (frequencyStandard == "dvbt")
@@ -510,16 +488,16 @@ int main(int argc, char *argv[])
                          // stuff needed for particular scans
                          /* mplexid   */ 0,
                          startChan, frequencyStandard, modulation, region);
-            ret = qApp->exec();
+            ret = QCoreApplication::exec();
         }
         return (ret) ? GENERIC_EXIT_NOT_OK : GENERIC_EXIT_OK;
     }
 
     if (doScanList)
     {
-        vector<ScanInfo> scans = LoadScanList();
+        std::vector<ScanInfo> scans = LoadScanList();
 
-        cout<<" scanid cardid sourceid processed        date"<<endl;
+        std::cout<<" scanid cardid sourceid processed        date"<<std::endl;
         for (auto & scan : scans)
         {
             printf("%5i %6i %8i %8s    %20s\n",
@@ -528,14 +506,14 @@ int main(int argc, char *argv[])
                    scan.m_scandate.toString(Qt::ISODate)
                    .toLatin1().constData());
         }
-        cout<<endl;
+        std::cout<<std::endl;
 
         return GENERIC_EXIT_OK;
     }
 
     if (scanImport)
     {
-        cout<<"*** SCAN IMPORT START ***"<<endl;
+        std::cout<<"*** SCAN IMPORT START ***"<<std::endl;
         {
             ScanDTVTransportList list = LoadScan(scanImport);
             ChannelImporter ci(false, true, true, true, false,
@@ -546,7 +524,7 @@ int main(int argc, char *argv[])
                                scanServiceRequirements);
             ci.Process(list);
         }
-        cout<<"*** SCAN IMPORT END ***"<<endl;
+        std::cout<<"*** SCAN IMPORT END ***"<<std::endl;
         return GENERIC_EXIT_OK;
     }
 
@@ -619,7 +597,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    qApp->exec();
+    QCoreApplication::exec();
 }
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */

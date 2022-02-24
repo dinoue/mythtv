@@ -110,7 +110,7 @@ QString DishEventTagsDescriptor::programid(void) const
     } else
         return prefix;
 
-    QString id = QString("%1%2%3").arg(prefix).arg(series).arg(episode, 4, 0);
+    QString id = QString("%1%2%3").arg(prefix, series).arg(episode, 4, 0);
 
     return id;
 }
@@ -141,7 +141,7 @@ QString DishEventTagsDescriptor::seriesid(void) const
 
 QDate DishEventTagsDescriptor::originalairdate(void) const
 {
-    unsigned char mjd[5];
+    std::array<uint8_t,5> mjd {};
 
     if (DescriptorLength() != 8)
         return {};
@@ -192,8 +192,8 @@ QString DishEventMPAADescriptor::rating(void) const
 
     QMutexLocker locker(&s_mpaaRatingsLock);
 
-    QMap<uint,QString>::const_iterator it = s_mpaaRatingsDesc.find(rating_raw());
-    if (it != s_mpaaRatingsDesc.end())
+    QMap<uint,QString>::const_iterator it = s_mpaaRatingsDesc.constFind(rating_raw());
+    if (it != s_mpaaRatingsDesc.constEnd())
         return *it;
 
     // Found nothing? Just return empty string.
@@ -251,8 +251,8 @@ QString DishEventVCHIPDescriptor::rating(void) const
 
     QMutexLocker locker(&s_vchipRatingsLock);
 
-    QMap<uint,QString>::const_iterator it = s_vchipRatingsDesc.find(rating_raw());
-    if (it != s_vchipRatingsDesc.end())
+    QMap<uint,QString>::const_iterator it = s_vchipRatingsDesc.constFind(rating_raw());
+    if (it != s_vchipRatingsDesc.constEnd())
         return *it;
 
     // Found nothing? Just return empty string.
@@ -301,29 +301,28 @@ volatile bool      DishContentDescriptor::s_dishCategoryDescExists = false;
 
 QString dish_theme_type_to_string(uint theme_type)
 {
-    // cppcheck-suppress variableScope
-    static const char *s_themes[kThemeLast] =
+    static const std::array<const std::string,kThemeLast> s_themes =
     {
         "", "Movie", "Sports", "News/Business", "Family/Children", "Education",
         "Series/Special", "Music/Art", "Religious", "Off-Air"
     };
 
     if ((theme_type > kThemeNone) && (theme_type < kThemeLast))
-        return QString(s_themes[theme_type]);
+        return QString::fromStdString(s_themes[theme_type]);
 
     return "";
 }
 
 DishThemeType string_to_dish_theme_type(const QString &theme_type)
 {
-    static const char *s_themes[kThemeLast] =
+    static const std::array<const std::string,kThemeLast> s_themes
     {
         "", "Movie", "Sports", "News/Business", "Family/Children", "Education",
         "Series/Special", "Music/Art", "Religious", "Off-Air"
     };
 
     for (uint i = 1; i < 10; i++)
-        if (theme_type == s_themes[i])
+        if (theme_type.toStdString() == s_themes[i])
             return (DishThemeType) i;
 
     return kThemeNone;
@@ -337,8 +336,8 @@ DishThemeType DishContentDescriptor::GetTheme(DVBKind dvbkind) const
     if (Nibble1(0) == 0x00)
         return kThemeOffAir;
 
-    QMap<uint,QString>::const_iterator it = s_themeDesc.find(Nibble2(0));
-    if (it != s_themeDesc.end())
+    QMap<uint,QString>::const_iterator it = s_themeDesc.constFind(Nibble2(0));
+    if (it != s_themeDesc.constEnd())
         return string_to_dish_theme_type(*it);
 
     // Found nothing? Just return empty string.
@@ -354,8 +353,8 @@ QString DishContentDescriptor::GetCategory(DVBKind dvbkind) const
 
     // Try to get detailed description
     QMap<uint,QString>::const_iterator it =
-        s_dishCategoryDesc.find(UserNibble(0));
-    if (it != s_dishCategoryDesc.end())
+        s_dishCategoryDesc.constFind(UserNibble(0));
+    if (it != s_dishCategoryDesc.constEnd())
         return *it;
 
     // Fallback to just the theme

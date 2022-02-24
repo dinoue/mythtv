@@ -5,8 +5,8 @@
  *  Copyright notice is in v4l2recorder.cpp of the MythTV project.
  */
 
-#ifndef _V4L2encRecorder_H_
-#define _V4L2encRecorder_H_
+#ifndef V4L2encRecorder_H
+#define V4L2encRecorder_H
 
 // MythTV includes
 #include "v4l2encstreamhandler.h"
@@ -38,7 +38,7 @@ class V4L2encRecorder : public V4LRecorder
     void Close(void);
     void StartNewFile(void) override; // RecorderBase
 
-    bool PauseAndWait(int timeout = 500) override; // RecorderBase
+    bool PauseAndWait(std::chrono::milliseconds timeout = 500ms) override; // RecorderBase
 
   protected:
     bool StartEncoding(void);
@@ -56,4 +56,4 @@ class V4L2encRecorder : public V4LRecorder
     V4L2encStreamHandler *m_streamHandler  {nullptr};
 };
 
-#endif // _V4L2enc_RECORDER_H_
+#endif // V4L2enc_RECORDER_H

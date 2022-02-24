@@ -5,7 +5,6 @@
 
 // C++ headers
 #include <vector>
-using namespace std;
 
 // OS X headers
 #undef always_inline
@@ -42,8 +41,8 @@ class DarwinAVCInfo : public AVCInfo
     void CloseDeviceInterface(void);
 
     bool SendAVCCommand(
-        const vector<uint8_t> &cmd,
-        vector<uint8_t>       &result,
+        const std::vector<uint8_t> &cmd,
+        std::vector<uint8_t>       &result,
         int                   retry_cnt) override; // AVCInfo
 
     bool GetDeviceNodes(int &local_node, int &remote_node);
@@ -59,8 +58,8 @@ class DarwinAVCInfo : public AVCInfo
 
     io_object_t  fw_device_notifier_ref {0};
 
-    IOFireWireAVCLibUnitInterface **avc_handle {0};
-    IOFireWireLibDeviceRef          fw_handle  {0};
+    IOFireWireAVCLibUnitInterface **avc_handle {nullptr};
+    IOFireWireLibDeviceRef          fw_handle  {nullptr};
 };
 using avcinfo_list_t = QMap<uint64_t,DarwinAVCInfo*>;
 

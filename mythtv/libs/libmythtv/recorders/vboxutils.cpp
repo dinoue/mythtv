@@ -5,7 +5,6 @@
 #include <QString>
 #include <QStringList>
 #include <QDomDocument>
-#include <QRegExp>
 
 // MythTV headers
 #include "vboxutils.h"
@@ -20,31 +19,27 @@
 #define QUERY_CHANNELS  "http://{URL}/cgi-bin/HttpControl/HttpControlApp?OPTION=1&Method=GetXmltvChannelsList"\
                         "&FromChIndex=FirstChannel&ToChIndex=LastChannel&FilterBy=All"
 
-#define SEARCH_TIME 3000
+static constexpr std::chrono::milliseconds SEARCH_TIME { 3s };
 #define VBOX_URI "urn:schemas-upnp-org:device:MediaServer:1"
 #define VBOX_UDN "uuid:b7531642-0123-3210"
-
-VBox::VBox(const QString &url)
-{
-    m_url = url;
-}
 
 // static method
 QStringList VBox::probeDevices(void)
 {
-    const int milliSeconds = SEARCH_TIME;
+    const std::chrono::milliseconds milliSeconds { SEARCH_TIME };
+    auto seconds = duration_cast<std::chrono::seconds>(milliSeconds);
 
     // see if we have already found one or more vboxes
     QStringList result = VBox::doUPNPSearch();
 
-    if (result.count())
+    if (!result.isEmpty())
         return result;
 
     // non found so start a new search
     LOG(VB_GENERAL, LOG_INFO, LOC + QString("Using UPNP to search for Vboxes (%1 secs)")
-        .arg(milliSeconds / 1000));
+        .arg(seconds.count()));
 
-    SSDP::Instance()->PerformSearch(VBOX_URI, milliSeconds / 1000);
+    SSDP::Instance()->PerformSearch(VBOX_URI, seconds);
 
     // Search for a total of 'milliSeconds' ms, sending new search packet
     // about every 250 ms until less than one second remains.
@@ -52,13 +47,13 @@ QStringList VBox::probeDevices(void)
     MythTimer searchTime; searchTime.start();
     while (totalTime.elapsed() < milliSeconds)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(25));
-        int ttl = milliSeconds - totalTime.elapsed();
-        if ((searchTime.elapsed() > 249) && (ttl > 1000))
+        std::this_thread::sleep_for(25ms);
+        auto ttl = duration_cast<std::chrono::seconds>(milliSeconds - totalTime.elapsed());
+        if ((searchTime.elapsed() > 249ms) && (ttl > 1s))
         {
             LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("UPNP Search %1 secs")
-                .arg(ttl / 1000));
-            SSDP::Instance()->PerformSearch(VBOX_URI, ttl / 1000);
+                .arg(ttl.count()));
+            SSDP::Instance()->PerformSearch(VBOX_URI, ttl);
             searchTime.start();
         }
     }
@@ -93,7 +88,7 @@ QStringList VBox::doUPNPSearch(void)
     EntryMap map;
     vboxes->GetEntryMap(map);
 
-    foreach (auto BE, map)
+    for (auto *BE : qAsConst(map))
     {
         if (!BE->GetDeviceDesc())
         {
@@ -106,7 +101,8 @@ QStringList VBox::doUPNPSearch(void)
         QString udn = BE->GetDeviceDesc()->m_rootDevice.m_sUDN;
         int port = BE->GetDeviceDesc()->m_hostUrl.port();
 
-        LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Found possible VBox at %1 (%2:%3)").arg(friendlyName).arg(ip).arg(port));
+        LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Found possible VBox at %1 (%2:%3)")
+            .arg(friendlyName, ip, QString::number(port)));
 
         if (udn.startsWith(VBOX_UDN))
         {
@@ -132,7 +128,7 @@ QStringList VBox::doUPNPSearch(void)
                 // add a device in the format ID IP TUNERNO TUNERTYPE
                 // eg vbox_3718 192.168.1.204 1 DVBT/T2
                 const QString& tuner = tuners.at(x);
-                QString device = QString("%1 %2 %3").arg(id).arg(ip).arg(tuner);
+                QString device = QString("%1 %2 %3").arg(id, ip, tuner);
                 result << device;
                 LOG(VB_GENERAL, LOG_INFO, QString("Found VBox - %1").arg(device));
             }
@@ -164,8 +160,9 @@ QString VBox::getIPFromVideoDevice(const QString& dev)
     QString id = devItems.at(0).trimmed();
 
     // if we already have an ip address use that
-    QRegExp ipRegExp("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
-    if (id.indexOf(ipRegExp) == 0)
+    QRegularExpression ipRE { R"(^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$)" };
+    auto match = ipRE.match(id);
+    if (match.hasMatch())
         return id;
 
     // we must have a vbox id so look it up to find the ip address
@@ -256,7 +253,8 @@ bool VBox::checkVersion(QString &version)
 
     delete xmlDoc;
 
-    LOG(VB_GENERAL, LOG_INFO, LOC + QString("CheckVersion - required: %1, actual: %2").arg(VBOX_MIN_API_VERSION).arg(version));
+    LOG(VB_GENERAL, LOG_INFO, LOC + QString("CheckVersion - required: %1, actual: %2")
+        .arg(VBOX_MIN_API_VERSION, version));
 
     if (major < requiredMajor)
         return false;
@@ -392,7 +390,7 @@ bool VBox::sendQuery(const QString& query, QDomDocument* xmlDoc)
                 return true;
 
             LOG(VB_GENERAL, LOG_ERR, LOC +
-                QString("API Error: %1 - %2, Query was: %3").arg(errorCode).arg(errorDesc).arg(query));
+                QString("API Error: %1 - %2, Query was: %3").arg(errorCode).arg(errorDesc, query));
 
             return false;
         }
@@ -402,7 +400,7 @@ bool VBox::sendQuery(const QString& query, QDomDocument* xmlDoc)
     return true;
 }
 
-QString VBox::getStrValue(QDomElement &element, const QString &name, int index)
+QString VBox::getStrValue(const QDomElement &element, const QString &name, int index)
 {
     QDomNodeList nodes = element.elementsByTagName(name);
     if (!nodes.isEmpty())
@@ -416,7 +414,7 @@ QString VBox::getStrValue(QDomElement &element, const QString &name, int index)
     return QString();
 }
 
-int VBox::getIntValue(QDomElement &element, const QString &name, int index)
+int VBox::getIntValue(const QDomElement &element, const QString &name, int index)
 {
     QString value = getStrValue(element, name, index);
 

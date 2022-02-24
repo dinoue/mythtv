@@ -4,8 +4,8 @@
  * Object to convert a MythPlayer frame into a greyscale image.
  */
 
-#ifndef __PGMCONVERTER_H__
-#define __PGMCONVERTER_H__
+#ifndef PGMCONVERTER_H
+#define PGMCONVERTER_H
 
 extern "C" {
 #include "libavcodec/avcodec.h"    /* AVFrame */
@@ -13,6 +13,7 @@ extern "C" {
 
 class MythPlayer;
 class MythAVCopy;
+class MythVideoFrame;
 
 /*
  * PGM_CONVERT_GREYSCALE:
@@ -34,7 +35,7 @@ public:
     ~PGMConverter(void);
 
     int MythPlayerInited(const MythPlayer *player);
-    const AVFrame *getImage(const VideoFrame *frame, long long frameno,
+    const AVFrame *getImage(const MythVideoFrame *frame, long long frameno,
             int *pwidth, int *pheight);
     int reportTime(void);
 
@@ -44,12 +45,12 @@ private:
     int             m_height        {-1}; /* frame dimensions */
     AVFrame         m_pgm           {};   /* grayscale frame */
 #ifdef PGM_CONVERT_GREYSCALE
-    struct timeval  m_convertTime   {0,0};
+    std::chrono::microseconds  m_convertTime  {0us};
     bool            m_timeReported  {false};
     MythAVCopy     *m_copy          {nullptr};
 #endif /* PGM_CONVERT_GREYSCALE */
 };
 
-#endif  /* !__PGMCONVERTER_H__ */
+#endif  /* !PGMCONVERTER_H */
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */

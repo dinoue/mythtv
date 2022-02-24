@@ -6,12 +6,12 @@
 //
 // Copyright (c) 2011 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __HTMLSERVER_H__
-#define __HTMLSERVER_H__
+#ifndef HTMLSERVER_H
+#define HTMLSERVER_H
 
 #include "httpserver.h"
 #include "serverSideScripting.h"
@@ -51,4 +51,4 @@ class UPNP_PUBLIC HtmlServerExtension : public HttpServerExtension
 
 };
 
-#endif
+#endif // HTMLSERVER_H

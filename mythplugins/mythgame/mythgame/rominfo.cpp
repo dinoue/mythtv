@@ -14,7 +14,7 @@ bool operator==(const RomInfo& a, const RomInfo& b)
     return a.Romname() == b.Romname();
 }
 
-void RomInfo::SaveToDatabase()
+void RomInfo::SaveToDatabase() const
 {
     MSqlQuery query(MSqlQuery::InitCon());
 
@@ -25,8 +25,8 @@ void RomInfo::SaveToDatabase()
 
     if (inserting)
     {
-        LOG(VB_GENERAL, LOG_INFO, LOC + QString("Adding %1 - %2").arg(Rompath())
-            .arg(Romname()));
+        LOG(VB_GENERAL, LOG_INFO, LOC + QString("Adding %1 - %2")
+            .arg(Rompath(), Romname()));
 
         query.prepare("INSERT INTO gamemetadata "
                       "(`system`, romname, gamename, genre, year, gametype, "
@@ -91,10 +91,10 @@ void RomInfo::SaveToDatabase()
     }
 }
 
-void RomInfo::DeleteFromDatabase()
+void RomInfo::DeleteFromDatabase() const
 {
-    LOG(VB_GENERAL, LOG_INFO, LOC + QString("Removing %1 - %2").arg(Rompath())
-            .arg(Romname()));
+    LOG(VB_GENERAL, LOG_INFO, LOC + QString("Removing %1 - %2")
+        .arg(Rompath(), Romname()));
 
     MSqlQuery query(MSqlQuery::InitCon());
 
@@ -160,13 +160,10 @@ bool RomInfo::FindImage(QString BaseFileName, QString *result)
 
 
     BaseFileName.truncate(dotLocation + 1);
-    foreach (auto & format, graphic_formats)
-    {
-        *result = BaseFileName + format;
-        if (QFile::exists(*result))
-            return true;
-    }
-    return false;
+    return std::any_of(graphic_formats.cbegin(), graphic_formats.cend(),
+                       [BaseFileName,result](const auto & format)
+                           { *result = BaseFileName + format;
+                             return QFile::exists(*result); } );
 }
 
 void RomInfo::setField(const QString& field, const QString& data)
@@ -196,7 +193,7 @@ void RomInfo::setField(const QString& field, const QString& data)
     else if (field == "publisher")
         m_publisher = data;
     else if (field == "crc_value")
-        m_crc_value = data;
+        m_crcValue = data;
     else if (field == "inetref")
         m_inetref = data;
     else if (field == "diskcount")
@@ -231,7 +228,7 @@ void RomInfo::setFavorite(bool updateDatabase)
     }
 }
 
-QString RomInfo::getExtension()
+QString RomInfo::getExtension() const
 {
     int pos = Romname().lastIndexOf(".");
     if (pos == -1)
@@ -413,13 +410,12 @@ RomInfo *RomInfo::GetRomInfoById(int id)
     return ret;
 }
 
-QString RomInfo::toString()
+QString RomInfo::toString() const
 {
     return QString ("Rom Info:\n"
                "ID: %1\n"
                "Game Name: %2\n"
                "Rom Name: %3\n"
                "Rom Path: %4")
-               .arg(Id()).arg(Gamename())
-               .arg(Romname()).arg(Rompath());
+               .arg(QString::number(Id()), Gamename(), Romname(), Rompath());
 }

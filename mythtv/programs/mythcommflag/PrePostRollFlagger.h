@@ -7,7 +7,7 @@ class PrePostRollFlagger : public ClassicCommDetector
 {
 public:
     PrePostRollFlagger(SkipType commDetectMethod, bool showProgress,
-                            bool fullSpeed, MythPlayer* player,
+                            bool fullSpeed, MythCommFlagPlayer* player,
                             const QDateTime& startedAt_in,
                             const QDateTime& stopsAt_in,
                             const QDateTime& recordingStartedAt_in,
@@ -26,7 +26,7 @@ private:
 
     void Init();
 
-    long long findBreakInrange(long long start, long long stopFrame,
+    long long findBreakInrange(long long startFrame, long long stopFrame,
                                long long totalFrames,
                                long long &framesProcessed,
                                QElapsedTimer &flagTime, bool findLast);

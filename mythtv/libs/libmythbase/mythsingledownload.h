@@ -1,5 +1,5 @@
-#ifndef _Myth_Single_Download_h_
-#define _Myth_Single_Download_h_
+#ifndef MYTH_SINGLE_DOWNLOAD_H
+#define MYTH_SINGLE_DOWNLOAD_H
 
 //#include <QObject>
 #include <QString>
@@ -12,6 +12,8 @@
 #include <QEventLoop>
 
 #include "mythbaseexp.h"
+
+using namespace std::chrono_literals;
 
 /*
  * MythDownloadManager leaks memory.  For things like the HLS
@@ -28,7 +30,7 @@ class MBASE_PUBLIC MythSingleDownload : public QObject
    MythSingleDownload(void) = default;
    ~MythSingleDownload(void) override = default;
 
-   bool DownloadURL(const QUrl &url, QByteArray *buffer, uint timeout = 30000,
+   bool DownloadURL(const QUrl &url, QByteArray *buffer, std::chrono::seconds timeout = 30s,
                     uint redirs = 0, qint64 maxsize = 0, QString *final_url = nullptr);
    void Cancel(void);
    QString ErrorString(void) const { return m_errorstring; }
@@ -50,4 +52,4 @@ class MBASE_PUBLIC MythSingleDownload : public QObject
     qint64                m_maxsize         {0};
 };
 
-#endif
+#endif // MYTH_SINGLE_DOWNLOAD_H

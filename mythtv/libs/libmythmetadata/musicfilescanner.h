@@ -1,5 +1,5 @@
-#ifndef _MUSICFILESCANNER_H_
-#define _MUSICFILESCANNER_H_
+#ifndef MUSICFILESCANNER_H
+#define MUSICFILESCANNER_H
 
 // MythTV
 #include "mythmetaexp.h"
@@ -24,12 +24,12 @@ class META_PUBLIC MusicFileScanner
     struct MusicFileData
     {
         QString startDir;
-        MusicFileLocation location;
+        MusicFileLocation location {kFileSystem};
     };
 
     using MusicLoadedMap = QMap <QString, MusicFileData>;
     public:
-        MusicFileScanner(bool force = false);
+        explicit MusicFileScanner(bool force = false);
         ~MusicFileScanner(void) = default;
 
         void SearchDirs(const QStringList &dirList);
@@ -38,7 +38,7 @@ class META_PUBLIC MusicFileScanner
 
     private:
         void BuildFileList(QString &directory, MusicLoadedMap &music_files, MusicLoadedMap &art_files, int parentid);
-        static int  GetDirectoryId(const QString &directory, const int &parentid);
+        static int  GetDirectoryId(const QString &directory, int parentid);
         static bool HasFileChanged(const QString &filename, const QString &date_modified);
         void AddFileToDB(const QString &filename, const QString &startDir);
         void RemoveFileFromDB (const QString &filename, const QString &startDir);
@@ -70,7 +70,7 @@ class META_PUBLIC MusicFileScanner
         uint m_coverartRemoved   {0};
         uint m_coverartUpdated   {0};
 
-        bool m_forceupdate;
+        bool m_forceupdate       {false};
 };
 
-#endif // _MUSICFILESCANNER_H_
+#endif // MUSICFILESCANNER_H

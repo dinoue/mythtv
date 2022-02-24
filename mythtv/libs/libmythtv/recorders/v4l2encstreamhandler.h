@@ -1,11 +1,11 @@
 // -*- Mode: c++ -*-
 
-#ifndef _V4L2encStreamhandler_H_
-#define _V4L2encStreamhandler_H_
+#ifndef V4L2encStreamhandler_H
+#define V4L2encStreamhandler_H
 
 #include <cstdint>
+#include <string>
 #include <vector>
-using namespace std;
 
 #include <QString>
 #include <QAtomicInt>
@@ -125,10 +125,10 @@ class V4L2encStreamHandler : public StreamHandler
     uint          m_highBitrate            {UINT_MAX};
     uint          m_highPeakBitrate        {UINT_MAX};
 
-    static const int   kAudioRateL1[];
-    static const int   kAudioRateL2[];
-    static const int   kAudioRateL3[];
-    static const char *kStreamTypes[];
+    static const std::array<const int,14>         kAudioRateL1;
+    static const std::array<const int,14>         kAudioRateL2;
+    static const std::array<const int,14>         kAudioRateL3;
+    static const std::array<const std::string,15> kStreamTypes;
 
     int           m_fd                     {-1};
     int           m_audioInput             {-1};
@@ -149,4 +149,4 @@ class V4L2encStreamHandler : public StreamHandler
     bool          m_pauseEncodingAllowed   {true};
 };
 
-#endif // _V4L2encSTREAMHANDLER_H_
+#endif // V4L2encSTREAMHANDLER_H

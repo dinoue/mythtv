@@ -1,8 +1,8 @@
 #include <iostream>
-using namespace std;
 
 #include <QFile>
 #include <QFileInfo>
+#include <QRegularExpression>
 #include <QUrl>
 
 // POSIX C headers
@@ -34,7 +34,7 @@ using namespace std;
 #include "threadedfilewriter.h"
 #include "storagegroup.h"
 
-#define MAX_FILE_CHECK 500  // in ms
+static constexpr std::chrono::milliseconds MAX_FILE_CHECK { 500ms };
 
 static bool RemoteSendReceiveStringList(const QString &host, QStringList &strlist)
 {
@@ -70,16 +70,16 @@ static bool RemoteSendReceiveStringList(const QString &host, QStringList &strlis
 }
 
 RemoteFile::RemoteFile(QString url, bool write, bool usereadahead,
-                       int timeout_ms,
+                       std::chrono::milliseconds timeout,
                        const QStringList *possibleAuxiliaryFiles) :
     m_path(std::move(url)),
-    m_useReadAhead(usereadahead),  m_timeoutMs(timeout_ms),
+    m_useReadAhead(usereadahead),  m_timeoutMs(timeout),
     m_writeMode(write)
 {
     if (m_writeMode)
     {
         m_useReadAhead = false;
-        m_timeoutMs = -1;
+        m_timeoutMs = -1ms;
     }
     else if (possibleAuxiliaryFiles)
         m_possibleAuxFiles = *possibleAuxiliaryFiles;
@@ -160,7 +160,7 @@ MythSocket *RemoteFile::openSocket(bool control)
     QStringList strlist;
 
 #ifndef IGNORE_PROTO_VER_MISMATCH
-    if (!gCoreContext->CheckProtoVersion(lsock, 5000))
+    if (!gCoreContext->CheckProtoVersion(lsock, 5s))
     {
         LOG(VB_GENERAL, LOG_ERR, loc +
             QString("Failed validation to server %1:%2").arg(host).arg(port));
@@ -171,7 +171,8 @@ MythSocket *RemoteFile::openSocket(bool control)
 
     if (control)
     {
-        strlist.append(QString("ANN Playback %1 %2").arg(hostname).arg(false));
+        strlist.append(QString("ANN Playback %1 %2")
+                       .arg(hostname).arg(static_cast<int>(false)));
         if (!lsock->SendReceiveStringList(strlist))
         {
             LOG(VB_GENERAL, LOG_ERR, loc +
@@ -184,12 +185,12 @@ MythSocket *RemoteFile::openSocket(bool control)
     else
     {
         strlist.push_back(QString("ANN FileTransfer %1 %2 %3 %4")
-                          .arg(hostname).arg(m_writeMode)
-                          .arg(m_useReadAhead).arg(m_timeoutMs));
+                          .arg(hostname).arg(static_cast<int>(m_writeMode))
+                          .arg(static_cast<int>(m_useReadAhead)).arg(m_timeoutMs.count()));
         strlist << QString("%1").arg(dir);
         strlist << sgroup;
 
-        foreach (auto fname, m_possibleAuxFiles)
+        for (const auto& fname : qAsConst(m_possibleAuxFiles))
             strlist << fname;
 
         if (!lsock->SendReceiveStringList(strlist))
@@ -314,7 +315,7 @@ bool RemoteFile::OpenInternal()
         if (m_localFile == -1)
         {
             LOG(VB_FILE, LOG_ERR, QString("RemoteFile::Open(%1) Error: %2")
-                .arg(m_path).arg(strerror(errno)));
+                .arg(m_path, strerror(errno)));
             return false;
         }
         return true;
@@ -375,7 +376,8 @@ void RemoteFile::Close(bool haslock)
 {
     if (isLocal())
     {
-        ::close(m_localFile);
+        if (m_localFile >= 0)
+            ::close(m_localFile);
         m_localFile = -1;
         delete m_fileWriter;
         m_fileWriter = nullptr;
@@ -587,7 +589,7 @@ bool RemoteFile::CopyFile (const QString& src, const QString& dst,
                            bool overwrite, bool verify)
 {
     LOG(VB_FILE, LOG_INFO,
-        QString("RemoteFile::CopyFile: Copying file from '%1' to '%2'").arg(src).arg(dst));
+        QString("RemoteFile::CopyFile: Copying file from '%1' to '%2'").arg(src, dst));
 
     // sanity check
     if (src == dst)
@@ -676,7 +678,7 @@ bool RemoteFile::CopyFile (const QString& src, const QString& dst,
 bool RemoteFile::MoveFile (const QString& src, const QString& dst, bool overwrite)
 {
     LOG(VB_FILE, LOG_INFO,
-        QString("RemoteFile::MoveFile: Moving file from '%1' to '%2'").arg(src).arg(dst));
+        QString("RemoteFile::MoveFile: Moving file from '%1' to '%2'").arg(src, dst));
 
     // sanity check
     if (src == dst)
@@ -778,7 +780,7 @@ long long RemoteFile::SeekInternal(long long pos, int whence, long long curpos)
         if (whence == SEEK_SET)
         {
             QFileInfo info(m_path);
-            offset = min(pos, info.size());
+            offset = std::min(pos, info.size());
         }
         else if (whence == SEEK_END)
         {
@@ -988,11 +990,11 @@ int RemoteFile::Read(void *data, int size)
 
     sent = size;
 
-    int waitms = 30;
+    std::chrono::milliseconds waitms { 30ms };
     MythTimer mtimer;
     mtimer.start();
 
-    while (recv < sent && !error && mtimer.elapsed() < 10000)
+    while (recv < sent && !error && mtimer.elapsed() < 10s)
     {
         int ret = m_sock->Read(((char *)data) + recv, sent - recv, waitms);
 
@@ -1001,7 +1003,7 @@ int RemoteFile::Read(void *data, int size)
         else if (ret < 0)
             error = true;
 
-        waitms += (waitms < 200) ? 20 : 0;
+        waitms += (waitms < 200ms) ? 20ms : 0ms;
 
         if (m_controlSock->IsDataAvailable() &&
             m_controlSock->ReadStringList(strlist, MythSocket::kShortTimeout) &&
@@ -1025,7 +1027,7 @@ int RemoteFile::Read(void *data, int size)
     {
         // Wait up to 1.5s for the backend to send the size
         // MythSocket::ReadString will drop the connection
-        if (m_controlSock->ReadStringList(strlist, 1500) &&
+        if (m_controlSock->ReadStringList(strlist, 1500ms) &&
             !strlist.isEmpty())
         {
             sent = strlist[0].toInt(); // -1 on backend error
@@ -1206,7 +1208,7 @@ void RemoteFile::SetTimeout(bool fast)
     // handled.  The CheckConnection function can call Resume which
     // calls Close, which deletes m_controlSock.  However, the
     // subsequent call to OpenInternal is guaranteed to recreate the
-    // socket or return false for a non-local connection, an this must
+    // socket or return false for a non-local connection, and this must
     // be a non-local connection if this line of code is executed.
     if (!CheckConnection())
     {
@@ -1214,6 +1216,8 @@ void RemoteFile::SetTimeout(bool fast)
             "RemoteFile::SetTimeout(): Couldn't connect");
         return;
     }
+    if (m_controlSock == nullptr)
+        return;
 
     QStringList strlist( m_query.arg(m_recorderNum) );
     strlist << "SET_TIMEOUT";
@@ -1253,14 +1257,10 @@ QDateTime RemoteFile::LastModified(const QString &url)
     gCoreContext->SendReceiveStringList(strlist);
 
     if (strlist.size() > 1) {
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        result = MythDate::fromTime_t(strlist[1].toUInt());
-#else
         if (!strlist[1].isEmpty() && (strlist[1].toInt() != -1))
             result = MythDate::fromSecsSinceEpoch(strlist[1].toLongLong());
         else
             result = QDateTime();;
-#endif
     }
 
     return result;
@@ -1294,7 +1294,7 @@ QString RemoteFile::FindFile(const QString& filename, const QString& host,
 
 /**
  *  \brief Search all BE's for files in the give storage group
- *  \param filename the partial path and filename to look for or regex
+ *  \param filename the partial path and filename to look for or regular espression (QRegularExpression)
  *  \param host search this host first if given or default to the master BE if empty
  *  \param storageGroup the name of the storage group to search
  *  \param useRegex if true filename is assumed to be a regex expression of files to find
@@ -1307,7 +1307,7 @@ QStringList RemoteFile::FindFileList(const QString& filename, const QString& hos
 {
     LOG(VB_FILE, LOG_INFO, QString("RemoteFile::FindFile(): looking for '%1' on '%2' in group '%3' "
                                    "(useregex: %4, allowfallback: %5)")
-                                   .arg(filename).arg(host).arg(storageGroup)
+                                   .arg(filename, host, storageGroup)
                                    .arg(useRegex).arg(allowFallback));
 
     if (filename.isEmpty() || storageGroup.isEmpty())
@@ -1333,7 +1333,7 @@ QStringList RemoteFile::FindFileList(const QString& filename, const QString& hos
             QStringList files = sgroup.GetFileList('/' + fi.path());
 
             LOG(VB_FILE, LOG_INFO, QString("RemoteFile::FindFileList: Looking in dir '%1' for '%2'")
-                                           .arg(fi.path()).arg(fi.fileName()));
+                                           .arg(fi.path(), fi.fileName()));
 
             for (int x = 0; x < files.size(); x++)
             {
@@ -1341,12 +1341,12 @@ QStringList RemoteFile::FindFileList(const QString& filename, const QString& hos
                                                .arg(x).arg(files[x]));
             }
 
-            QStringList filteredFiles = files.filter(QRegExp(fi.fileName()));
-            for (int x = 0; x < filteredFiles.size(); x++)
+            QStringList filteredFiles = files.filter(QRegularExpression(fi.fileName()));
+            for (const QString& file : qAsConst(filteredFiles))
             {
                 strList << MythCoreContext::GenMythURL(gCoreContext->GetHostName(),
                                                        gCoreContext->GetBackendServerPort(),
-                                                       fi.path() + '/' + filteredFiles[x],
+                                                       fi.path() + '/' + file,
                                                        storageGroup);
             }
         }

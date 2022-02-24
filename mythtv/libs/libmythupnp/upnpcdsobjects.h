@@ -6,12 +6,12 @@
 //
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __UPNPCDSOBJECTS_H_
-#define __UPNPCDSOBJECTS_H_
+#ifndef UPNPCDSOBJECTS_H
+#define UPNPCDSOBJECTS_H
 
 #include <QDateTime>
 #include <QString>
@@ -92,7 +92,7 @@ class Property
         QString  m_sValue;
 };
 
-using Properties = QMap<QString,Property*>;
+using Properties = QMultiMap<QString,Property*>;
 using CDSObjects = QList<CDSObject*>;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -226,7 +226,7 @@ class UPNP_PUBLIC CDSObject : public ReferenceCounter
         Property         *AddProperty( Property *pProp  );
         QList<Property*>  GetProperties( const QString &sName );
         CDSObject        *AddChild   ( CDSObject   *pChild );
-        CDSObjects        GetChildren( void ) { return m_children; }
+        CDSObjects        GetChildren( void ) const { return m_children; }
         CDSObject        *GetChild   ( const QString &sID );
 
         ContainerClass *AddSearchClass( ContainerClass *pClass );
@@ -282,4 +282,4 @@ class UPNP_PUBLIC CDSObject : public ReferenceCounter
 
 };
 
-#endif
+#endif // UPNPCDSOBJECTS_H

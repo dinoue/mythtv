@@ -30,7 +30,7 @@ class RecordingInfo;
 class DVBDBOptions;
 class RecorderBase;
 class ChannelBase;
-class RingBuffer;
+class MythMediaBuffer;
 class TVRec;
 
 class FrameRate
@@ -38,17 +38,24 @@ class FrameRate
 public:
     explicit FrameRate(uint n, uint d=1) : m_num(n), m_den(d) {}
     double toDouble(void) const { return m_num / (double)m_den; }
-    bool isNonzero(void) const { return m_num; }
+    bool isNonzero(void) const { return m_num != 0U; }
     uint getNum(void) const { return m_num; }
     uint getDen(void) const { return m_den; }
     QString toString(void) const { return QString("%1/%2").arg(m_num).arg(m_den); }
-    bool operator==(const FrameRate &other) {
+    bool operator==(const FrameRate other) const {
         return m_num == other.m_num && m_den == other.m_den;
     }
-    bool operator!=(const FrameRate &other) { return !(*this == other); }
+    bool operator!=(const FrameRate other) const { return !(*this == other); }
 private:
     uint m_num;
     uint m_den;
+};
+
+enum class SCAN_t : uint8_t {
+    UNKNOWN_SCAN,
+    INTERLACED,
+    PROGRESSIVE,
+    VARIABLE
 };
 
 /** \class RecorderBase
@@ -96,7 +103,7 @@ class MTV_PUBLIC RecorderBase : public QRunnable
      *   Initialize(), Open(), or StartRecorder() calls. Externally created
      *   RingBuffers are not deleted in the Recorder's destructor.
      */
-    void SetRingBuffer(RingBuffer *rbuf);
+    void SetRingBuffer(MythMediaBuffer *Buffer);
 
     /** \brief Set an specific option.
      *
@@ -148,7 +155,7 @@ class MTV_PUBLIC RecorderBase : public QRunnable
      *
      *   This calls TVRec::RingBufferChanged() when the switch happens.
      */
-    void SetNextRecording(const RecordingInfo *ri, RingBuffer *rb);
+    void SetNextRecording(const RecordingInfo *ri, MythMediaBuffer *Buffer);
 
     /** \brief This is called between SetOptionsFromProfile() and
      *         run() to initialize any devices, etc.
@@ -219,7 +226,7 @@ class MTV_PUBLIC RecorderBase : public QRunnable
     virtual void Pause(bool clear = true);
     virtual void Unpause(void);
     virtual bool IsPaused(bool holding_lock = false) const;
-    virtual bool WaitForPause(int timeout = 1000);
+    virtual bool WaitForPause(std::chrono::milliseconds timeout = 1s);
 
     /** \brief Returns the latest frame rate.
      */
@@ -257,7 +264,7 @@ class MTV_PUBLIC RecorderBase : public QRunnable
      *  \sa SetOption(const QString&, const QString&)
      */
     void SetStrOption(RecordingProfile *profile, const QString &name);
-    virtual bool PauseAndWait(int timeout = 100);
+    virtual bool PauseAndWait(std::chrono::milliseconds timeout = 100ms);
 
     virtual void ResetForNewFile(void) = 0;
     virtual void SetRecordingStatus(RecStatus::Type status,
@@ -280,7 +287,11 @@ class MTV_PUBLIC RecorderBase : public QRunnable
 
     /** \brief Note a change in video frame rate in the recordedmark table
      */
-    void FrameRateChange(uint framerate, long long frame);
+    void FrameRateChange(uint framerate, uint64_t frame);
+
+    /** \brief Note a change in video scan type in the recordedmark table
+     */
+    void VideoScanChange(SCAN_t scan, uint64_t frame);
 
     /** \brief Note a change in video codec
      */
@@ -292,7 +303,7 @@ class MTV_PUBLIC RecorderBase : public QRunnable
 
     /** \brief Note the total duration in the recordedmark table
      */
-    void SetDuration(uint64_t duration);
+    void SetDuration(std::chrono::milliseconds duration);
 
     /** \brief Note the total frames in the recordedmark table
      */
@@ -301,7 +312,7 @@ class MTV_PUBLIC RecorderBase : public QRunnable
     void TryWriteProgStartMark(const frm_pos_map_t &durationDeltaCopy);
 
     TVRec         *m_tvrec                {nullptr};
-    RingBuffer    *m_ringBuffer           {nullptr};
+    MythMediaBuffer *m_ringBuffer         {nullptr};
     bool           m_weMadeBuffer         {true};
 
     AVContainer    m_containerFormat      {formatUnknown};
@@ -337,7 +348,7 @@ class MTV_PUBLIC RecorderBase : public QRunnable
 
     // For RingBuffer switching
     QMutex         m_nextRingBufferLock;
-    RingBuffer    *m_nextRingBuffer       {nullptr};
+    MythMediaBuffer    *m_nextRingBuffer       {nullptr};
     RecordingInfo *m_nextRecording        {nullptr};
     MythTimer      m_ringBufferCheckTimer;
 
@@ -369,7 +380,7 @@ class MTV_PUBLIC RecorderBase : public QRunnable
     MythTimer      m_timeOfLatestDataTimer;
     RecordingGaps  m_recordingGaps;
     /// timeOfLatest update interval target in milliseconds.
-    static const uint kTimeOfLatestDataIntervalTarget;
+    static constexpr std::chrono::milliseconds kTimeOfLatestDataIntervalTarget { 5s };
 };
 
 #endif

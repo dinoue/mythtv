@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2013 Chris Pinkham <cpinkham@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 ////////////////////////////////////////////////////////////////////////////
 
@@ -30,8 +30,8 @@ class SERVICE_PUBLIC TitleInfo : public QObject
     Q_PROPERTY( QString         Inetref          READ Inetref           WRITE setInetref          )
     Q_PROPERTY( int             Count            READ Count             WRITE setCount          )
 
-    PROPERTYIMP    ( QString    , Title            )
-    PROPERTYIMP    ( QString    , Inetref          )
+    PROPERTYIMP_REF( QString    , Title            )
+    PROPERTYIMP_REF( QString    , Inetref          )
     PROPERTYIMP    ( int        , Count            );
 
     public:

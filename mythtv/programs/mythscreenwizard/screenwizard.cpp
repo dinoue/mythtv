@@ -16,8 +16,6 @@
 #include "themeinfo.h"
 #include "mythrect.h"
 
-using namespace std;
-
 #define kMinWidth 160
 #define kMinHeight 160
 
@@ -303,7 +301,7 @@ void ScreenWizard::slotChangeCoarseFine()
     updateScreen();
 }
 
-void ScreenWizard::slotSaveSettings()
+void ScreenWizard::slotSaveSettings() const
 {
     LOG(VB_GENERAL, LOG_ERR, "Updating screen size settings");
     gCoreContext->SaveSetting("GuiOffsetX", m_topLeftX);
@@ -322,7 +320,7 @@ void ScreenWizard::slotResetSettings()
     qApp->quit();
 }
 
-bool ScreenWizard::anythingChanged()
+bool ScreenWizard::anythingChanged() const
 {
     if (m_screenWidth != m_bottomRightX - m_topLeftX)
         return true;

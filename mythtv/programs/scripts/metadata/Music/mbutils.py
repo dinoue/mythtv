@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # This file is part of MythTV.
 # Copyright 2016, Paul Harrison.
 #
@@ -15,30 +15,25 @@
 
 """Various utilities using the musicbrainzngs python bindings to access the MB database"""
 
-from __future__ import print_function
-from __future__ import unicode_literals
 from optparse import OptionParser
 import musicbrainzngs
-from musicbrainzngs.compat import is_py2
 import sys
 import pprint
 
 __author__      = "Paul Harrison'"
 __title__       = "Music Brainz utilities"
 __description__ = "Various utilities using the musicbrainzngs python bindings to access the MB database"
-__version__     = "0.1"
+__version__     = "0.2"
 
 debug = False
 
 musicbrainzngs.set_useragent(
     "MythTV",
-    "0.28",
+    "32.0",
     "https://www.mythtv.org",
 )
 
-#musicbrainzngs.set_hostname("musicbrainz.org")
-#musicbrainzngs.set_hostname("music.peavers.com:5000")
-musicbrainzngs.set_hostname("musicbrainz-mirror.eu:5000")
+musicbrainzngs.set_hostname("musicbrainz.org")
 
 def log(debug, txt):
     if debug:
@@ -47,10 +42,7 @@ def log(debug, txt):
 def convert_etree(etostr):
     """lxml.etree.tostring is a bytes object in python3, and a str in python2.
     """
-    if is_py2:
-        return(etostr)
-    else:
-        return(etostr.decode())
+    return(etostr.decode())
 
 def search_releases(artist, album, limit):
     from lxml import etree

@@ -5,7 +5,7 @@
 
 QString MasterGuideTable::TableClassString(uint i) const
 {
-    static const QString kTts[] = {
+    static const std::array<const QString,11> kTts {
         QString("UNKNOWN"),
         QString("Terrestrial VCT with current()"),
         QString("Terrestrial VCT with !current()"),
@@ -88,7 +88,7 @@ QString MasterGuideTable::toString(void) const
                    .arg(TableClassString(i)).arg(TableType(i)));
         if (0 != TableDescriptorsLength(i))
         {
-            vector<const unsigned char*> desc =
+            std::vector<const unsigned char*> desc =
                 MPEGDescriptor::Parse(TableDescriptors(i),
                                       TableDescriptorsLength(i));
             for (auto & d : desc)
@@ -100,7 +100,7 @@ QString MasterGuideTable::toString(void) const
     {
         str.append(QString("  global descriptors length(%1) ")
                    .arg(GlobalDescriptorsLength()));
-        vector<const unsigned char*> desc =
+        std::vector<const unsigned char*> desc =
             MPEGDescriptor::Parse(GlobalDescriptors(),
                                   GlobalDescriptorsLength());
         str.append(QString("count: %1\n").arg(desc.size()));
@@ -125,10 +125,10 @@ QString MasterGuideTable::toStringXML(uint indent_level) const
         .arg(indent_0)
         .arg(TableCount())
         .arg(GlobalDescriptorsLength())
-        .arg(indent_1)
-        .arg(PSIPTable::XMLValues(indent_level + 1));
+        .arg(indent_1,
+             PSIPTable::XMLValues(indent_level + 1));
 
-    vector<const unsigned char*> gdesc =
+    std::vector<const unsigned char*> gdesc =
         MPEGDescriptor::Parse(GlobalDescriptors(), GlobalDescriptorsLength());
     for (auto & i : gdesc)
     {
@@ -150,12 +150,12 @@ QString MasterGuideTable::toStringXML(uint indent_level) const
             .arg(TableVersion(i))
             .arg(indent_1)
             .arg(TableType(i),4,16,QChar('0'))
-            .arg(TableClassString(i))
-            .arg(indent_2)
+            .arg(TableClassString(i),
+                 indent_2)
             .arg(TableDescriptorsBytes(i))
             .arg(TableDescriptorsLength(i));
 
-        vector<const unsigned char*> desc =
+        std::vector<const unsigned char*> desc =
             MPEGDescriptor::Parse(
                 TableDescriptors(i), TableDescriptorsLength(i));
         str += (desc.empty()) ? " />\n" : ">\n";
@@ -174,7 +174,7 @@ QString MasterGuideTable::toStringXML(uint indent_level) const
 
 QString VirtualChannelTable::ModulationModeString(uint i) const
 {
-    static const char *s_modnames[6] =
+    static const std::array<const std::string,6>s_modnames
     {
         "[Reserved]",   "Analog",      "SCTE mode 1",
         "SCTE mode 2",  "ATSC 8-VSB",  "ATSC 16-VSB",
@@ -182,19 +182,19 @@ QString VirtualChannelTable::ModulationModeString(uint i) const
     uint mode = ModulationMode(i);
     if (mode >= (sizeof(s_modnames) / sizeof(char*)))
         return QString("Unknown 0x%1").arg(mode,2,16,QChar('0'));
-    return QString(s_modnames[mode]);
+    return QString::fromStdString(s_modnames[mode]);
 }
 
 QString VirtualChannelTable::ServiceTypeString(uint i) const
 {
-    static const char *s_servicenames[5] =
+    static const std::array<const std::string,5> s_servicenames
     {
         "[Reserved]", "Analog", "ATSC TV", "ATSC Audio", "ATSC Data",
     };
     uint type = ServiceType(i);
-    if (type >= (sizeof(s_servicenames) / sizeof(char*)))
+    if (type >= s_servicenames.size())
         return QString("Unknown 0x%1").arg(type,2,16,QChar('0'));
-    return QString(s_servicenames[type]);
+    return QString::fromStdString(s_servicenames[type]);
 }
 
 QString VirtualChannelTable::toString(void) const
@@ -202,8 +202,8 @@ QString VirtualChannelTable::toString(void) const
     QString str;
     str.append(QString("%1 Virtual Channel Section\n%2"
                        "      channel_count(%3) tsid(0x%4)")
-               .arg((TableID::TVCT == TableID()) ? "Terrestrial":"Cable")
-               .arg(PSIPTable::toString())
+               .arg((TableID::TVCT == TableID()) ? "Terrestrial":"Cable",
+                    PSIPTable::toString())
                .arg(ChannelCount())
                .arg(TransportStreamID(),4,16,QChar('0')));
 
@@ -222,7 +222,7 @@ QString VirtualChannelTable::toString(void) const
     {
         str.append(QString("global descriptors length(%1) ")
                    .arg(GlobalDescriptorsLength()));
-        vector<const unsigned char*> desc =
+        std::vector<const unsigned char*> desc =
             MPEGDescriptor::Parse(GlobalDescriptors(),
                                   GlobalDescriptorsLength());
         str.append(QString("count: %1\n").arg(desc.size()));
@@ -240,7 +240,6 @@ QString VirtualChannelTable::toStringXML(uint indent_level) const
 {
     QString indent_0 = xml_indent(indent_level);
     QString indent_1 = xml_indent(indent_level + 1);
-    QString indent_2 = xml_indent(indent_level + 2);
 
     QString section_name = QString("%1VirtualChannelSection")
         .arg((TableID::TVCT == TableID()) ? "Terrestrial" : "Cable");
@@ -256,17 +255,17 @@ QString VirtualChannelTable::toStringXML(uint indent_level) const
         QString("%1<%2 tsid=\"0x%3\" channel_count=\"%4\""
                 "\n%5global_descriptors_length=\"%6\"%7"
                 "\n%8%9>\n")
-        .arg(indent_0)
-        .arg(section_name)
+        .arg(indent_0,
+             section_name)
         .arg(TransportStreamID(),4,16,QChar('0'))
         .arg(ChannelCount())
         .arg(indent_1)
         .arg(GlobalDescriptorsLength())
-        .arg(mapid)
-        .arg(indent_1)
-        .arg(PSIPTable::XMLValues(indent_level + 1));
+        .arg(mapid,
+             indent_1,
+             PSIPTable::XMLValues(indent_level + 1));
 
-    vector<const unsigned char*> gdesc =
+    std::vector<const unsigned char*> gdesc =
         MPEGDescriptor::Parse(GlobalDescriptors(), GlobalDescriptorsLength());
     for (auto & i : gdesc)
     {
@@ -286,12 +285,12 @@ QString VirtualChannelTable::ChannelStringXML(
     QString indent_0 = xml_indent(indent_level);
     QString indent_1 = xml_indent(indent_level + 1);
     QString str = QString("%1<Channel %2\n%3descriptors_length=\"%4\">\n")
-        .arg(indent_0)
-        .arg(XMLChannelValues(indent_level + 1, chan))
-        .arg(indent_1)
+        .arg(indent_0,
+             XMLChannelValues(indent_level + 1, chan),
+             indent_1)
         .arg(DescriptorsLength(chan));
 
-    vector<const unsigned char*> desc =
+    std::vector<const unsigned char*> desc =
         MPEGDescriptor::Parse(Descriptors(chan), DescriptorsLength(chan));
     for (auto & i : desc)
     {
@@ -311,7 +310,7 @@ QString VirtualChannelTable::XMLChannelValues(
     str += QString("short_channel_name=\"%1\" ").arg(ShortChannelName(chan));
     str += "\n" + indent_0;
 
-    str += QString("modulation=\"0x%1\" modulation_desc=\"%2\" ")
+    str += QString(R"(modulation="0x%1" modulation_desc="%2" )")
         .arg(ModulationMode(chan),2,16,QChar('0'))
         .arg(ModulationModeString(chan));
     str += QString("channel_tsid=\"0x%1\"")
@@ -330,7 +329,7 @@ QString VirtualChannelTable::XMLChannelValues(
         .arg(xml_bool_to_string(IsHiddenInGuide(chan)));
     str += "\n" + indent_0;
 
-    str += QString("service_type=\"0x%1\" service_type_desc=\"%2\"")
+    str += QString(R"(service_type="0x%1" service_type_desc="%2")")
         .arg(ServiceType(chan),2,16,QChar('0'))
         .arg(ServiceTypeString(chan));
     str += "\n" + indent_0;
@@ -344,7 +343,7 @@ QString VirtualChannelTable::XMLChannelValues(
 QString TerrestrialVirtualChannelTable::XMLChannelValues(
     uint indent_level, uint chan) const
 {
-    return QString("major_channel=\"%1\" minor_channel=\"%2\" ")
+    return QString(R"(major_channel="%1" minor_channel="%2" )")
         .arg(MajorChannel(chan)).arg(MinorChannel(chan)) +
         VirtualChannelTable::XMLChannelValues(indent_level, chan);
 }
@@ -361,9 +360,9 @@ QString TerrestrialVirtualChannelTable::ChannelString(uint chan) const
 
     str.append(QString("    pnum(%1) ").arg(ProgramNumber(chan)));
     str.append(QString("ETM_loc(%1) ").arg(ETMlocation(chan)));
-    str.append(QString("access_ctrl(%1) ").arg(IsAccessControlled(chan)));
-    str.append(QString("hidden(%1) ").arg(IsHidden(chan)));
-    str.append(QString("hide_guide(%1) ").arg(IsHiddenInGuide(chan)));
+    str.append(QString("access_ctrl(%1) ").arg(static_cast<int>(IsAccessControlled(chan))));
+    str.append(QString("hidden(%1) ").arg(static_cast<int>(IsHidden(chan))));
+    str.append(QString("hide_guide(%1) ").arg(static_cast<int>(IsHiddenInGuide(chan))));
     str.append(QString("service_type(%1)\n").arg(ServiceTypeString(chan)));
 
     str.append(QString("    source_id(%1)\n").arg(SourceID(chan)));
@@ -371,7 +370,7 @@ QString TerrestrialVirtualChannelTable::ChannelString(uint chan) const
     {
         str.append(QString("    descriptors length(%1) ")
                    .arg(DescriptorsLength(chan)));
-        vector<const unsigned char*> desc =
+        std::vector<const unsigned char*> desc =
             MPEGDescriptor::Parse(Descriptors(chan), DescriptorsLength(chan));
         str.append(QString("count:%1\n").arg(desc.size()));
         for (auto & i : desc)
@@ -387,16 +386,16 @@ QString CableVirtualChannelTable::XMLChannelValues(
     uint indent_level, uint chan) const
 {
     QString channel_info = SCTEIsChannelNumberTwoPart(chan) ?
-        QString("major_channel=\"%1\" minor_channel=\"%2\" ")
+        QString(R"(major_channel="%1" minor_channel="%2" )")
         .arg(MajorChannel(chan)).arg(MinorChannel(chan)) :
         QString("channel_number=\"%1\" ")
         .arg(SCTEOnePartChannel(chan));
 
     return channel_info +
         VirtualChannelTable::XMLChannelValues(indent_level, chan) +
-        QString(" path_select=\"%1\" out_of_band=\"%2\"")
-        .arg(xml_bool_to_string(IsPathSelect(chan)))
-        .arg(xml_bool_to_string(IsOutOfBand(chan)));
+        QString(R"( path_select="%1" out_of_band="%2")")
+        .arg(xml_bool_to_string(IsPathSelect(chan)),
+             xml_bool_to_string(IsOutOfBand(chan)));
 }
 
 QString CableVirtualChannelTable::ChannelString(uint chan) const
@@ -421,20 +420,20 @@ QString CableVirtualChannelTable::ChannelString(uint chan) const
 
     str.append(QString("    pnum(%1) ").arg(ProgramNumber(chan)));
     str.append(QString("ETM_loc(%1) ").arg(ETMlocation(chan)));
-    str.append(QString("access_ctrl(%1) ").arg(IsAccessControlled(chan)));
-    str.append(QString("hidden(%1) ").arg(IsHidden(chan)));
-    str.append(QString("hide_guide(%1) ").arg(IsHiddenInGuide(chan)));
+    str.append(QString("access_ctrl(%1) ").arg(static_cast<int>(IsAccessControlled(chan))));
+    str.append(QString("hidden(%1) ").arg(static_cast<int>(IsHidden(chan))));
+    str.append(QString("hide_guide(%1) ").arg(static_cast<int>(IsHiddenInGuide(chan))));
     str.append(QString("service_type(%1)\n").arg(ServiceTypeString(chan)));
 
     str.append(QString("    source_id(%1) ").arg(SourceID(chan)));
-    str.append(QString("path_select(%1) ").arg(IsPathSelect(chan)));
-    str.append(QString("out_of_band(%1)\n").arg(IsOutOfBand(chan)));
+    str.append(QString("path_select(%1) ").arg(static_cast<int>(IsPathSelect(chan))));
+    str.append(QString("out_of_band(%1)\n").arg(static_cast<int>(IsOutOfBand(chan))));
 
     if (0 != DescriptorsLength(chan))
     {
         str.append(QString("    descriptors length(%1) ")
                    .arg(DescriptorsLength(chan)));
-        vector<const unsigned char*> desc =
+        std::vector<const unsigned char*> desc =
             MPEGDescriptor::Parse(Descriptors(chan), DescriptorsLength(chan));
         str.append(QString("count:%1\n").arg(desc.size()));
         for (auto & i : desc)
@@ -448,7 +447,7 @@ QString EventInformationTable::toString(void) const
 {
     QString str;
     str.append(QString("Event Information Table\n"));
-    str.append(((PSIPTable*)(this))->toString());
+    str.append(static_cast<const PSIPTable*>(this)->toString());
     str.append(QString("      pid(0x%1) sourceID(%2) eventCount(%3)\n")
                .arg(tsheader()->PID()).arg(SourceID()).arg(EventCount()));
     for (uint i = 0; i < EventCount(); i++)
@@ -461,7 +460,7 @@ QString EventInformationTable::toString(void) const
                    arg(ETMLocation(i)).arg(title(i).toString()));
         if (0 != DescriptorsLength(i))
         {
-            vector<const unsigned char*> desc =
+            std::vector<const unsigned char*> desc =
                 MPEGDescriptor::Parse(Descriptors(i), DescriptorsLength(i));
             for (auto & j : desc)
                 str.append(QString("%1\n")
@@ -477,7 +476,7 @@ QString ExtendedTextTable::toString(void) const
         QString("Extended Text Table -- sourceID(%1) eventID(%2) "
                 "ettID(%3) isChannelETM(%4) isEventETM(%5)\n%6")
         .arg(SourceID()).arg(EventID()).arg(ExtendedTextTableID())
-        .arg(IsChannelETM()).arg(IsEventETM())
+        .arg(static_cast<int>(IsChannelETM())).arg(static_cast<int>(IsEventETM()))
         .arg(ExtendedTextMessage().toString());
     return str;
 }
@@ -509,7 +508,7 @@ QString VirtualChannelTable::GetExtendedChannelName(uint i) const
     if ((i >= ChannelCount()) || DescriptorsLength(i) == 0)
         return QString();
 
-    vector<const unsigned char*> parsed =
+    std::vector<const unsigned char*> parsed =
         MPEGDescriptor::Parse(Descriptors(i), DescriptorsLength(i));
 
     const unsigned char* desc =
@@ -527,7 +526,7 @@ QString SystemTimeTable::toString(void) const
         QString("System Time Section GPSTime(%1) GPS2UTC_Offset(%2) ")
         .arg(SystemTimeGPS().toString(Qt::ISODate)).arg(GPSOffset());
     str.append(QString("DS(%3) Day(%4) Hour(%5)\n")
-               .arg(InDaylightSavingsTime())
+               .arg(static_cast<int>(InDaylightSavingsTime()))
                .arg(DayDaylightSavingsStarts())
                .arg(HourDaylightSavingsStarts()));
     return str;
@@ -542,13 +541,13 @@ QString SystemTimeTable::toStringXML(uint indent_level) const
         "%1<SystemTimeSection system_time=\"%2\" system_time_iso=\"%3\""
         "\n%4in_dst=\"%5\" dst_start_day=\"%6\" dst_start_hour=\"%7\""
         "\n%8%9 />")
-        .arg(indent_0)
-        .arg(GPSRaw())
-        .arg(SystemTimeGPS().toString(Qt::ISODate))
-        .arg(indent_1)
-        .arg(xml_bool_to_string(InDaylightSavingsTime()))
-        .arg(DayDaylightSavingsStarts()) /* day-of-month */
-        .arg(HourDaylightSavingsStarts())
-        .arg(indent_1)
-        .arg(PSIPTable::XMLValues(indent_level + 1));
+        .arg(indent_0,
+             QString::number(GPSRaw()),
+             SystemTimeGPS().toString(Qt::ISODate),
+             indent_1,
+             xml_bool_to_string(InDaylightSavingsTime()),
+             QString::number(DayDaylightSavingsStarts()), /* day-of-month */
+             QString::number(HourDaylightSavingsStarts()),
+             indent_1,
+             PSIPTable::XMLValues(indent_level + 1));
 }

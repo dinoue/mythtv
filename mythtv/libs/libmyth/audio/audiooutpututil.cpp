@@ -1,18 +1,20 @@
-#include <cinttypes>
+#include "audiooutpututil.h"
+
+#include <cstdint>
 #include <cmath>
 #include <sys/types.h>
 
+#include <QtEndian>
+
 #include "mythconfig.h"
 #include "mythlogging.h"
-#include "audiooutpututil.h"
 #include "audioconvert.h"
-#include "bswap.h"
-#include "libmythtv/mythavutil.h"
+#include "mythaverror.h"
 
 extern "C" {
 #include "libavcodec/avcodec.h"
-#include "pink.h"
 }
+#include "pink.h"
 
 #define LOC QString("AOUtil: ")
 
@@ -157,7 +159,7 @@ void AudioOutputUtil::AdjustVolume(void *buf, int len, int volume,
 }
 
 template <class AudioDataType>
-void _MuteChannel(AudioDataType *buffer, int channels, int ch, int frames)
+void tMuteChannel(AudioDataType *buffer, int channels, int ch, int frames)
 {
     AudioDataType *s1 = buffer + ch;
     AudioDataType *s2 = buffer - ch + 1;
@@ -182,27 +184,19 @@ void AudioOutputUtil::MuteChannel(int obits, int channels, int ch,
     int frames = bytes / ((obits >> 3) * channels);
 
     if (obits == 8)
-        _MuteChannel((uchar *)buffer, channels, ch, frames);
+        tMuteChannel((uchar *)buffer, channels, ch, frames);
     else if (obits == 16)
-        _MuteChannel((short *)buffer, channels, ch, frames);
+        tMuteChannel((short *)buffer, channels, ch, frames);
     else
-        _MuteChannel((int *)buffer, channels, ch, frames);
+        tMuteChannel((int *)buffer, channels, ch, frames);
 }
-
-#if HAVE_BIGENDIAN
-#define LE_SHORT(v)      bswap_16(v)
-#define LE_INT(v)        bswap_32(v)
-#else
-#define LE_SHORT(v)      (v)
-#define LE_INT(v)        (v)
-#endif
 
 char *AudioOutputUtil::GeneratePinkFrames(char *frames, int channels,
                                           int channel, int count, int bits)
 {
-    pink_noise_t pink;
+    pink_noise_t pink{};
 
-    initialize_pink_noise(&pink, bits);
+    initialize_pink_noise(&pink);
 
     auto *samp16 = (int16_t*) frames;
     auto *samp32 = (int32_t*) frames;
@@ -218,9 +212,9 @@ char *AudioOutputUtil::GeneratePinkFrames(char *frames, int channels,
                     static_cast<float>(0x03fffffff);
                 int32_t ires = res;
                 if (bits == 16)
-                    *samp16++ = LE_SHORT(ires >> 16);
+                    *samp16++ = qToLittleEndian<int16_t>(ires >> 16);
                 else
-                    *samp32++ = LE_INT(ires);
+                    *samp32++ = qToLittleEndian<int32_t>(ires);
             }
             else
             {
@@ -247,7 +241,6 @@ int AudioOutputUtil::DecodeAudio(AVCodecContext *ctx,
 {
     MythAVFrame frame;
     bool got_frame = false;
-    char error[AV_ERROR_MAX_STRING_SIZE];
 
     data_size = 0;
     if (!frame)
@@ -272,9 +265,10 @@ int AudioOutputUtil::DecodeAudio(AVCodecContext *ctx,
         ret = 0;
     else if (ret < 0)
     {
+        std::string error;
         LOG(VB_AUDIO, LOG_ERR, LOC +
             QString("audio decode error: %1 (%2)")
-            .arg(av_make_error_string(error, sizeof(error), ret))
+            .arg(av_make_error_stdstring(error, ret))
             .arg(got_frame));
         return ret;
     }

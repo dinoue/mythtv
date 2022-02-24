@@ -6,20 +6,34 @@
 //                                                                            
 // Copyright (c) 2006 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
 #include <cmath>
 
 #include <QStringList>
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#include <QStringConverter>
+#else
 #include <QTextCodec>
+#endif
 #include <QTextStream>
 
 #include "upnp.h"
 #include "eventing.h"
 #include "upnptaskevent.h"
 #include "mythlogging.h"
+#include "mythcorecontext.h"
+#include "configuration.h"
+
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
+  #define QT_ENDL endl
+  #define QT_FLUSH flush
+#else
+  #define QT_ENDL Qt::endl
+  #define QT_FLUSH Qt::flush
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -30,25 +44,25 @@ uint StateVariables::BuildNotifyBody(
 {
     uint nCount = 0;
 
-    ts << "<?xml version=\"1.0\"?>" << endl
-       << "<e:propertyset xmlns:e=\"urn:schemas-upnp-org:event-1-0\">" << endl;
+    ts << "<?xml version=\"1.0\"?>" << QT_ENDL
+       << "<e:propertyset xmlns:e=\"urn:schemas-upnp-org:event-1-0\">" << QT_ENDL;
 
-    foreach (auto prop, m_map)
+    for (auto *prop : qAsConst(m_map))
     {
         if ( ttLastNotified < prop->m_ttLastChanged )
         {
             nCount++;
 
-            ts << "<e:property>" << endl;
+            ts << "<e:property>" << QT_ENDL;
             ts <<   "<" << prop->m_sName << ">";
             ts <<     prop->ToString();
             ts <<   "</" << prop->m_sName << ">";
-            ts << "</e:property>" << endl;
+            ts << "</e:property>" << QT_ENDL;
         }
     }
 
-    ts << "</e:propertyset>" << endl;
-    ts << flush;
+    ts << "</e:propertyset>" << QT_ENDL;
+    ts << QT_FLUSH;
 
     return nCount;
 }
@@ -63,7 +77,7 @@ Eventing::Eventing(const QString &sExtensionName,
     HttpServerExtension(sExtensionName, sSharePath),
     m_sEventMethodName(std::move(sEventMethodName)),
     m_nSubscriptionDuration(
-        UPnp::GetConfiguration()->GetValue("UPnP/SubscriptionDuration", 1800))
+        MythCoreContext::GetConfiguration()->GetDuration<std::chrono::seconds>("UPnP/SubscriptionDuration", 30min))
 {
     m_nSupportedMethods |= (RequestTypeSubscribe | RequestTypeUnsubscribe);
 }
@@ -74,9 +88,9 @@ Eventing::Eventing(const QString &sExtensionName,
 
 Eventing::~Eventing()
 {
-    foreach (auto & subscriber, m_Subscribers)
+    for (const auto *subscriber : qAsConst(m_subscribers))
         delete subscriber;
-    m_Subscribers.clear();
+    m_subscribers.clear();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -227,24 +241,24 @@ void Eventing::HandleSubscribe( HTTPRequest *pRequest )
 
         sCallBack = sCallBack.mid( 1, sCallBack.indexOf(">") - 1);
 
-        int nDuration = m_nSubscriptionDuration;
+        std::chrono::seconds nDuration = m_nSubscriptionDuration;
         if ( sTimeout.startsWith("Second-") )
         {
             bool ok = false;
-            int nValue = sTimeout.section("-", 1).toInt(&ok);
+            auto nValue = std::chrono::seconds(sTimeout.section("-", 1).toInt(&ok));
             if (ok)
                 nDuration = nValue;
         }
 
         pInfo = new SubscriberInfo( sCallBack, nDuration );
 
-        Subscribers::iterator it = m_Subscribers.find(pInfo->m_sUUID);
-        if (it != m_Subscribers.end())
+        Subscribers::iterator it = m_subscribers.find(pInfo->m_sUUID);
+        if (it != m_subscribers.end())
         {
             delete *it;
-            m_Subscribers.erase(it);
+            m_subscribers.erase(it);
         }
-        m_Subscribers[pInfo->m_sUUID] = pInfo;
+        m_subscribers[pInfo->m_sUUID] = pInfo;
 
         // Use PostProcess Hook to Send Initial FULL Notification...
         //      *** Must send this response first then notify.
@@ -262,7 +276,7 @@ void Eventing::HandleSubscribe( HTTPRequest *pRequest )
         if ( sSID.length() != 0 )   
         {
             sSID  = sSID.mid( 5 );
-            pInfo = m_Subscribers[sSID];
+            pInfo = m_subscribers[sSID];
         }
 
     }
@@ -273,7 +287,7 @@ void Eventing::HandleSubscribe( HTTPRequest *pRequest )
                                                     .arg( pInfo->m_sUUID );
 
         pRequest->m_mapRespHeaders[ "TIMEOUT"] = QString( "Second-%1" )
-                                                    .arg( pInfo->m_nDuration );
+                                                    .arg( pInfo->m_nDuration.count() );
 
         pRequest->m_nResponseStatus = 200;
 
@@ -302,11 +316,11 @@ void Eventing::HandleUnsubscribe( HTTPRequest *pRequest )
 
     sSID = sSID.mid( 5 );
 
-    Subscribers::iterator it = m_Subscribers.find(sSID);
-    if (it != m_Subscribers.end())
+    Subscribers::iterator it = m_subscribers.find(sSID);
+    if (it != m_subscribers.end())
     {
         delete *it;
-        m_Subscribers.erase(it);
+        m_subscribers.erase(it);
         pRequest->m_nResponseStatus = 200;
     }
 }
@@ -317,13 +331,12 @@ void Eventing::HandleUnsubscribe( HTTPRequest *pRequest )
 
 void Eventing::Notify()
 {
-    TaskTime tt;
-    gettimeofday( (&tt), nullptr );
+    auto tt = nowAsDuration<std::chrono::microseconds>();
 
     m_mutex.lock();
 
-    Subscribers::iterator it = m_Subscribers.begin();
-    while (it != m_Subscribers.end())
+    Subscribers::iterator it = m_subscribers.begin();
+    while (it != m_subscribers.end())
     { 
         if (!(*it))
         {   // This should never happen, but if someone inserted bad data...
@@ -341,7 +354,7 @@ void Eventing::Notify()
         {
             // Time to expire this subscription. Remove subscriber from list.
             delete *it;
-            it = m_Subscribers.erase(it);
+            it = m_subscribers.erase(it);
         }
     }
 
@@ -360,7 +373,11 @@ void Eventing::NotifySubscriber( SubscriberInfo *pInfo )
     QByteArray   aBody;
     QTextStream  tsBody( &aBody, QIODevice::WriteOnly );
 
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     tsBody.setCodec(QTextCodec::codecForName("UTF-8"));
+#else
+    tsBody.setEncoding(QStringConverter::Utf8);
+#endif
 
     // ----------------------------------------------------------------------
     // Build Body... Only send if there are changes
@@ -375,7 +392,11 @@ void Eventing::NotifySubscriber( SubscriberInfo *pInfo )
         auto *pBuffer = new QByteArray();    // UPnpEventTask will delete this pointer.
         QTextStream  tsMsg( pBuffer, QIODevice::WriteOnly );
 
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
         tsMsg.setCodec(QTextCodec::codecForName("UTF-8"));
+#else
+        tsMsg.setEncoding(QStringConverter::Utf8);
+#endif
 
         // ----------------------------------------------------------------------
         // Build Message Header 
@@ -395,7 +416,7 @@ void Eventing::NotifySubscriber( SubscriberInfo *pInfo )
         tsMsg << "SEQ: " << QString::number( pInfo->m_nKey ) << "\r\n";
         tsMsg << "\r\n";
         tsMsg << aBody;
-        tsMsg << flush;
+        tsMsg << QT_FLUSH;
 
         // ------------------------------------------------------------------
         // Add new EventTask to the TaskQueue to do the actual sending.
@@ -408,7 +429,7 @@ void Eventing::NotifySubscriber( SubscriberInfo *pInfo )
         auto *pEventTask = new UPnpEventTask(QHostAddress(pInfo->m_qURL.host()),
                                              nPort, pBuffer);
 
-        TaskQueue::Instance()->AddTask( 250, pEventTask );
+        TaskQueue::Instance()->AddTask( 250ms, pEventTask );
 
         pEventTask->DecrRef();
 
@@ -418,7 +439,7 @@ void Eventing::NotifySubscriber( SubscriberInfo *pInfo )
 
         pInfo->IncrementKey();
 
-        gettimeofday( (&pInfo->m_ttLastNotified), nullptr );
+        pInfo->m_ttLastNotified = nowAsDuration<std::chrono::microseconds>();
     }
 }
 

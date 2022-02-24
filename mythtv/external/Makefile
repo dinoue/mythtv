@@ -1,10 +1,17 @@
 include ../config.mak
 
-SUBDIRS = FFmpeg libmythdvdnav libudfread
-SUBDIRS += libmythsoundtouch
+SUBDIRS = FFmpeg libmythdvdnav
 
-ifneq ($(CONFIG_LIBBLURAY_EXTERNAL),yes)
+ifneq ($(CONFIG_SYSTEM_LIBEXIV2),yes)
+    SUBDIRS += libexiv2
+endif
+
+ifneq ($(CONFIG_SYSTEM_LIBBLURAY),yes)
     SUBDIRS += libmythbluray
+endif
+
+ifneq ($(CONFIG_SYSTEM_LIBUDFREAD),yes)
+    SUBDIRS += libudfread
 endif
 
 SUBDIRS_ALL = $(addsuffix -all, ${SUBDIRS})
@@ -24,6 +31,9 @@ distclean:	${SUBDIRS_DISTCLEAN}
 FFmpeg-all FFmpeg-install FFmpeg-uninstall FFmpeg-clean FFmpeg-distclean:
 	${MAKE} -C FFmpeg ${@:FFmpeg-%=%} DESTDIR=${INSTALL_ROOT}
 
+libexiv2-all libexiv2-clean libexiv2-distclean libexiv2-install libexiv2-uninstall:
+	${MAKE} -C libexiv2 ${@:libexiv2-%=%}
+
 libmythbluray-all libmythbluray-clean libmythbluray-distclean libmythbluray-install libmythbluray-uninstall:
 	${MAKE} -C libmythbluray ${@:libmythbluray-%=%}
 
@@ -32,9 +42,6 @@ libmythdvdnav-all libmythdvdnav-clean libmythdvdnav-distclean libmythdvdnav-inst
 
 libudfread-all libudfread-clean libudfread-distclean libudfread-install libudfread-uninstall:
 	${MAKE} -C libudfread ${@:libudfread-%=%}
-
-libmythsoundtouch-all libmythsoundtouch-clean libmythsoundtouch-distclean libmythsoundtouch-install libmythsoundtouch-uninstall:
-	${MAKE} -C libmythsoundtouch ${@:libmythsoundtouch-%=%}
 
 nv-codec-headers-distclean:
 	rm -rf nv-codec-headers/install nv-codec-headers/ffnvcodec.pc

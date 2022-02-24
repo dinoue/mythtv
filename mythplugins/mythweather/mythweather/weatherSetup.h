@@ -1,5 +1,5 @@
-#ifndef _WEATHER_SETUP_H_
-#define _WEATHER_SETUP_H_
+#ifndef WEATHER_SETUP_H
+#define WEATHER_SETUP_H
 
 // QT headers
 #include <QList>
@@ -27,8 +27,8 @@ struct SourceListInfo
     QString author;
     QString email;
     QString version;
-    uint update_timeout   {DEFAULT_UPDATE_TIMEOUT};
-    uint retrieve_timeout {};
+    std::chrono::minutes update_timeout   {DEFAULT_UPDATE_TIMEOUT};
+    std::chrono::seconds retrieve_timeout {0s};
     uint id               {};
 };
 
@@ -108,7 +108,10 @@ class SourceSetup : public MythScreenType
     bool loadData(void);
 
   protected slots:
-    void sourceListItemSelected(MythUIButtonListItem *item = nullptr);
+    void sourceListItemSelected(MythUIButtonListItem *item);
+#if 0
+    void sourceListItemSelected() { sourceListItemSelected(nullptr) };
+#endif
     void updateSpinboxUpdate(void);
     void retrieveSpinboxUpdate(void);
     void saveData(void);
@@ -166,4 +169,4 @@ class LocationDialog : public MythScreenType
     MythUIText *m_sourceText;
 };
 
-#endif
+#endif /* WEATHER_SETUP_H */

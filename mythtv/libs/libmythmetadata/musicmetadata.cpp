@@ -6,7 +6,6 @@
 #include <QDateTime>
 #include <QDir>
 #include <QDomDocument>
-#include <QRegExp>
 #include <QScopedPointer>
 #include <utility>
 
@@ -41,8 +40,6 @@
 #include "musicutils.h"
 #include "lyricsdata.h"
 
-using namespace std;
-
 static QString thePrefix = "the ";
 
 bool operator==(MusicMetadata& a, MusicMetadata& b)
@@ -57,7 +54,7 @@ bool operator!=(MusicMetadata& a, MusicMetadata& b)
 
 // this ctor is for radio streams
 MusicMetadata::MusicMetadata(int lid, QString lbroadcaster, QString lchannel, QString ldescription,
-                             UrlList lurls, QString llogourl, QString lgenre, QString lmetaformat,
+                             const UrlList &lurls, QString llogourl, QString lgenre, QString lmetaformat,
                              QString lcountry, QString llanguage, QString lformat)
          :  m_genre(std::move(lgenre)),
             m_format(std::move(lformat)),
@@ -71,9 +68,7 @@ MusicMetadata::MusicMetadata(int lid, QString lbroadcaster, QString lchannel, QS
             m_country(std::move(lcountry)),
             m_language(std::move(llanguage))
 {
-    for (int x = 0; x < STREAMURLCOUNT; x++)
-        m_urls[x] = lurls[x];
-
+    m_urls = lurls;
     setRepo(RT_Radio);
     ensureSortFields();
 }
@@ -141,8 +136,7 @@ MusicMetadata& MusicMetadata::operator=(const MusicMetadata &rhs)
     m_channel = rhs.m_channel;
     m_description = rhs.m_description;
 
-    for (int x = 0; x < 5; x++)
-        m_urls[x] = rhs.m_urls[x];
+    m_urls = rhs.m_urls;
     m_logoUrl = rhs.m_logoUrl;
     m_metaFormat = rhs.m_metaFormat;
     m_country = rhs.m_country;
@@ -292,7 +286,7 @@ MusicMetadata *MusicMetadata::createFromID(int trackid)
         mdata->m_genre = query.value(4).toString();
         mdata->m_year = query.value(5).toInt();
         mdata->m_trackNum = query.value(6).toInt();
-        mdata->m_length = query.value(7).toInt();
+        mdata->m_length = std::chrono::milliseconds(query.value(7).toInt());
         mdata->m_id = query.value(8).toUInt();
         mdata->m_rating = query.value(9).toInt();
         mdata->m_playCount = query.value(10).toInt();
@@ -461,7 +455,6 @@ int MusicMetadata::getDirectoryId()
     if (m_directoryId < 0)
     {
         QString sqldir = m_filename.section('/', 0, -2);
-        QString sqlfilename = m_filename.section('/', -1);
 
         checkEmptyFields();
 
@@ -735,7 +728,6 @@ void MusicMetadata::dumpToDatabase()
                    "WHERE song_id= :ID ;";
     }
 
-    QString sqldir = m_filename.section('/', 0, -2);
     QString sqlfilename = m_filename.section('/', -1);
 
     MSqlQuery query(MSqlQuery::InitCon());
@@ -749,7 +741,7 @@ void MusicMetadata::dumpToDatabase()
     query.bindValue(":GENRE", m_genreId);
     query.bindValue(":YEAR", m_year);
     query.bindValue(":TRACKNUM", m_trackNum);
-    query.bindValue(":LENGTH", m_length);
+    query.bindValue(":LENGTH", static_cast<qint64>(m_length.count()));
     query.bindValue(":FILENAME", sqlfilename);
     query.bindValue(":RATING", m_rating);
     query.bindValueNoNull(":FORMAT", m_format);
@@ -1066,7 +1058,7 @@ void MusicMetadata::setField(const QString &field, const QString &data)
     else if (field == "disccount")
         m_discCount = data.toInt();
     else if (field == "length")
-        m_length = data.toInt();
+        m_length = std::chrono::milliseconds(data.toInt());
     else if (field == "compilation")
         m_compilation = (data.toInt() > 0);
     else
@@ -1108,7 +1100,7 @@ void MusicMetadata::toMap(InfoMap &metadataMap, const QString &prefix)
         if (m_broadcaster.isEmpty())
             metadataMap[prefix + "album"] = m_channel;
         else
-            metadataMap[prefix + "album"] = QString("%1 - %2").arg(m_broadcaster).arg(m_channel);
+            metadataMap[prefix + "album"] = QString("%1 - %2").arg(m_broadcaster, m_channel);
     }
     else
         metadataMap[prefix + "album"] = m_album;
@@ -1122,19 +1114,8 @@ void MusicMetadata::toMap(InfoMap &metadataMap, const QString &prefix)
     metadataMap[prefix + "genre"] = m_genre;
     metadataMap[prefix + "year"] = (m_year > 0 ? QString("%1").arg(m_year) : "");
 
-    int len = m_length / 1000;
-    int eh = len / 3600;
-    int em = (len / 60) % 60;
-    int es = len % 60;
-    if (eh > 0)
-        metadataMap[prefix + "length"] = QString("%1:%2:%3")
-            .arg(eh,1,10)
-            .arg(em,2,10,QChar('0'))
-            .arg(es,2,10,QChar('0'));
-    else
-        metadataMap[prefix + "length"] = QString("%1:%2")
-            .arg(em,2,10,QChar('0'))
-            .arg(es,2,10,QChar('0'));
+    QString fmt = (m_length >= 1h) ? "H:mm:ss" : "mm:ss";
+    metadataMap[prefix + "length"] = MythDate::formatTime(m_length, fmt);
 
     if (m_lastPlay.isValid())
     {
@@ -1225,10 +1206,9 @@ void MusicMetadata::setEmbeddedAlbumArt(AlbumArtList &albumart)
     if (!m_albumArt)
         m_albumArt = new AlbumArtImages(this, false);
 
-    foreach (auto art, albumart)
+    for (auto *art : qAsConst(albumart))
     {
-        AlbumArtImage *image = art;
-        image->m_filename = QString("%1-%2").arg(m_id).arg(image->m_filename);
+        art->m_filename = QString("%1-%2").arg(m_id).arg(art->m_filename);
         m_albumArt->addImage(art);
     }
 
@@ -1305,7 +1285,7 @@ QString MusicMetadata::getAlbumArtFile(void)
             // image is a radio station icon, check if we have already downloaded and cached it
             QString path = GetConfDir() + "/MythMusic/AlbumArt/";
             QFileInfo fi(res);
-            QString filename = QString("%1-%2.%3").arg(m_id).arg("front").arg(fi.suffix());
+            QString filename = QString("%1-%2.%3").arg(m_id).arg("front", fi.suffix());
 
             albumart_image->m_filename = path + filename;
 
@@ -1525,12 +1505,6 @@ void AllMusic::resync()
                      "LEFT JOIN music_genres ON music_songs.genre_id=music_genres.genre_id "
                      "ORDER BY music_songs.song_id;";
 
-    QString filename;
-    QString artist;
-    QString album;
-    QString title;
-    QString compartist;
-
     MSqlQuery query(MSqlQuery::InitCon());
     if (!query.exec(aquery))
         MythDB::DBError("AllMusic::resync", query);
@@ -1556,7 +1530,7 @@ void AllMusic::resync()
                 query.value(7).toString(),     // genre
                 query.value(8).toInt(),        // year
                 query.value(9).toInt(),        // track no.
-                query.value(10).toInt(),       // length
+                std::chrono::milliseconds(query.value(10).toInt()),       // length
                 query.value(0).toInt(),        // id
                 query.value(13).toInt(),       // rating
                 query.value(14).toInt(),       // playcount
@@ -1606,25 +1580,17 @@ void AllMusic::resync()
             {
                 // first song
                 m_playCountMin = m_playCountMax = query.value(13).toInt();
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-                m_lastPlayMin  = m_lastPlayMax  = query.value(14).toDateTime().toTime_t();
-#else
                 m_lastPlayMin  = m_lastPlayMax  = query.value(14).toDateTime().toSecsSinceEpoch();
-#endif
             }
             else
             {
                 int playCount = query.value(13).toInt();
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-                double lastPlay = query.value(14).toDateTime().toTime_t();
-#else
                 qint64 lastPlay = query.value(14).toDateTime().toSecsSinceEpoch();
-#endif
 
-                m_playCountMin = min(playCount, m_playCountMin);
-                m_playCountMax = max(playCount, m_playCountMax);
-                m_lastPlayMin  = min(lastPlay,  m_lastPlayMin);
-                m_lastPlayMax  = max(lastPlay,  m_lastPlayMax);
+                m_playCountMin = std::min(playCount, m_playCountMin);
+                m_playCountMax = std::max(playCount, m_playCountMax);
+                m_lastPlayMin  = std::min(lastPlay,  m_lastPlayMin);
+                m_lastPlayMax  = std::max(lastPlay,  m_lastPlayMax);
             }
             m_numLoaded++;
         }
@@ -1636,7 +1602,7 @@ void AllMusic::resync()
 
     // get a list of tracks in our cache that's now not in the database
     QList<MusicMetadata::IdType> deleteList;
-    foreach (auto track, m_allMusic)
+    for (const auto *track : qAsConst(m_allMusic))
     {
         if (!idList.contains(track->ID()))
         {
@@ -1692,7 +1658,7 @@ bool AllMusic::updateMetadata(int an_id, MusicMetadata *the_track)
 /// \brief Check each MusicMetadata entry and save those that have changed (ratings, etc.)
 void AllMusic::save(void)
 {
-    foreach (auto & item, m_allMusic)
+    for (auto *item : qAsConst(m_allMusic))
     {
         if (item->hasChanged())
             item->persist();
@@ -1734,7 +1700,7 @@ bool AllMusic::checkCDTrack(MusicMetadata *the_track)
 
 MusicMetadata* AllMusic::getCDMetadata(int the_track)
 {
-    foreach (auto & anit, m_cdData)
+    for (auto *anit : qAsConst(m_cdData))
     {
         if (anit->Track() == the_track)
         {
@@ -2081,7 +2047,7 @@ void AlbumArtImages::scanForImages()
 
     while (scanThread->isRunning())
     {
-        qApp->processEvents();
+        QCoreApplication::processEvents();
         usleep(1000);
     }
 
@@ -2138,7 +2104,7 @@ void AlbumArtImages::scanForImages()
 
 AlbumArtImage *AlbumArtImages::getImage(ImageType type)
 {
-    foreach (auto & item, m_imageList)
+    for (auto *item : qAsConst(m_imageList))
     {
         if (item->m_imageType == type)
             return item;
@@ -2149,7 +2115,7 @@ AlbumArtImage *AlbumArtImages::getImage(ImageType type)
 
 AlbumArtImage *AlbumArtImages::getImageByID(int imageID)
 {
-    foreach (auto & item, m_imageList)
+    for (auto *item : qAsConst(m_imageList))
     {
         if (item->m_id == imageID)
             return item;
@@ -2162,7 +2128,7 @@ QStringList AlbumArtImages::getImageFilenames(void) const
 {
     QStringList paths;
 
-    foreach (auto item, m_imageList)
+    for (const auto *item : qAsConst(m_imageList))
         paths += item->m_filename;
 
     return paths;
@@ -2180,7 +2146,7 @@ AlbumArtImage *AlbumArtImages::getImageAt(uint index)
 QString AlbumArtImages::getTypeName(ImageType type)
 {
     // these const's should match the ImageType enum's
-    static const char* s_typeStrings[] = {
+    static const std::array<const std::string,6> s_typeStrings {
         QT_TR_NOOP("Unknown"),            // IT_UNKNOWN
         QT_TR_NOOP("Front Cover"),        // IT_FRONTCOVER
         QT_TR_NOOP("Back Cover"),         // IT_BACKCOVER
@@ -2190,14 +2156,14 @@ QString AlbumArtImages::getTypeName(ImageType type)
     };
 
     return QCoreApplication::translate("AlbumArtImages",
-                                       s_typeStrings[type]);
+                                       s_typeStrings[type].c_str());
 }
 
 // static method to get a filename from an ImageType
 QString AlbumArtImages::getTypeFilename(ImageType type)
 {
     // these const's should match the ImageType enum's
-    static const char* s_filenameStrings[] = {
+    static const std::array<const std::string,6> s_filenameStrings {
         QT_TR_NOOP("unknown"),      // IT_UNKNOWN
         QT_TR_NOOP("front"),        // IT_FRONTCOVER
         QT_TR_NOOP("back"),         // IT_BACKCOVER
@@ -2207,7 +2173,7 @@ QString AlbumArtImages::getTypeFilename(ImageType type)
     };
 
     return QCoreApplication::translate("AlbumArtImages",
-                                       s_filenameStrings[type]);
+                                       s_filenameStrings[type].c_str());
 }
 
 // static method to guess the image type from the filename
@@ -2254,15 +2220,15 @@ ImageType AlbumArtImages::getImageTypeFromName(const QString &name)
     return type;
 }
 
-void AlbumArtImages::addImage(const AlbumArtImage &newImage)
+void AlbumArtImages::addImage(const AlbumArtImage * const newImage)
 {
     // do we already have an image of this type?
     AlbumArtImage *image = nullptr;
 
-    foreach (auto & item, m_imageList)
+    for (auto *item : qAsConst(m_imageList))
     {
-        if (item->m_imageType == newImage.m_imageType
-            && item->m_embedded == newImage.m_embedded)
+        if (item->m_imageType == newImage->m_imageType
+            && item->m_embedded == newImage->m_embedded)
         {
             image = item;
             break;
@@ -2278,11 +2244,11 @@ void AlbumArtImages::addImage(const AlbumArtImage &newImage)
     else
     {
         // we already have an image of this type so just update it with the new info
-        image->m_filename = newImage.m_filename;
-        image->m_imageType = newImage.m_imageType;
-        image->m_embedded = newImage.m_embedded;
-        image->m_description = newImage.m_description;
-        image->m_hostname = newImage.m_hostname;
+        image->m_filename    = newImage->m_filename;
+        image->m_imageType   = newImage->m_imageType;
+        image->m_embedded    = newImage->m_embedded;
+        image->m_description = newImage->m_description;
+        image->m_hostname    = newImage->m_hostname;
     }
 }
 
@@ -2317,7 +2283,7 @@ void AlbumArtImages::dumpToDatabase(void)
     }
 
     // now add the albumart to the db
-    foreach (auto image, m_imageList)
+    for (auto *image : qAsConst(m_imageList))
     {
         //TODO: for the moment just ignore artist images
         if (image->m_imageType == IT_ARTIST)

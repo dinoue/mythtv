@@ -3,21 +3,28 @@
 // race on startup?
 // http date format and locale
 
+#include <chrono>
+#include <vector>
+
 #include <QTcpSocket>
 #include <QNetworkInterface>
 #include <QCoreApplication>
 #include <QKeyEvent>
 #include <QCryptographicHash>
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#include <QStringConverter>
+#endif
 #include <QTimer>
 #include <QUrlQuery>
 
 #include "mthread.h"
+#include "mythrandom.h"
 #include "mythdate.h"
 #include "mythlogging.h"
 #include "mythcorecontext.h"
 #include "mythuiactions.h"
 #include "mythuistatetracker.h"
-#include "plist.h"
+#include "mythbinaryplist.h"
 #include "tv_play.h"
 #include "mythmainwindow.h"
 #include "tv_actions.h"
@@ -27,7 +34,11 @@
 
 MythAirplayServer* MythAirplayServer::gMythAirplayServer = nullptr;
 MThread*           MythAirplayServer::gMythAirplayServerThread = nullptr;
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
 QMutex*            MythAirplayServer::gMythAirplayServerMutex = new QMutex(QMutex::Recursive);
+#else
+QRecursiveMutex*   MythAirplayServer::gMythAirplayServerMutex = new QRecursiveMutex();
+#endif
 
 #define LOC QString("AirPlay: ")
 
@@ -125,7 +136,13 @@ QString AirPlayHardwareId()
     {
         QByteArray ba;
         for (int i = 0; i < AIRPLAY_HARDWARE_ID_SIZE; i++)
-            ba.append((random() % 80) + 33);
+        {
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
+            ba.append((MythRandom() % 80) + 33);
+#else
+            ba.append(MythRandom(33, 33 + 80 - 1));
+#endif
+        }
         id = ba.toHex();
     }
     id = id.toUpper();
@@ -136,23 +153,18 @@ QString AirPlayHardwareId()
 
 QString GenerateNonce(void)
 {
-    int nonceParts[4];
-    QString nonce;
 #if QT_VERSION >= QT_VERSION_CHECK(5,10,0)
     auto *randgen = QRandomGenerator::global();
-    nonceParts[0] = randgen->generate();
-    nonceParts[1] = randgen->generate();
-    nonceParts[2] = randgen->generate();
-    nonceParts[3] = randgen->generate();
+    std::array<uint32_t,4> nonceParts {
+        randgen->generate(), randgen->generate(),
+        randgen->generate(), randgen->generate() };
 #else
-    QTime time = QTime::currentTime();
-    qsrand((uint)time.msec());
-    nonceParts[0] = qrand();
-    nonceParts[1] = qrand();
-    nonceParts[2] = qrand();
-    nonceParts[3] = qrand();
+    std::srand(std::time(nullptr));
+    std::array<int32_t,4> nonceParts {
+        std::rand(), std::rand(), std::rand(), std::rand() };
 #endif
 
+    QString nonce;
     nonce =  QString::number(nonceParts[0], 16).toUpper();
     nonce += QString::number(nonceParts[1], 16).toUpper();
     nonce += QString::number(nonceParts[2], 16).toUpper();
@@ -232,17 +244,16 @@ class APHTTPRequest
 
     QByteArray GetQueryValue(const QByteArray& key)
     {
-        foreach (auto & query, m_queries)
-            if (query.first == key)
-                return query.second;
-        return "";
+        auto samekey = [key](const auto& query) { return query.first == key; };;
+        auto query = std::find_if(m_queries.cbegin(), m_queries.cend(), samekey);
+        return (query != m_queries.cend()) ? query->second : "";
     }
 
     QMap<QByteArray,QByteArray> GetHeadersFromBody(void)
     {
         QMap<QByteArray,QByteArray> result;
         QList<QByteArray> lines = m_body.split('\n');;
-        foreach (QByteArray line, lines)
+        for (const QByteArray& line : qAsConst(lines))
         {
             int index = line.indexOf(":");
             if (index > 0)
@@ -254,7 +265,7 @@ class APHTTPRequest
         return result;
     }
 
-    bool IsComplete(void)
+    bool IsComplete(void) const
     {
         return !m_incomingPartial;
     }
@@ -271,7 +282,7 @@ class APHTTPRequest
 
     void Process(void)
     {
-        if (!m_data.size())
+        if (m_data.isEmpty())
             return;
 
         // request line
@@ -376,11 +387,11 @@ bool MythAirplayServer::Create(void)
     {
         gMythAirplayServer->moveToThread(gMythAirplayServerThread->qthread());
         QObject::connect(
-            gMythAirplayServerThread->qthread(), SIGNAL(started()),
-            gMythAirplayServer,                  SLOT(Start()));
+            gMythAirplayServerThread->qthread(), &QThread::started,
+            gMythAirplayServer,                  &MythAirplayServer::Start);
         QObject::connect(
-            gMythAirplayServerThread->qthread(), SIGNAL(finished()),
-            gMythAirplayServer,                  SLOT(Stop()));
+            gMythAirplayServerThread->qthread(), &QThread::finished,
+            gMythAirplayServer,                  &MythAirplayServer::Stop);
         gMythAirplayServerThread->start(QThread::LowestPriority);
     }
 
@@ -432,7 +443,7 @@ void MythAirplayServer::Teardown(void)
     m_bonjour = nullptr;
 
     // disconnect connections
-    foreach (QTcpSocket* connection, m_sockets)
+    for (QTcpSocket* connection : qAsConst(m_sockets))
     {
         disconnect(connection, nullptr, nullptr, nullptr);
         delete connection;
@@ -440,7 +451,7 @@ void MythAirplayServer::Teardown(void)
     m_sockets.clear();
 
     // remove all incoming buffers
-    foreach (APHTTPRequest* request, m_incoming)
+    for (APHTTPRequest* request : qAsConst(m_incoming))
     {
         delete request;
     }
@@ -456,8 +467,8 @@ void MythAirplayServer::Start(void)
         return;
 
     // join the dots
-    connect(this, SIGNAL(newConnection(QTcpSocket*)),
-            this, SLOT(newConnection(QTcpSocket*)));
+    connect(this, &ServerPool::newConnection,
+            this, &MythAirplayServer::newAirplayConnection);
 
     // start listening for connections
     // try a few ports in case the default is in use
@@ -485,10 +496,10 @@ void MythAirplayServer::Start(void)
 
         QByteArray name = m_name.toUtf8();
         name.append(" on ");
-        name.append(gCoreContext->GetHostName());
+        name.append(gCoreContext->GetHostName().toUtf8());
         QByteArray type = "_airplay._tcp";
         QByteArray txt;
-        txt.append(26); txt.append("deviceid="); txt.append(GetMacAddress());
+        txt.append(26); txt.append("deviceid="); txt.append(GetMacAddress().toUtf8());
         // supposed to be: 0: video, 1:Phone, 3: Volume Control, 4: HLS
         // 9: Audio, 10: ? (but important without it it fails) 11: Audio redundant
         txt.append(13); txt.append("features=0xF7");
@@ -503,10 +514,10 @@ void MythAirplayServer::Start(void)
         if (!m_serviceRefresh)
         {
             m_serviceRefresh = new QTimer();
-            connect(m_serviceRefresh, SIGNAL(timeout()), this, SLOT(timeout()));
+            connect(m_serviceRefresh, &QTimer::timeout, this, &MythAirplayServer::timeout);
         }
         // Will force a Bonjour refresh in two seconds
-        m_serviceRefresh->start(2000);
+        m_serviceRefresh->start(2s);
     }
     m_valid = true;
 }
@@ -514,7 +525,7 @@ void MythAirplayServer::Start(void)
 void MythAirplayServer::timeout(void)
 {
     m_bonjour->ReAnnounceService();
-    m_serviceRefresh->start(10000);
+    m_serviceRefresh->start(10s);
 }
 
 void MythAirplayServer::Stop(void)
@@ -522,7 +533,7 @@ void MythAirplayServer::Stop(void)
     Teardown();
 }
 
-void MythAirplayServer::newConnection(QTcpSocket *client)
+void MythAirplayServer::newAirplayConnection(QTcpSocket *client)
 {
     QMutexLocker locker(m_lock);
     LOG(VB_GENERAL, LOG_INFO, LOC + QString("New connection from %1:%2")
@@ -530,14 +541,15 @@ void MythAirplayServer::newConnection(QTcpSocket *client)
 
     gCoreContext->SendSystemEvent(QString("AIRPLAY_NEW_CONNECTION"));
     m_sockets.append(client);
-    connect(client, SIGNAL(disconnected()), this, SLOT(deleteConnection()));
-    connect(client, SIGNAL(readyRead()), this, SLOT(read()));
+    connect(client, &QAbstractSocket::disconnected,
+            this, qOverload<>(&MythAirplayServer::deleteConnection));
+    connect(client, &QIODevice::readyRead, this, &MythAirplayServer::read);
 }
 
 void MythAirplayServer::deleteConnection(void)
 {
     QMutexLocker locker(m_lock);
-    auto *socket = dynamic_cast<QTcpSocket *>(sender());
+    auto *socket = qobject_cast<QTcpSocket *>(sender());
     if (!socket)
         return;
 
@@ -601,7 +613,7 @@ void MythAirplayServer::deleteConnection(QTcpSocket *socket)
 void MythAirplayServer::read(void)
 {
     QMutexLocker locker(m_lock);
-    auto *socket = dynamic_cast<QTcpSocket *>(sender());
+    auto *socket = qobject_cast<QTcpSocket *>(sender());
     if (!socket)
         return;
 
@@ -658,13 +670,13 @@ void MythAirplayServer::HandleResponse(APHTTPRequest *req,
     {
         LOG(VB_GENERAL, LOG_INFO, LOC +
             QString("Method: %1 URI: %2")
-            .arg(req->GetMethod().data()).arg(req->GetURI().data()));
+            .arg(req->GetMethod().data(), req->GetURI().data()));
     }
     else
     {
         LOG(VB_GENERAL, LOG_DEBUG, LOC +
             QString("Method: %1 URI: %2")
-            .arg(req->GetMethod().data()).arg(req->GetURI().data()));
+            .arg(req->GetMethod().data(), req->GetURI().data()));
     }
 
     if (req->GetURI() == "200" || req->GetMethod().startsWith("HTTP"))
@@ -913,7 +925,7 @@ void MythAirplayServer::HandleResponse(APHTTPRequest *req,
         if (req->GetHeaders().contains("Content-Type") &&
             req->GetHeaders()["Content-Type"] == "application/x-apple-binary-plist")
         {
-            PList plist(req->GetBody());
+            MythBinaryPList plist(req->GetBody());
             LOG(VB_GENERAL, LOG_DEBUG, LOC + plist.ToString());
 
             QVariant start   = plist.GetValue("Start-Position");
@@ -984,25 +996,29 @@ void MythAirplayServer::SendResponse(QTcpSocket *socket,
         socket->state() != QAbstractSocket::ConnectedState)
         return;
     QTextStream response(socket);
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     response.setCodec("UTF-8");
+#else
+    response.setEncoding(QStringConverter::Utf8);
+#endif
     QByteArray reply;
     reply.append("HTTP/1.1 ");
-    reply.append(QString::number(status));
+    reply.append(QString::number(status).toUtf8());
     reply.append(" ");
     reply.append(StatusToString(status));
     reply.append("\r\n");
     reply.append("DATE: ");
-    reply.append(MythDate::current().toString("ddd, d MMM yyyy hh:mm:ss"));
+    reply.append(MythDate::current().toString("ddd, d MMM yyyy hh:mm:ss").toUtf8());
     reply.append(" GMT\r\n");
-    if (header.size())
+    if (!header.isEmpty())
         reply.append(header);
 
-    if (body.size())
+    if (!body.isEmpty())
     {
         reply.append("Content-Type: ");
         reply.append(content_type);
         reply.append("Content-Length: ");
-        reply.append(QString::number(body.size()));
+        reply.append(QString::number(body.size()).toUtf8());
     }
     else
     {
@@ -1010,8 +1026,8 @@ void MythAirplayServer::SendResponse(QTcpSocket *socket,
     }
     reply.append("\r\n\r\n");
 
-    if (body.size())
-        reply.append(body);
+    if (!body.isEmpty())
+        reply.append(body.toUtf8());
 
     response << reply;
     response.flush();
@@ -1042,18 +1058,22 @@ bool MythAirplayServer::SendReverseEvent(QByteArray &session,
 
     m_connections[session].m_lastEvent = event;
     QTextStream response(m_connections[session].m_reverseSocket);
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     response.setCodec("UTF-8");
+#else
+    response.setEncoding(QStringConverter::Utf8);
+#endif
     QByteArray reply;
     reply.append("POST /event HTTP/1.1\r\n");
     reply.append("Content-Type: text/x-apple-plist+xml\r\n");
     reply.append("Content-Length: ");
-    reply.append(QString::number(body.size()));
+    reply.append(QString::number(body.size()).toUtf8());
     reply.append("\r\n");
     reply.append("x-apple-session-id: ");
     reply.append(session);
     reply.append("\r\n\r\n");
-    if (body.size())
-        reply.append(body);
+    if (!body.isEmpty())
+        reply.append(body.toUtf8());
 
     response << reply;
     response.flush();
@@ -1212,9 +1232,10 @@ void MythAirplayServer::StartPlayback(const QString &pathname)
     auto* me = new MythEvent(ACTION_HANDLEMEDIA, QStringList(pathname));
     qApp->postEvent(GetMythMainWindow(), me);
     // Wait until we receive that the play has started
-    gCoreContext->WaitUntilSignals(SIGNAL(TVPlaybackStarted()),
-                                   SIGNAL(TVPlaybackAborted()),
-                                   nullptr);
+    std::vector<CoreWaitInfo> sigs {
+        { "TVPlaybackStarted", &MythCoreContext::TVPlaybackStarted },
+        { "TVPlaybackAborted", &MythCoreContext::TVPlaybackAborted } };
+    gCoreContext->WaitUntilSignals(sigs);
     LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
         QString("ACTION_HANDLEMEDIA completed"));
 }
@@ -1231,9 +1252,10 @@ void MythAirplayServer::StopPlayback(void)
                                  Qt::NoModifier, ACTION_STOP);
         qApp->postEvent(GetMythMainWindow(), (QEvent*)ke);
         // Wait until we receive that playback has stopped
-        gCoreContext->WaitUntilSignals(SIGNAL(TVPlaybackStopped()),
-                                       SIGNAL(TVPlaybackAborted()),
-                                       nullptr);
+        std::vector<CoreWaitInfo> sigs {
+            { "TVPlaybackStopped", &MythCoreContext::TVPlaybackStopped },
+            { "TVPlaybackAborted", &MythCoreContext::TVPlaybackAborted } };
+        gCoreContext->WaitUntilSignals(sigs);
         LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
             QString("ACTION_STOP completed"));
     }
@@ -1257,10 +1279,11 @@ void MythAirplayServer::SeekPosition(uint64_t position)
                                  QStringList(QString::number(position)));
         qApp->postEvent(GetMythMainWindow(), me);
         // Wait until we receive that the seek has completed
-        gCoreContext->WaitUntilSignals(SIGNAL(TVPlaybackSought(qint64)),
-                                       SIGNAL(TVPlaybackStopped()),
-                                       SIGNAL(TVPlaybackAborted()),
-                                       nullptr);
+        std::vector<CoreWaitInfo> sigs {
+            { "TVPlaybackSought", qOverload<>(&MythCoreContext::TVPlaybackSought) },
+            { "TVPlaybackStopped", &MythCoreContext::TVPlaybackStopped },
+            { "TVPlaybackAborted", &MythCoreContext::TVPlaybackAborted } };
+        gCoreContext->WaitUntilSignals(sigs);
         LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
             QString("ACTION_SEEKABSOLUTE completed"));
     }
@@ -1283,10 +1306,11 @@ void MythAirplayServer::PausePlayback(void)
                                  Qt::NoModifier, ACTION_PAUSE);
         qApp->postEvent(GetMythMainWindow(), (QEvent*)ke);
         // Wait until we receive that playback has stopped
-        gCoreContext->WaitUntilSignals(SIGNAL(TVPlaybackPaused()),
-                                       SIGNAL(TVPlaybackStopped()),
-                                       SIGNAL(TVPlaybackAborted()),
-                                       nullptr);
+        std::vector<CoreWaitInfo> sigs {
+            { "TVPlaybackPaused", &MythCoreContext::TVPlaybackPaused },
+            { "TVPlaybackStopped", &MythCoreContext::TVPlaybackStopped },
+            { "TVPlaybackAborted", &MythCoreContext::TVPlaybackAborted } };
+        gCoreContext->WaitUntilSignals(sigs);
         LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
             QString("ACTION_PAUSE completed"));
     }
@@ -1309,10 +1333,11 @@ void MythAirplayServer::UnpausePlayback(void)
                                  Qt::NoModifier, ACTION_PLAY);
         qApp->postEvent(GetMythMainWindow(), (QEvent*)ke);
         // Wait until we receive that playback has stopped
-        gCoreContext->WaitUntilSignals(SIGNAL(TVPlaybackPlaying()),
-                                       SIGNAL(TVPlaybackStopped()),
-                                       SIGNAL(TVPlaybackAborted()),
-                                       nullptr);
+        std::vector<CoreWaitInfo> sigs {
+            { "TVPlaybackPlaying", &MythCoreContext::TVPlaybackPlaying },
+            { "TVPlaybackStopped", &MythCoreContext::TVPlaybackStopped },
+            { "TVPlaybackAborted", &MythCoreContext::TVPlaybackAborted } };
+        gCoreContext->WaitUntilSignals(sigs);
         LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
             QString("ACTION_PLAY completed"));
     }

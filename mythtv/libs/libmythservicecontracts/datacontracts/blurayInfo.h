@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2011 Robert McNamara <rmcnamara@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -47,15 +47,15 @@ class SERVICE_PUBLIC BlurayInfo : public QObject
     Q_PROPERTY( bool            LibBDPlusDetected    READ LibBDPlusDetected    WRITE setLibBDPlusDetected    )
     Q_PROPERTY( bool            BDPlusHandled        READ BDPlusHandled        WRITE setBDPlusHandled        )
 
-    PROPERTYIMP    ( QString    , Path                 )
-    PROPERTYIMP    ( QString    , Title                )
-    PROPERTYIMP    ( QString    , AltTitle             )
-    PROPERTYIMP    ( QString    , DiscLang             )
+    PROPERTYIMP_REF( QString    , Path                 )
+    PROPERTYIMP_REF( QString    , Title                )
+    PROPERTYIMP_REF( QString    , AltTitle             )
+    PROPERTYIMP_REF( QString    , DiscLang             )
     PROPERTYIMP    ( uint       , DiscNum              )
     PROPERTYIMP    ( uint       , TotalDiscNum         )
     PROPERTYIMP    ( uint       , TitleCount           )
     PROPERTYIMP    ( uint       , ThumbCount           )
-    PROPERTYIMP    ( QString    , ThumbPath            )
+    PROPERTYIMP_REF( QString    , ThumbPath            )
     PROPERTYIMP    ( bool       , TopMenuSupported     )
     PROPERTYIMP    ( bool       , FirstPlaySupported   )
     PROPERTYIMP    ( uint       , NumHDMVTitles        )

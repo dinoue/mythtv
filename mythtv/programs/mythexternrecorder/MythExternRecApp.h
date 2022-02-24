@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _MythTVExternRecApp_H_
-#define _MythTVExternRecApp_H_
+#ifndef MYTHTVEXTERNRECAPP_H
+#define MYTHTVEXTERNRECAPP_H
 
 #include <QObject>
 #include <QtCore/QtCore>
@@ -43,7 +43,7 @@ class MythExternRecApp : public QObject
 
     QString Desc(void) const;
     void MythLog(const QString & msg)
-    { SendMessage("", "0", QString("STATUS:%1").arg(msg)); }
+    { emit SendMessage("", "0", QString("STATUS:%1").arg(msg)); }
     void SetErrorMsg(const QString & msg) { emit ErrorMessage(msg); }
 
   signals:
@@ -83,7 +83,7 @@ class MythExternRecApp : public QObject
 
   protected:
     void GetChannel(const QString & serial, const QString & func);
-    void TerminateProcess(QProcess & proc, const QString & desc);
+    void TerminateProcess(QProcess & proc, const QString & desc) const;
 
   private:
     bool config(void);
@@ -109,6 +109,7 @@ class MythExternRecApp : public QObject
     QMap<QString, QString>  m_appEnv;
 
     QProcess                m_tuneProc;
+    QProcess                m_finishTuneProc;
     QString                 m_tuneCommand;
     QString                 m_onDataStart;
     QString                 m_newEpisodeCommand;
@@ -133,4 +134,4 @@ class MythExternRecApp : public QObject
 
 };
 
-#endif
+#endif // MYTHTVEXTERNRECAPP_H

@@ -55,7 +55,7 @@ class META_PUBLIC VideoMetadata
              const QString &sortSubtitle = QString(),
              const QString &tagline = QString(),
              int year = VIDEO_YEAR_DEFAULT,
-             const QDate &releasedate = QDate(),
+             QDate releasedate = QDate(),
              const QString &inetref = QString(),
              int collectionref = 0,
              const QString &homepage = QString(),
@@ -68,7 +68,7 @@ class META_PUBLIC VideoMetadata
              int playcount = 0,
              int season = 0,
              int episode = 0,
-             const QDate &insertdate = QDate(),
+             QDate insertdate = QDate(),
              int id = 0,
              ParentalLevel::Level showlevel = ParentalLevel::plLowest,
              int categoryID = 0,
@@ -90,8 +90,15 @@ class META_PUBLIC VideoMetadata
     bool sortBefore(const VideoMetadata &rhs) const;
 
     void toMap(InfoMap &metadataMap);
-    void GetStateMap(InfoMap &stateMap);
+    QString GetText(const QString& name) const;
+    void GetStateMap(InfoMap &stateMap) const;
+    QString GetState(const QString& name) const;
     void GetImageMap(InfoMap &imageMap);
+    QString GetImage(const QString& name) const;
+
+    static QString MetadataGetTextCb(const QString& name, void *data);
+    static QString MetadataGetImageCb(const QString& name, void *data);
+    static QString MetadataGetStateCb(const QString& name, void *data);
 
     const QString &GetPrefix() const;
     void SetPrefix(const QString &prefix);
@@ -137,8 +144,8 @@ class META_PUBLIC VideoMetadata
     const QString &GetRating() const;
     void SetRating(const QString &rating);
 
-    int GetLength() const;
-    void SetLength(int length);
+    std::chrono::minutes GetLength() const;
+    void SetLength(std::chrono::minutes length);
 
     int GetSeason() const;
     void SetSeason(int season);

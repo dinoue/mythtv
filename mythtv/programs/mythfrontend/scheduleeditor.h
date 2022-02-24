@@ -46,6 +46,7 @@ class SchedOptMixin
     MythUISpinBox    *m_endoffsetSpin   {nullptr};
     MythUIButtonList *m_dupmethodList   {nullptr};
     MythUIButtonList *m_dupscopeList    {nullptr};
+    MythUIButtonList *m_autoExtendList  {nullptr};
     MythUIButtonList *m_inputList       {nullptr};
     MythUICheckBox   *m_ruleactiveCheck {nullptr};
     MythUIButtonList *m_newrepeatList   {nullptr};
@@ -148,6 +149,7 @@ class ScheduleEditor : public ScheduleCommon,
     public SchedOptMixin, public FilterOptMixin,
     public StoreOptMixin, public PostProcMixin
 {
+    friend class SchedEditChild;
   Q_OBJECT
   public:
     ScheduleEditor(MythScreenStack *parent, RecordingInfo* recinfo,

@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2011 Robert McNamara <rmcnamara@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +31,7 @@ class SERVICE_PUBLIC CaptureCardList : public QObject
 
     Q_CLASSINFO( "CaptureCards", "type=DTC::CaptureCard");
 
-    Q_PROPERTY( QVariantList CaptureCards READ CaptureCards DESIGNABLE true )
+    Q_PROPERTY( QVariantList CaptureCards READ CaptureCards )
 
     PROPERTYIMP_RO_REF( QVariantList, CaptureCards );
 
@@ -54,7 +54,7 @@ class SERVICE_PUBLIC CaptureCardList : public QObject
             // We must make sure the object added to the QVariantList has
             // a parent of 'this'
 
-            CaptureCard *pObject = new CaptureCard( this );
+            auto *pObject = new CaptureCard( this );
             m_CaptureCards.append( QVariant::fromValue<QObject *>( pObject ));
 
             return pObject;

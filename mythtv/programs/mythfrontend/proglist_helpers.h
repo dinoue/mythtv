@@ -1,5 +1,5 @@
-#ifndef _PROGLIST_HELPERS_H_
-#define _PROGLIST_HELPERS_H_
+#ifndef PROGLIST_HELPERS_H
+#define PROGLIST_HELPERS_H
 
 #include <utility>
 
@@ -103,7 +103,7 @@ class EditPowerSearchPopup : public MythScreenType
 
   public:
     EditPowerSearchPopup(MythScreenStack *parentStack, ProgLister *parent,
-                         const QString &currentValue);
+                         QString &currentValue);
 
     bool Create() override; // MythScreenType
 
@@ -130,4 +130,4 @@ class EditPowerSearchPopup : public MythScreenType
     MythUIButton     *m_okButton     {nullptr};
 };
 
-#endif // _PROGLIST_HELPERS_H_
+#endif // PROGLIST_HELPERS_H

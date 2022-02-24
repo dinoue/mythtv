@@ -19,8 +19,8 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#ifndef _SCTE_TABLES_H_
-#define _SCTE_TABLES_H_
+#ifndef SCTE_TABLES_H
+#define SCTE_TABLES_H
 
 #include <cassert>
 
@@ -248,7 +248,7 @@ class MTV_PUBLIC SCTENetworkInformationTable : public PSIPTable
     QString toStringXML(uint indent_level) const override; // PSIPTable
 
   private:
-    vector<const unsigned char*> m_ptrs;
+    std::vector<const unsigned char*> m_ptrs;
 };
 
 class MTV_PUBLIC NetworkTextTable : public PSIPTable
@@ -351,7 +351,7 @@ class VirtualChannelMapSubtable
 {
   public:
     VirtualChannelMapSubtable(
-        const unsigned char *data, const vector<const unsigned char*> &ptrs) :
+        const unsigned char *data, const std::vector<const unsigned char*> &ptrs) :
         m_data(data), _ptrs(ptrs) {}
 
     //   zero                   2  7.0
@@ -373,11 +373,7 @@ class VirtualChannelMapSubtable
     QDateTime ActivationTimeUTC(uint offset = 0) const
     {
         QDateTime dt;
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        dt.setTime_t(GPS_EPOCH + offset + ActivationTimeRaw());
-#else
         dt.setSecsSinceEpoch(GPS_EPOCH + offset + ActivationTimeRaw());
-#endif
         return dt;
     }
     //   number_of_VC_records   8 13.0
@@ -466,7 +462,7 @@ class VirtualChannelMapSubtable
     uint Size(void) const { return _ptrs.back() - m_data; }
 
     const unsigned char *m_data;
-    const vector<const unsigned char*> &_ptrs;
+    const std::vector<const unsigned char*> &_ptrs;
 };
 
 class MTV_PUBLIC InverseChannelMapSubtable
@@ -559,7 +555,7 @@ class MTV_PUBLIC ShortVirtualChannelTable : public PSIPTable
     QString toStringXML(uint indent_level) const override; // PSIPTable
 
   private:
-    vector<const unsigned char*> m_ptrs;
+    std::vector<const unsigned char*> m_ptrs;
 };
 
 /** \class SCTESystemTimeTable
@@ -595,21 +591,13 @@ class MTV_PUBLIC SCTESystemTimeTable : public PSIPTable
     QDateTime SystemTimeGPS(void) const
     {
         QDateTime dt;
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        dt.setTime_t(GPSUnix());
-#else
         dt.setSecsSinceEpoch(GPSUnix());
-#endif
         return dt;
     }
     QDateTime SystemTimeUTC(void) const
     {
         QDateTime dt;
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        dt.setTime_t(UTCUnix());
-#else
         dt.setSecsSinceEpoch(UTCUnix());
-#endif
         return dt;
     }
     time_t GPSUnix(void) const
@@ -688,4 +676,4 @@ class MTV_PUBLIC AggregateDataEventTable : public PSIPTable
 };
 
 
-#endif // _SCTE_TABLES_H_
+#endif // SCTE_TABLES_H

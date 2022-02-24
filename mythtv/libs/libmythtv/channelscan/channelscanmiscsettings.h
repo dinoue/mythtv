@@ -27,8 +27,8 @@
  *
  */
 
-#ifndef _MISC_SETTINGS_H_
-#define _MISC_SETTINGS_H_
+#ifndef CHANNEL_SCAN_MISC_SETTINGS_H
+#define CHANNEL_SCAN_MISC_SETTINGS_H
 
 #include "standardsettings.h"
 #include "channelscantypes.h"
@@ -217,6 +217,53 @@ class TrustEncSISetting : public TransMythUICheckBoxSetting
     }
 };
 
+// Scan data reference transponder
+class ScanTransponder: public TransMythUIComboBoxSetting
+{
+  public:
+    ScanTransponder() : TransMythUIComboBoxSetting(false)
+    {
+        setLabel(QObject::tr("Satellite tuning data"));
+        setHelpText(
+             QObject::tr(
+                "Select a satellite from this list for the "
+                "tuning data of the reference transponder."));
+        addSelection("(Select Satellite)", "Select", true);
+
+        // Satellite tuning data
+        m_tdm["Hotbird"] = { "Hotbird", "Hotbird   13.0E", "12015000", "h", "27500000", "8PSK", "DVB-S2", "3/4" };
+        m_tdm["Astra-1"] = { "Astra-1", "Astra-1   19.2E", "11229000", "v", "22000000", "8PSK", "DVB-S2", "2/3" };
+        m_tdm["Astra-3"] = { "Astra-3", "Astra-3   23.5E", "12031500", "h", "27500000", "QPSK", "DVB-S2", "auto"};
+        m_tdm["Astra-2"] = { "Astra-2", "Astra-2   28.2E", "10714000", "h", "22000000", "QPSK", "DVB-S",  "5/6" };
+
+        for (auto &td: m_tdm)
+        {
+            addSelection(td.fullname, td.name);
+        }
+    }
+
+  private:
+    struct tuningdata {
+        QString name;
+        QString fullname;
+        QString frequency;
+        QString polarity;
+        QString symbolrate;
+        QString modulation;
+        QString modSys;
+        QString fec;
+    };
+    QMap<QString, struct tuningdata> m_tdm;
+
+  public:
+    QString getFrequency (const QString &satname) {return m_tdm[satname].frequency; }
+    QString getPolarity  (const QString &satname) {return m_tdm[satname].polarity;  }
+    QString getSymbolrate(const QString &satname) {return m_tdm[satname].symbolrate;}
+    QString getModulation(const QString &satname) {return m_tdm[satname].modulation;}
+    QString getModSys    (const QString &satname) {return m_tdm[satname].modSys;    }
+    QString getFec       (const QString &satname) {return m_tdm[satname].fec;       }
+};
+
 class ScanFrequencykHz: public TransTextEditSetting
 {
   public:
@@ -239,17 +286,17 @@ class ScanFrequency: public TransTextEditSetting
     };
 };
 
-class ScanSymbolRateDVBS: public TransMythUIComboBoxSetting
+class ScanDVBSSymbolRate: public TransMythUIComboBoxSetting
 {
   public:
-    ScanSymbolRateDVBS() : TransMythUIComboBoxSetting(true)
+    ScanDVBSSymbolRate() : TransMythUIComboBoxSetting(true)
     {
         setLabel(QObject::tr("Symbol Rate"));
         setHelpText(
              QObject::tr(
                 "Symbol Rate (symbols/second).\n"
-                "Most DVB-S transponders transmit at 27.5 "
-                "million symbols per second."));
+                "Most DVB-S transponders transmit at 27500000 "
+                "symbols per second."));
         addSelection("3333000");
         addSelection("22000000");
         addSelection("22500000");
@@ -263,17 +310,17 @@ class ScanSymbolRateDVBS: public TransMythUIComboBoxSetting
     }
 };
 
-class ScanSymbolRateDVBC: public TransMythUIComboBoxSetting
+class ScanDVBCSymbolRate: public TransMythUIComboBoxSetting
 {
   public:
-    ScanSymbolRateDVBC() : TransMythUIComboBoxSetting(true)
+    ScanDVBCSymbolRate() : TransMythUIComboBoxSetting(true)
     {
         setLabel(QObject::tr("Symbol Rate"));
         setHelpText(
              QObject::tr(
                 "Symbol Rate (symbols/second).\n"
-                "Most DVB-C transports transmit at 6.9 or 6.875 "
-                "million symbols per second."));
+                "Most DVB-C transports transmit at 6900000 or 6875000 "
+                "symbols per second."));
         addSelection("3450000");
         addSelection("5000000");
         addSelection("5900000");
@@ -421,15 +468,15 @@ class ScanHierarchy: public TransMythUIComboBoxSetting
     };
 };
 
-class ScanModSys: public TransMythUIComboBoxSetting
+class ScanDVBSModSys: public TransMythUIComboBoxSetting
 {
     public:
-    ScanModSys()
+    ScanDVBSModSys()
     {
-        setLabel(QObject::tr("Mod Sys"));
-        setHelpText(QObject::tr("Modulation system (Default: DVB-S)"));
-        addSelection("DVB-S");
-        addSelection("DVB-S2");
+        setLabel(QObject::tr("Modulation System"));
+        setHelpText(QObject::tr("Modulation system (Default: DVB-S2)"));
+        addSelection("DVB-S",  "DVB-S");
+        addSelection("DVB-S2", "DVB-S2", true);
     };
 };
 
@@ -438,11 +485,24 @@ class ScanDVBTModSys: public TransMythUIComboBoxSetting
     public:
     ScanDVBTModSys()
     {
-        setLabel(QObject::tr("Mod Sys"));
-        setHelpText(QObject::tr("Modulation system (Default: DVB-T)"));
-        addSelection("DVB-T");
-        addSelection("DVB-T2");
+        setLabel(QObject::tr("Modulation System"));
+        setHelpText(QObject::tr("Modulation system (Default: DVB-T2)"));
+        addSelection("DVB-T",  "DVB-T");
+        addSelection("DVB-T2", "DVB-T2", true);
     };
+};
+
+class ScanDVBCModSys : public  TransMythUIComboBoxSetting
+{
+  public:
+    ScanDVBCModSys()
+    {
+        setLabel(QObject::tr("Modulation System"));
+        setHelpText(QObject::tr("Modulation System (Default: DVB-C/A)"));
+        addSelection("DVB-C/A", "DVB-C/A", true);
+        addSelection("DVB-C/B", "DVB-C/B");
+        addSelection("DVB-C/C", "DVB-C/C");
+    }
 };
 
 class ScanRollOff: public TransMythUIComboBoxSetting
@@ -470,4 +530,4 @@ class PaneError : public GroupSetting
     }
 };
 
-#endif // _MISC_SETTINGS_H_
+#endif // CHANNEL_SCAN_MISC_SETTINGS_H

@@ -1,8 +1,14 @@
+#include <unistd.h> // for usleep()
+
+#include <utility>
+
 #include <QTcpSocket>
 #include <QTextStream>
 #include <QTimer>
 #include <QtEndian>
-#include <utility>
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#include <QStringConverter>
+#endif
 
 #include "mythlogging.h"
 #include "mythcorecontext.h"
@@ -15,10 +21,9 @@
 #include "mythraopdevice.h"
 #include "mythraopconnection.h"
 #include "mythairplayserver.h"
+#include "mythchrono.h"
 
 #include "mythmainwindow.h"
-
-#include <unistd.h> // for usleep()
 
 #define LOC QString("RAOP Conn: ")
 #define MAX_PACKET_SIZE  2048
@@ -36,24 +41,23 @@ QString MythRAOPConnection::g_rsaLastError;
 #define AUDIO_DATA       0x60
 #define FIRSTAUDIO_DATA  (0x60 | 0x80)
 
-
 // Size (in ms) of audio buffered in audio card
-#define AUDIOCARD_BUFFER 500
+static constexpr std::chrono::milliseconds AUDIOCARD_BUFFER { 500ms };
 // How frequently we may call ProcessAudio (via QTimer)
 // ideally 20ms, but according to documentation
 // anything lower than 50ms on windows, isn't reliable
-#define AUDIO_BUFFER     100
+static constexpr std::chrono::milliseconds AUDIO_BUFFER { 100ms };
 
-class _NetStream : public QTextStream
+class RaopNetStream : public QTextStream
 {
 public:
-    explicit _NetStream(QIODevice *device) : QTextStream(device)
+    explicit RaopNetStream(QIODevice *device) : QTextStream(device)
     {
     };
-    _NetStream &operator<<(const QString &str)
+    RaopNetStream &operator<<(const QString &str)
     {
         LOG(VB_PLAYBACK, LOG_DEBUG,
-            LOC + QString("Sending(%1): ").arg(str.length()) + str);
+            LOC + QString("Sending(%1): ").arg(str.length()) + str.trimmed());
         QTextStream *q = this;
         *q << str;
         return *this;
@@ -75,7 +79,7 @@ MythRAOPConnection::~MythRAOPConnection()
 {
     CleanUp();
 
-    foreach (QTcpSocket *client, m_eventClients)
+    for (QTcpSocket *client : qAsConst(m_eventClients))
     {
         client->close();
         client->deleteLater();
@@ -107,7 +111,9 @@ MythRAOPConnection::~MythRAOPConnection()
 
     if (m_id > 0)
     {
-        GetNotificationCenter()->UnRegister(this, m_id);
+        auto *nc = GetNotificationCenter();
+        if (nc)
+            nc->UnRegister(this, m_id);
     }
 }
 
@@ -175,9 +181,13 @@ void MythRAOPConnection::CleanUp(void)
 bool MythRAOPConnection::Init(void)
 {
     // connect up the request socket
-    m_textStream = new _NetStream(m_socket);
+    m_textStream = new RaopNetStream(m_socket);
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     m_textStream->setCodec("UTF-8");
-    if (!connect(m_socket, SIGNAL(readyRead()), this, SLOT(readClient())))
+#else
+    m_textStream->setEncoding(QStringConverter::Utf8);
+#endif
+    if (!connect(m_socket, &QIODevice::readyRead, this, &MythRAOPConnection::readClient))
     {
         LOG(VB_PLAYBACK, LOG_ERR, LOC + "Failed to connect client socket signal.");
         return false;
@@ -185,8 +195,8 @@ bool MythRAOPConnection::Init(void)
 
     // create the data socket
     m_dataSocket = new ServerPool();
-    if (!connect(m_dataSocket, SIGNAL(newDatagram(QByteArray, QHostAddress, quint16)),
-                 this,         SLOT(udpDataReady(QByteArray, QHostAddress, quint16))))
+    if (!connect(m_dataSocket, &ServerPool::newDatagram,
+                 this,         &MythRAOPConnection::udpDataReady))
     {
         LOG(VB_PLAYBACK, LOG_ERR, LOC + "Failed to connect data socket signal.");
         return false;
@@ -212,11 +222,11 @@ bool MythRAOPConnection::Init(void)
 
     // start the watchdog timer to auto delete the client after a period of inactivity
     m_watchdogTimer = new QTimer();
-    connect(m_watchdogTimer, SIGNAL(timeout()), this, SLOT(timeout()));
-    m_watchdogTimer->start(10000);
+    connect(m_watchdogTimer, &QTimer::timeout, this, &MythRAOPConnection::timeout);
+    m_watchdogTimer->start(10s);
 
     m_dequeueAudioTimer = new QTimer();
-    connect(m_dequeueAudioTimer, SIGNAL(timeout()), this, SLOT(ProcessAudio()));
+    connect(m_dequeueAudioTimer, &QTimer::timeout, this, &MythRAOPConnection::ProcessAudio);
 
     return true;
 }
@@ -230,16 +240,16 @@ void MythRAOPConnection::udpDataReady(QByteArray buf, const QHostAddress& /*peer
 {
     // restart the idle timer
     if (m_watchdogTimer)
-        m_watchdogTimer->start(10000);
+        m_watchdogTimer->start(10s);
 
     if (!m_audio || !m_codec || !m_codecContext)
         return;
 
     uint8_t  type = 0;
     uint16_t seq = 0;
-    uint64_t timestamp = 0;
+    uint64_t firstframe = 0;
 
-    if (!GetPacketType(buf, type, seq, timestamp))
+    if (!GetPacketType(buf, type, seq, firstframe))
     {
         LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
             QString("Packet doesn't start with valid Rtp Header (0x%1)")
@@ -257,7 +267,7 @@ void MythRAOPConnection::udpDataReady(QByteArray buf, const QHostAddress& /*peer
 
         case FIRSTAUDIO_DATA:
             m_nextSequence      = seq;
-            m_nextTimestamp     = timestamp;
+            m_nextTimestamp     = framesToMs(firstframe);
             // With iTunes we know what the first sequence is going to be.
             // iOS device do not tell us before streaming start what the first
             // packet is going to be.
@@ -279,7 +289,7 @@ void MythRAOPConnection::udpDataReady(QByteArray buf, const QHostAddress& /*peer
             return;
     }
 
-    timestamp = framesToMs(timestamp);
+    auto timestamp = framesToMs(firstframe);
     if (timestamp < m_currentTimestamp)
     {
         LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
@@ -308,7 +318,7 @@ void MythRAOPConnection::udpDataReady(QByteArray buf, const QHostAddress& /*peer
         {
             LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
                 QString("Received required resend %1 (with ts:%2 last:%3)")
-                .arg(seq).arg(timestamp).arg(m_nextSequence));
+                .arg(seq).arg(firstframe).arg(m_nextSequence));
             m_resends.remove(seq);
         }
         else
@@ -338,16 +348,13 @@ void MythRAOPConnection::udpDataReady(QByteArray buf, const QHostAddress& /*peer
 
 void MythRAOPConnection::ProcessSync(const QByteArray &buf)
 {
-    bool    first       = (uint8_t)buf[0] == 0x90; // First sync is 0x90,0x55
+    bool    first       = (uint8_t)buf[0] == 0x90; // First sync is 0x90,0x54
     const char *req     = buf.constData();
     uint64_t current_ts = qFromBigEndian(*(uint32_t *)(req + 4));
     uint64_t next_ts    = qFromBigEndian(*(uint32_t *)(req + 16));
 
-    uint64_t current    = framesToMs(current_ts);
-    uint64_t next       = framesToMs(next_ts);
-
-    m_currentTimestamp  = current;
-    m_nextTimestamp     = next;
+    m_currentTimestamp  = framesToMs(current_ts);
+    m_nextTimestamp     = framesToMs(next_ts);
     m_bufferLength      = m_nextTimestamp - m_currentTimestamp;
 
     if (current_ts > m_progressStart)
@@ -356,35 +363,28 @@ void MythRAOPConnection::ProcessSync(const QByteArray &buf)
         SendNotification(true);
     }
 
-    if (first)
-    {
-        LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("Receiving first SYNC packet"));
-    }
-    else
-    {
-        LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("Receiving SYNC packet"));
-    }
+    LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("Receiving %1SYNC packet")
+        .arg(first ? "first " : ""));
 
-    timeval  t {};
-    gettimeofday(&t, nullptr);
-    m_timeLastSync = t.tv_sec * 1000 + t.tv_usec / 1000;
+    m_timeLastSync = nowAsDuration<std::chrono::milliseconds>();
 
     LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("SYNC: cur:%1 next:%2 time:%3")
-        .arg(m_currentTimestamp).arg(m_nextTimestamp).arg(m_timeLastSync));
+        .arg(m_currentTimestamp.count()).arg(m_nextTimestamp.count())
+        .arg(m_timeLastSync.count()));
 
-    int64_t delay = framesToMs((uint64_t)m_audioQueue.size() * m_framesPerPacket);
-    int64_t audiots = m_audio->GetAudiotime();
-    int64_t currentLatency = 0LL;
+    std::chrono::milliseconds delay = framesToMs((uint64_t)m_audioQueue.size() * m_framesPerPacket);
+    std::chrono::milliseconds audiots = m_audio->GetAudiotime();
+    std::chrono::milliseconds currentLatency = 0ms;
 
     if (m_audioStarted)
     {
-        currentLatency = audiots - (int64_t)m_currentTimestamp;
+        currentLatency = audiots - m_currentTimestamp;
     }
 
     LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
         QString("RAOP timestamps: about to play:%1 desired:%2 latency:%3")
-        .arg(audiots).arg(m_currentTimestamp)
-        .arg(currentLatency));
+        .arg(audiots.count()).arg(m_currentTimestamp.count())
+        .arg(currentLatency.count()));
 
     delay += m_audio->GetAudioBufferedTime();
     delay += currentLatency;
@@ -392,11 +392,11 @@ void MythRAOPConnection::ProcessSync(const QByteArray &buf)
     LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
         QString("Queue=%1 buffer=%2ms ideal=%3ms diffts:%4ms")
         .arg(m_audioQueue.size())
-        .arg(delay)
-        .arg(m_bufferLength)
-        .arg(m_bufferLength-delay));
+        .arg(delay.count())
+        .arg(m_bufferLength.count())
+        .arg((m_bufferLength-delay).count()));
 
-    if (m_adjustedLatency <= 0 && m_audioStarted &&
+    if (m_adjustedLatency <= 0ms && m_audioStarted &&
         (-currentLatency > AUDIOCARD_BUFFER))
     {
         // Too much delay in playback.
@@ -406,7 +406,7 @@ void MythRAOPConnection::ProcessSync(const QByteArray &buf)
         // Will drop some frames in next ProcessAudio
         LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
             QString("Too much delay (%1ms), adjusting")
-            .arg(m_bufferLength - delay));
+            .arg((m_bufferLength - delay).count()));
 
         m_adjustedLatency = m_cardLatency + m_networkLatency;
 
@@ -426,7 +426,7 @@ void MythRAOPConnection::ProcessSync(const QByteArray &buf)
  * SendResendRequest:
  * Request RAOP client to resend missed RTP packets
  */
-void MythRAOPConnection::SendResendRequest(uint64_t timestamp,
+void MythRAOPConnection::SendResendRequest(std::chrono::milliseconds timestamp,
                                            uint16_t expected, uint16_t got)
 {
     if (!m_clientControlSocket)
@@ -438,18 +438,16 @@ void MythRAOPConnection::SendResendRequest(uint64_t timestamp,
 
     LOG(VB_PLAYBACK, LOG_INFO, LOC +
         QString("Missed %1 packet(s): expected %2 got %3 ts:%4")
-        .arg(missed).arg(expected).arg(got).arg(timestamp));
+        .arg(missed).arg(expected).arg(got).arg(timestamp.count()));
 
-    unsigned char req[8];
-    req[0] = 0x80;
-    req[1] = RANGE_RESEND | 0x80;
-    *(uint16_t *)(req + 2) = qToBigEndian(m_seqNum++);
-    *(uint16_t *)(req + 4) = qToBigEndian(expected);   // missed seqnum
-    *(uint16_t *)(req + 6) = qToBigEndian(missed);     // count
+    std::array<uint8_t,8> req { 0x80, RANGE_RESEND | 0x80};
+    *(uint16_t *)(&req[2]) = qToBigEndian(m_seqNum++);
+    *(uint16_t *)(&req[4]) = qToBigEndian(expected);   // missed seqnum
+    *(uint16_t *)(&req[6]) = qToBigEndian(missed);     // count
 
-    if (m_clientControlSocket->writeDatagram((char *)req, sizeof(req),
+    if (m_clientControlSocket->writeDatagram((char *)req.data(), req.size(),
                                              m_peerAddress, m_clientControlPort)
-        == sizeof(req))
+        == (qint64)req.size())
     {
         for (uint16_t count = 0; count < missed; count++)
         {
@@ -467,12 +465,12 @@ void MythRAOPConnection::SendResendRequest(uint64_t timestamp,
  * Expire resend requests that are older than timestamp. Those requests are
  * expired when audio with older timestamp has already been played
  */
-void MythRAOPConnection::ExpireResendRequests(uint64_t timestamp)
+void MythRAOPConnection::ExpireResendRequests(std::chrono::milliseconds timestamp)
 {
     if (m_resends.isEmpty())
         return;
 
-    QMutableMapIterator<uint16_t,uint64_t> it(m_resends);
+    QMutableMapIterator<uint16_t,std::chrono::milliseconds> it(m_resends);
     while (it.hasNext())
     {
         it.next();
@@ -494,31 +492,29 @@ void MythRAOPConnection::SendTimeRequest(void)
     if (!m_clientControlSocket) // should never happen
         return;
 
-    timeval t {};
-    gettimeofday(&t, nullptr);
+    uint32_t ntpSec {0};
+    uint32_t ntpTicks {0};
+    auto usecs = nowAsDuration<std::chrono::microseconds>();
+    microsecondsToNTP(usecs, ntpSec, ntpTicks);
 
-    unsigned char req[32];
-    req[0] = 0x80;
-    req[1] = TIMING_REQUEST | 0x80;
-    // this is always 0x00 0x07 according to http://blog.technologeek.org/airtunes-v2
-    // no other value works
-    req[2] = 0x00;
-    req[3] = 0x07;
-    *(uint32_t *)(req + 4)  = (uint32_t)0;
-    *(uint64_t *)(req + 8)  = (uint64_t)0;
-    *(uint64_t *)(req + 16) = (uint64_t)0;
-    *(uint32_t *)(req + 24) = qToBigEndian((uint32_t)t.tv_sec);
-    *(uint32_t *)(req + 28) = qToBigEndian((uint32_t)t.tv_usec);
+    std::array<uint8_t,32> req {
+        0x80, TIMING_REQUEST | 0x80,
+        // this is always 0x00 0x07 according to http://blog.technologeek.org/airtunes-v2
+        // no other value works
+        0x00, 0x07
+    };
+    *(uint32_t *)(&req[24]) = qToBigEndian(ntpSec);
+    *(uint32_t *)(&req[28]) = qToBigEndian(ntpTicks);
 
-    if (m_clientTimingSocket->writeDatagram((char *)req, sizeof(req), m_peerAddress,
-                                            m_clientTimingPort) != sizeof(req))
+    if (m_clientTimingSocket->writeDatagram((char *)req.data(), req.size(), m_peerAddress,
+                                            m_clientTimingPort) != (qint64)req.size())
     {
         LOG(VB_PLAYBACK, LOG_ERR, LOC + "Failed to send resend time request.");
         return;
     }
     LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
         QString("Requesting master time (Local %1.%2)")
-        .arg(t.tv_sec).arg(t.tv_usec));
+        .arg(ntpSec,8,16,QChar('0')).arg(ntpTicks,8,16,QChar('0')));
 }
 
 /**
@@ -529,38 +525,69 @@ void MythRAOPConnection::SendTimeRequest(void)
  */
 void MythRAOPConnection::ProcessTimeResponse(const QByteArray &buf)
 {
-    timeval t1 {};
-    timeval t2 {};
     const char *req = buf.constData();
 
-    t1.tv_sec  = qFromBigEndian(*(uint32_t *)(req + 8));
-    t1.tv_usec = qFromBigEndian(*(uint32_t *)(req + 12));
-
-    gettimeofday(&t2, nullptr);
-    uint64_t time1 = t1.tv_sec * 1000 + t1.tv_usec / 1000;
-    uint64_t time2 = t2.tv_sec * 1000 + t2.tv_usec / 1000;
+    uint32_t ntpSec   = qFromBigEndian(*(uint32_t *)(req + 8));
+    uint32_t ntpTicks = qFromBigEndian(*(uint32_t *)(req + 12));
+    auto time1 = NTPToLocal(ntpSec, ntpTicks);
+    auto time2 = nowAsDuration<std::chrono::milliseconds>();
     LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("Read back time (Local %1.%2)")
-        .arg(t1.tv_sec).arg(t1.tv_usec));
+        .arg(ntpSec,8,16,QChar('0')).arg(ntpTicks,8,16,QChar('0')));
     // network latency equal time difference in ms between request and response
     // divide by two for approximate time of one way trip
     m_networkLatency = (time2 - time1) / 2;
     LOG(VB_AUDIO, LOG_DEBUG, LOC + QString("Network Latency: %1ms")
-        .arg(m_networkLatency));
+        .arg(m_networkLatency.count()));
 
     // now calculate the time difference between the client and us.
     // this is NTP time, where sec is in seconds, and ticks is in 1/2^32s
     uint32_t sec    = qFromBigEndian(*(uint32_t *)(req + 24));
     uint32_t ticks  = qFromBigEndian(*(uint32_t *)(req + 28));
+    LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("Source NTP clock time %1.%2")
+        .arg(sec,8,16,QChar('0')).arg(ticks,8,16,QChar('0')));
+
     // convert ticks into ms
-    int64_t  master = NTPToLocal(sec, ticks);
+    std::chrono::milliseconds master = NTPToLocal(sec, ticks);
+
+    // This value is typically huge (~50 years) and meaningless as
+    // Apple products send uptime, not wall time.
     m_clockSkew     = master - time2;
 }
 
-uint64_t MythRAOPConnection::NTPToLocal(uint32_t sec, uint32_t ticks)
+
+// Timestamps in Airplay packets are stored using the format designed
+// for NTP: a 32-bit seconds field and a 32-bit fractional seconds
+// field, based on a zero value meaning January 1st 1900. This
+// constant handles the conversion between that epoch base, and the
+// unix epoch base time of January 1st, 1970.
+static constexpr uint64_t CLOCK_EPOCH {0x83aa7e80};
+std::chrono::milliseconds MythRAOPConnection::NTPToLocal(uint32_t sec, uint32_t ticks)
 {
-    return (int64_t)sec * 1000LL + (((int64_t)ticks * 1000LL) >> 32);
+    return std::chrono::milliseconds(((int64_t)sec - CLOCK_EPOCH) * 1000LL +
+                                     (((int64_t)ticks * 1000LL) >> 32));
+}
+void MythRAOPConnection::microsecondsToNTP(std::chrono::microseconds usec,
+                                           uint32_t &ntpSec, uint32_t &ntpTicks)
+{
+    ntpSec = duration_cast<std::chrono::seconds>(usec).count() + CLOCK_EPOCH;
+    ntpTicks = ((usec % 1s).count() << 32) / 1000000;
+}
+void MythRAOPConnection::timevalToNTP(timeval t, uint32_t &ntpSec, uint32_t &ntpTicks)
+{
+    auto micros = durationFromTimeval<std::chrono::microseconds>(t);
+    microsecondsToNTP(micros, ntpSec, ntpTicks);
 }
 
+
+///
+/// \param buf       A pointer to the received data.
+/// \param type      The type of this packet.
+/// \param seq       The sequence number of this packet. This value is not
+///                  always set.
+/// \param timestamp The frame number of the first frame in this
+///                  packet.  NOT milliseconds. This value is not
+///                  always set.
+/// \returns true if the packet header was successfully parsed.
 bool MythRAOPConnection::GetPacketType(const QByteArray &buf, uint8_t &type,
                                        uint16_t &seq, uint64_t &timestamp)
 {
@@ -613,28 +640,29 @@ uint32_t MythRAOPConnection::decodeAudioPacket(uint8_t type,
         return -1;
 
     int aeslen = len & ~0xf;
-    unsigned char iv[16];
-    unsigned char decrypted_data[MAX_PACKET_SIZE];
-    memcpy(iv, m_aesIV.constData(), sizeof(iv));
+    std::array<uint8_t,16> iv {};
+    std::array<uint8_t,MAX_PACKET_SIZE> decrypted_data {};
+    std::copy(m_aesIV.cbegin(), m_aesIV.cbegin() + iv.size(), iv.data());
     AES_cbc_encrypt((const unsigned char *)data_in,
-                    decrypted_data, aeslen,
-                    &m_aesKey, iv, AES_DECRYPT);
-    memcpy(decrypted_data + aeslen, data_in + aeslen, len - aeslen);
+                    decrypted_data.data(), aeslen,
+                    &m_aesKey, iv.data(), AES_DECRYPT);
+    std::copy(data_in + aeslen, data_in + len,
+              decrypted_data.data() + aeslen);
 
-    AVPacket tmp_pkt;
     AVCodecContext *ctx = m_codecContext;
-
-    av_init_packet(&tmp_pkt);
-    tmp_pkt.data = decrypted_data;
-    tmp_pkt.size = len;
+    AVPacket *tmp_pkt = av_packet_alloc();
+    if (tmp_pkt == nullptr)
+        return -1;
+    tmp_pkt->data = decrypted_data.data();
+    tmp_pkt->size = len;
 
     uint32_t frames_added = 0;
     auto *samples = (uint8_t *)av_mallocz(AudioOutput::kMaxSizeBuffer);
-    while (tmp_pkt.size > 0)
+    while (tmp_pkt->size > 0)
     {
         int data_size = 0;
         int ret = AudioOutputUtil::DecodeAudio(ctx, samples,
-                                               data_size, &tmp_pkt);
+                                               data_size, tmp_pkt);
         if (ret < 0)
         {
             av_free(samples);
@@ -650,9 +678,10 @@ uint32_t MythRAOPConnection::decodeAudioPacket(uint8_t type,
             AudioData block {samples, data_size, num_samples};
             dest->append(block);
         }
-        tmp_pkt.data += ret;
-        tmp_pkt.size -= ret;
+        tmp_pkt->data += ret;
+        tmp_pkt->size -= ret;
     }
+    av_packet_free(&tmp_pkt);
     return frames_added;
 }
 
@@ -667,11 +696,9 @@ void MythRAOPConnection::ProcessAudio()
         // packets, so unpause as early as possible
         m_audio->Pause(false);
     }
-    timeval  t {};
-    gettimeofday(&t, nullptr);
-    uint64_t dtime    = (t.tv_sec * 1000 + t.tv_usec / 1000) - m_timeLastSync;
-    uint64_t rtp      = dtime + m_currentTimestamp;
-    uint64_t buffered = m_audioStarted ? m_audio->GetAudioBufferedTime() : 0;
+    auto     dtime    = nowAsDuration<std::chrono::milliseconds>() - m_timeLastSync;
+    auto     rtp      = dtime + m_currentTimestamp;
+    auto     buffered = m_audioStarted ? m_audio->GetAudioBufferedTime() : 0ms;
 
     // Keep audio framework buffer as short as possible, keeping everything in
     // m_audioQueue, so we can easily reset the least amount possible
@@ -680,19 +707,19 @@ void MythRAOPConnection::ProcessAudio()
 
     // Also make sure m_audioQueue never goes to less than 1/3 of the RDP stream
     // total latency, this should gives us enough time to receive missed packets
-    int64_t queue = framesToMs((uint64_t)m_audioQueue.size() * m_framesPerPacket);
+    std::chrono::milliseconds queue = framesToMs((uint64_t)m_audioQueue.size() * m_framesPerPacket);
     if (queue < m_bufferLength / 3)
         return;
 
     rtp += buffered;
 
     // How many packets to add to the audio card, to fill AUDIOCARD_BUFFER
-    int max_packets    = ((AUDIOCARD_BUFFER - buffered)
+    int max_packets    = ((AUDIOCARD_BUFFER - buffered).count()
                           * m_frameRate / 1000) / m_framesPerPacket;
     int i              = 0;
-    uint64_t timestamp = 0;
+    std::chrono::milliseconds timestamp = 0ms;
 
-    QMapIterator<uint64_t,AudioPacket> packet_it(m_audioQueue);
+    QMapIterator<std::chrono::milliseconds,AudioPacket> packet_it(m_audioQueue);
     while (packet_it.hasNext() && i <= max_packets)
     {
         packet_it.next();
@@ -710,20 +737,20 @@ void MythRAOPConnection::ProcessAudio()
             {
                 LOG(VB_PLAYBACK, LOG_ERR, LOC +
                     QString("Audio discontinuity seen. Played %1 (%3) expected %2")
-                    .arg(frames.seq).arg(m_lastSequence).arg(timestamp));
+                    .arg(frames.seq).arg(m_lastSequence).arg(timestamp.count()));
                 m_lastSequence = frames.seq;
             }
             m_lastSequence++;
 
-            foreach (auto & data, *frames.data)
+            for (const auto & data : qAsConst(*frames.data))
             {
                 int offset = 0;
                 int framecnt = 0;
 
-                if (m_adjustedLatency > 0)
+                if (m_adjustedLatency > 0ms)
                 {
                         // calculate how many frames we have to drop to catch up
-                    offset = (m_adjustedLatency * m_frameRate / 1000) *
+                    offset = (m_adjustedLatency.count() * m_frameRate / 1000) *
                         m_audio->GetBytesPerFrame();
                     if (offset > data.length)
                         offset = data.length;
@@ -732,12 +759,12 @@ void MythRAOPConnection::ProcessAudio()
                     LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
                         QString("ProcessAudio: Dropping %1 frames to catch up "
                                 "(%2ms to go)")
-                        .arg(framecnt).arg(m_adjustedLatency));
+                        .arg(framecnt).arg(m_adjustedLatency.count()));
                     timestamp += framesToMs(framecnt);
                 }
                 m_audio->AddData((char *)data.data + offset,
                                  data.length - offset,
-                                 timestamp, framecnt);
+                                 std::chrono::milliseconds(timestamp), framecnt);
                 timestamp += m_audio->LengthLastData();
             }
             i++;
@@ -755,10 +782,10 @@ void MythRAOPConnection::ProcessAudio()
     m_dequeueAudioTimer->start(AUDIO_BUFFER);
 }
 
-int MythRAOPConnection::ExpireAudio(uint64_t timestamp)
+int MythRAOPConnection::ExpireAudio(std::chrono::milliseconds timestamp)
 {
     int res = 0;
-    QMutableMapIterator<uint64_t,AudioPacket> packet_it(m_audioQueue);
+    QMutableMapIterator<std::chrono::milliseconds,AudioPacket> packet_it(m_audioQueue);
     while (packet_it.hasNext())
     {
         packet_it.next();
@@ -767,7 +794,7 @@ int MythRAOPConnection::ExpireAudio(uint64_t timestamp)
             AudioPacket frames = packet_it.value();
             if (frames.data)
             {
-                foreach (auto & data, *frames.data)
+                for (const auto & data : qAsConst(*frames.data))
                     av_free(data.data);
                 delete frames.data;
             }
@@ -784,8 +811,8 @@ void MythRAOPConnection::ResetAudio(void)
     {
         m_audio->Reset();
     }
-    ExpireAudio(UINT64_MAX);
-    ExpireResendRequests(UINT64_MAX);
+    ExpireAudio(std::chrono::milliseconds::max());
+    ExpireResendRequests(std::chrono::milliseconds::max());
     m_audioStarted = false;
 }
 
@@ -814,7 +841,7 @@ void MythRAOPConnection::audioRetry(void)
  */
 void MythRAOPConnection::readClient(void)
 {
-    auto *socket = dynamic_cast<QTcpSocket *>(sender());
+    auto *socket = qobject_cast<QTcpSocket *>(sender());
     if (!socket)
         return;
 
@@ -837,8 +864,7 @@ void MythRAOPConnection::readClient(void)
             if (line.size() == 0)
                 break;
             LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("Header(%1) = %2")
-                .arg(m_socket->peerAddress().toString())
-                .arg(line));
+                .arg(m_socket->peerAddress().toString(), line));
             m_incomingHeaders.append(line);
             if (line.contains("Content-Length:"))
             {
@@ -903,7 +929,7 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
         gotRTP = true;
         QString data = tags["RTP-Info"];
         QStringList items = data.split(";");
-        foreach (QString item, items)
+        for (const QString& item : qAsConst(items))
         {
             if (item.startsWith("seq"))
             {
@@ -927,7 +953,7 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
         if (!tags.contains("Authorization"))
         {
             // 60 seconds to enter password.
-            m_watchdogTimer->start(60000);
+            m_watchdogTimer->start(1min);
             FinishAuthenticationResponse(m_textStream, m_socket, tags["CSeq"]);
             return;
         }
@@ -971,15 +997,16 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
         }
 
         int i = 0;
-        unsigned char from[38];
-        memcpy(from, challenge.constData(), challenge_size);
+        std::array<uint8_t,38> from {};
+        std::copy(challenge.cbegin(), challenge.cbegin() + challenge_size,
+                  from.data());
         i += challenge_size;
         if (m_socket->localAddress().protocol() ==
             QAbstractSocket::IPv4Protocol)
         {
             uint32_t ip = m_socket->localAddress().toIPv4Address();
             ip = qToBigEndian(ip);
-            memcpy(from + i, &ip, 4);
+            memcpy(&from[i], &ip, 4);
             i += 4;
         }
         else if (m_socket->localAddress().protocol() ==
@@ -990,31 +1017,31 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
                       "\x00\x00\x00\x00" "\x00\x00\x00\x00" "\x00\x00\xff\xff",
                       12) == 0)
             {
-                memcpy(from + i, &ip[12], 4);
+                memcpy(&from[i], &ip[12], 4);
                 i += 4;
             }
             else
             {
-                memcpy(from + i, &ip, 16);
+                memcpy(&from[i], &ip, 16);
                 i += 16;
             }
         }
-        memcpy(from + i, m_hardwareId.constData(), AIRPLAY_HARDWARE_ID_SIZE);
+        memcpy(&from[i], m_hardwareId.constData(), AIRPLAY_HARDWARE_ID_SIZE);
         i += AIRPLAY_HARDWARE_ID_SIZE;
 
         int pad = 32 - i;
         if (pad > 0)
         {
-            memset(from + i, 0, pad);
+            memset(&from[i], 0, pad);
             i += pad;
         }
 
         LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
             QString("Full base64 response: '%1' size %2")
-            .arg(QByteArray((const char *)from, i).toBase64().constData())
+            .arg(QByteArray((char *)from.data(), i).toBase64().constData())
             .arg(i));
 
-        RSA_private_encrypt(i, from, to, LoadKey(), RSA_PKCS1_PADDING);
+        RSA_private_encrypt(i, from.data(), to, LoadKey(), RSA_PKCS1_PADDING);
 
         QByteArray base64 = QByteArray((const char *)to, tosize).toBase64();
         delete[] to;
@@ -1040,7 +1067,7 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
     else if (option == "ANNOUNCE")
     {
         QStringList lines = splitLines(content);
-        foreach (QString line, lines)
+        for (const QString& line : qAsConst(lines))
         {
             if (line.startsWith("a=rsaaeskey:"))
             {
@@ -1085,10 +1112,10 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
                 m_audioFormat.clear();
                 QString format = line.mid(7).trimmed();
                 QList<QString> formats = format.split(' ');
-                foreach (QString fmt, formats)
+                for (const QString& fmt : qAsConst(formats))
                     m_audioFormat.append(fmt.toInt());
 
-                foreach (int fmt, m_audioFormat)
+                for (int fmt : qAsConst(m_audioFormat))
                     LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
                         QString("Audio parameter: %1").arg(fmt));
                 m_framesPerPacket = m_audioFormat[1];
@@ -1103,7 +1130,7 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
         if (tags.contains("Transport"))
         {
             // New client is trying to play audio, disconnect all the other clients
-            auto *dev = dynamic_cast<MythRAOPDevice*>(parent());
+            auto *dev = qobject_cast<MythRAOPDevice*>(parent());
             if (dev != nullptr)
                 dev->DeleteAllClients(this);
             gCoreContext->WantingPlayback(parent());
@@ -1115,7 +1142,7 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
             QStringList items = data.split(";");
             bool events = false;
 
-            foreach (QString item, items)
+            for (const QString& item : qAsConst(items))
             {
                 if (item.startsWith("control_port"))
                     control_port = item.mid(item.indexOf("=") + 1).trimmed().toUInt();
@@ -1160,9 +1187,9 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
             }
             m_clientControlPort = control_port;
             connect(m_clientControlSocket,
-                    SIGNAL(newDatagram(QByteArray, QHostAddress, quint16)),
+                    &ServerPool::newDatagram,
                     this,
-                    SLOT(udpDataReady(QByteArray, QHostAddress, quint16)));
+                    &MythRAOPConnection::udpDataReady);
 
             if (m_clientTimingSocket)
             {
@@ -1189,14 +1216,14 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
             }
             m_clientTimingPort = timing_port;
             connect(m_clientTimingSocket,
-                    SIGNAL(newDatagram(QByteArray, QHostAddress, quint16)),
+                    &ServerPool::newDatagram,
                     this,
-                    SLOT(udpDataReady(QByteArray, QHostAddress, quint16)));
+                    &MythRAOPConnection::udpDataReady);
 
             if (m_eventServer)
             {
                 // Should never get here, but just in case
-                foreach (auto client, m_eventClients)
+                for (auto *client : qAsConst(m_eventClients))
                 {
                     client->disconnect();
                     client->abort();
@@ -1223,8 +1250,8 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
                 {
                     LOG(VB_PLAYBACK, LOG_INFO, LOC +
                         QString("Listening for RAOP events on port %1").arg(m_eventPort));
-                    connect(m_eventServer, SIGNAL(newConnection(QTcpSocket *)),
-                            this, SLOT(newEventClient(QTcpSocket *)));
+                    connect(m_eventServer, &ServerPool::newConnection,
+                            this, &MythRAOPConnection::newEventClient);
                 }
             }
 
@@ -1232,21 +1259,21 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
             {
                 CreateDecoder();
                     // Calculate audio card latency
-                if (m_cardLatency < 0)
+                if (m_cardLatency < 0ms)
                 {
                     m_adjustedLatency = m_cardLatency = AudioCardLatency();
                     // if audio isn't started, start playing 500ms worth of silence
                     // and measure timestamp difference
                     LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
                         QString("Audio hardware latency: %1ms")
-                        .arg(m_cardLatency + m_networkLatency));
+                        .arg((m_cardLatency + m_networkLatency).count()));
                 }
             }
 
             // Recreate transport line with new ports value
             QString newdata;
             bool first = true;
-            foreach (QString item, items)
+            for (const QString& item : qAsConst(items))
             {
                 if (!first)
                 {
@@ -1294,14 +1321,14 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
         if (gotRTP)
         {
             m_nextSequence  = RTPseq;
-            m_nextTimestamp = RTPtimestamp;
+            m_nextTimestamp = framesToMs(RTPtimestamp);
         }
 
         // Calculate audio card latency
-        if (m_cardLatency > 0)
+        if (m_cardLatency > 0ms)
         {
             *m_textStream << QString("Audio-Latency: %1")
-                .arg(m_cardLatency+m_networkLatency);
+                .arg((m_cardLatency+m_networkLatency).count());
         }
     }
     else if (option == "FLUSH")
@@ -1313,9 +1340,9 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
             m_currentTimestamp = m_nextTimestamp - m_bufferLength;
         }
         // determine RTP timestamp of last sample played
-        uint64_t timestamp = m_audioStarted && m_audio ?
+        std::chrono::milliseconds timestamp = m_audioStarted && m_audio ?
             m_audio->GetAudiotime() : m_lastTimestamp;
-        *m_textStream << "RTP-Info: rtptime=" << QString::number(timestamp);
+        *m_textStream << "RTP-Info: rtptime=" << QString::number(MsToFrame(timestamp));
         m_streamingStarted = false;
         ResetAudio();
     }
@@ -1330,7 +1357,7 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
 
                 LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
                     QString("text/parameters: name=%1 parem=%2")
-                    .arg(name).arg(param));
+                    .arg(name, param));
 
                 if (name == "volume" && m_allowVolumeControl && m_audio)
                 {
@@ -1358,8 +1385,8 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
 
                     LOG(VB_PLAYBACK, LOG_INFO,
                         LOC +QString("Progress: %1/%2")
-                        .arg(stringFromSeconds(current))
-                        .arg(stringFromSeconds(length)));
+                        .arg(stringFromSeconds(current),
+                             stringFromSeconds(length)));
                     SendNotification(true);
                 }
             }
@@ -1380,8 +1407,8 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
                 m_dmap = decodeDMAP(content);
                 LOG(VB_PLAYBACK, LOG_INFO,
                     QString("Receiving Title:%1 Artist:%2 Album:%3 Format:%4")
-                    .arg(m_dmap["minm"]).arg(m_dmap["asar"])
-                    .arg(m_dmap["asal"]).arg(m_dmap["asfm"]));
+                    .arg(m_dmap["minm"], m_dmap["asar"],
+                         m_dmap["asal"], m_dmap["asfm"]));
                 SendNotification(false);
             }
         }
@@ -1394,7 +1421,7 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
             {
                 QStringList lines = splitLines(content);
                 *m_textStream << "Content-Type: text/parameters\r\n";
-                foreach (QString line, lines)
+                for (const QString& line : qAsConst(lines))
                 {
                     if (line == "volume")
                     {
@@ -1420,7 +1447,7 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
     FinishResponse(m_textStream, m_socket, option, tags["CSeq"], responseData);
 }
 
-void MythRAOPConnection::FinishAuthenticationResponse(_NetStream *stream,
+void MythRAOPConnection::FinishAuthenticationResponse(RaopNetStream *stream,
                                                       QTcpSocket *socket,
                                                       QString &cseq)
 {
@@ -1438,20 +1465,20 @@ void MythRAOPConnection::FinishAuthenticationResponse(_NetStream *stream,
         .arg(cseq).arg(socket->flush()));
 }
 
-void MythRAOPConnection::FinishResponse(_NetStream *stream, QTcpSocket *socket,
+void MythRAOPConnection::FinishResponse(RaopNetStream *stream, QTcpSocket *socket,
                                         QString &option, QString &cseq, QString &responseData)
 {
     if (!stream)
         return;
     *stream << "Server: AirTunes/130.14\r\n";
     *stream << "CSeq: " << cseq << "\r\n";
-    if (responseData.length())
+    if (!responseData.isEmpty())
         *stream << "Content-Length: " << QString::number(responseData.length()) << "\r\n\r\n" << responseData;
     else
         *stream << "\r\n";
     stream->flush();
     LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("Finished %1 %2 , Send: %3")
-        .arg(option).arg(cseq).arg(socket->flush()));
+        .arg(option, cseq, QString::number(socket->flush())));
 }
 
 /**
@@ -1501,13 +1528,13 @@ RawHash MythRAOPConnection::FindTags(const QStringList &lines)
     if (lines.isEmpty())
         return result;
 
-    for (int i = 0; i < lines.size(); i++)
+    for (const QString& line : qAsConst(lines))
     {
-        int index = lines[i].indexOf(":");
+        int index = line.indexOf(":");
         if (index > 0)
         {
-            result.insert(lines[i].left(index).trimmed(),
-                          lines[i].mid(index + 1).trimmed());
+            result.insert(line.left(index).trimmed(),
+                          line.mid(index + 1).trimmed());
         }
     }
     return result;
@@ -1541,26 +1568,8 @@ QStringList MythRAOPConnection::splitLines(const QByteArray &lines)
  */
 QString MythRAOPConnection::stringFromSeconds(int timeInSeconds)
 {
-    int hour    = timeInSeconds / 3600;
-    int minute  = (timeInSeconds - hour * 3600) / 60;
-    int seconds = timeInSeconds - hour * 3600 - minute * 60;
-    QString str;
-
-    if (hour)
-    {
-        str += QString("%1:").arg(hour);
-    }
-    if (minute < 10)
-    {
-        str += "0";
-    }
-    str += QString("%1:").arg(minute);
-    if (seconds < 10)
-    {
-        str += "0";
-    }
-    str += QString::number(seconds);
-    return str;
+    QTime time = QTime(0,0).addSecs(timeInSeconds);
+    return time.toString(time.hour() > 0 ? "HH:mm:ss" : "mm:ss");
 }
 
 /**
@@ -1568,9 +1577,14 @@ QString MythRAOPConnection::stringFromSeconds(int timeInSeconds)
  * Description: return the duration in ms of frames
  *
  */
-uint64_t MythRAOPConnection::framesToMs(uint64_t frames)
+std::chrono::milliseconds MythRAOPConnection::framesToMs(uint64_t frames) const
 {
-    return (frames * 1000ULL) / m_frameRate;
+    return std::chrono::milliseconds((frames * 1000ULL) / m_frameRate);
+}
+
+uint64_t MythRAOPConnection::MsToFrame(std::chrono::milliseconds millis) const
+{
+    return millis.count() * m_frameRate / 1000ULL;
 }
 
 /**
@@ -1707,8 +1721,8 @@ void MythRAOPConnection::StartAudioTimer(void)
         return;
 
     m_audioTimer = new QTimer();
-    connect(m_audioTimer, SIGNAL(timeout()), this, SLOT(audioRetry()));
-    m_audioTimer->start(5000);
+    connect(m_audioTimer, &QTimer::timeout, this, &MythRAOPConnection::audioRetry);
+    m_audioTimer->start(5s);
 }
 
 void MythRAOPConnection::StopAudioTimer(void)
@@ -1725,23 +1739,23 @@ void MythRAOPConnection::StopAudioTimer(void)
  * AudioCardLatency:
  * Description: Play silence and calculate audio latency between input / output
  */
-int64_t MythRAOPConnection::AudioCardLatency(void)
+std::chrono::milliseconds MythRAOPConnection::AudioCardLatency(void)
 {
     if (!m_audio)
-        return 0;
+        return 0ms;
 
     auto *samples = (int16_t *)av_mallocz(AudioOutput::kMaxSizeBuffer);
-    int frames = AUDIOCARD_BUFFER * m_frameRate / 1000;
+    int frames = AUDIOCARD_BUFFER.count() * m_frameRate / 1000;
     m_audio->AddData((char *)samples,
                      frames * (m_sampleSize>>3) * m_channels,
-                     0,
+                     0ms,
                      frames);
     av_free(samples);
-    usleep(AUDIOCARD_BUFFER * 1000);
-    uint64_t audiots = m_audio->GetAudiotime();
+    usleep(duration_cast<std::chrono::microseconds>(AUDIOCARD_BUFFER).count());
+    std::chrono::milliseconds audiots = m_audio->GetAudiotime();
     LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("AudioCardLatency: ts=%1ms")
-        .arg(audiots));
-    return AUDIOCARD_BUFFER - (int64_t)audiots;
+        .arg(audiots.count()));
+    return AUDIOCARD_BUFFER - audiots;
 }
 
 void MythRAOPConnection::newEventClient(QTcpSocket *client)
@@ -1751,12 +1765,12 @@ void MythRAOPConnection::newEventClient(QTcpSocket *client)
         .arg(client->peerAddress().toString()).arg(client->peerPort()));
 
     m_eventClients.append(client);
-    connect(client, SIGNAL(disconnected()), this, SLOT(deleteEventClient()));
+    connect(client, &QAbstractSocket::disconnected, this, &MythRAOPConnection::deleteEventClient);
 }
 
 void MythRAOPConnection::deleteEventClient(void)
 {
-    auto *client = dynamic_cast<QTcpSocket *>(sender());
+    auto *client = qobject_cast<QTcpSocket *>(sender());
     QString label;
 
     if (client != nullptr)
@@ -1771,8 +1785,8 @@ void MythRAOPConnection::deleteEventClient(void)
 void MythRAOPConnection::SendNotification(bool update)
 {
     QImage image = m_artwork.isEmpty() ? QImage() : QImage::fromData(m_artwork);
-    int duration  =
-        lroundf(static_cast<float>(m_progressEnd-m_progressStart) / m_frameRate);
+    auto duration = std::chrono::seconds(
+        lroundf(static_cast<float>(m_progressEnd-m_progressStart) / m_frameRate));
     int position =
         (m_progressCurrent-m_progressStart) / m_frameRate;
 
@@ -1790,7 +1804,7 @@ void MythRAOPConnection::SendNotification(bool update)
     }
     n->SetId(m_id);
     n->SetParent(this);
-    n->SetDuration(5);
+    n->SetDuration(5s);
     n->SetFullScreen(gCoreContext->GetBoolSetting("AirPlayFullScreen"));
     GetNotificationCenter()->Queue(*n);
     m_firstSend = true;

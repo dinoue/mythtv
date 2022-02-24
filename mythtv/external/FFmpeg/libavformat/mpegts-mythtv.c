@@ -795,7 +795,7 @@ static void mpegts_find_stream_type(AVStream *st,
         if (stream_type == types->stream_type) {
             st->codecpar->codec_type = types->codec_type;
             st->codecpar->codec_id   = types->codec_id;
-            st->request_probe        = 0;
+            st->internal->request_probe        = 0;
             return;
         }
     }
@@ -1040,10 +1040,10 @@ static int mpegts_push_data(MpegTSFilter *filter,
                         code != 0x1ff && code != 0x1f2 && /* program_stream_directory, DSMCC_stream */
                         code != 0x1f8) {                  /* ITU-T Rec. H.222.1 type E stream */
                         pes->state = MPEGTS_PESHEADER;
-                        if (pes->st->codecpar->codec_id == AV_CODEC_ID_NONE && !pes->st->request_probe) {
+                        if (pes->st->codecpar->codec_id == AV_CODEC_ID_NONE && !pes->st->internal->request_probe) {
                             av_dlog(pes->stream, "pid=%x stream_type=%x probing\n",
                                     pes->pid, pes->stream_type);
-                            pes->st->request_probe= 1;
+                            pes->st->internal->request_probe= 1;
                         }
                     } else {
                         pes->state = MPEGTS_PAYLOAD;
@@ -1509,6 +1509,11 @@ int ff_parse_mpeg2_descriptor(AVFormatContext *fc, pmt_entry_t *item, int stream
     language = dvbci->language;
 
     switch(desc_tag) {
+    case 0x02: /* video stream descriptor */
+        if (get8(pp, desc_end) & 0x1) {
+            dvbci->disposition |= AV_DISPOSITION_STILL_IMAGE;
+        }
+        break;
 #if 0
     case 0x1E: /* SL descriptor */
         desc_es_id = get16(pp, desc_end);
@@ -1530,7 +1535,7 @@ int ff_parse_mpeg2_descriptor(AVFormatContext *fc, pmt_entry_t *item, int stream
         break;
     case 0x1F: /* FMC descriptor */
         get16(pp, desc_end);
-        if (mp4_descr_count > 0 && (item->codec_id == AV_CODEC_ID_AAC_LATM || st->request_probe>0) &&
+        if (mp4_descr_count > 0 && (item->codec_id == AV_CODEC_ID_AAC_LATM || st->internal->request_probe>0) &&
             mp4_descr->dec_config_descr_len && mp4_descr->es_id == pid) {
             AVIOContext pb;
             ffio_init_context(&pb, mp4_descr->dec_config_descr,
@@ -1538,7 +1543,7 @@ int ff_parse_mpeg2_descriptor(AVFormatContext *fc, pmt_entry_t *item, int stream
             ff_mp4_read_dec_config_descr(fc, st, &pb);
             if (item->codec_id == AV_CODEC_ID_AAC &&
                 st->codecpar->extradata_size > 0){
-                st->request_probe= st->need_parsing = 0;
+                st->internal->request_probe= st->need_parsing = 0;
                 st->codecpar->codec_type= AVMEDIA_TYPE_AUDIO;
             }
         }
@@ -2027,6 +2032,17 @@ static void mpegts_cleanup_streams(MpegTSContext *ts)
     }
 }
 
+// This was previously in libavutil/internal.h
+// Copied here because it is no longer used in the rest of ffmpeg
+#define FF_ALLOCZ_OR_GOTO(ctx, p, size, label)\
+{\
+    p = av_mallocz(size);\
+    if (!(p) && (size) != 0) {\
+        av_log(ctx, AV_LOG_ERROR, "Cannot allocate memory.\n");\
+        goto label;\
+    }\
+}
+
 static AVStream *new_section_av_stream(SectionContext *sect, enum AVMediaType type,
                                        enum AVCodecID id)
 {
@@ -2146,6 +2162,7 @@ static void mpegts_add_stream(MpegTSContext *ts, int id, pmt_entry_t* item,
                 st->carousel_id = item->dvbci.sub_id;
 
             st->component_tag = item->dvbci.component_tag;
+            st->disposition   = item->dvbci.disposition;
 
             av_log(NULL, AV_LOG_DEBUG, "mpegts_add_stream: "
                    "stream #%d, has id 0x%x and codec %s, type %s at 0x%x\n",

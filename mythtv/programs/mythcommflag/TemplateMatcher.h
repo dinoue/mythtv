@@ -15,8 +15,8 @@
  * template known to change locations, but at a very large cost of time.
  */
 
-#ifndef __TEMPLATEMATCHER_H__
-#define __TEMPLATEMATCHER_H__
+#ifndef TEMPLATEMATCHER_H
+#define TEMPLATEMATCHER_H
 
 extern "C" {
 #include "libavcodec/avcodec.h"    /* AVFrame */
@@ -32,7 +32,8 @@ class TemplateMatcher : public FrameAnalyzer
 {
 public:
     /* Ctor/dtor. */
-    TemplateMatcher(PGMConverter *pgmc, EdgeDetector *ed, TemplateFinder *tf,
+    TemplateMatcher(std::shared_ptr<PGMConverter> pgmc,
+                    std::shared_ptr<EdgeDetector> ed, TemplateFinder *tf,
             const QString& debugdir);
     ~TemplateMatcher(void) override;
 
@@ -41,7 +42,7 @@ public:
         { return "TemplateMatcher"; }
     enum analyzeFrameResult MythPlayerInited(MythPlayer *player,
             long long nframes) override; // FrameAnalyzer
-    enum analyzeFrameResult analyzeFrame(const VideoFrame *frame,
+    enum analyzeFrameResult analyzeFrame(const MythVideoFrame *frame,
             long long frameno, long long *pNextFrame) override; // FrameAnalyzer
     int finished(long long nframes, bool final) override; // FrameAnalyzer
     int reportTime(void) const override; // FrameAnalyzer
@@ -55,8 +56,8 @@ public:
     int computeBreaks(FrameMap *breaks);
 
 private:
-    PGMConverter           *m_pgmConverter      {nullptr};
-    EdgeDetector           *m_edgeDetector      {nullptr};
+    std::shared_ptr<PGMConverter> m_pgmConverter {nullptr};
+    std::shared_ptr<EdgeDetector> m_edgeDetector {nullptr};
     TemplateFinder         *m_templateFinder    {nullptr};
     const struct AVFrame   *m_tmpl              {nullptr};  /* template image */
     int                     m_tmplRow           {-1};       /* template location */
@@ -80,10 +81,9 @@ private:
     bool                    m_debugMatches      {false};
     bool                    m_debugRemoveRunts  {false};
     bool                    m_matchesDone       {false};
-    struct timeval          m_analyzeTime       {0,0};
+    std::chrono::microseconds  m_analyzeTime    {0us};
 };
 
-#endif  /* !__TEMPLATEMATCHER_H__ */
+#endif  /* !TEMPLATEMATCHER_H */
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
-

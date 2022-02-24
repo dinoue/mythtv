@@ -1,5 +1,6 @@
 #include <unistd.h>
 
+#include <array>
 #include <utility>
 
 #include "mythlogging.h"
@@ -68,7 +69,7 @@ bool HLSRecStream::DownloadKey(MythSingleDownload& downloader,
 }
 
 bool HLSRecStream::DecodeData(MythSingleDownload& downloader,
-                              const uint8_t *IV, const QString& keypath,
+                              const QByteArray& IV, const QString& keypath,
                               QByteArray& data, int64_t sequence)
 {
     AESKeyMap::iterator Ikey;
@@ -88,9 +89,9 @@ bool HLSRecStream::DecodeData(MythSingleDownload& downloader,
 
     /* Decrypt data using AES-128 */
     int aeslen = data.size() & ~0xf;
-    unsigned char iv[AES_BLOCK_SIZE];
+    std::array<uint8_t,AES_BLOCK_SIZE> iv {};
     char *decrypted_data = new char[data.size()];
-    if (IV == nullptr)
+    if (IV.isEmpty())
     {
         /*
          * If the EXT-X-KEY tag does not have the IV attribute,
@@ -100,7 +101,6 @@ bool HLSRecStream::DecodeData(MythSingleDownload& downloader,
          * the sequence number SHALL be placed in a 16-octet
          * buffer and padded (on the left) with zeros.
          */
-        memset(iv, 0, AES_BLOCK_SIZE);
         iv[15] = sequence         & 0xff;
         iv[14] = (sequence >> 8)  & 0xff;
         iv[13] = (sequence >> 16) & 0xff;
@@ -108,15 +108,15 @@ bool HLSRecStream::DecodeData(MythSingleDownload& downloader,
     }
     else
     {
-        memcpy(iv, IV, sizeof(iv));
+        std::copy(IV.cbegin(), IV.cend(), iv.data());
     }
     AES_cbc_encrypt((unsigned char*)data.constData(),
                     (unsigned char*)decrypted_data, aeslen,
-                    *Ikey, iv, AES_DECRYPT);
-    memcpy(decrypted_data + aeslen, data.constData() + aeslen,
-           data.size() - aeslen);
+                    *Ikey, iv.data(), AES_DECRYPT);
+    std::copy(data.cbegin() + aeslen, data.cend(), decrypted_data + aeslen);
 
     // remove the PKCS#7 padding from the buffer
+    // NOLINTNEXTLINE(bugprone-signed-char-misuse)
     int pad = decrypted_data[data.size()-1];
     if (pad <= 0 || pad > AES_BLOCK_SIZE)
     {
@@ -144,7 +144,7 @@ void HLSRecStream::AverageBandwidth(int64_t bandwidth)
     m_bandwidth = m_sumBandwidth / m_bandwidthSegs.size();
 }
 
-uint HLSRecStream::Duration(void) const
+std::chrono::seconds HLSRecStream::Duration(void) const
 {
     QMutexLocker lock(&m_lock);
     return m_duration;
@@ -176,10 +176,10 @@ bool HLSRecStream::SetAESIV(QString line)
         // not even size, pad with front 0
         line.insert(2, QLatin1String("0"));
     }
-    int padding = std::max(0, AES_BLOCK_SIZE - (line.size() - 2));
+    int padding = std::max(0, AES_BLOCK_SIZE - (static_cast<int>(line.size()) - 2));
     QByteArray ba = QByteArray(padding, 0x0);
     ba.append(QByteArray::fromHex(QByteArray(line.toLatin1().constData() + 2)));
-    memcpy(m_aesIV, ba.constData(), ba.size());
+    m_aesIV = ba;
     m_ivLoaded = true;
     return true;
 }

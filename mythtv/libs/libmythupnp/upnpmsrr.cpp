@@ -8,9 +8,10 @@
 #include "upnp.h"
 #include "upnpmsrr.h"
 #include "mythlogging.h"
+#include "mythcorecontext.h"
+#include "configuration.h"
 
 #include <cmath>
-#include <QRegExp>
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -35,7 +36,7 @@ UPnpMSRR::UPnpMSRR( UPnpDevice *pDevice, const QString &sSharePath )
     SetValue<unsigned short>("ValidationRevokedUpdateID"   , 0);
 
     QString sUPnpDescPath =
-        UPnp::GetConfiguration()->GetValue( "UPnP/DescXmlPath", m_sSharePath );
+        MythCoreContext::GetConfiguration()->GetValue( "UPnP/DescXmlPath", m_sSharePath );
 
     m_sServiceDescFileName = sUPnpDescPath + "MSRR_scpd.xml";
     m_sControlUrl          = "/MSRR_Control";
@@ -87,7 +88,7 @@ bool UPnpMSRR::ProcessRequest( HTTPRequest *pRequest )
 
         LOG(VB_UPNP, LOG_INFO,
             QString("UPnpMSRR::ProcessRequest : %1 : %2 :")
-                .arg(pRequest->m_sBaseUrl) .arg(pRequest->m_sMethod));
+                .arg(pRequest->m_sBaseUrl, pRequest->m_sMethod));
 
         switch(GetMethod(pRequest->m_sMethod))
         {

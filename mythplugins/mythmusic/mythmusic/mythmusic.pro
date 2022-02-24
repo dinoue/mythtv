@@ -3,7 +3,7 @@ include ( ../../settings.pro )
 include ( ../../programs-libs.pro )
 include (config.pro)
 
-QT += xml sql opengl network widgets webkitwidgets
+QT += xml sql opengl network widgets
 
 !exists( config.pro ) {
    error(Missing config.pro: please run the configure script)
@@ -32,7 +32,7 @@ HEADERS += decoder.h flacencoder.h mainvisual.h
 HEADERS += playlist.h polygon.h
 HEADERS += synaesthesia.h encoder.h visualize.h avfdecoder.h
 HEADERS += vorbisencoder.h polygon.h
-HEADERS += bumpscope.h lameencoder.h dbcheck.h
+HEADERS += bumpscope.h lameencoder.h musicdbcheck.h
 HEADERS += importmusic.h
 HEADERS += mythgoom.h
 HEADERS += editmetadata.h smartplaylist.h genres.h
@@ -48,7 +48,7 @@ HEADERS += remoteavformatcontext.h lyricsview.h
 SOURCES += decoder.cpp
 SOURCES += flacencoder.cpp main.cpp
 SOURCES += mainvisual.cpp playlist.cpp
-SOURCES += encoder.cpp dbcheck.cpp
+SOURCES += encoder.cpp musicdbcheck.cpp
 SOURCES += synaesthesia.cpp lameencoder.cpp
 SOURCES += vorbisencoder.cpp visualize.cpp bumpscope.cpp
 SOURCES += genres.cpp importmusic.cpp
@@ -66,8 +66,8 @@ SOURCES += lyricsview.cpp
 cdio {
     INCLUDEPATH -= $${SYSROOT}/usr/include/cdda
     INCLUDEPATH *= $${SYSROOT}/usr/include/cdio
-    HEADERS += cddecoder.h cdrip.h cddb.h
-    SOURCES += cddecoder.cpp cdrip.cpp cddb.cpp
+    HEADERS += cddecoder.h cdrip.h
+    SOURCES += cddecoder.cpp cdrip.cpp
     QT += network
     LIBS += -lcdio -lcdio_cdda -lcdio_paranoia
 }

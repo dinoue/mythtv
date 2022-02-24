@@ -1,6 +1,7 @@
 include ( ../../settings.pro )
 
-QT += network xml sql script widgets
+QT += network xml sql widgets
+contains(QT_MAJOR_VERSION, 5): QT += script
 android: QT += androidextras
 
 TEMPLATE = lib
@@ -38,7 +39,7 @@ HEADERS += audio/audiooutputgraph.h
 HEADERS += backendselect.h dbsettings.h
 HEADERS += langsettings.h
 HEADERS +=
-HEADERS += mythcontext.h
+HEADERS += mythaverror.h mythcontext.h
 HEADERS += mythexp.h mythmediamonitor.h
 HEADERS += schemawizard.h
 HEADERS += output.h
@@ -51,6 +52,7 @@ HEADERS += remoteutil.h
 HEADERS += rawsettingseditor.h
 HEADERS += programinfo.h          programinfoupdater.h
 HEADERS += programtypes.h         recordingtypes.h
+HEADERS += programtypeflags.h
 HEADERS += rssparse.h
 HEADERS += guistartup.h
 
@@ -59,13 +61,13 @@ SOURCES += audio/spdifencoder.cpp audio/audiooutputdigitalencoder.cpp
 SOURCES += audio/audiooutputnull.cpp
 SOURCES += audio/audiooutpututil.cpp audio/audiooutputdownmix.cpp
 SOURCES += audio/audioconvert.cpp
-SOURCES += audio/audiosettings.cpp audio/audiooutputsettings.cpp audio/pink.c
+SOURCES += audio/audiosettings.cpp audio/audiooutputsettings.cpp audio/pink.cpp
 SOURCES += audio/volumebase.cpp audio/eldutils.cpp
 SOURCES += audio/audiooutputgraph.cpp
 SOURCES += backendselect.cpp dbsettings.cpp
 SOURCES += langsettings.cpp
 SOURCES +=
-SOURCES += mythcontext.cpp
+SOURCES += mythaverror.cpp mythcontext.cpp
 SOURCES += mythmediamonitor.cpp
 SOURCES += schemawizard.cpp
 SOURCES += output.cpp
@@ -87,20 +89,18 @@ HEADERS += netgrabbermanager.h
 SOURCES += mythrssmanager.cpp           netutils.cpp
 SOURCES += netgrabbermanager.cpp
 
-INCLUDEPATH += ../../external/libmythsoundtouch ../libmythfreesurround
+INCLUDEPATH += ../libmythfreesurround
 INCLUDEPATH += ../libmythbase
 INCLUDEPATH += ../.. ../ ./ ../libmythupnp ../libmythui
 INCLUDEPATH += ../.. ../../external/FFmpeg
 INCLUDEPATH += ../libmythservicecontracts
 INCLUDEPATH += $${POSTINC}
-DEPENDPATH += ../../external/libmythsoundtouch
 DEPENDPATH += ../libmythfreesurround
 DEPENDPATH += ../ ../libmythui ../libmythbase
 DEPENDPATH += ../libmythupnp
 DEPENDPATH += ./audio
 DEPENDPATH += ../libmythservicecontracts
 
-LIBS += -L../../external/libmythsoundtouch   -lmythsoundtouch-$${LIBVERSION}
 LIBS += -L../libmythbase           -lmythbase-$${LIBVERSION}
 LIBS += -L../libmythui           -lmythui-$${LIBVERSION}
 LIBS += -L../libmythupnp         -lmythupnp-$${LIBVERSION}
@@ -110,15 +110,14 @@ LIBS += -L../../external/FFmpeg/libavutil  -lmythavutil
 LIBS += -L../../external/FFmpeg/libavcodec -lmythavcodec
 LIBS += -L../../external/FFmpeg/libavformat  -lmythavformat
 LIBS += -L../libmythservicecontracts         -lmythservicecontracts-$${LIBVERSION}
-!using_libbluray_external {
+!using_system_libbluray {
     #INCLUDEPATH += ../../external/libmythbluray/src
     DEPENDPATH += ../../external/libmythbluray
     #LIBS += -L../../external/libmythbluray     -lmythbluray-$${LIBVERSION}
 }
 
 !win32-msvc* {
-    !using_libbluray_external:POST_TARGETDEPS += ../../external/libmythbluray/libmythbluray-$${MYTH_LIB_EXT}
-    POST_TARGETDEPS += ../../external/libmythsoundtouch/libmythsoundtouch-$${MYTH_LIB_EXT}
+    !using_system_libbluray:POST_TARGETDEPS += ../../external/libmythbluray/libmythbluray-$${MYTH_LIB_EXT}
     POST_TARGETDEPS += ../../external/FFmpeg/libswresample/$$avLibName(swresample)
     POST_TARGETDEPS += ../../external/FFmpeg/libavutil/$$avLibName(avutil)
     POST_TARGETDEPS += ../../external/FFmpeg/libavcodec/$$avLibName(avcodec)
@@ -134,12 +133,13 @@ inc.files += audio/audiooutputsettings.h audio/audiooutpututil.h
 inc.files += audio/audioconvert.h
 inc.files += audio/volumebase.h audio/eldutils.h
 inc.files += inetcomms.h schemawizard.h
-inc.files += mythmediamonitor.h
+inc.files += mythaverror.h mythmediamonitor.h
 inc.files += visual.h output.h langsettings.h
 inc.files += mythexp.h storagegroupeditor.h
 inc.files += mythterminal.h       remoteutil.h
 inc.files += programinfo.h
 inc.files += programtypes.h       recordingtypes.h
+inc.files += programtypeflags.h
 inc.files += rssparse.h
 inc.files += standardsettings.h
 
@@ -184,8 +184,6 @@ HEADERS += audio/audiooutputopensles.h
 HEADERS += audio/audiooutputaudiotrack.h
 }
 
-linux:DEFINES += linux
-
 cygwin {
     QMAKE_LFLAGS_SHLIB += -Wl,--noinhibit-exec
     DEFINES += _WIN32
@@ -201,7 +199,7 @@ mingw | win32-msvc* {
     SOURCES += audio/audiooutputdx.cpp
     HEADERS += mediamonitor-windows.h   audio/audiooutputwin.h
     HEADERS += audio/audiooutputdx.h
-    LIBS += -lwinmm -lws2_32 -luser32
+    LIBS += -lwinmm -lws2_32 -luser32 -lsamplerate -lSoundTouch
 }
 
 macx {

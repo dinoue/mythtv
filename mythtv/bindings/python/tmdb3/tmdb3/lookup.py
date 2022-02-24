@@ -38,10 +38,7 @@ import signal
 def print_etree(etostr):
     """lxml.etree.tostring is a bytes object in python3, and a str in python2.
     """
-    if sys.version_info[0] == 2:
-        sys.stdout.write(etostr)
-    else:
-        sys.stdout.write(etostr.decode())
+    sys.stdout.write(etostr.decode())
 
 def timeouthandler(signal, frame):
     raise RuntimeError("Timed out")
@@ -60,7 +57,7 @@ def buildSingle(inetref, opts):
     else:
         movie = Movie(inetref)
 
-    tree = etree.XML(u'<metadata></metadata>')
+    tree = etree.XML('<metadata></metadata>')
     mapping = [['runtime',      'runtime'],     ['title',       'originaltitle'],
                ['releasedate',  'releasedate'], ['tagline',     'tagline'],
                ['description',  'overview'],    ['homepage',    'homepage'],
@@ -174,7 +171,7 @@ def buildMovieList(query, opts):
     from MythTV import VideoMetadata
     from lxml import etree
     results = iter(searchMovie(query))
-    tree = etree.XML(u'<metadata></metadata>')
+    tree = etree.XML('<metadata></metadata>')
     mapping = [['runtime',      'runtime'],     ['title',       'originaltitle'],
                ['releasedate',  'releasedate'], ['tagline',     'tagline'],
                ['description',  'overview'],    ['homepage',    'homepage'],
@@ -240,7 +237,7 @@ def buildTVList(query, opts):
         ['title', 'name'], ['inetref','id'],
         ['collectionref','id'], ['description','overview'],
         ['releasedate','first_air_date']]
-    tree = etree.XML(u'<metadata></metadata>')
+    tree = etree.XML('<metadata></metadata>')
 
     count = 0
     while True:
@@ -343,7 +340,7 @@ def buildEpisode(args, opts):
     # reload episode with full details
     episode = Episode(inetref,season_number,episode_number)
 
-    tree = etree.XML(u'<metadata></metadata>')
+    tree = etree.XML('<metadata></metadata>')
     mapping = [['subtitle','name'],
                ['description', 'overview'], ['season', 'season_number'],
                ['episode', 'episode_number'], ['releasedate', 'air_date']]
@@ -399,7 +396,7 @@ def buildCollection(inetref, opts):
     from MythTV import VideoMetadata
     from lxml import etree
     collection = Collection(inetref)
-    tree = etree.XML(u'<metadata></metadata>')
+    tree = etree.XML('<metadata></metadata>')
     m = VideoMetadata()
     m.collectionref = str(collection.id)
     try:
@@ -434,7 +431,7 @@ def buildTVSeries(inetref, opts):
         ['title', 'name'], ['inetref','id'],
         ['collectionref','id'], ['description','overview'],
         ['releasedate','first_air_date']]
-    tree = etree.XML(u'<metadata></metadata>')
+    tree = etree.XML('<metadata></metadata>')
     m = VideoMetadata()
     for i,j in mapping:
         if getattr(series, j):
@@ -462,7 +459,7 @@ def buildTVSeries(inetref, opts):
 
 def buildVersion(showType, command):
     from lxml import etree
-    version = etree.XML(u'<grabber></grabber>')
+    version = etree.XML('<grabber></grabber>')
     etree.SubElement(version, "name").text = __title__ + ' ' + showType
     etree.SubElement(version, "author").text = __author__
     etree.SubElement(version, "thumbnail").text = 'tmdb.png'

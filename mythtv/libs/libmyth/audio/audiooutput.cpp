@@ -1,14 +1,12 @@
 #include <cstdio>
 #include <cstdlib>
 
-using namespace std;
-
 // Qt utils: to parse audio list
+#include <QtGlobal>
 #include <QFile>
 #include <QDateTime>
 #include <QDir>
 
-#include "mythconfig.h"
 #include "audiooutput.h"
 #include "mythmiscutil.h"
 #include "compat.h"
@@ -24,7 +22,7 @@ using namespace std;
 #ifdef USING_ALSA
 #include "audiooutputalsa.h"
 #endif
-#if CONFIG_DARWIN
+#ifdef Q_OS_DARWIN
 #include "audiooutputca.h"
 #endif
 #ifdef USING_JACK
@@ -99,7 +97,7 @@ AudioOutput *AudioOutput::OpenAudio(AudioSettings &settings,
                 "WARNING: ***Pulse Audio is running***");
         }
     }
-#endif
+#endif // USING_PULSE
 
     settings.FixPassThrough();
 
@@ -111,7 +109,7 @@ AudioOutput *AudioOutput::OpenAudio(AudioSettings &settings,
         LOG(VB_GENERAL, LOG_ERR, "Audio output device is set to PulseAudio "
                                  "but PulseAudio support is not compiled in!");
         return nullptr;
-#endif
+#endif // USING_PULSEOUTPUT
     }
     if (main_device.startsWith("NULL"))
     {
@@ -142,7 +140,7 @@ AudioOutput *AudioOutput::OpenAudio(AudioSettings &settings,
             }
             delete alsadevs;
         }
-#endif
+#endif // USING_ALSA
         if (main_device.contains("pulse", Qt::CaseInsensitive))
         {
             ispulse = true;
@@ -152,10 +150,10 @@ AudioOutput *AudioOutput::OpenAudio(AudioSettings &settings,
             pulsestatus = PulseHandler::Suspend(PulseHandler::kPulseSuspend);
         }
     }
-#else // USING_PULSE
+#else // !USING_PULSE
     // Quiet warning error when not compiling with pulseaudio
     Q_UNUSED(willsuspendpa);
-#endif
+#endif // USING_PULSE
 
     if (main_device.startsWith("ALSA:"))
     {
@@ -219,7 +217,7 @@ AudioOutput *AudioOutput::OpenAudio(AudioSettings &settings,
 #if defined(USING_OSS)
     else
         ret = new AudioOutputOSS(settings);
-#elif CONFIG_DARWIN
+#elif defined(Q_OS_DARWIN)
     else
         ret = new AudioOutputCA(settings);
 #endif
@@ -302,7 +300,7 @@ void AudioOutput::ClearWarning(void)
 }
 
 AudioOutput::AudioDeviceConfig* AudioOutput::GetAudioDeviceConfig(
-    QString &name, QString &desc, bool willsuspendpa)
+    QString &name, const QString &desc, bool willsuspendpa)
 {
     AudioOutputSettings aosettings(true);
 
@@ -327,8 +325,8 @@ AudioOutput::AudioDeviceConfig* AudioOutput::GetAudioDeviceConfig(
         if (aosettings.getELD().isValid())
         {
             capabilities += tr(" (%1 connected to %2)")
-                .arg(aosettings.getELD().product_name().simplified())
-                .arg(aosettings.getELD().connection_name());
+                .arg(aosettings.getELD().product_name().simplified(),
+                     aosettings.getELD().connection_name());
         }
         else
         {
@@ -365,11 +363,10 @@ AudioOutput::AudioDeviceConfig* AudioOutput::GetAudioDeviceConfig(
                 // by ELD
             int mask = 0;
             mask |=
-                (aosettings.canLPCM() << 0) |
-                (aosettings.canAC3()  << 1) |
-                (aosettings.canDTS()  << 2);
-            // cppcheck-suppress variableScope
-            static const char *s_typeNames[] = { "LPCM", "AC3", "DTS" };
+                (static_cast<int>(aosettings.canLPCM()) << 0) |
+                (static_cast<int>(aosettings.canAC3())  << 1) |
+                (static_cast<int>(aosettings.canDTS())  << 2);
+            static const std::array<const std::string,3> s_typeNames { "LPCM", "AC3", "DTS" };
 
             if (mask != 0)
             {
@@ -381,7 +378,7 @@ AudioOutput::AudioDeviceConfig* AudioOutput::GetAudioDeviceConfig(
                     {
                         if (found_one)
                             capabilities += ", ";
-                        capabilities += s_typeNames[i];
+                        capabilities += QString::fromStdString(s_typeNames[i]);
                         found_one = true;
                     }
                 }
@@ -389,8 +386,7 @@ AudioOutput::AudioDeviceConfig* AudioOutput::GetAudioDeviceConfig(
             }
         }
     }
-    LOG(VB_AUDIO, LOG_INFO, QString("Found %1 (%2)")
-                                .arg(name).arg(capabilities));
+    LOG(VB_AUDIO, LOG_INFO, QString("Found %1 (%2)") .arg(name, capabilities));
     auto *adc = new AudioOutput::AudioDeviceConfig(name, capabilities);
     adc->m_settings = aosettings;
     return adc;
@@ -400,7 +396,8 @@ AudioOutput::AudioDeviceConfig* AudioOutput::GetAudioDeviceConfig(
 static void fillSelectionsFromDir(const QDir &dir,
                                   AudioOutput::ADCVect *list)
 {
-    foreach (auto & fi, dir.entryInfoList())
+    QFileInfoList entries = dir.entryInfoList();
+    for (const auto& fi : qAsConst(entries))
     {
         QString name = fi.absoluteFilePath();
         QString desc = AudioOutput::tr("OSS device");
@@ -427,11 +424,10 @@ AudioOutput::ADCVect* AudioOutput::GetOutputList(void)
 
     if (!alsadevs->empty())
     {
-        for (QMap<QString, QString>::const_iterator i = alsadevs->begin();
-             i != alsadevs->end(); ++i)
+        for (auto i = alsadevs->cbegin(); i != alsadevs->cend(); ++i)
         {
             const QString& key = i.key();
-            QString desc = i.value();
+            const QString& desc = i.value();
             QString devname = QString("ALSA:%1").arg(key);
 
             auto *adc = GetAudioDeviceConfig(devname, desc);
@@ -472,7 +468,7 @@ AudioOutput::ADCVect* AudioOutput::GetOutputList(void)
         }
     }
 #endif
-#if CONFIG_DARWIN
+#ifdef Q_OS_DARWIN
 
     {
         QMap<QString, QString> *devs = AudioOutputCA::GetDevices(nullptr);
@@ -553,7 +549,7 @@ AudioOutput::ADCVect* AudioOutput::GetOutputList(void)
     }
 #endif
 
-#ifdef ANDROID
+#ifdef Q_OS_ANDROID
     {
         QString name = "OpenSLES:";
         QString desc =  tr("OpenSLES default output. Stereo support only.");
@@ -599,7 +595,6 @@ int AudioOutput::DecodeAudio(AVCodecContext *ctx,
                              const AVPacket *pkt)
 {
     bool got_frame = false;
-    char error[AV_ERROR_MAX_STRING_SIZE];
 
     data_size = 0;
     if (!m_frame)
@@ -631,9 +626,10 @@ int AudioOutput::DecodeAudio(AVCodecContext *ctx,
         ret = 0;
     else if (ret < 0)
     {
+        std::string error;
         LOG(VB_AUDIO, LOG_ERR, LOC +
             QString("audio decode error: %1 (%2)")
-            .arg(av_make_error_string(error, sizeof(error), ret))
+            .arg(av_make_error_stdstring(error, ret))
             .arg(got_frame));
         return ret;
     }

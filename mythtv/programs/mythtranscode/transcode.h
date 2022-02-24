@@ -1,5 +1,5 @@
 #include "recordingprofile.h"
-#include "fifowriter.h"
+#include "io/mythfifowriter.h"
 #include "transcodedefs.h"
 #include "programtypes.h"
 #include "playercontext.h"
@@ -7,9 +7,9 @@
 class ProgramInfo;
 class NuppelVideoRecorder;
 class MythPlayer;
-class RingBuffer;
+class MythMediaBuffer;
 
-using KFATable = vector<struct kfatable_entry>;
+using KFATable = std::vector<struct kfatable_entry>;
 
 class Transcode : public QObject
 {
@@ -54,8 +54,8 @@ class Transcode : public QObject
     NuppelVideoRecorder *m_nvr                 { nullptr };
 #endif
     PlayerContext       *m_ctx                 { nullptr };
-    RingBuffer          *m_outRingBuffer       { nullptr };
-    FIFOWriter          *m_fifow               { nullptr };
+    MythMediaBuffer     *m_outBuffer           { nullptr };
+    MythFIFOWriter      *m_fifow               { nullptr };
     KFATable            *m_kfaTable            { nullptr };
     bool                 m_showProgress        { false };
     QString              m_recorderOptions;

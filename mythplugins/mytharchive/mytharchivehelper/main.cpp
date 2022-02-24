@@ -30,16 +30,13 @@
 #include <sys/wait.h>  // for WIFEXITED and WEXITSTATUS
 #include <unistd.h>
 
-#include <mythconfig.h>
-#if CONFIG_DARWIN or defined(__FreeBSD__)
+#include <QtGlobal>
+#if defined(Q_OS_DARWIN) or defined(__FreeBSD__)
 #include <sys/param.h>
 #include <sys/mount.h>
-#elif __linux__
+#elif defined(__linux__)
 #include <sys/vfs.h>
 #endif
-
-using namespace std;
-
 
 // Qt headers
 #include <QApplication>
@@ -77,6 +74,12 @@ extern "C" {
 // mytharchive headers
 #include "../mytharchive/archiveutil.h"
 #include "../mytharchive/remoteavformatcontext.h"
+
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
+  #define QT_ENDL endl
+#else
+  #define QT_ENDL Qt::endl
+#endif
 
 class NativeArchive
 {
@@ -122,7 +125,7 @@ NativeArchive::~NativeArchive(void)
 bool NativeArchive::copyFile(const QString &source, const QString &destination)
 {
     QString command = QString("mythutil --copyfile --infile '%1' --outfile '%2'")
-                              .arg(source).arg(destination);
+                              .arg(source, destination);
     uint res = myth_system(command);
     if (res != GENERIC_EXIT_OK)
     {
@@ -372,7 +375,7 @@ int NativeArchive::doNativeArchive(const QString &jobFile)
     return 0;
 }
 
-static QRegExp badChars = QRegExp("(/|\\\\|:|\'|\"|\\?|\\|)");
+static const QRegularExpression badChars { R"((/|\\|:|'|"|\?|\|))" };
 
 static QString fixFilename(const QString &filename)
 {
@@ -410,7 +413,7 @@ int NativeArchive::exportRecording(QDomElement   &itemNode,
     QString filename = itemNode.attribute("filename");
     bool doDelete = (itemNode.attribute("delete", "0") == "0");
     LOG(VB_JOBQUEUE, LOG_INFO, QString("Archiving %1 (%2), do delete: %3")
-            .arg(title).arg(filename).arg(doDelete));
+            .arg(title, filename, doDelete ? "true" : "false"));
 
     if (title == "" || filename == "")
     {
@@ -634,7 +637,7 @@ int NativeArchive::exportVideo(QDomElement   &itemNode,
     QString filename = itemNode.attribute("filename");
     bool doDelete = (itemNode.attribute("delete", "0") == "0");
     LOG(VB_JOBQUEUE, LOG_INFO, QString("Archiving %1 (%2), do delete: %3")
-            .arg(title).arg(filename).arg(doDelete));
+            .arg(title, filename, doDelete ? "true" : "false"));
 
     if (title == "" || filename == "")
     {
@@ -917,7 +920,7 @@ int NativeArchive::doImportArchive(const QString &xmlFile, int chanID)
 
         LOG(VB_JOBQUEUE, LOG_INFO,
             QString("Archive DB version: %1, Local DB version: %2")
-                .arg(dbVersion).arg(gCoreContext->GetSetting("DBSchemaVer")));
+                .arg(dbVersion, gCoreContext->GetSetting("DBSchemaVer")));
     }
     else
     {
@@ -1163,7 +1166,11 @@ int NativeArchive::importVideo(const QDomElement &itemNode, const QString &xmlFi
     // copy file to video directory
     QString path = gCoreContext->GetSetting("VideoStartupDir");
     QString origFilename = findNodeText(videoNode, "filename");
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList dirList = origFilename.split("/", QString::SkipEmptyParts);
+#else
+    QStringList dirList = origFilename.split("/", Qt::SkipEmptyParts);
+#endif
     QDir dir;
     for (int x = 0; x < dirList.count() - 1; x++)
     {
@@ -1550,6 +1557,7 @@ static int grabThumbnail(const QString& inFile, const QString& thumbList, const 
     LOG(VB_JOBQUEUE, LOG_INFO, QString("grabThumbnail(): Opening '%1'")
             .arg(inFile));
 
+    MythCodecMap codecmap;
     RemoteAVFormatContext inputFC(inFile);
     if (!inputFC.isOpen())
     {
@@ -1596,8 +1604,7 @@ static int grabThumbnail(const QString& inFile, const QString& thumbList, const 
     }
 
     // get the codec context for the video stream
-    AVCodecContext *codecCtx = gCodecMap->getCodecContext
-        (inputFC->streams[videostream]);
+    AVCodecContext *codecCtx = codecmap.GetCodecContext(inputFC->streams[videostream]);
 
     // get decoder for video stream
     AVCodec * codec = avcodec_find_decoder(codecCtx->codec_id);
@@ -1616,7 +1623,11 @@ static int grabThumbnail(const QString& inFile, const QString& thumbList, const 
     }
 
     // get list of required thumbs
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList list = thumbList.split(",", QString::SkipEmptyParts);
+#else
+    QStringList list = thumbList.split(",", Qt::SkipEmptyParts);
+#endif
     MythAVFrame frame;
     if (!frame)
     {
@@ -1628,7 +1639,6 @@ static int grabThumbnail(const QString& inFile, const QString& thumbList, const 
     memset(&orig, 0, sizeof(AVFrame));
     memset(&retbuf, 0, sizeof(AVFrame));
     MythAVCopy copyframe;
-    MythPictureDeinterlacer deinterlacer(codecCtx->pix_fmt, width, height);
 
     int bufflen = width * height * 4;
     auto *outputbuf = new unsigned char[bufflen];
@@ -1695,7 +1705,7 @@ static int grabThumbnail(const QString& inFile, const QString& thumbList, const 
                             AV_PIX_FMT_RGB32, width, height, IMAGE_ALIGN);
 
                         AVFrame *tmp = frame;
-                        deinterlacer.DeinterlaceSingle(tmp, tmp);
+                        MythAVUtil::DeinterlaceAVFrame(tmp);
 
                         copyframe.Copy(&retbuf, AV_PIX_FMT_RGB32, tmp,
                                        codecCtx->pix_fmt, width, height);
@@ -1747,29 +1757,32 @@ static int grabThumbnail(const QString& inFile, const QString& thumbList, const 
     delete[] outputbuf;
 
     // close the codec
-    gCodecMap->freeCodecContext
-        (inputFC->streams[videostream]);
+    codecmap.FreeCodecContext(inputFC->streams[videostream]);
 
     return 0;
 }
 
 static int64_t getFrameCount(AVFormatContext *inputFC, int vid_id)
 {
-    AVPacket pkt;
     int64_t count = 0;
 
     LOG(VB_JOBQUEUE, LOG_INFO, "Calculating frame count");
 
-    av_init_packet(&pkt);
-
-    while (av_read_frame(inputFC, &pkt) >= 0)
+    AVPacket *pkt = av_packet_alloc();
+    if (pkt == nullptr)
     {
-        if (pkt.stream_index == vid_id)
+        LOG(VB_GENERAL, LOG_ERR, "packet allocation failed");
+        return 0;
+    }
+    while (av_read_frame(inputFC, pkt) >= 0)
+    {
+        if (pkt->stream_index == vid_id)
         {
             count++;
         }
-        av_packet_unref(&pkt);
+        av_packet_unref(pkt);
     }
+    av_packet_free(&pkt);
 
     return count;
 }
@@ -1886,7 +1899,7 @@ static int64_t getFrameCount(const QString &filename, float fps)
     if (posMap.empty())
         return 0; // no position map in recording
 
-    frm_pos_map_t::const_iterator it = posMap.end();
+    frm_pos_map_t::const_iterator it = posMap.cend();
     --it;
     uint64_t totframes = it.key() * keyframedist;
     return totframes;
@@ -1898,6 +1911,7 @@ static int getFileInfo(const QString& inFile, const QString& outFile, int lenMet
     LOG(VB_JOBQUEUE , LOG_INFO, QString("getFileInfo(): Opening '%1'")
             .arg(inFile));
 
+    MythCodecMap codecmap;
     RemoteAVFormatContext inputFC(inFile);
     if (!inputFC.isOpen())
     {
@@ -1936,19 +1950,22 @@ static int getFileInfo(const QString& inFile, const QString& outFile, int lenMet
     for (uint i = 0; i < inputFC->nb_streams; i++)
     {
         AVStream *st = inputFC->streams[i];
-        char buf[256];
-        AVCodecContext *avctx = gCodecMap->getCodecContext(st);
+        std::string buf (256,'\0');
+        AVCodecContext *avctx = codecmap.GetCodecContext(st);
         AVCodecParameters *par = st->codecpar;
 
-        buf[0]=0;
         if (avctx)
-            avcodec_string(buf, sizeof(buf), avctx, static_cast<int>(false));
+            avcodec_string(buf.data(), buf.size(), avctx, static_cast<int>(false));
 
         switch (st->codecpar->codec_type)
         {
             case AVMEDIA_TYPE_VIDEO:
             {
-                QStringList param = QString(buf).split(',', QString::SkipEmptyParts);
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
+                QStringList param = QString::fromStdString(buf).split(',', QString::SkipEmptyParts);
+#else
+                QStringList param = QString::fromStdString(buf).split(',', Qt::SkipEmptyParts);
+#endif
                 QString codec = param[0].remove("Video:", Qt::CaseInsensitive);
                 QDomElement stream = doc.createElement("video");
                 stream.setAttribute("streamindex", i);
@@ -2075,7 +2092,11 @@ static int getFileInfo(const QString& inFile, const QString& outFile, int lenMet
 
             case AVMEDIA_TYPE_AUDIO:
             {
-                QStringList param = QString(buf).split(',', QString::SkipEmptyParts);
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
+                QStringList param = QString::fromStdString(buf).split(',', QString::SkipEmptyParts);
+#else
+                QStringList param = QString::fromStdString(buf).split(',', Qt::SkipEmptyParts);
+#endif
                 QString codec = param[0].remove("Audio:", Qt::CaseInsensitive);
 
                 QDomElement stream = doc.createElement("audio");
@@ -2120,7 +2141,11 @@ static int getFileInfo(const QString& inFile, const QString& outFile, int lenMet
 
             case AVMEDIA_TYPE_SUBTITLE:
             {
-                QStringList param = QString(buf).split(',', QString::SkipEmptyParts);
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
+                QStringList param = QString::fromStdString(buf).split(',', QString::SkipEmptyParts);
+#else
+                QStringList param = QString::fromStdString(buf).split(',', Qt::SkipEmptyParts);
+#endif
                 QString codec = param[0].remove("Subtitle:", Qt::CaseInsensitive);
 
                 QDomElement stream = doc.createElement("subtitle");
@@ -2146,7 +2171,7 @@ static int getFileInfo(const QString& inFile, const QString& outFile, int lenMet
             {
                 QDomElement stream = doc.createElement("data");
                 stream.setAttribute("streamindex", i);
-                stream.setAttribute("codec", buf);
+                stream.setAttribute("codec", QString::fromStdString(buf));
                 streams.appendChild(stream);
 
                 break;
@@ -2158,7 +2183,7 @@ static int getFileInfo(const QString& inFile, const QString& outFile, int lenMet
                         .arg(inputFC->streams[i]->codecpar->codec_type).arg(i));
                 break;
         }
-        gCodecMap->freeCodecContext(st);
+        codecmap.FreeCodecContext(st);
     }
 
     // finally save the xml to the file
@@ -2192,12 +2217,12 @@ static int getDBParamters(const QString& outFile)
     }
 
     QTextStream t(&f);
-    t << params.m_dbHostName << endl;
-    t << params.m_dbUserName << endl;
-    t << params.m_dbPassword << endl;
-    t << params.m_dbName << endl;
-    t << gCoreContext->GetHostName() << endl;
-    t << GetInstallPrefix() << endl;
+    t << params.m_dbHostName << QT_ENDL;
+    t << params.m_dbUserName << QT_ENDL;
+    t << params.m_dbPassword << QT_ENDL;
+    t << params.m_dbName << QT_ENDL;
+    t << gCoreContext->GetHostName() << QT_ENDL;
+    t << GetInstallPrefix() << QT_ENDL;
     f.close();
 
     return 0;
@@ -2212,14 +2237,15 @@ static int isRemote(const QString& filename)
     if (!QFile::exists(filename))
         return 0;
 
-#if CONFIG_DARWIN
+// TODO replace with FileSystemInfo?
+#ifdef Q_OS_DARWIN
     struct statfs statbuf {};
     if ((statfs(qPrintable(filename), &statbuf) == 0) &&
         ((!strcmp(statbuf.f_fstypename, "nfs")) ||      // NFS|FTP
             (!strcmp(statbuf.f_fstypename, "afpfs")) || // ApplShr
             (!strcmp(statbuf.f_fstypename, "smbfs"))))  // SMB
         return 2;
-#elif __linux__
+#elif defined(__linux__)
     struct statfs statbuf {};
     if ((statfs(qPrintable(filename), &statbuf) == 0) &&
         ((statbuf.f_type == 0x6969) ||      // NFS

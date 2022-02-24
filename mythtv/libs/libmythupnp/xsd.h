@@ -6,12 +6,12 @@
 //                                                                            
 // Copyright (c) 2012 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef _XSD_H_
-#define _XSD_H_
+#ifndef XSD_H
+#define XSD_H
 
 #include <QMetaObject>
 #include <QString>
@@ -71,4 +71,4 @@ class UPNP_PUBLIC Xsd : public QDomDocument
 
 struct TypeInfo { QString sAttrName; QString sContentType; };
 
-#endif
+#endif // XSD_H

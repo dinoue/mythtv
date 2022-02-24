@@ -1,17 +1,15 @@
 // -*- Mode: c++ -*-
 // Copyright (c) 2003-2004, Daniel Thor Kristjansson
-#ifndef _ATSC_DESCRIPTORS_H_
-#define _ATSC_DESCRIPTORS_H_
+#ifndef ATSC_DESCRIPTORS_H
+#define ATSC_DESCRIPTORS_H
 
+#include <array>
 #include <vector>
-using namespace std;
 
 #include <QString>
 #include <QMap>
 
 #include "mpegdescriptors.h"
-
-using namespace std;
 
 using IntToBuf = QMap<int, const unsigned char*>;
 
@@ -100,7 +98,7 @@ class CaptionServiceDescriptor : public MPEGDescriptor
         { return iso639_key_to_str3(CanonicalLanguageKey(i)); }
     //   uimsbf cc_type         1  3.0
     bool Type(int i) const
-        { return ((Offset(i,-1)[3])>>7) & 1; }
+        { return (((Offset(i,-1)[3])>>7) & 1) != 0; }
     //   bslbf reserved         1  3.1           1
     //   if (cc_type==line21) {
     //      reserved            5  3.2        0x1f
@@ -205,10 +203,10 @@ class ComponentNameDescriptor : public MPEGDescriptor
 
 
 // a_52a.pdf p120, Table A2
-class AudioStreamDescriptor : public MPEGDescriptor
+class AC3AudioStreamDescriptor : public MPEGDescriptor
 {
   public:
-    explicit AudioStreamDescriptor(const unsigned char *data, int len = 300) :
+    explicit AC3AudioStreamDescriptor(const unsigned char *data, int len = 300) :
         MPEGDescriptor(data, len, DescriptorID::ac3_audio_stream) { }
     // descriptor_tag                        8   0.0   0x81
     // sample_rate_code                      3   2.0
@@ -307,7 +305,7 @@ class AudioStreamDescriptor : public MPEGDescriptor
         return QString("TODO");
     }
     // for(i=0; i<N; i++) {
-    //   additional_info[i] N×8 bslbf
+    //   additional_info[i] Nx8 bslbf
     // }
 
     QString toString() const override; // MPEGDescriptor
@@ -349,4 +347,4 @@ class ExtendedChannelNameDescriptor : public MPEGDescriptor
     QString toString() const override; // MPEGDescriptor
 };
 
-#endif
+#endif // ATSC_DESCRIPTORS_H

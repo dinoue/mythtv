@@ -24,7 +24,7 @@ TransportScanItem::TransportScanItem(uint           sourceid,
                                      const QString &_si_std,
                                      QString        _name,
                                      uint           _mplexid,
-                                     uint           _timeoutTune)
+                                     std::chrono::milliseconds _timeoutTune)
     : m_mplexid(_mplexid),  m_friendlyName(std::move(_name)),
       m_sourceID(sourceid),
       m_timeoutTune(_timeoutTune)
@@ -41,8 +41,8 @@ TransportScanItem::TransportScanItem(uint           sourceid,
 
 TransportScanItem::TransportScanItem(uint           _sourceid,
                                      QString        _name,
-                                     DTVMultiplex  &_tuning,
-                                     uint           _timeoutTune)
+                                     const  DTVMultiplex &_tuning,
+                                     std::chrono::milliseconds _timeoutTune)
     : m_mplexid(0),
       m_friendlyName(std::move(_name)),
       m_sourceID(_sourceid),
@@ -55,7 +55,7 @@ TransportScanItem::TransportScanItem(uint                _sourceid,
                                      QString             _name,
                                      DTVTunerType        _tuner_type,
                                      const DTVTransport &_tuning,
-                                     uint                _timeoutTune)
+                                     std::chrono::milliseconds _timeoutTune)
     : m_mplexid(0),
       m_friendlyName(std::move(_name)),
       m_sourceID(_sourceid),
@@ -83,14 +83,14 @@ TransportScanItem::TransportScanItem(uint sourceid,
                                      uint freqNum,
                                      uint freq,
                                      const FrequencyTable &ft,
-                                     uint timeoutTune)
+                                     std::chrono::milliseconds timeoutTune)
     : m_mplexid(0),           m_friendlyName(std::move(strFmt)),
       m_friendlyNum(freqNum), m_sourceID(sourceid),
       m_timeoutTune(timeoutTune)
 {
     m_tuning.Clear();
 
-    // setup tuning params
+    // Setup tuning parameters
     m_tuning.m_frequency  = freq;
     m_tuning.m_sistandard = "dvb";
     m_tuning.m_modulation = ft.m_modulation;
@@ -122,14 +122,15 @@ TransportScanItem::TransportScanItem(uint sourceid,
         m_tuning.m_fec            = ft.m_fecInner;
     }
 
-    m_mplexid = GetMultiplexIdFromDB();
+    // Do not use tuning information from database for the "Full Scan"
+    // m_mplexid = GetMultiplexIdFromDB();
 }
 
 TransportScanItem::TransportScanItem(uint _sourceid,
                                      QString _name,
                                      IPTVTuningData _tuning,
                                      QString _channel,
-                                     uint _timeoutTune) :
+                                     std::chrono::milliseconds _timeoutTune) :
     m_mplexid(0),
     m_friendlyName(std::move(_name)),
     m_sourceID(_sourceid),
@@ -167,39 +168,36 @@ QString TransportScanItem::toString() const
         return m_iptvChannel + ": " + m_iptvTuning.GetDeviceKey();
     }
 
-    QString str = QString("Transport Scan Item '%1' #%2\n")
-        .arg(m_friendlyName).arg(m_friendlyNum);
-    str += QString("\tmplexid(%1) standard(%2) sourceid(%3)\n")
-        .arg(m_mplexid).arg(m_tuning.m_sistandard).arg(m_sourceID);
-    str += QString("\tuseTimer(%1) scanning(%2)\n")
-        .arg(m_useTimer).arg(m_scanning);
-    str += QString("\ttimeoutTune(%3 msec)\n").arg(m_timeoutTune);
+    QString str = QString("Transport Scan Item '%1' #%2").arg(m_friendlyName).arg(m_friendlyNum);
+    str += "\n\t";
+    str += QString("mplexid(%1) "           ).arg(m_mplexid);
+    str += QString("standard(%1) "          ).arg(m_tuning.m_sistandard);
+    str += QString("sourceid(%1) "          ).arg(m_sourceID);
+    str += QString("useTimer(%1) "          ).arg(static_cast<int>(m_useTimer));
+    str += QString("scanning(%1) "          ).arg(static_cast<int>(m_scanning));
+    str += QString("timeoutTune(%3 msec)  " ).arg(m_timeoutTune.count());
+    str += "\n\t";
+    str += QString("frequency(%1) "         ).arg(m_tuning.m_frequency);
+    str += QString("offset[0..2]: %1 %2 %3 ").arg(m_freqOffsets[0]).arg(m_freqOffsets[1]).arg(m_freqOffsets[2]);
+
     if (m_tuning.m_sistandard == "atsc" || m_tuning.m_sistandard == "analog")
     {
-        str += QString("\tfrequency(%1) modulation(%2)\n")
-            .arg(m_tuning.m_frequency)
-            .arg(m_tuning.m_modulation.toString());
+        str += QString("modulation(%1) "    ).arg(m_tuning.m_modulation.toString());
     }
     else
     {
-        str += QString("\tfrequency(%1) constellation(%2)\n")
-            .arg(m_tuning.m_frequency)
-            .arg(m_tuning.m_modulation.toString());
-        str += QString("\t  inv(%1) bandwidth(%2) hp(%3) lp(%4)\n")
-            .arg(m_tuning.m_inversion)
-            .arg(m_tuning.m_bandwidth)
-            .arg(m_tuning.m_hpCodeRate)
-            .arg(m_tuning.m_lpCodeRate);
-        str += QString("\t  trans_mode(%1) guard_int(%2) hierarchy(%3)\n")
-            .arg(m_tuning.m_transMode)
-            .arg(m_tuning.m_guardInterval)
-            .arg(m_tuning.m_hierarchy);
-        str += QString("\t  symbol_rate(%1) fec(%2)\n")
-            .arg(m_tuning.m_symbolRate)
-            .arg(m_tuning.m_fec);
+        str += QString("constellation(%1) " ).arg(m_tuning.m_modulation.toString());
+        str += QString("inv(%1) "           ).arg(m_tuning.m_inversion.toString());
+        str += QString("bandwidth(%1) "     ).arg(m_tuning.m_bandwidth.toString());
+        str += QString("hp(%1) "            ).arg(m_tuning.m_hpCodeRate.toString());
+        str += QString("lp(%1) "            ).arg(m_tuning.m_lpCodeRate.toString());
+        str += "\n\t";
+        str += QString("trans_mode(%1) "    ).arg(m_tuning.m_transMode.toString());
+        str += QString("guard_int(%1) "     ).arg(m_tuning.m_guardInterval.toString());
+        str += QString("hierarchy(%1) "     ).arg(m_tuning.m_hierarchy.toString());
+        str += QString("symbol_rate(%1) "   ).arg(m_tuning.m_symbolRate);
+        str += QString("fec(%1) "           ).arg(m_tuning.m_fec.toString());
     }
-    str += QString("\toffset[0..2]: %1 %2 %3")
-        .arg(m_freqOffsets[0]).arg(m_freqOffsets[1]).arg(m_freqOffsets[2]);
     return str;
 }
 
@@ -232,7 +230,7 @@ static freq_table_list_t get_matching_freq_tables_internal(
     freq_table_list_t list;
 
     QString lookup = QString("%1_%2_%3%4")
-        .arg(format).arg(modulation).arg(country);
+        .arg(format, modulation, country);
 
     freq_table_map_t::const_iterator it = fmap.begin();
     for (uint i = 0; it != fmap.end(); i++)
@@ -459,13 +457,13 @@ static void init_freq_tables(freq_table_map_t &fmap)
 
     // New Zealand
     fmap["dvbt_ofdm_nz0"] = new FrequencyTable(
-        474000000, 858000000, 8000000, "Channel %1", 21,
+        474000000, 690000000, 8000000, "Channel %1", 21,
         DTVInversion::kInversionOff,
         DTVBandwidth::kBandwidth8MHz, DTVCodeRate::kFEC_3_4,
         DTVCodeRate::kFEC_3_4, DTVModulation::kModulationQAM64,
         DTVTransmitMode::kTransmissionMode8K,
         DTVGuardInterval::kGuardInterval_1_16, DTVHierarchy::kHierarchyNone,
-        DTVModulation::kModulationQAM64, 0 , 0); // UHF 21-69
+        DTVModulation::kModulationQAM64, 0 , 0); // UHF 21-48
 
     // France
     fmap["dvbt_ofdm_fr0"] = new FrequencyTable(
@@ -489,13 +487,13 @@ static void init_freq_tables(freq_table_map_t &fmap)
 
     // Netherlands
     fmap["dvbt_ofdm_nl0"] = new FrequencyTable(
-        474000000, 786000000, 8000000, "Channel %1", 21,
+        474000000, 690000000, 8000000, "Channel %1", 21,
         DTVInversion::kInversionOff,
         DTVBandwidth::kBandwidth8MHz, DTVCodeRate::kFECAuto,
         DTVCodeRate::kFECAuto, DTVModulation::kModulationQAMAuto,
         DTVTransmitMode::kTransmissionModeAuto,
         DTVGuardInterval::kGuardIntervalAuto, DTVHierarchy::kHierarchyNone,
-        DTVModulation::kModulationQAMAuto, 0, 0); // UHF 21-60
+        DTVModulation::kModulationQAMAuto, 0, 0); // UHF 21-48
 
     // Chile (ISDB-Tb)
     fmap["dvbt_ofdm_cl0"] = new FrequencyTable(
@@ -567,9 +565,9 @@ static void init_freq_tables(freq_table_map_t &fmap)
 
 //#define DEBUG_DVB_OFFSETS
 #ifdef DEBUG_DVB_OFFSETS
-    // UHF 14-51
+    // UHF 24-36
     fmap["atsc_vsb8_us0"] = new FrequencyTable(
-        533000000, 695000000, 6000000, "xATSC Channel %1", 24,
+        533000000, 605000000, 6000000, "xATSC Channel %1", 24,
         DTVInversion::kInversionOff,
         DTVBandwidth::kBandwidth7MHz, DTVCodeRate::kFECAuto,
         DTVCodeRate::kFECAuto, DTVModulation::kModulationQAMAuto,
@@ -590,52 +588,55 @@ static void init_freq_tables(freq_table_map_t &fmap)
     fmap["atsc_vsb8_us2"] = new FrequencyTable(
         "ATSC Channel %1",  7, 177000000, 213000000, 6000000,
         DTVModulation::kModulation8VSB);
-    // UHF 14-51
+    // UHF 14-36
     fmap["atsc_vsb8_us3"] = new FrequencyTable(
-        "ATSC Channel %1", 14, 473000000, 695000000, 6000000,
+        "ATSC Channel %1", 14, 473000000, 605000000, 6000000,
         DTVModulation::kModulation8VSB);
 #endif // !DEBUG_DVB_OFFSETS
 
-    QString modStr[] = { "vsb8",  "qam256",   "qam128",   "qam64",   };
-    DTVModulation::Types mod[] = { DTVModulation::kModulation8VSB,
+    const std::array<const QString,4> modStr {
+        "vsb8", "qam256", "qam128", "qam64" };
+    const std::array<const DTVModulation::Types,4> mod {
+                         DTVModulation::kModulation8VSB,
                          DTVModulation::kModulationQAM256,
                          DTVModulation::kModulationQAM128,
                          DTVModulation::kModulationQAM64, };
-    QString desc[]   = { "ATSC ", "QAM-256 ", "QAM-128 ", "QAM-64 ", };
+    const std::array<const QString,4> desc {
+        "ATSC ", "QAM-256 ", "QAM-128 ", "QAM-64 ", };
 
 #define FREQ(A,B, C,D, E,F,G, H, I) \
-    fmap[QString("atsc_%1_us%2").arg(A).arg(B)] = \
+    fmap[QString("atsc_%1_us%2").arg(A,B)] =      \
         new FrequencyTable((C)+(D), E, F, G, H, I);
 
 // The maximum channel defined in the US frequency tables (standard, HRC, IRC)
-#define US_MAX_CHAN 159
+#define US_MAX_CHAN 158
 // Equation for computing EIA-542 frequency of channels > 99
 // A = bandwidth, B = offset, C = channel designation (number)
 #define EIA_542_FREQUENCY(A,B,C) ( ( (A) * ( 8 + (C) ) ) + (B) )
 
     for (uint i = 0; i < 4; i++)
     {
-        // USA Cable, ch 2 to US_MAX_CHAN and T.7 to T.14
-        FREQ(modStr[i], "cable0", desc[i], "Channel %1",
-             2,    57000000,   69000000, 6000000, mod[i]); // 2-4
+        // USA Cable, T13 to T14 and ch 2 to US_MAX_CHAN
+        FREQ(modStr[i], "cable0", desc[i], "Channel T-%1",
+             13,   44750000,   50750000, 6000000, mod[i]); // T13-T14
         FREQ(modStr[i], "cable1", desc[i], "Channel %1",
-             5,    79000000,   85000000, 6000000, mod[i]); // 5-6
+             2,    57000000,   69000000, 6000000, mod[i]); // 2-4
         FREQ(modStr[i], "cable2", desc[i], "Channel %1",
-             7,   177000000,  213000000, 6000000, mod[i]); // 7-13
+             5,    79000000,   85000000, 6000000, mod[i]); // 5-6
         FREQ(modStr[i], "cable3", desc[i], "Channel %1",
-             14,  123000000,  171000000, 6000000, mod[i]); // 14-22
+             7,   177000000,  213000000, 6000000, mod[i]); // 7-13
         FREQ(modStr[i], "cable4", desc[i], "Channel %1",
-             23,  219000000,  645000000, 6000000, mod[i]); // 23-94
+             14,  123000000,  171000000, 6000000, mod[i]); // 14-22
         FREQ(modStr[i], "cable5", desc[i], "Channel %1",
+             23,  219000000,  645000000, 6000000, mod[i]); // 23-94
+        FREQ(modStr[i], "cable6", desc[i], "Channel %1",
              95,   93000000,  117000000, 6000000, mod[i]); // 95-99
         // The center frequency of any EIA-542 std cable channel over 99 is
         // Frequency_MHz = ( 6 * ( 8 + channel_designation ) ) + 3
-        FREQ(modStr[i], "cable6", desc[i], "Channel %1",
-             100, 651000000,
-             EIA_542_FREQUENCY(6000000, 3000000, US_MAX_CHAN),
-             6000000, mod[i]);                             // 100-US_MAX_CHAN
-        FREQ(modStr[i], "cable7", desc[i], "Channel T-%1",
-             7,    8750000,   50750000, 6000000, mod[i]); // T7-14
+        FREQ(modStr[i], "cable7", desc[i], "Channel %1",
+            100, 651000000,
+            EIA_542_FREQUENCY(6000000, 3000000, US_MAX_CHAN),
+            6000000, mod[i]);                             // 100-US_MAX_CHAN
 
         // USA Cable, QAM 256 ch 78 to US_MAX_CHAN
         FREQ(modStr[i], "cablehigh0", desc[i], "Channel %1",
@@ -715,18 +716,16 @@ static void init_freq_tables(freq_table_map_t &fmap)
     }
 
     // create old school frequency tables...
-    for (CHANLISTS *ptr = chanlists; ptr->name ; ptr++)
+    for (const auto & [name, list] : gChanLists)
     {
-        QString tbl_name = ptr->name;
-        for (uint i = 0; i < (uint)ptr->count; i++)
+        for (uint i = 0; i < (uint)list.size(); i++)
         {
-            uint64_t freq = (ptr->list[i].freq * 1000LL) + 1750000;
-            fmap[QString("analog_analog_%1%2").arg(tbl_name).arg(i)] =
+            uint64_t freq = (list[i].freq * 1000LL) + 1750000;
+            fmap[QString("analog_analog_%1%2").arg(name).arg(i)] =
                 new FrequencyTable(
-                    QString("%1 %2").arg(tbl_name).arg(ptr->list[i].name), i+2,
+                    QString("%1 %2").arg(name, list[i].name), i+2,
                     freq, freq + 3000000,
                     6000000, DTVModulation::kModulationAnalog);
         }
     }
-
 }

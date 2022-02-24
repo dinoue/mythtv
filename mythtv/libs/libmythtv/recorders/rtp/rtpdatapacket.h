@@ -3,10 +3,10 @@
  * Distributed as part of MythTV under GPL v2 and later.
  */
 
-#ifndef _RTP_DATA_PACKET_H_
-#define _RTP_DATA_PACKET_H_
+#ifndef RTP_DATA_PACKET_H
+#define RTP_DATA_PACKET_H
 
-#include <arpa/inet.h> // for ntohs()/ntohl()
+#include <QtEndian>
 
 #include "udppacket.h"
 #include "mythlogging.h"
@@ -94,24 +94,24 @@ class RTPDataPacket : public UDPPacket
 
     uint GetSequenceNumber(void) const
     {
-        return ntohs(*reinterpret_cast<const uint16_t*>(m_data.data()+2));
+        return qFromBigEndian(*reinterpret_cast<const uint16_t*>(m_data.data()+2));
     }
 
     uint GetTimeStamp(void) const
     {
-        return ntohl(*reinterpret_cast<const uint32_t*>(m_data.data()+4));
+        return qFromBigEndian(*reinterpret_cast<const uint32_t*>(m_data.data()+4));
     }
 
     uint GetSynchronizationSource(void) const
     {
-        return ntohl(*reinterpret_cast<const uint32_t*>(m_data.data()+8));
+        return qFromBigEndian(*reinterpret_cast<const uint32_t*>(m_data.data()+8));
     }
 
     uint GetContributingSource(uint i) const
     {
         const uint32_t tmp =
             *reinterpret_cast<const uint32_t*>(m_data.data() + 12 + 4 * i);
-        return ntohl(tmp);
+        return qFromBigEndian(tmp);
     }
 
     uint GetPayloadOffset(void) const { return m_off; }
@@ -127,4 +127,4 @@ class RTPDataPacket : public UDPPacket
     mutable uint m_off { 0 };
 };
 
-#endif // _RTP_DATA_PACKET_H_
+#endif // RTP_DATA_PACKET_H

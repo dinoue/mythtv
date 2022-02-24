@@ -8,6 +8,7 @@
 #include "mythplayer.h"
 #include "programinfo.h"
 #include "mythcorecontext.h"            // for MythCoreContext, etc
+#include "mythdate.h"
 #include "mythtypes.h"                  // for InfoMap
 #include "mythuiactions.h"              // for ACTION_DOWN, ACTION_UP
 #include "playercontext.h"              // for PlayerContext
@@ -82,7 +83,7 @@ QString DeleteMap::GetRedoMessage(void) const
             tr("(Nothing to redo)"));
 }
 
-bool DeleteMap::HandleAction(QString &action, uint64_t frame)
+bool DeleteMap::HandleAction(const QString &action, uint64_t frame)
 {
     bool handled = true;
     if (action == ACTION_UP)
@@ -162,19 +163,11 @@ QString DeleteMap::CreateTimeString(uint64_t frame, bool use_cutlist,
                                     double frame_rate, bool full_resolution)
     const
 {
-    uint64_t ms = TranslatePositionFrameToMs(frame, frame_rate, use_cutlist);
-    int secs = (int)(ms / 1000);
-    int remainder = (int)(ms % 1000);
-    int totalSecs = (int)
-        (TranslatePositionFrameToMs(frame, frame_rate, use_cutlist) / 1000);
-    QString timestr;
-    if (totalSecs >= 3600)
-        timestr = QString::number(secs / 3600) + ":";
-    timestr += QString("%1").arg((secs / 60) % 60, 2, 10, QChar(48)) +
-        QString(":%1").arg(secs % 60, 2, 10, QChar(48));
+    std::chrono::milliseconds ms = TranslatePositionFrameToMs(frame, frame_rate, use_cutlist);
+    QString fmt = (ms >= 1h) ? "H:mm:ss" : "mm:ss";
     if (full_resolution)
-        timestr += QString(".%1").arg(remainder, 3, 10, QChar(48));
-    return timestr;
+        fmt += ".zzz";
+    return MythDate::formatTime(ms, fmt);
 }
 
  /**
@@ -211,29 +204,29 @@ void DeleteMap::UpdateOSD(uint64_t frame, double frame_rate, OSD *osd)
     infoMap["reltimedisplay"] = relTimeDisplay;
     infoMap["rellengthdisplay"] = relLengthDisplay;
     //: example: "13:24 (10:23 of 24:37)"
-    infoMap["fulltimedisplay"] = tr("%3 (%1 of %2)").arg(relTimeDisplay)
-        .arg(relLengthDisplay).arg(timestr);
+    infoMap["fulltimedisplay"] = tr("%3 (%1 of %2)")
+        .arg(relTimeDisplay, relLengthDisplay, timestr);
 
     QHash<QString,float> posMap;
     posMap.insert("position", (float)((double)frame/(double)total));
-    osd->SetValues("osd_program_editor", posMap, kOSDTimeout_None);
-    osd->SetText("osd_program_editor", infoMap,  kOSDTimeout_None);
+    osd->SetValues(OSD_WIN_PROGEDIT, posMap, kOSDTimeout_None);
+    osd->SetText(OSD_WIN_PROGEDIT, infoMap,  kOSDTimeout_None);
     if (m_changed || total != m_cachedTotalForOSD)
-        osd->SetRegions("osd_program_editor", m_deleteMap, total);
+        osd->SetRegions(OSD_WIN_PROGEDIT, m_deleteMap, total);
     m_changed = false;
     m_cachedTotalForOSD = total;
 }
 
-void DeleteMap::UpdateOSD(int64_t timecode, OSD *osd)
+void DeleteMap::UpdateOSD(std::chrono::milliseconds timecode, OSD *osd)
 {
-    osd->SetGraph("osd_program_editor", "audiograph", timecode);
+    osd->SetGraph(OSD_WIN_PROGEDIT, "audiograph", timecode);
 }
 
 /// Set the edit mode and optionally hide the edit mode OSD.
 void DeleteMap::SetEditing(bool edit, OSD *osd)
 {
     if (osd && !edit)
-        osd->HideWindow("osd_program_editor");
+        osd->HideWindow(OSD_WIN_PROGEDIT);
     m_editing = edit;
 }
 
@@ -710,7 +703,7 @@ void DeleteMap::CleanMap(void)
 
         // Delete the unwanted frame marks safely, and not while iterating over
         // the map which would lead to a crash
-        foreach (const long & dit, deleteList)
+        for (const int64_t & dit : qAsConst(deleteList))
         {
             Delete(dit);
         }
@@ -844,7 +837,7 @@ void DeleteMap::TrackerReset(uint64_t frame)
  * \brief Returns true if the given frame has passed the last cut point start
  *        and provides the frame number of the next jump.
  */
-bool DeleteMap::TrackerWantsToJump(uint64_t frame, uint64_t &to)
+bool DeleteMap::TrackerWantsToJump(uint64_t frame, uint64_t &to) const
 {
     if (IsEmpty() || !m_nextCutStartIsValid || frame < m_nextCutStart)
         return false;
@@ -899,7 +892,7 @@ bool DeleteMap::IsSaved(void) const
     return currentMap == savedMap;
 }
 
-uint64_t DeleteMap::TranslatePositionFrameToMs(uint64_t position,
+std::chrono::milliseconds DeleteMap::TranslatePositionFrameToMs(uint64_t position,
                                                float fallback_framerate,
                                                bool use_cutlist) const
 {
@@ -908,7 +901,7 @@ uint64_t DeleteMap::TranslatePositionFrameToMs(uint64_t position,
                                      use_cutlist ? m_deleteMap :
                                      frm_dir_map_t());
 }
-uint64_t DeleteMap::TranslatePositionMsToFrame(uint64_t dur_ms,
+uint64_t DeleteMap::TranslatePositionMsToFrame(std::chrono::milliseconds dur_ms,
                                                float fallback_framerate,
                                                bool use_cutlist) const
 {

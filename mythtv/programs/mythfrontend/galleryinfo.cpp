@@ -1,60 +1,58 @@
+#include <chrono>
+
 #include "galleryinfo.h"
 
+#include "imagemetadata.h"
 #include "mythcoreutil.h"
 #include "mythdate.h"
-#include "imagemetadata.h"
 
-
-// Only Used to initialise the QSet of keys
-static QStringList kBasicInfoFields = QStringList()
-        // Exif tags
-        << EXIF_TAG_USERCOMMENT
-        << EXIF_TAG_IMAGEDESCRIPTION
-        << EXIF_TAG_ORIENTATION
-        << EXIF_TAG_DATETIME
-        << "Exif.Image.Make"
-        << "Exif.Image.Model"
-        << "Exif.Photo.ExposureTime"
-        << "Exif.Photo.ShutterSpeedValue"
-        << "Exif.Photo.FNumber"
-        << "Exif.Photo.ApertureValue"
-        << "Exif.Photo.ExposureBiasValue"
-        << "Exif.Photo.Flash"
-        << "Exif.Photo.FocalLength"
-        << "Exif.Photo.FocalLengthIn35mmFilm"
-        << "ISO speed"
-        << "Exif.Photo.MeteringMode"
-        << "Exif.Photo.PixelXDimension"
-        << "Exif.Photo.PixelYDimension"
-           // Video tags
-        << "FFmpeg.format.format_long_name"
-        << "FFmpeg.format.duration"
-        << "FFmpeg.format.creation_time"
-        << "FFmpeg.format.model"
-        << "FFmpeg.format.make"
-           // Only detects tags within the first 2 streams for efficiency
-        << "FFmpeg.stream0:.codec_long_name"
-        << "FFmpeg.stream1:.codec_long_name"
-        << "FFmpeg.stream0:.width"
-        << "FFmpeg.stream1:.width"
-        << "FFmpeg.stream0:.height"
-        << "FFmpeg.stream1:.height"
-        << "FFmpeg.stream0:.sample_rate"
-        << "FFmpeg.stream1:.sample_rate"
-        << "FFmpeg.stream0:.rotate"
-        << "FFmpeg.stream1:.rotate";
 
 //! The exif/video tags comprising the Basic file info
-static QSet<QString> kBasicInfoSet = QSet<QString>::fromList(kBasicInfoFields);
-
+static QSet<QString> kBasicInfoSet {
+        // Exif tags
+        EXIF_TAG_USERCOMMENT,
+        EXIF_TAG_IMAGEDESCRIPTION,
+        EXIF_TAG_ORIENTATION,
+        EXIF_TAG_DATETIME,
+        "Exif.Image.Make",
+        "Exif.Image.Model",
+        "Exif.Photo.ExposureTime",
+        "Exif.Photo.ShutterSpeedValue",
+        "Exif.Photo.FNumber",
+        "Exif.Photo.ApertureValue",
+        "Exif.Photo.ExposureBiasValue",
+        "Exif.Photo.Flash",
+        "Exif.Photo.FocalLength",
+        "Exif.Photo.FocalLengthIn35mmFilm",
+        "ISO speed",
+        "Exif.Photo.MeteringMode",
+        "Exif.Photo.PixelXDimension",
+        "Exif.Photo.PixelYDimension",
+           // Video tags
+        "FFmpeg.format.format_long_name",
+        "FFmpeg.format.duration",
+        "FFmpeg.format.creation_time",
+        "FFmpeg.format.model",
+        "FFmpeg.format.make",
+           // Only detects tags within the first 2 streams for efficiency
+        "FFmpeg.stream0:.codec_long_name",
+        "FFmpeg.stream1:.codec_long_name",
+        "FFmpeg.stream0:.width",
+        "FFmpeg.stream1:.width",
+        "FFmpeg.stream0:.height",
+        "FFmpeg.stream1:.height",
+        "FFmpeg.stream0:.sample_rate",
+        "FFmpeg.stream1:.sample_rate",
+        "FFmpeg.stream0:.rotate",
+        "FFmpeg.stream1:.rotate" };
 
 //! Constructor
 InfoList::InfoList(MythScreenType &screen)
     : m_screen(screen), m_mgr(ImageManagerFe::getInstance())
 {
     m_timer.setSingleShot(true);
-    m_timer.setInterval(1000);
-    connect(&m_timer, SIGNAL(timeout()), this, SLOT(Clear()));
+    m_timer.setInterval(1s);
+    connect(&m_timer, &QTimer::timeout, this, &InfoList::Clear);
 }
 
 
@@ -247,15 +245,9 @@ void InfoList::Display(ImageItemK &im, const QStringList &tagStrings)
 
     if (im.IsDevice())
     {
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
         CreateButton(tr("Last scan"),
-                     MythDate::toString(QDateTime::fromTime_t(im.m_date),
+                     MythDate::toString(QDateTime::fromSecsSinceEpoch(im.m_date.count()),
                                         MythDate::kDateTimeFull | MythDate::kAddYear));
-#else
-        CreateButton(tr("Last scan"),
-                     MythDate::toString(QDateTime::fromSecsSinceEpoch(im.m_date),
-                                        MythDate::kDateTimeFull | MythDate::kAddYear));
-#endif
     }
 
     if (im.IsDirectory())
@@ -263,15 +255,9 @@ void InfoList::Display(ImageItemK &im, const QStringList &tagStrings)
 
     if (!im.IsDevice())
     {
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
         CreateButton(tr("Modified"),
-                     MythDate::toString(QDateTime::fromTime_t(im.m_modTime),
+                     MythDate::toString(QDateTime::fromSecsSinceEpoch(im.m_modTime.count()),
                                         MythDate::kDateTimeFull | MythDate::kAddYear));
-#else
-        CreateButton(tr("Modified"),
-                     MythDate::toString(QDateTime::fromSecsSinceEpoch(im.m_modTime),
-                                        MythDate::kDateTimeFull | MythDate::kAddYear));
-#endif
     }
 
     if (im.IsFile())
@@ -281,7 +267,8 @@ void InfoList::Display(ImageItemK &im, const QStringList &tagStrings)
 
         // Create buttons for exif/video tags
         // Multimap iterates each key latest->earliest so we must do it the long way
-        foreach (const QString &group, tags.uniqueKeys())
+        QList groups = tags.uniqueKeys();
+        for (const QString & group : qAsConst(groups))
         {
             // Iterate earliest->latest to preserve tag order
             using TagList = QList<QStringList>;

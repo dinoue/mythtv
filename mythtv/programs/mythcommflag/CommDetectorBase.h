@@ -1,8 +1,7 @@
-#ifndef _CommDetectorBase_H_
-#define _CommDetectorBase_H_
+#ifndef COMMDETECTOR_BASE_H
+#define COMMDETECTOR_BASE_H
 
 #include <iostream>
-using namespace std;
 
 #include <QObject>
 #include <QMap>
@@ -42,7 +41,7 @@ public:
     virtual void requestCommBreakMapUpdate(void) {};
 
     virtual void PrintFullMap(
-        ostream &out, const frm_dir_map_t *comm_breaks, bool verbose) const = 0;
+        std::ostream &out, const frm_dir_map_t *comm_breaks, bool verbose) const = 0;
 
 signals:
     void statusUpdate(const QString& a) ;
@@ -55,7 +54,6 @@ protected:
     bool m_bStop   { false };
 };
 
-#endif
-
+#endif // COMMDETECTOR_BASE_H
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */

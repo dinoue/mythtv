@@ -57,15 +57,13 @@ void MultiplexSetting::Load(void)
         {
             QString ChannelNumber =
                 QString("Freq %1").arg(query.value(3).toInt());
-            CHANLIST* curList = chanlists[0].list;
-            int totalChannels = chanlists[0].count;
             int findFrequency = (query.value(3).toInt() / 1000) - 1750;
-            for (int x = 0 ; x < totalChannels ; ++x)
+            for (const auto & list : gChanLists[0].list)
             {
-                if ((curList[x].freq <= findFrequency + 200) &&
-                    (curList[x].freq >= findFrequency - 200))
+                if ((list.freq <= findFrequency + 200) &&
+                    (list.freq >= findFrequency - 200))
                 {
-                    ChannelNumber = QString("%1").arg(curList[x].name);
+                    ChannelNumber = QString("%1").arg(list.name);
                 }
             }
 
@@ -75,10 +73,10 @@ void MultiplexSetting::Load(void)
         else
         {
             DisplayText = QString("%1 Hz (%2) (%3) (%4)")
-                .arg(query.value(3).toString())
-                .arg(query.value(4).toString())
-                .arg(query.value(1).toInt())
-                .arg(query.value(2).toInt());
+                .arg(query.value(3).toString(),
+                     query.value(4).toString(),
+                     query.value(1).toString(),
+                     query.value(2).toString());
         }
         addSelection(DisplayText, query.value(0).toString());
     }

@@ -32,16 +32,16 @@ class SERVICE_PUBLIC VideoMultiplexList : public QObject
     Q_PROPERTY( QString      Version        READ Version         WRITE setVersion        )
     Q_PROPERTY( QString      ProtoVer       READ ProtoVer        WRITE setProtoVer       )
 
-    Q_PROPERTY( QVariantList VideoMultiplexes READ VideoMultiplexes DESIGNABLE true )
+    Q_PROPERTY( QVariantList VideoMultiplexes READ VideoMultiplexes )
 
     PROPERTYIMP       ( int         , StartIndex      )
     PROPERTYIMP       ( int         , Count           )
     PROPERTYIMP       ( int         , CurrentPage     )
     PROPERTYIMP       ( int         , TotalPages      )
     PROPERTYIMP       ( int         , TotalAvailable  )
-    PROPERTYIMP       ( QDateTime   , AsOf            )
-    PROPERTYIMP       ( QString     , Version         )
-    PROPERTYIMP       ( QString     , ProtoVer        )
+    PROPERTYIMP_REF   ( QDateTime   , AsOf            )
+    PROPERTYIMP_REF   ( QString     , Version         )
+    PROPERTYIMP_REF   ( QString     , ProtoVer        )
 
     PROPERTYIMP_RO_REF( QVariantList, VideoMultiplexes );
 
@@ -73,7 +73,7 @@ class SERVICE_PUBLIC VideoMultiplexList : public QObject
             // We must make sure the object added to the QVariantList has
             // a parent of 'this'
 
-            VideoMultiplex *pObject = new VideoMultiplex( this );
+            auto *pObject = new VideoMultiplex( this );
             m_VideoMultiplexes.append( QVariant::fromValue<QObject *>( pObject ));
 
             return pObject;

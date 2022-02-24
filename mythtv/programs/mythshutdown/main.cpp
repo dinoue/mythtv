@@ -1,9 +1,9 @@
 
 #include <iostream>
 #include <cstdlib>
-using namespace std;
 #include <unistd.h>
 
+#include <QtGlobal>
 #include <QCoreApplication>
 #include <QFile>
 
@@ -278,7 +278,7 @@ static int getStatus(bool bWantRecStatus)
         res |= 16;
     }
 
-    if (JobQueue::HasRunningOrPendingJobs(15))
+    if (JobQueue::HasRunningOrPendingJobs(15min))
     {
         LOG(VB_STDIO|VB_FLUSH, LOG_ERR,
             QObject::tr("Has queued or pending jobs", "mythshutdown") + "\n");
@@ -335,8 +335,8 @@ static int getStatus(bool bWantRecStatus)
     // allow for a 15 minute window
     if (dtPeriod1Start != dtPeriod1End)
     {
-        int delta = dtCurrent.secsTo(dtPeriod1Start);
-        if (delta >= 0 && delta <= 15 * 60)
+        auto delta = std::chrono::seconds(dtCurrent.secsTo(dtPeriod1Start));
+        if (delta >= 0s && delta <= 15min)
         {
             LOG(VB_STDIO|VB_FLUSH, LOG_ERR,
                 QObject::tr("About to start daily wakeup period (1)",
@@ -347,8 +347,8 @@ static int getStatus(bool bWantRecStatus)
 
     if (dtPeriod2Start != dtPeriod2End)
     {
-        int delta = dtCurrent.secsTo(dtPeriod2Start);
-        if (delta >= 0 && delta <= 15 * 60)
+        auto delta = std::chrono::seconds(dtCurrent.secsTo(dtPeriod2Start));
+        if (delta >= 0s && delta <= 15min)
         {
             LOG(VB_STDIO|VB_FLUSH, LOG_ERR,
                 QObject::tr("About to start daily wakeup period (2)",
@@ -655,9 +655,9 @@ static int shutdown()
     if (dtWakeupTime.isValid())
     {
         // dont't shutdown if we are within idleWait mins of the next wakeup time
-        int idleWaitForRecordingTime =
-                    gCoreContext->GetNumSetting("idleWaitForRecordingTime", 15);
-        if (dtCurrent.secsTo(dtWakeupTime) > idleWaitForRecordingTime * 60)
+        std::chrono::seconds idleWaitForRecordingTime =
+            gCoreContext->GetDurSetting<std::chrono::minutes>("idleWaitForRecordingTime", 15min);
+        if (dtCurrent.secsTo(dtWakeupTime) > idleWaitForRecordingTime.count())
         {
             QString nvramCommand =
                 gCoreContext->GetSetting(
@@ -671,11 +671,7 @@ static int shutdown()
             {
                 QString time_ts;
                 nvramCommand.replace(
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-                    "$time", time_ts.setNum(dtWakeupTime.toTime_t())
-#else
                     "$time", time_ts.setNum(dtWakeupTime.toSecsSinceEpoch())
-#endif
                     );
             }
             else
@@ -790,12 +786,10 @@ static int startup()
     {
         // if we started within 15mins of the saved wakeup time assume we started
         // automatically to record or for a daily wakeup/shutdown period
+        auto delta = MythDate::secsInPast(startupTime);
+        delta = std::chrono::abs(delta);
 
-        int delta = startupTime.secsTo(MythDate::current());
-        if (delta < 0)
-            delta = -delta;
-
-        if (delta < 15 * 60)
+        if (delta < 15min)
             res = 0;
         else
             res = 1;
@@ -851,7 +845,7 @@ int main(int argc, char **argv)
     QList<int> signallist;
     signallist << SIGINT << SIGTERM << SIGSEGV << SIGABRT << SIGBUS << SIGFPE
                << SIGILL;
-#if ! CONFIG_DARWIN
+#ifndef Q_OS_DARWIN
     signallist << SIGRTMIN;
 #endif
     SignalHandler::Init(signallist);

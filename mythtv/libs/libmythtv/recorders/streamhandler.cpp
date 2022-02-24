@@ -10,7 +10,7 @@
 #define O_LARGEFILE 0
 #endif
 
-#define LOC      QString("SH[%1](%2): ").arg(m_inputId).arg(m_device)
+#define LOC      QString("SH[%1]: ").arg(m_inputId)
 
 StreamHandler::~StreamHandler()
 {
@@ -33,7 +33,7 @@ StreamHandler::~StreamHandler()
 void StreamHandler::AddListener(MPEGStreamData *data,
                                 bool allow_section_reader,
                                 bool needs_buffering,
-                                QString output_file)
+                                const QString& output_file)
 {
     QMutexLocker locker(&m_addRmLock);
 
@@ -65,7 +65,7 @@ void StreamHandler::AddListener(MPEGStreamData *data,
         m_needsBuffering     |= needs_buffering;
     }
 
-    m_streamDataList[data] = std::move(output_file);
+    m_streamDataList[data] = output_file;
 
     m_listenerLock.unlock();
 
@@ -153,7 +153,7 @@ void StreamHandler::Start(void)
 void StreamHandler::Stop(void)
 {
     LOG(VB_RECORD, LOG_DEBUG, LOC + "Stopping");
-    SetRunningDesired(false);
+    StreamHandler::SetRunningDesired(false);
     wait();
     LOG(VB_RECORD, LOG_DEBUG, LOC + "Stopped");
 }
@@ -190,11 +190,13 @@ bool StreamHandler::AddPIDFilter(PIDInfo *info)
 {
 #ifdef DEBUG_PID_FILTERS
     LOG(VB_RECORD, LOG_DEBUG, LOC + QString("AddPIDFilter(0x%1)")
-            .arg(info->_pid, 0, 16));
+            .arg(info->m_pid, 0, 16));
 #endif // DEBUG_PID_FILTERS
 
     QMutexLocker writing_locker(&m_pidLock);
     m_pidInfo[info->m_pid] = info;
+
+    m_filtersChanged = true;
 
     CycleFiltersByPriority();
 
@@ -228,6 +230,8 @@ bool StreamHandler::RemovePIDFilter(uint pid)
 
     delete tmp;
 
+    m_filtersChanged = true;
+
     return ok;
 }
 
@@ -239,7 +243,7 @@ bool StreamHandler::RemoveAllPIDFilters(void)
     LOG(VB_RECORD, LOG_DEBUG, LOC + "RemoveAllPIDFilters()");
 #endif // DEBUG_PID_FILTERS
 
-    vector<int> del_pids;
+    std::vector<int> del_pids;
     for (auto it = m_pidInfo.begin(); it != m_pidInfo.end(); ++it)
         del_pids.push_back(it.key());
 
@@ -252,13 +256,13 @@ bool StreamHandler::RemoveAllPIDFilters(void)
 
 void StreamHandler::UpdateListeningForEIT(void)
 {
-    vector<uint> add_eit;
-    vector<uint> del_eit;
-
     QMutexLocker read_locker(&m_listenerLock);
 
     for (auto it1 = m_streamDataList.cbegin(); it1 != m_streamDataList.cend(); ++it1)
     {
+        std::vector<uint> add_eit;
+        std::vector<uint> del_eit;
+
         MPEGStreamData *sd = it1.key();
         if (sd->HasEITPIDChanges(m_eitPids) &&
             sd->GetEITPIDChanges(m_eitPids, add_eit, del_eit))
@@ -294,7 +298,7 @@ bool StreamHandler::UpdateFiltersFromStreamData(void)
     }
 
     QMap<uint, PIDInfo*> add_pids;
-    vector<uint>         del_pids;
+    std::vector<uint>    del_pids;
 
     {
         QMutexLocker read_locker(&m_pidLock);
@@ -302,7 +306,7 @@ bool StreamHandler::UpdateFiltersFromStreamData(void)
         // PIDs that need to be added..
         for (auto lit = pids.constBegin(); lit != pids.constEnd(); ++lit)
         {
-            if (*lit && (m_pidInfo.find(lit.key()) == m_pidInfo.end()))
+            if ((*lit != 0U) && (m_pidInfo.find(lit.key()) == m_pidInfo.end()))
             {
                 add_pids[lit.key()] = CreatePIDInfo(
                     lit.key(), StreamID::PrivSec, 0);
@@ -328,7 +332,7 @@ bool StreamHandler::UpdateFiltersFromStreamData(void)
         ok &= AddPIDFilter(pid);
 
     // Cycle filters if it's been a while
-    if (m_cycleTimer.isRunning() && (m_cycleTimer.elapsed() > 1000))
+    if (m_cycleTimer.isRunning() && (m_cycleTimer.elapsed() > 1s))
         CycleFiltersByPriority();
 
     return ok;
@@ -341,12 +345,12 @@ PIDPriority StreamHandler::GetPIDPriority(uint pid) const
     PIDPriority tmp = kPIDPriorityNone;
 
     for (auto it = m_streamDataList.cbegin(); it != m_streamDataList.cend(); ++it)
-        tmp = max(tmp, it.key()->GetPIDPriority(pid));
+        tmp = std::max(tmp, it.key()->GetPIDPriority(pid));
 
     return tmp;
 }
 
-void StreamHandler::WriteMPTS(unsigned char * buffer, uint len)
+void StreamHandler::WriteMPTS(const unsigned char * buffer, uint len)
 {
     if (m_mptsTfw == nullptr)
         return;
@@ -382,19 +386,17 @@ bool StreamHandler::AddNamedOutputFile(const QString &file)
         {
             LOG(VB_GENERAL, LOG_ERR, LOC +
                 QString("Failed to link '%1' to '%2'")
-                .arg(m_mptsBaseFile)
-                .arg(fn) +
-                ENO);
+                .arg(m_mptsBaseFile, fn) + ENO);
         }
         else
         {
             LOG(VB_RECORD, LOG_INFO, LOC +
                 QString("linked '%1' to '%2'")
-                .arg(m_mptsBaseFile)
-                .arg(fn));
+                .arg(m_mptsBaseFile, fn));
         }
     }
-
+#else
+    Q_UNUSED(file);
 #endif //  !defined( USING_MINGW ) && !defined( _MSC_VER )
     return true;
 }
@@ -414,5 +416,7 @@ void StreamHandler::RemoveNamedOutputFile(const QString &file)
             m_mptsTfw = nullptr;
         }
     }
+#else
+    Q_UNUSED(file);
 #endif //  !defined( USING_MINGW ) && !defined( _MSC_VER )
 }

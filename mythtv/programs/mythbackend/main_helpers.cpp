@@ -1,7 +1,4 @@
 #include "mythconfig.h"
-#if CONFIG_DARWIN
-    #include <sys/aio.h>    // O_SYNC
-#endif
 #if CONFIG_SYSTEMD_NOTIFY
     #include <systemd/sd-daemon.h>
     #define be_sd_notify(x) \
@@ -22,7 +19,6 @@
 
 #include <QCoreApplication>
 #include <QFileInfo>
-#include <QRegExp>
 #include <QFile>
 #include <QDir>
 #include <QMap>
@@ -60,6 +56,21 @@
 #include "mediaserver.h"
 #include "httpstatus.h"
 #include "mythlogging.h"
+
+// New webserver
+#include "libmythbase/http/mythhttproot.h"
+#include "libmythbase/http/mythhttprewrite.h"
+#include "libmythbase/http/mythhttpinstance.h"
+#include "servicesv2/v2myth.h"
+#include "servicesv2/v2video.h"
+#include "servicesv2/v2dvr.h"
+#include "servicesv2/v2content.h"
+#include "servicesv2/v2guide.h"
+#include "servicesv2/v2channel.h"
+#include "servicesv2/v2status.h"
+#include "servicesv2/v2capture.h"
+#include "servicesv2/v2music.h"
+#include "servicesv2/v2config.h"
 
 #define LOC      QString("MythBackend: ")
 #define LOC_WARN QString("MythBackend, Warning: ")
@@ -127,7 +138,7 @@ bool setupTVs(bool ismaster, bool &error)
     }
 
     if (!query.exec(
-            "SELECT cardid, hostname "
+            "SELECT cardid, parentid, videodevice, hostname, sourceid "
             "FROM capturecard "
             "ORDER BY cardid"))
     {
@@ -135,15 +146,18 @@ bool setupTVs(bool ismaster, bool &error)
         return false;
     }
 
-    vector<uint>    cardids;
-    vector<QString> hosts;
+    std::vector<unsigned int> cardids;
+    std::vector<QString> hosts;
     while (query.next())
     {
-        uint    cardid = query.value(0).toUInt();
-        QString host   = query.value(1).toString();
-        QString cidmsg = QString("Card %1").arg(cardid);
+        uint    cardid      = query.value(0).toUInt();
+        uint    parentid    = query.value(1).toUInt();
+        QString videodevice = query.value(2).toString();
+        QString hostname    = query.value(3).toString();
+        uint    sourceid    = query.value(4).toUInt();
+        QString cidmsg      = QString("Card[%1](%2)").arg(cardid).arg(videodevice);
 
-        if (host.isEmpty())
+        if (hostname.isEmpty())
         {
             LOG(VB_GENERAL, LOG_ERR, cidmsg +
                 " does not have a hostname defined.\n"
@@ -151,12 +165,24 @@ bool setupTVs(bool ismaster, bool &error)
             continue;
         }
 
+        // Skip all cards that do not have a video source
+        if (sourceid == 0)
+        {
+            if (parentid == 0)
+            {
+                LOG(VB_GENERAL, LOG_WARNING, cidmsg +
+                    " does not have a video source");
+            }
+            continue;
+        }
+
         cardids.push_back(cardid);
-        hosts.push_back(host);
+        hosts.push_back(hostname);
     }
 
     QWriteLocker tvlocker(&TVRec::s_inputsLock);
 
+    // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks)
     for (size_t i = 0; i < cardids.size(); i++)
     {
         if (hosts[i] == localhostname) {
@@ -180,7 +206,7 @@ bool setupTVs(bool ismaster, bool &error)
                 if (tv && tv->Init())
                 {
                     auto *enc = new EncoderLink(cardid, tv);
-                    tvList[cardid] = enc;
+                    gTVList[cardid] = enc;
                 }
                 else
                 {
@@ -201,7 +227,7 @@ bool setupTVs(bool ismaster, bool &error)
                 if (tv && tv->Init())
                 {
                     auto *enc = new EncoderLink(cardid, tv);
-                    tvList[cardid] = enc;
+                    gTVList[cardid] = enc;
                 }
                 else
                 {
@@ -213,12 +239,12 @@ bool setupTVs(bool ismaster, bool &error)
             else
             {
                 auto *enc = new EncoderLink(cardid, nullptr, host);
-                tvList[cardid] = enc;
+                gTVList[cardid] = enc;
             }
         }
     }
 
-    if (tvList.empty())
+    if (gTVList.empty())
     {
         LOG(VB_GENERAL, LOG_WARNING, LOC +
                 "No valid capture cards are defined in the database.");
@@ -238,11 +264,11 @@ void cleanup(void)
     if (gCoreContext)
         gCoreContext->SetExiting();
 
-    delete sysEventHandler;
-    sysEventHandler = nullptr;
+    delete gSysEventHandler;
+    gSysEventHandler = nullptr;
 
-    delete housekeeping;
-    housekeeping = nullptr;
+    delete gHousekeeping;
+    gHousekeeping = nullptr;
 
     if (gCoreContext)
     {
@@ -250,11 +276,11 @@ void cleanup(void)
         gCoreContext->SetScheduler(nullptr);
     }
 
-    delete expirer;
-    expirer = nullptr;
+    delete gExpirer;
+    gExpirer = nullptr;
 
-    delete jobqueue;
-    jobqueue = nullptr;
+    delete gJobQueue;
+    gJobQueue = nullptr;
 
     delete g_pUPnp;
     g_pUPnp = nullptr;
@@ -287,10 +313,10 @@ void cleanup(void)
      delete gBackendContext;
      gBackendContext = nullptr;
 
-    if (pidfile.size())
+    if (!gPidFile.isEmpty())
     {
-        unlink(pidfile.toLatin1().constData());
-        pidfile.clear();
+        unlink(gPidFile.toLatin1().constData());
+        gPidFile.clear();
     }
 
     SignalHandler::Done();
@@ -369,7 +395,7 @@ int handle_command(const MythBackendCommandLineParser &cmdline)
     if (cmdline.toBool("printsched") ||
         cmdline.toBool("testsched"))
     {
-        auto *sched = new Scheduler(false, &tvList);
+        auto *sched = new Scheduler(false, &gTVList);
         if (cmdline.toBool("printsched"))
         {
             if (!gCoreContext->ConnectToMasterServer())
@@ -378,14 +404,14 @@ int handle_command(const MythBackendCommandLineParser &cmdline)
                 delete sched;
                 return GENERIC_EXIT_CONNECT_ERROR;
             }
-            cout << "Retrieving Schedule from Master backend.\n";
+            std::cout << "Retrieving Schedule from Master backend.\n";
             sched->FillRecordListFromMaster();
         }
         else
         {
-            cout << "Calculating Schedule from database.\n" <<
-                    "Inputs, Card IDs, and Conflict info may be invalid "
-                    "if you have multiple tuners.\n";
+            std::cout << "Calculating Schedule from database.\n" <<
+                         "Inputs, Card IDs, and Conflict info may be invalid "
+                         "if you have multiple tuners.\n";
             ProgramInfo::CheckProgramIDAuthorities();
             sched->FillRecordListFromDB();
         }
@@ -432,8 +458,8 @@ int handle_command(const MythBackendCommandLineParser &cmdline)
 
     if (cmdline.toBool("printexpire"))
     {
-        expirer = new AutoExpire();
-        expirer->PrintExpireList(cmdline.toString("printexpire"));
+        gExpirer = new AutoExpire();
+        gExpirer->PrintExpireList(cmdline.toString("printexpire"));
         return GENERIC_EXIT_OK;
     }
 
@@ -592,13 +618,16 @@ int run_backend(MythBackendCommandLineParser &cmdline)
     int     port = gCoreContext->GetBackendServerPort();
     if (gCoreContext->GetBackendServerIP().isEmpty())
     {
-        cerr << "No setting found for this machine's BackendServerIP.\n"
-             << "Please run setup on this machine and modify the first page\n"
-             << "of the general settings.\n";
+        std::cerr << "No setting found for this machine's BackendServerAddr.\n"
+                  << "Please run mythtv-setup on this machine.\n"
+                  << "Go to page \"1. General\" / \"Host Address Backend Setup\" and examine the values.\n"
+                  << "N.B. The default values are correct for a combined frontend/backend machine.\n"
+                  << "Press Escape, select \"Save and Exit\" and exit mythtv-setup.\n"
+                  << "Then start mythbackend again.\n";
         return GENERIC_EXIT_SETUP_ERROR;
     }
 
-    sysEventHandler = new MythSystemEventHandler();
+    gSysEventHandler = new MythSystemEventHandler();
 
     if (ismaster)
     {
@@ -609,7 +638,7 @@ int run_backend(MythBackendCommandLineParser &cmdline)
         LOG(VB_GENERAL, LOG_NOTICE, LOC + "Running as a slave backend.");
     }
 
-   if (ismaster)
+    if (ismaster)
     {
         EITCache::ClearChannelLocks();
     }
@@ -627,10 +656,13 @@ int run_backend(MythBackendCommandLineParser &cmdline)
         if (runsched)
         {
             be_sd_notify("STATUS=Creating scheduler");
-            sched = new Scheduler(true, &tvList);
+            sched = new Scheduler(true, &gTVList);
             int err = sched->GetError();
             if (err)
+            {
+                delete sched;
                 return err;
+            }
 
             if (cmdline.toBool("nosched"))
                 sched->DisableScheduling();
@@ -638,9 +670,9 @@ int run_backend(MythBackendCommandLineParser &cmdline)
 
         if (!cmdline.toBool("noautoexpire"))
         {
-            expirer = new AutoExpire(&tvList);
+            gExpirer = new AutoExpire(&gTVList);
             if (sched)
-                sched->SetExpirer(expirer);
+                sched->SetExpirer(gExpirer);
         }
         gCoreContext->SetScheduler(sched);
     }
@@ -648,33 +680,33 @@ int run_backend(MythBackendCommandLineParser &cmdline)
     if (!cmdline.toBool("nohousekeeper"))
     {
         be_sd_notify("STATUS=Creating housekeeper");
-        housekeeping = new HouseKeeper();
+        gHousekeeping = new HouseKeeper();
 
         if (ismaster)
         {
-            housekeeping->RegisterTask(new LogCleanerTask());
-            housekeeping->RegisterTask(new CleanupTask());
-            housekeeping->RegisterTask(new ThemeUpdateTask());
-            housekeeping->RegisterTask(new ArtworkTask());
-            housekeeping->RegisterTask(new MythFillDatabaseTask());
+            gHousekeeping->RegisterTask(new LogCleanerTask());
+            gHousekeeping->RegisterTask(new CleanupTask());
+            gHousekeeping->RegisterTask(new ThemeUpdateTask());
+            gHousekeeping->RegisterTask(new ArtworkTask());
+            gHousekeeping->RegisterTask(new MythFillDatabaseTask());
 
             // only run this task if MythMusic is installed and we have a new enough schema
             if (gCoreContext->GetNumSetting("MusicDBSchemaVer", 0) >= 1024)
-                housekeeping->RegisterTask(new RadioStreamUpdateTask());
+                gHousekeeping->RegisterTask(new RadioStreamUpdateTask());
         }
 
-        housekeeping->RegisterTask(new JobQueueRecoverTask());
+        gHousekeeping->RegisterTask(new JobQueueRecoverTask());
 #ifdef __linux__
  #ifdef CONFIG_BINDINGS_PYTHON
-        housekeeping->RegisterTask(new HardwareProfileTask());
+        gHousekeeping->RegisterTask(new HardwareProfileTask());
  #endif
 #endif
 
-        housekeeping->Start();
+        gHousekeeping->Start();
     }
 
     if (!cmdline.toBool("nojobqueue"))
-        jobqueue = new JobQueue(ismaster);
+        gJobQueue = new JobQueue(ismaster);
 
     // ----------------------------------------------------------------------
     //
@@ -686,6 +718,12 @@ int run_backend(MythBackendCommandLineParser &cmdline)
         g_pUPnp = new MediaServer();
 
         g_pUPnp->Init(ismaster, cmdline.toBool("noupnp"));
+    }
+
+    if (cmdline.toBool("dvbv3"))
+    {
+        LOG(VB_GENERAL, LOG_INFO, LOC + "Use legacy DVBv3 API");
+        gCoreContext->SetDVBv3(true);
     }
 
     // ----------------------------------------------------------------------
@@ -700,13 +738,13 @@ int run_backend(MythBackendCommandLineParser &cmdline)
         LOG(VB_GENERAL, LOG_INFO, "Main::Registering HttpStatus Extension");
         be_sd_notify("STATUS=Registering HttpStatus Extension");
 
-        httpStatus = new HttpStatus( &tvList, sched, expirer, ismaster );
+        httpStatus = new HttpStatus( &gTVList, sched, gExpirer, ismaster );
         pHS->RegisterExtension( httpStatus );
     }
 
     be_sd_notify("STATUS=Creating main server");
     mainServer = new MainServer(
-        ismaster, port, &tvList, sched, expirer);
+        ismaster, port, &gTVList, sched, gExpirer);
 
     int exitCode = mainServer->GetExitCode();
     if (exitCode != GENERIC_EXIT_OK)
@@ -729,6 +767,44 @@ int run_backend(MythBackendCommandLineParser &cmdline)
 
     // Provide systemd ready notification (for type=notify units)
     be_sd_notify("READY=1");
+
+    const HTTPServices be_services = {
+        { VIDEO_SERVICE, &MythHTTPService::Create<V2Video> },
+        { MYTH_SERVICE, &MythHTTPService::Create<V2Myth> },
+        { DVR_SERVICE, &MythHTTPService::Create<V2Dvr> },
+        { CONTENT_SERVICE, &MythHTTPService::Create<V2Content> },
+        { GUIDE_SERVICE, &MythHTTPService::Create<V2Guide> },
+        { CHANNEL_SERVICE, &MythHTTPService::Create<V2Channel> },
+        { STATUS_SERVICE, &MythHTTPService::Create<V2Status> },
+        { CAPTURE_SERVICE, &MythHTTPService::Create<V2Capture> },
+        { MUSIC_SERVICE, &MythHTTPService::Create<V2Music> },
+        { CONFIG_SERVICE, &MythHTTPService::Create<V2Config> },
+    };
+
+    MythHTTPInstance::Addservices(be_services);
+
+    // Send all unknown requests into the web app. make bookmarks and direct access work.
+    auto spa_index = [](auto && PH1) { return MythHTTPRewrite::RewriteToSPA(std::forward<decltype(PH1)>(PH1), "apps/backend/index.html"); };
+    MythHTTPInstance::AddErrorPageHandler({ "=404", spa_index });
+
+    // Serve components of the backend web app as if they were hosted at '/'
+    auto main_js = [](auto && PH1) { return MythHTTPRewrite::RewriteFile(std::forward<decltype(PH1)>(PH1), "apps/backend/main.js"); };
+    auto styles_css = [](auto && PH1) { return MythHTTPRewrite::RewriteFile(std::forward<decltype(PH1)>(PH1), "apps/backend/styles.css"); };
+    auto polyfills_js = [](auto && PH1) { return MythHTTPRewrite::RewriteFile(std::forward<decltype(PH1)>(PH1), "apps/backend/polyfills.js"); };
+    auto runtime_js = [](auto && PH1) { return MythHTTPRewrite::RewriteFile(std::forward<decltype(PH1)>(PH1), "apps/backend/runtime.js"); };
+
+    // Default index page
+    auto root = [](auto && PH1) { return MythHTTPRoot::RedirectRoot(std::forward<decltype(PH1)>(PH1), "apps/backend/index.html"); };
+
+    const HTTPHandlers be_handlers = {
+        { "/main.js", main_js },
+        { "/styles.css", styles_css },
+        { "/polyfills.js", polyfills_js },
+        { "/runtime.js", runtime_js },
+        { "/", root }
+    };
+
+    MythHTTPScopedInstance webserver(be_handlers);
 
     ///////////////////////////////
     ///////////////////////////////

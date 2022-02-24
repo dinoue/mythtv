@@ -1,6 +1,8 @@
 
 #include "idlescreen.h"
 
+#include <chrono>
+
 #include <QTimer>
 
 #include <mythcontext.h>
@@ -15,7 +17,7 @@
 
 #include <tvremoteutil.h>
 
-#define UPDATE_INTERVAL   15000
+static constexpr std::chrono::milliseconds UPDATE_INTERVAL { 15s };
 
 IdleScreen::IdleScreen(MythScreenStack *parent)
               :MythScreenType(parent, "standbymode"),
@@ -24,8 +26,8 @@ IdleScreen::IdleScreen(MythScreenStack *parent)
     gCoreContext->addListener(this);
     GetMythMainWindow()->EnterStandby();
 
-    connect(m_updateScreenTimer, SIGNAL(timeout()),
-            this, SLOT(UpdateScreen()));
+    connect(m_updateScreenTimer, &QTimer::timeout,
+            this, &IdleScreen::UpdateScreen);
     m_updateScreenTimer->start(UPDATE_INTERVAL);
 }
 
@@ -92,7 +94,7 @@ bool IdleScreen::CheckConnectionToServer(void)
     if (bRes)
         m_updateScreenTimer->start(UPDATE_INTERVAL);
     else
-        m_updateScreenTimer->start(5000);
+        m_updateScreenTimer->start(5s);
 
     return bRes;
 }
@@ -103,7 +105,7 @@ void IdleScreen::UpdateStatus(void)
 
     if (CheckConnectionToServer())
     {
-        if (m_secondsToShutdown >= 0)
+        if (m_secondsToShutdown >= 0s)
             state = "shuttingdown";
         else if (RemoteGetRecordingStatus())
             state = "recording";
@@ -123,10 +125,10 @@ void IdleScreen::UpdateStatus(void)
 
         if (statusText)
         {
-            if (m_secondsToShutdown >= 0)
+            if (m_secondsToShutdown >= 0s)
             {
                 QString status = tr("Backend will shutdown in %n "
-                                    "second(s).", "", m_secondsToShutdown);
+                                    "second(s).", "", m_secondsToShutdown.count());
 
                 statusText->SetText(status);
             }
@@ -250,13 +252,13 @@ void IdleScreen::customEvent(QEvent* event)
 
         if (me->Message().startsWith("RECONNECT_"))
         {
-            m_secondsToShutdown = -1;
+            m_secondsToShutdown = -1s;
             UpdateStatus();
         }
         else if (me->Message().startsWith("SHUTDOWN_COUNTDOWN"))
         {
             QString secs = me->Message().mid(19);
-            m_secondsToShutdown = secs.toInt();
+            m_secondsToShutdown = std::chrono::seconds(secs.toInt());
             UpdateStatus();
         }
         else if (me->Message().startsWith("SHUTDOWN_NOW"))
@@ -284,7 +286,7 @@ void IdleScreen::customEvent(QEvent* event)
 
             if (!PendingSchedUpdate())
             {
-                QTimer::singleShot(50, this, SLOT(UpdateScheduledList()));
+                QTimer::singleShot(50ms, this, &IdleScreen::UpdateScheduledList);
                 SetPendingSchedUpdate(true);
             }
         }

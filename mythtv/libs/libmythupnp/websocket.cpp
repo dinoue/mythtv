@@ -1,3 +1,4 @@
+#include <chrono>
 
 // Own header
 #include "websocket.h"
@@ -10,10 +11,10 @@
 #include "websocket_extensions/websocket_mythevent.h"
 
 // QT headers
-#include <QThread>
-#include <QTcpSocket>
-#include <QSslCipher>
 #include <QCryptographicHash>
+#include <QSslCipher>
+#include <QTcpSocket>
+#include <QThread>
 #include <QtCore>
 #include <QtGlobal>
 
@@ -45,11 +46,11 @@ WebSocketServer::~WebSocketServer()
     m_threadPool.Stop();
 }
 
-void WebSocketServer::newTcpConnection(qt_socket_fd_t socket)
+void WebSocketServer::newTcpConnection(qintptr socket)
 {
 
     PoolServerType type = kTCPServer;
-    auto *server = dynamic_cast<PrivTcpServer *>(QObject::sender());
+    auto *server = qobject_cast<PrivTcpServer *>(QObject::sender());
     if (server)
         type = server->GetServerType();
 
@@ -67,7 +68,7 @@ void WebSocketServer::newTcpConnection(qt_socket_fd_t socket)
 /////////////////////////////////////////////////////////////////////////////
 
 WebSocketWorkerThread::WebSocketWorkerThread(WebSocketServer& webSocketServer,
-                                 qt_socket_fd_t sock, PoolServerType type
+                                 qintptr sock, PoolServerType type
 #ifndef QT_NO_OPENSSL
                                  , const QSslConfiguration& sslConfig
 #endif
@@ -99,7 +100,7 @@ void WebSocketWorkerThread::run(void)
 /////////////////////////////////////////////////////////////////////////////
 
 WebSocketWorker::WebSocketWorker(WebSocketServer& webSocketServer,
-                                 qt_socket_fd_t sock, PoolServerType type
+                                 qintptr sock, PoolServerType type
 #ifndef QT_NO_OPENSSL
                                  , const QSslConfiguration& sslConfig
 #endif
@@ -188,7 +189,7 @@ void WebSocketWorker::SetupSocket()
         }
 
         if (pSslSocket)
-            m_socket = dynamic_cast<QTcpSocket *>(pSslSocket);
+            m_socket = pSslSocket;
         else
             return;
 #else
@@ -210,13 +211,13 @@ void WebSocketWorker::SetupSocket()
 
     m_socket->setSocketOption(QAbstractSocket::KeepAliveOption, QVariant(1));
 
-    connect(m_socket, SIGNAL(readyRead()), SLOT(doRead()));
-    connect(m_socket, SIGNAL(disconnected()), SLOT(CloseConnection()));
+    connect(m_socket, &QIODevice::readyRead, this, &WebSocketWorker::doRead);
+    connect(m_socket, &QAbstractSocket::disconnected, this, &WebSocketWorker::CloseConnection);
 
     // Setup heartbeat
-    m_heartBeat->setInterval(20000); // 20 second
+    m_heartBeat->setInterval(20s);
     m_heartBeat->setSingleShot(false);
-    connect(m_heartBeat, SIGNAL(timeout()), SLOT(SendHeartBeat()));
+    connect(m_heartBeat, &QTimer::timeout, this, &WebSocketWorker::SendHeartBeat);
 }
 
 void WebSocketWorker::CleanupSocket()
@@ -229,7 +230,7 @@ void WebSocketWorker::CleanupSocket()
                                    .arg(m_socket->error()));
     }
 
-    int writeTimeout = 5000; // 5 Seconds
+    std::chrono::milliseconds writeTimeout = 5s;
     // Make sure any data in the buffer is flushed before the socket is closed
     while (m_webSocketServer.IsRunning() &&
            m_socket->isValid() &&
@@ -250,13 +251,13 @@ void WebSocketWorker::CleanupSocket()
         // streaming. We should create a new server extension or adjust the
         // timeout according to the User-Agent, instead of increasing the
         // standard timeout. However we should ALWAYS have a timeout.
-        if (!m_socket->waitForBytesWritten(writeTimeout))
+        if (!m_socket->waitForBytesWritten(writeTimeout.count()))
         {
             LOG(VB_GENERAL, LOG_WARNING, QString("WebSocketWorker(%1): "
                                          "Timed out waiting to write bytes to "
                                          "the socket, waited %2 seconds")
                                             .arg(m_socketFD)
-                                            .arg(writeTimeout / 1000));
+                                            .arg(writeTimeout.count() / 1000));
             break;
         }
     }
@@ -326,7 +327,11 @@ bool WebSocketWorker::ProcessHandshake(QTcpSocket *socket)
     if (line.isEmpty())
         return false;
 
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList tokens = QString(line).split(' ', QString::SkipEmptyParts);
+#else
+    QStringList tokens = QString(line).split(' ', Qt::SkipEmptyParts);
+#endif
 
     if (tokens.length() != 3) // Anything but 3 is invalid - {METHOD} {HOST/PATH} {PROTOCOL}
     {
@@ -389,7 +394,7 @@ bool WebSocketWorker::ProcessHandshake(QTcpSocket *socket)
           ++it )
     {
         LOG(VB_HTTP, LOG_INFO, QString("(Request Header) %1: %2")
-                                        .arg(it.key()).arg(*it));
+                                        .arg(it.key(), *it));
     }
 
     if (!requestHeaders.contains("connection")) // RFC 6455 - 1.3. Opening Handshake
@@ -398,7 +403,11 @@ bool WebSocketWorker::ProcessHandshake(QTcpSocket *socket)
         return false;
     }
 
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList connectionValues = requestHeaders["connection"].split(',', QString::SkipEmptyParts);
+#else
+    QStringList connectionValues = requestHeaders["connection"].split(',', Qt::SkipEmptyParts);
+#endif
     if (!connectionValues.contains("Upgrade", Qt::CaseInsensitive)) // RFC 6455 - 1.3. Opening Handshake
     {
         LOG(VB_GENERAL, LOG_ERR, "WebSocketWorker::ProcessHandshake() - Invalid 'Connection' header");
@@ -456,9 +465,9 @@ bool WebSocketWorker::ProcessHandshake(QTcpSocket *socket)
     QString header("%1: %2\r\n");
     for (it = responseHeaders.begin(); it != responseHeaders.end(); ++it)
     {
-        socket->write(header.arg(it.key()).arg(*it).toLatin1().constData());
+        socket->write(header.arg(it.key(), *it).toLatin1());
         LOG(VB_HTTP, LOG_INFO, QString("(Response Header) %1: %2")
-                                        .arg(it.key()).arg(*it));
+                                        .arg(it.key(), *it));
     }
 
     socket->write("\r\n");
@@ -679,7 +688,7 @@ void WebSocketWorker::HandleDataFrame(const WebSocketFrame &frame)
                 // For Debugging and fuzz testing
                 if (m_fuzzTesting)
                     SendText(frame.m_payload);
-                foreach (auto & extension, m_extensions)
+                for (auto *const extension : qAsConst(m_extensions))
                 {
                     if (extension->HandleTextFrame(frame))
                         break;
@@ -688,7 +697,7 @@ void WebSocketWorker::HandleDataFrame(const WebSocketFrame &frame)
             case WebSocketFrame::kOpBinaryFrame :
                 if (m_fuzzTesting)
                     SendBinary(frame.m_payload);
-                foreach (auto & extension, m_extensions)
+                for (auto *const extension : qAsConst(m_extensions))
                 {
                     if (extension->HandleBinaryFrame(frame))
                         break;
@@ -752,7 +761,7 @@ void WebSocketWorker::HandleCloseConnection(const QByteArray &payload)
     }
 
     LOG(VB_HTTP, LOG_INFO, QString("WebSocketWorker - Received CLOSE frame - [%1] %2")
-                                    .arg(QString::number(code)).arg(closeMessage));
+                                    .arg(QString::number(code), closeMessage));
     SendClose((ErrorCode)code);
 }
 
@@ -922,10 +931,10 @@ void WebSocketWorker::RegisterExtension(WebSocketExtension* extension)
     if (!extension)
         return;
 
-    connect(extension, SIGNAL(SendTextMessage(const QString &)),
-            this, SLOT(SendText(const QString &)));
-    connect(extension, SIGNAL(SendBinaryMessage(const QByteArray &)),
-            this, SLOT(SendBinary(const QByteArray &)));
+    connect(extension, &WebSocketExtension::SendTextMessage,
+            this, qOverload<const QString &>(&WebSocketWorker::SendText));
+    connect(extension, &WebSocketExtension::SendBinaryMessage,
+            this, &WebSocketWorker::SendBinary);
 
     m_extensions.append(extension);
 }

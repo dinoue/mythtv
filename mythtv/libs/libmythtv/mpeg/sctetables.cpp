@@ -38,13 +38,13 @@ QString CarrierDefinitionSubtable::toStringXML(uint indent_level) const
         .arg(DescriptorsCount());
     str += QString("number_of_carriers=\"%1\"").arg(NumberOfCarriers());
     str += "\n" + indent_1;
-    str += QString("spacing_unit=\"%1\" spacing_unit_hz=\"%2\"")
+    str += QString(R"(spacing_unit="%1" spacing_unit_hz="%2")")
         .arg(SpacingUnit()).arg(SpacingUnitHz());
     str += "\n" + indent_1;
-    str += QString("frequency_spacing=\"%1\" frequency_spacing_hz=\"%2\"")
+    str += QString(R"(frequency_spacing="%1" frequency_spacing_hz="%2")")
         .arg(FrequencySpacing()).arg(FrequencySpacingHz());
     str += "\n" + indent_1;
-    str += QString("frequency_unit=\"%1\" frequency_unit_hz=\"%2\"")
+    str += QString(R"(frequency_unit="%1" frequency_unit_hz="%2")")
         .arg(FrequencyUnit()).arg(FrequencyUnitHz());
     str += "\n" + indent_1;
     str += QString("first_carrier_frequency=\"%1\" "
@@ -52,7 +52,7 @@ QString CarrierDefinitionSubtable::toStringXML(uint indent_level) const
         .arg(FirstCarrierFrequency())
         .arg(FirstCarrierFrequencyHz());
 
-    vector<const unsigned char*> desc =
+    std::vector<const unsigned char*> desc =
         MPEGDescriptor::Parse(Descriptors(), DescriptorsLength());
     for (auto & d : desc)
     {
@@ -139,17 +139,17 @@ QString ModulationModeSubtable::toStringXML(uint indent_level) const
         QString("<ModulationMode descriptors_count=\"%2\"")
         .arg(DescriptorsCount());
     str += "\n" + indent_1;
-    str += QString("transmission_system=\"%1\" transmission_system_desc=\"%2\"")
+    str += QString(R"(transmission_system="%1" transmission_system_desc="%2")")
         .arg(TransmissionSystem()).arg(TransmissionSystemString());
     str += "\n" + indent_1;
-    str += QString("inner_coding_mode=\"%1\" inner_coding_mode_desc=\"%2\"")
+    str += QString(R"(inner_coding_mode="%1" inner_coding_mode_desc="%2")")
         .arg(InnerCodingMode()).arg(InnerCodingModeString());
     str += "\n" + indent_1;
     str += QString("split_bitstream_mode=\"%1\" ")
         .arg(xml_bool_to_string(SplitBitstreamMode()));
     str += QString("symbol_rate=\"%1\"").arg(SymbolRate());
 
-    vector<const unsigned char*> desc =
+    std::vector<const unsigned char*> desc =
         MPEGDescriptor::Parse(Descriptors(), DescriptorsLength());
 
     if (desc.empty())
@@ -241,7 +241,7 @@ QString SCTENetworkInformationTable::toStringXML(uint indent_level) const
             str += ModulationMode(i).toStringXML(indent_level + 1) + "\n";
     }
 
-    vector<const unsigned char*> desc =
+    std::vector<const unsigned char*> desc =
         MPEGDescriptor::Parse(Descriptors(), DescriptorsLength());
     for (auto & d : desc)
     {
@@ -379,9 +379,9 @@ QString DefinedChannelsMapSubtable::toStringXML(uint indent_level) const
     {
         str += indent_1 + QString("<Range range_defined=\"%1\"%2 "
                                   "channels_count=\"%3\" />\n")
-            .arg(xml_bool_to_string(RangeDefined(i)))
-            .arg(RangeDefined(i) ? " " : "")
-            .arg(ChannelsCount(i));
+            .arg(xml_bool_to_string(RangeDefined(i)),
+                 RangeDefined(i) ? " " : "",
+                 QString::number(ChannelsCount(i)));
     }
 
     return str + indent_0 + "</DefinedChannelsMap>";
@@ -414,7 +414,7 @@ QString VirtualChannelMapSubtable::toStringXML(uint indent_level) const
     str += QString("splice=\"%1\" ")
         .arg(xml_bool_to_string(Splice()));
     str += "\n" + indent_1;
-    str += QString("activation_time=\"%1\" actication_time_desc=\"%2\"")
+    str += QString(R"(activation_time="%1" actication_time_desc="%2")")
         .arg(ActivationTimeRaw())
         .arg(ActivationTimeUTC().toString(Qt::ISODate));
     str += ">\n";
@@ -429,10 +429,10 @@ QString VirtualChannelMapSubtable::toStringXML(uint indent_level) const
             .arg(xml_bool_to_string(ApplicationVirtualChannel(i)));
         str += QString("path_select=\"%1\" ").arg(PathSelect(i));
         str += "\n" + indent_2;
-        str += QString("transport_type=\"%1\" transport_type_desc=\"%2\" ")
+        str += QString(R"(transport_type="%1" transport_type_desc="%2" )")
             .arg(TransportType(i)).arg(TransportTypeString(i));
         str += "\n" + indent_2;
-        str += QString("channel_type=\"%1\" channel_type_desc=\"%2\" ")
+        str += QString(R"(channel_type="%1" channel_type_desc="%2" )")
             .arg(ChannelType(i)).arg(ChannelTypeString(i));
         if (ApplicationVirtualChannel(i))
             str += QString("application_id=\"%1\" ").arg(ApplicationID(i));
@@ -448,9 +448,9 @@ QString VirtualChannelMapSubtable::toStringXML(uint indent_level) const
         else
         {
             str += QString("cds_reference=\"%1\" ").arg(CDSReference(i));
-            str += QString("scrampled=\"%1\" ").arg(Scrambled(i));
+            str += QString("scrampled=\"%1\" ").arg(static_cast<int>(Scrambled(i)));
             str += "\n" + indent_2;
-            str += QString("video_standard=\"%1\" video_standard_desc=\"%2\" ")
+            str += QString(R"(video_standard="%1" video_standard_desc="%2" )")
                 .arg(VideoStandard(i)).arg(VideoStandardString(i));
         }
         if (!DescriptorsIncluded())
@@ -463,7 +463,7 @@ QString VirtualChannelMapSubtable::toStringXML(uint indent_level) const
         str += QString("descriptors_count=\"%1\"").arg(DescriptorsCount(i));
         str += ">\n";
 
-        vector<const unsigned char*> desc =
+        std::vector<const unsigned char*> desc =
             MPEGDescriptor::Parse(Descriptors(i), DescriptorsLength(i));
         for (auto & d : desc)
         {
@@ -522,7 +522,7 @@ QString ShortVirtualChannelTable::toStringXML(uint indent_level) const
         QString("<ShortVirtualChannelSection vct_id=\"%1\" ").arg(ID());
     str += QString("transmission_medium=\"%1\" ").arg(TransmissionMedium());
     str += "\n" + indent_1;
-    str += QString("table_subtype=\"%1\" table_subtype_desc=\"%2\"")
+    str += QString(R"(table_subtype="%1" table_subtype_desc="%2")")
         .arg(TableSubtype()).arg(TableSubtypeString());
     str += "\n" + indent_1 + PSIPTable::XMLValues(indent_level + 1) + ">\n";
 
@@ -533,7 +533,7 @@ QString ShortVirtualChannelTable::toStringXML(uint indent_level) const
     else if (kInverseChannelMap == TableSubtype())
         str += InverseChannelMap().toStringXML(indent_level + 1) + "\n";
 
-    vector<const unsigned char*> desc =
+    std::vector<const unsigned char*> desc =
         MPEGDescriptor::Parse(Descriptors(), DescriptorsLength());
     for (auto & d : desc)
     {
@@ -563,15 +563,15 @@ QString SCTESystemTimeTable::toStringXML(uint indent_level) const
         QString("<SCTESystemTimeSection system_time=\"%1\" "
                 "gps_utc_offset=\"%2\"\n%3utc_time_desc=\"%4\" psip=\"scte\"")
         .arg(SystemTimeRaw()).arg(GPSUTCOffset())
-        .arg(indent_1)
-        .arg(SystemTimeUTC().toString(Qt::ISODate));
+        .arg(indent_1,
+             SystemTimeUTC().toString(Qt::ISODate));
 
     if (!DescriptorsLength())
         return str + " />";
 
     str += ">\n";
 
-    vector<const unsigned char*> desc =
+    std::vector<const unsigned char*> desc =
         MPEGDescriptor::Parse(Descriptors(), DescriptorsLength());
     for (auto & d : desc)
     {

@@ -6,12 +6,12 @@
 //
 // Copyright (c) 2007 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __SSDPCLIENT_H__
-#define __SSDPCLIENT_H__
+#ifndef SSDPCLIENT_H
+#define SSDPCLIENT_H
 
 // Qt headers
 #include <QObject>
@@ -45,7 +45,7 @@ class UPNP_PUBLIC SSDPCacheEntries : public ReferenceCounter
         { QMutexLocker locker(&m_mutex); return m_mapEntries.size(); }
     void Insert(const QString &sUSN, DeviceLocation *pEntry);
     void Remove(const QString &sUSN);
-    uint RemoveStale(const TaskTime &ttNow);
+    uint RemoveStale(TaskTime ttNow);
 
     DeviceLocation *Find(const QString &sUSN);
 
@@ -101,7 +101,7 @@ class UPNP_PUBLIC SSDPCache : public QObject,
     private:
 
         // ------------------------------------------------------------------
-        // Private so the singleton pattern can be inforced.
+        // Private so the singleton pattern can be enforced.
         // ------------------------------------------------------------------
 
         SSDPCache();
@@ -124,7 +124,7 @@ class UPNP_PUBLIC SSDPCache : public QObject,
         void Add        ( const QString &sURI,
                           const QString &sUSN,
                           const QString &sLocation,
-                          long           sExpiresInSecs );
+                          std::chrono::seconds sExpiresInSecs );
 
         void Remove     ( const QString &sURI, const QString &sUSN );
         int  RemoveStale( );
@@ -139,4 +139,4 @@ class UPNP_PUBLIC SSDPCache : public QObject,
         DeviceLocation   *Find( const QString &sURI, const QString &sUSN );
 };
 
-#endif
+#endif // SSDPCLIENT_H

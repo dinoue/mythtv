@@ -27,8 +27,8 @@
  *
  */
 
-#ifndef _PANE_SINGLE_H_
-#define _PANE_SINGLE_H_
+#ifndef PANE_SINGLE_H
+#define PANE_SINGLE_H
 
 // MythTV headers
 #include "channelscanmiscsettings.h"
@@ -38,32 +38,32 @@ class PaneSingle : public GroupSetting
 {
   public:
     PaneSingle(const QString &target, StandardSetting *setting) :
-        m_transport_setting(new MultiplexSetting()),
-        m_ignore_signal_timeout(new IgnoreSignalTimeout()),
-        m_follow_nit(new FollowNITSetting())
+        m_transportSetting(new MultiplexSetting()),
+        m_ignoreSignalTimeout(new IgnoreSignalTimeout()),
+        m_followNit(new FollowNITSetting())
     {
         setVisible(false);
         setting->addTargetedChildren(target,
                                      {this,
-                                      m_transport_setting,
-                                      m_ignore_signal_timeout,
-                                      m_follow_nit});
+                                      m_transportSetting,
+                                      m_ignoreSignalTimeout,
+                                      m_followNit});
     }
 
     int  GetMultiplex(void) const
-        { return m_transport_setting->getValue().toInt(); }
+        { return m_transportSetting->getValue().toInt(); }
     bool ignoreSignalTimeout(void) const
-        { return m_ignore_signal_timeout->getValue().toInt(); }
+        { return m_ignoreSignalTimeout->getValue().toInt() != 0; }
     bool GetFollowNIT(void) const
-        { return m_follow_nit->getValue().toInt(); }
+        { return m_followNit->getValue().toInt() != 0; }
 
     void SetSourceID(uint sourceid)
-        { m_transport_setting->SetSourceID(sourceid); }
+        { m_transportSetting->SetSourceID(sourceid); }
 
   protected:
-    MultiplexSetting    *m_transport_setting     {nullptr};
-    IgnoreSignalTimeout *m_ignore_signal_timeout {nullptr};
-    FollowNITSetting    *m_follow_nit            {nullptr};
+    MultiplexSetting    *m_transportSetting      {nullptr};
+    IgnoreSignalTimeout *m_ignoreSignalTimeout   {nullptr};
+    FollowNITSetting    *m_followNit             {nullptr};
 };
 
-#endif // _PANE_SINGLE_H_
+#endif // PANE_SINGLE_H

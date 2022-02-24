@@ -6,9 +6,10 @@
  * Licensed under the GPL v2 or a later version at your choosing.
  */
 
-#ifndef _AUDIO_OUTPUT_SETTINGS_H_
-#define _AUDIO_OUTPUT_SETTINGS_H_
+#ifndef AUDIO_OUTPUT_SETTINGS_H
+#define AUDIO_OUTPUT_SETTINGS_H
 
+#include <array>
 #include <vector>
 
 #include "mythexp.h"
@@ -42,11 +43,8 @@ enum DigitalFeature {
     FEATURE_AAC    = 1 << 6,
 };
 
-static const int srs[] = { 5512, 8000,  11025, 16000, 22050, 32000,  44100,
-                           48000, 88200, 96000, 176400, 192000 };
-
-static const AudioFormat fmts[] = { FORMAT_U8,  FORMAT_S16, FORMAT_S24LSB,
-                                    FORMAT_S24, FORMAT_S32, FORMAT_FLT };
+using rate_array = std::array<const int,12>;
+using format_array = std::array<const AudioFormat,6>;
 
 class MPUBLIC AudioOutputSettings
 {
@@ -77,7 +75,7 @@ class MPUBLIC AudioOutputSettings
         int  BestSupportedChannels();
 
         void setPassthrough(int val)    { m_passthrough = val; };
-        int  canPassthrough()           { return m_passthrough; };
+        int  canPassthrough() const     { return m_passthrough; };
             /**
              * return DigitalFeature mask.
              * possible values are:
@@ -88,32 +86,32 @@ class MPUBLIC AudioOutputSettings
              * - FEATURE_TRUEHD
              * - FEATURE_DTSHD
              */
-        bool canFeature(DigitalFeature arg)
+        bool canFeature(DigitalFeature arg) const
         { return (m_features & arg) != 0U; };
-        bool canFeature(unsigned int arg)
+        bool canFeature(unsigned int arg) const
         { return (m_features & arg) != 0U; };
 
             /**
              * return true if device can or may support AC3
              * (deprecated, see canFeature())
              */
-        bool canAC3()                   { return canFeature(FEATURE_AC3); };
+        bool canAC3() const             { return canFeature(FEATURE_AC3); };
             /**
              * return true if device can or may support DTS
              * (deprecated, see canFeature())
              */
-        bool canDTS()                   { return canFeature(FEATURE_DTS); };
+        bool canDTS() const             { return canFeature(FEATURE_DTS); };
             /**
              * return true if device supports multichannels PCM
              * (deprecated, see canFeature())
              */
-        bool canLPCM()                  { return canFeature(FEATURE_LPCM); };
+        bool canLPCM() const            { return canFeature(FEATURE_LPCM); };
             /**
              * return true if class instance is marked invalid.
              * if true, you can not assume any of the other method returned
              * values are valid
              */
-        bool IsInvalid()                { return m_invalid; };
+        bool IsInvalid() const          { return m_invalid; };
 
             /**
              * set the provided digital feature
@@ -144,14 +142,14 @@ class MPUBLIC AudioOutputSettings
              * return the highest iec958 rate supported.
              * return 0 if no HD rate are supported
              */
-        int  GetMaxHDRate();
+        int  GetMaxHDRate() const;
 
             /**
              * Display in human readable form the digital features
              * supported by the output device
              */
         static QString FeaturesToString(DigitalFeature arg);
-        QString FeaturesToString(void)
+        QString FeaturesToString(void) const
         { return FeaturesToString((DigitalFeature)m_features); };
 
             /**
@@ -166,7 +164,7 @@ class MPUBLIC AudioOutputSettings
             /**
              * get the ELD flag
              */
-        bool hasELD();
+        bool hasELD() const;
         bool hasValidELD();
             /**
              * set ELD data
@@ -175,7 +173,7 @@ class MPUBLIC AudioOutputSettings
             /**
              * retrieve ELD data
              */
-        ELD &getELD(void)             { return m_eld; };
+        eld &getELD(void)             { return m_eld; };
             /**
              * Reports best supported channel number, restricted to ELD range
              */
@@ -205,12 +203,16 @@ class MPUBLIC AudioOutputSettings
              * ELD is usually retrieved from EDID CEA-861-E extension.
              */
         bool         m_hasEld      {false};
-        ELD          m_eld;
+        eld          m_eld;
 
-        std::vector<int> m_sr, m_rates, m_channels;
-        std::vector<AudioFormat> m_sf, m_formats;
-        std::vector<int>::iterator m_srIt;
-        std::vector<AudioFormat>::iterator m_sfIt;
+        std::vector<int>          m_rates;
+        std::vector<int>          m_channels;
+        std::vector<AudioFormat>  m_formats;
+        rate_array::iterator      m_srIt { };
+        format_array::iterator    m_sfIt { };
+
+        static const rate_array   kStdRates;
+        static const format_array kStdFormats;
 };
 
-#endif // _AUDIO_OUTPUT_SETTINGS_H_
+#endif // AUDIO_OUTPUT_SETTINGS_H

@@ -6,7 +6,7 @@
 //
 // Copyright (c) 2010 Robert McNamara <rmcnamara@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -41,7 +41,7 @@
 class SERVICE_PUBLIC ChannelServices : public Service
 {
     Q_OBJECT
-    Q_CLASSINFO( "version"    , "1.9" );
+    Q_CLASSINFO( "version"    , "1.10" );
     Q_CLASSINFO( "AddDBChannel_Method",              "POST" )
     Q_CLASSINFO( "UpdateDBChannel_Method",           "POST" )
     Q_CLASSINFO( "RemoveDBChannel_Method",           "POST" )
@@ -138,7 +138,8 @@ class SERVICE_PUBLIC ChannelServices : public Service
                                                                    int           NITId,
                                                                    uint          BouquetId,
                                                                    uint          RegionId,
-                                                                   uint          ScanFrequency ) = 0;
+                                                                   uint          ScanFrequency,
+                                                                   uint          LCNOffset ) = 0;
 
         virtual bool                      RemoveVideoSource      ( uint          SourceID ) = 0;
 
@@ -154,14 +155,15 @@ class SERVICE_PUBLIC ChannelServices : public Service
                                                                    int           NITId,
                                                                    uint          BouquetId,
                                                                    uint          RegionId,
-                                                                   uint          ScanFrequency ) = 0;
+                                                                   uint          ScanFrequency,
+                                                                   uint          LCNOffset ) = 0;
 
         virtual DTC::LineupList*          GetDDLineupList        ( const QString &Source,
                                                                    const QString &UserId,
                                                                    const QString &Password ) = 0;
 
-        virtual int                       FetchChannelsFromSource( const uint SourceId,
-                                                                   const uint CardId,
+        virtual int                       FetchChannelsFromSource( uint       SourceId,
+                                                                   uint       CardId,
                                                                    bool       WaitForFinish ) = 0;
 
         /* Multiplex Methods */

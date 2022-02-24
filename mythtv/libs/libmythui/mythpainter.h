@@ -17,6 +17,7 @@ class QColor;
 #include "mythuiexp.h"
 
 #include <list>
+#include <memory>
 
 #ifdef _MSC_VER
 #  include <cstdint>    // int64_t
@@ -28,6 +29,7 @@ class UIEffects;
 
 using LayoutVector = QVector<QTextLayout *>;
 using FormatVector = QVector<QTextLayout::FormatRange>;
+using ProcSource = std::shared_ptr<QByteArray>;
 
 class MUI_PUBLIC MythPainter : public QObject
 {
@@ -42,42 +44,43 @@ class MUI_PUBLIC MythPainter : public QObject
      *  DeleteImagePriv() is a pure virtual in this class. Instead
      *  children should call MythPainter::Teardown() for cleanup.
      */
-    virtual ~MythPainter() = default;
+    ~MythPainter() override = default;
 
     virtual QString GetName(void) = 0;
     virtual bool SupportsAnimation(void) = 0;
     virtual bool SupportsAlpha(void) = 0;
     virtual bool SupportsClipping(void) = 0;
     virtual void FreeResources(void) { }
-    virtual void Begin(QPaintDevice *parent) { m_parent = parent; }
-    virtual void End() { m_parent = nullptr; }
+    virtual void Begin(QPaintDevice* /*Parent*/) { }
+    virtual void End() { }
 
-    virtual void SetClipRect(const QRect &clipRect);
+    virtual void SetClipRect(QRect clipRect);
     virtual void SetClipRegion(const QRegion &clipRegion);
     virtual void Clear(QPaintDevice *device, const QRegion &region);
 
-    QPaintDevice *GetParent(void) { return m_parent; }
-
-    virtual void DrawImage(const QRect &dest, MythImage *im, const QRect &src,
-                           int alpha) = 0;
+    virtual void DrawImage(QRect dest, MythImage *im, QRect src, int alpha) = 0;
 
     void DrawImage(int x, int y, MythImage *im, int alpha);
-    void DrawImage(const QPoint &topLeft, MythImage *im, int alph);
+    void DrawImage(QPoint topLeft, MythImage *im, int alph);
+    virtual void DrawProcedural(QRect /*Area*/, int /*Alpha*/,
+                                const ProcSource& /*VertexSource*/,
+                                const ProcSource& /*FragmentSource*/,
+                                const QString& /*SourceHash*/) { }
 
-    virtual void DrawText(const QRect &r, const QString &msg, int flags,
+    virtual void DrawText(QRect r, const QString &msg, int flags,
                           const MythFontProperties &font, int alpha,
-                          const QRect &boundRect);
-    virtual void DrawTextLayout(const QRect &canvasRect,
+                          QRect boundRect);
+    virtual void DrawTextLayout(QRect canvasRect,
                                 const LayoutVector & layouts,
                                 const FormatVector & formats,
                                 const MythFontProperties &font, int alpha,
-                                const QRect &destRect);
-    virtual void DrawRect(const QRect &area, const QBrush &fillBrush,
+                                QRect destRect);
+    virtual void DrawRect(QRect area, const QBrush &fillBrush,
                           const QPen &linePen, int alpha);
-    virtual void DrawRoundRect(const QRect &area, int cornerRadius,
+    virtual void DrawRoundRect(QRect area, int cornerRadius,
                                const QBrush &fillBrush, const QPen &linePen,
                                int alpha);
-    virtual void DrawEllipse(const QRect &area, const QBrush &fillBrush,
+    virtual void DrawEllipse(QRect area, const QBrush &fillBrush,
                              const QPen &linePen, int alpha);
 
     virtual void PushTransformation(const UIEffects &zoom, QPointF center = QPointF());
@@ -95,24 +98,24 @@ class MUI_PUBLIC MythPainter : public QObject
         m_showNames = showNames;
     }
 
-    bool ShowBorders(void) { return m_showBorders; }
-    bool ShowTypeNames(void) { return m_showNames; }
+    bool ShowBorders(void) const { return m_showBorders; }
+    bool ShowTypeNames(void) const { return m_showNames; }
 
     void SetMaximumCacheSizes(int hardware, int software);
 
   protected:
     static void DrawTextPriv(MythImage *im, const QString &msg, int flags,
-                             const QRect &r, const MythFontProperties &font);
-    static void DrawRectPriv(MythImage *im, const QRect &area, int radius, int ellipse,
+                             QRect r, const MythFontProperties &font);
+    static void DrawRectPriv(MythImage *im, QRect area, int radius, int ellipse,
                              const QBrush &fillBrush, const QPen &linePen);
 
-    MythImage *GetImageFromString(const QString &msg, int flags, const QRect &r,
+    MythImage *GetImageFromString(const QString &msg, int flags, QRect r,
                                   const MythFontProperties &font);
     MythImage *GetImageFromTextLayout(const LayoutVector & layouts,
                                       const FormatVector & formats,
                                       const MythFontProperties &font,
                                       QRect &canvas, QRect &dest);
-    MythImage *GetImageFromRect(const QRect &area, int radius, int ellipse,
+    MythImage *GetImageFromRect(QRect area, int radius, int ellipse,
                                 const QBrush &fillBrush,
                                 const QPen &linePen);
 
@@ -127,13 +130,14 @@ class MUI_PUBLIC MythPainter : public QObject
 
     void CheckFormatImage(MythImage *im);
 
-    QPaintDevice *m_parent      {nullptr};
-    int m_hardwareCacheSize     {0};
-    int m_maxHardwareCacheSize  {0};
+    float m_frameTime { 0 };
+
+    int m_hardwareCacheSize     { 0 };
+    int m_maxHardwareCacheSize  { 0 };
 
   private:
     int64_t m_softwareCacheSize {0};
-    int64_t m_maxSoftwareCacheSize {1024 * 1024 * 48};
+    int64_t m_maxSoftwareCacheSize {48LL * 1024 * 1024};
 
     QMutex           m_allocationLock;
     QSet<MythImage*> m_allocatedImages;

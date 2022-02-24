@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2017 Paul Harrison <pharrison@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -41,16 +41,16 @@ class SERVICE_PUBLIC MusicMetadataInfoList : public QObject
     Q_PROPERTY( QString      Version        READ Version         WRITE setVersion        )
     Q_PROPERTY( QString      ProtoVer       READ ProtoVer        WRITE setProtoVer       )
 
-    Q_PROPERTY( QVariantList MusicMetadataInfos READ MusicMetadataInfos DESIGNABLE true )
+    Q_PROPERTY( QVariantList MusicMetadataInfos READ MusicMetadataInfos )
 
     PROPERTYIMP       ( int         , StartIndex      )
     PROPERTYIMP       ( int         , Count           )
     PROPERTYIMP       ( int         , CurrentPage     )
     PROPERTYIMP       ( int         , TotalPages      )
     PROPERTYIMP       ( int         , TotalAvailable  )
-    PROPERTYIMP       ( QDateTime   , AsOf            )
-    PROPERTYIMP       ( QString     , Version         )
-    PROPERTYIMP       ( QString     , ProtoVer        )
+    PROPERTYIMP_REF   ( QDateTime   , AsOf            )
+    PROPERTYIMP_REF   ( QString     , Version         )
+    PROPERTYIMP_REF   ( QString     , ProtoVer        )
 
     PROPERTYIMP_RO_REF( QVariantList, MusicMetadataInfos )
 
@@ -85,7 +85,7 @@ class SERVICE_PUBLIC MusicMetadataInfoList : public QObject
             // We must make sure the object added to the QVariantList has
             // a parent of 'this'
 
-            MusicMetadataInfo *pObject = new MusicMetadataInfo( this );
+            auto *pObject = new MusicMetadataInfo( this );
             m_MusicMetadataInfos.append( QVariant::fromValue<QObject *>( pObject ));
 
             return pObject;

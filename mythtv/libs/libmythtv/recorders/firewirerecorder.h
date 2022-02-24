@@ -4,8 +4,8 @@
  *  Distributed as part of MythTV under GPL v2 and later.
  */
 
-#ifndef _FIREWIRERECORDER_H_
-#define _FIREWIRERECORDER_H_
+#ifndef FIREWIRERECORDER_H
+#define FIREWIRERECORDER_H
 
 // MythTV headers
 #include "dtvrecorder.h"
@@ -40,7 +40,7 @@ class FirewireRecorder :
     void StopStreaming(void);
 
     void run(void) override; // RecorderBase
-    bool PauseAndWait(int timeout = 100) override; // RecorderBase
+    bool PauseAndWait(std::chrono::milliseconds timeout = 100ms) override; // RecorderBase
 
     // Implements TSDataListener
     void AddData(const unsigned char *data, uint len) override; // TSDataListener
@@ -60,7 +60,7 @@ class FirewireRecorder :
   private:
     FirewireChannel       *m_channel {nullptr};
     bool                   m_isopen  {false};
-    vector<unsigned char>  m_buffer;
+    std::vector<unsigned char>  m_buffer;
 };
 
-#endif //  _FIREWIRERECORDER_H_
+#endif // FIREWIRERECORDER_H

@@ -23,7 +23,6 @@
 #include <algorithm>
 #include <deque>                        // for _Deque_iterator, operator-, etc
 #include <iterator>                     // for reverse_iterator
-using namespace std;
 
 // QT
 #include <QDateTime>
@@ -139,8 +138,8 @@ void PrevRecordedList::Init(void)
             this, &PrevRecordedList::showListLoseFocus);
     connect(m_showList, &MythUIButtonList::TakingFocus,
             this, &PrevRecordedList::showListTakeFocus);
-    connect(m_showList, SIGNAL(itemClicked(MythUIButtonListItem*)),
-                this,  SLOT(ShowItemMenu()));
+    connect(m_showList, &MythUIButtonList::itemClicked,
+                this,  &PrevRecordedList::ShowItemMenu);
 
     UpdateTitleList();
     updateInfo();
@@ -273,7 +272,11 @@ bool PrevRecordedList::LoadDates(void)
         int month(query.value(1).toInt());
         program = new ProgramInfo();
         QDate startdate(year,month,1);
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
         QDateTime starttime(startdate);
+#else
+        QDateTime starttime = startdate.startOfDay();
+#endif
         program->SetRecordingStartTime(starttime);
         QString date = QString("%1/%2")
             .arg(year,4,10,QChar('0')).arg(month,2,10,QChar('0'));
@@ -307,7 +310,7 @@ void PrevRecordedList::UpdateShowList(void)
 }
 
 void PrevRecordedList::UpdateList(MythUIButtonList *bnList,
-    ProgramList *progData, bool isShows)
+    ProgramList *progData, bool isShows) const
 {
     bnList->Reset();
     for (auto *pg : *progData)
@@ -555,13 +558,13 @@ void PrevRecordedList::ShowMenu(void)
     ProgramInfo *pi = GetCurrentProgram();
     if (pi)
     {
-        menu->AddItem(tr("Edit Schedule"),   SLOT(EditScheduled()));
-        menu->AddItem(tr("Custom Edit"),     SLOT(EditCustom()));
-        menu->AddItem(tr("Program Details"), SLOT(ShowDetails()));
-        menu->AddItem(tr("Upcoming"), SLOT(ShowUpcoming()));
-        menu->AddItem(tr("Channel Search"), SLOT(ShowChannelSearch()));
+        menu->AddItem(tr("Edit Schedule"),   qOverload<>(&PrevRecordedList::EditScheduled));
+        menu->AddItem(tr("Custom Edit"),     &PrevRecordedList::EditCustom);
+        menu->AddItem(tr("Program Details"), &PrevRecordedList::ShowDetails);
+        menu->AddItem(tr("Upcoming"),        qOverload<>(&PrevRecordedList::ShowUpcoming));
+        menu->AddItem(tr("Channel Search"),  &PrevRecordedList::ShowChannelSearch);
     }
-    menu->AddItem(tr("Program Guide"),   SLOT(ShowGuide()));
+    menu->AddItem(tr("Program Guide"),   &PrevRecordedList::ShowGuide);
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
     auto *menuPopup = new MythDialogBox(menu, popupStack, "menuPopup");
 
@@ -582,13 +585,13 @@ void PrevRecordedList::ShowItemMenu(void)
     if (pi)
     {
         if (pi->IsDuplicate())
-            menu->AddItem(tr("Allow this episode to re-record"),   SLOT(AllowRecord()));
+            menu->AddItem(tr("Allow this episode to re-record"), &PrevRecordedList::AllowRecord);
         else
-            menu->AddItem(tr("Never record this episode"), SLOT(PreventRecord()));
+            menu->AddItem(tr("Never record this episode"), &PrevRecordedList::PreventRecord);
         menu->AddItem(tr("Remove this episode from the list"),
-            SLOT(ShowDeleteOldEpisodeMenu()));
+            &PrevRecordedList::ShowDeleteOldEpisodeMenu);
         menu->AddItem(tr("Remove all episodes for this title"),
-            SLOT(ShowDeleteOldSeriesMenu()));
+            &PrevRecordedList::ShowDeleteOldSeriesMenu);
     }
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
     auto *menuPopup = new MythDialogBox(menu, popupStack, "menuPopup");
@@ -611,7 +614,7 @@ void PrevRecordedList::customEvent(QEvent *event)
         auto *dce = (DialogCompletionEvent*)(event);
 
         QString resultid   = dce->GetId();
-        QString resulttext = dce->GetResultText();
+//      QString resulttext = dce->GetResultText();
         int     buttonnum  = dce->GetResult();
 
         if (resultid == "sortmenu")
@@ -727,7 +730,7 @@ void PrevRecordedList::ShowDeleteOldEpisodeMenu(void)
 
     QString message = tr("Delete this episode of '%1' from the previously recorded history?").arg(pi->GetTitle());
 
-    ShowOkPopup(message, this, SLOT(DeleteOldEpisode(bool)), true);
+    ShowOkPopup(message, this, &PrevRecordedList::DeleteOldEpisode, true);
 }
 
 void PrevRecordedList::DeleteOldEpisode(bool ok)
@@ -765,7 +768,7 @@ void PrevRecordedList::ShowDeleteOldSeriesMenu(void)
 
     QString message = tr("Delete all episodes of '%1' from the previously recorded history?").arg(pi->GetTitle());
 
-    ShowOkPopup(message, this, SLOT(DeleteOldSeries(bool)), true);
+    ShowOkPopup(message, this, &PrevRecordedList::DeleteOldSeries, true);
 }
 
 void PrevRecordedList::DeleteOldSeries(bool ok)
@@ -777,8 +780,17 @@ void PrevRecordedList::DeleteOldSeries(bool ok)
 
     MSqlQuery query(MSqlQuery::InitCon());
     query.prepare("DELETE FROM oldrecorded "
-                  "WHERE title = :TITLE AND future = 0");
+                  "WHERE title = :TITLE "
+                  "      AND recstatus <> :PENDING "
+                  "      AND recstatus <> :TUNING "
+                  "      AND recstatus <> :RECORDING "
+                  "      AND recstatus <> :FAILING "
+                  "      AND future = 0");
     query.bindValue(":TITLE", title);
+    query.bindValue(":PENDING", RecStatus::Pending);
+    query.bindValue(":TUNING", RecStatus::Tuning);
+    query.bindValue(":RECORDING", RecStatus::Recording);
+    query.bindValue(":FAILING", RecStatus::Failing);
     if (!query.exec())
         MythDB::DBError("ProgLister::DeleteOldSeries -- delete", query);
 
@@ -793,7 +805,11 @@ void PrevRecordedList::DeleteOldSeries(bool ok)
     auto it = m_showData.begin();
     while (pos < (int)m_showData.size())
     {
-        if ((*it)->GetTitle() == title)
+        if ((*it)->GetTitle() == title
+            && (*it)->GetRecordingStatus() != RecStatus::Pending
+            && (*it)->GetRecordingStatus() != RecStatus::Tuning
+            && (*it)->GetRecordingStatus() != RecStatus::Recording
+            && (*it)->GetRecordingStatus() != RecStatus::Failing)
         {
             LOG(VB_GENERAL, LOG_INFO, QString("Deleting %1 at pos %2")
                 .arg(title).arg(pos));

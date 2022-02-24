@@ -1,10 +1,21 @@
-#include "bdringbuffer.h"
-#include "avformatdecoderbd.h"
-#include "mythbdplayer.h"
+// MythTV
+#include "tv_play.h"
+#include "Bluray/mythbdbuffer.h"
+#include "Bluray/mythbddecoder.h"
+#include "Bluray/mythbdplayer.h"
 
-#include <unistd.h> // for usleep()
+#include "mythdate.h"
 
-#define LOC     QString("BDPlayer: ")
+// Std
+#include <unistd.h>
+
+#define LOC QString("BDPlayer: ")
+
+MythBDPlayer::MythBDPlayer(MythMainWindow *MainWindow, TV *Tv, PlayerContext *Context, PlayerFlags Flags)
+  : MythPlayerUI(MainWindow, Tv, Context, Flags)
+{
+    connect(Tv, &TV::GoToMenu, this, &MythBDPlayer::GoToMenu);
+}
 
 bool MythBDPlayer::HasReachedEof(void) const
 {
@@ -19,17 +30,16 @@ void MythBDPlayer::PreProcessNormalFrame(void)
     DisplayMenu();
 }
 
-bool MythBDPlayer::GoToMenu(const QString& str)
+void MythBDPlayer::GoToMenu(const QString& Menu)
 {
-    if (m_playerCtx->m_buffer->BD() && m_videoOutput)
-    {
-        int64_t pts = 0;
-        VideoFrame *frame = m_videoOutput->GetLastShownFrame();
-        if (frame)
-            pts = (int64_t)(frame->timecode  * 90);
-        return m_playerCtx->m_buffer->BD()->GoToMenu(str, pts);
-    }
-    return false;
+    if (!(m_playerCtx->m_buffer->BD() && m_videoOutput))
+        return;
+
+    mpeg::chrono::pts pts = 0_pts;
+    const auto * frame = m_videoOutput->GetLastShownFrame();
+    if (frame)
+        pts = duration_cast<mpeg::chrono::pts>(frame->m_timecode);
+    m_playerCtx->m_buffer->BD()->GoToMenu(Menu, pts);
 }
 
 void MythBDPlayer::DisplayMenu(void)
@@ -37,22 +47,17 @@ void MythBDPlayer::DisplayMenu(void)
     if (!m_playerCtx->m_buffer->IsBD())
         return;
 
-    m_osdLock.lock();
-    BDOverlay *overlay = nullptr;
-    while (m_osd && (nullptr != (overlay = m_playerCtx->m_buffer->BD()->GetOverlay())))
-        m_osd->DisplayBDOverlay(overlay);
-    m_osdLock.unlock();
+    MythBDOverlay *overlay = nullptr;
+    while (nullptr != (overlay = m_playerCtx->m_buffer->BD()->GetOverlay()))
+        m_captionsOverlay.DisplayBDOverlay(overlay);
 }
 
 void MythBDPlayer::DisplayPauseFrame(void)
 {
-    if (m_playerCtx->m_buffer->IsBD() &&
-        m_playerCtx->m_buffer->BD()->IsInStillFrame())
-    {
-        SetScanType(kScan_Progressive);
-    }
+    if (m_playerCtx->m_buffer->IsBD() && m_playerCtx->m_buffer->BD()->IsInStillFrame())
+        SetScanType(kScan_Progressive, m_videoOutput, m_frameInterval);
     DisplayMenu();
-    MythPlayer::DisplayPauseFrame();
+    MythPlayerUI::DisplayPauseFrame();
 }
 
 void MythBDPlayer::VideoStart(void)
@@ -60,7 +65,7 @@ void MythBDPlayer::VideoStart(void)
     if (!m_initialBDState.isEmpty())
         m_playerCtx->m_buffer->BD()->RestoreBDStateSnapshot(m_initialBDState);
 
-    MythPlayer::VideoStart();
+    MythPlayerUI::VideoStart();
 }
 
 bool MythBDPlayer::VideoLoop(void)
@@ -74,13 +79,10 @@ bool MythBDPlayer::VideoLoop(void)
     int nbframes = m_videoOutput ? m_videoOutput->ValidVideoFrames() : 0;
 
     // completely drain the video buffers for certain situations
-    bool drain = m_playerCtx->m_buffer->BD()->BDWaitingForPlayer() &&
-                 (nbframes > 0);
-
-    if (drain)
+    if (m_playerCtx->m_buffer->BD()->BDWaitingForPlayer() && (nbframes > 0))
     {
         if (nbframes < 2 && m_videoOutput)
-            m_videoOutput->UpdatePauseFrame(m_dispTimecode);
+            m_videoOutput->UpdatePauseFrame(m_avSync.DisplayTimecode());
 
         // if we go below the pre-buffering limit, the player will pause
         // so do this 'manually'
@@ -100,7 +102,7 @@ bool MythBDPlayer::VideoLoop(void)
     {
         if (nbframes > 1 && !m_stillFrameShowing)
         {
-            m_videoOutput->UpdatePauseFrame(m_dispTimecode);
+            m_videoOutput->UpdatePauseFrame(m_avSync.DisplayTimecode());
             DisplayNormalFrame(false);
             return !IsErrored();
         }
@@ -118,9 +120,8 @@ bool MythBDPlayer::VideoLoop(void)
         // flag if we have no frame
         if (nbframes == 0)
         {
-            LOG(VB_PLAYBACK, LOG_WARNING, LOC +
-                    "Warning: In BD Still but no video frames in queue");
-            usleep(10000);
+            LOG(VB_PLAYBACK, LOG_WARNING, LOC + "Warning: In BD Still but no video frames in queue");
+            std::this_thread::sleep_for(10ms);
             return !IsErrored();
         }
 
@@ -138,15 +139,14 @@ bool MythBDPlayer::VideoLoop(void)
         m_stillFrameShowing = false;
     }
 
-    return MythPlayer::VideoLoop();
+    return MythPlayerUI::VideoLoop();
 }
 
-bool MythBDPlayer::JumpToFrame(uint64_t frame)
+bool MythBDPlayer::JumpToFrame(uint64_t Frame)
 {
-    if (frame == ~0x0ULL)
+    if (Frame == ~0x0ULL)
         return false;
-
-    return MythPlayer::JumpToFrame(frame);
+    return MythPlayerUI::JumpToFrame(Frame);
 }
 
 void MythBDPlayer::EventStart(void)
@@ -164,40 +164,36 @@ void MythBDPlayer::EventStart(void)
     }
     m_playerCtx->UnlockPlayingInfo(__FILE__, __LINE__);
 
-    MythPlayer::EventStart();
+    MythPlayerUI::EventStart();
 }
 
 int MythBDPlayer::GetNumChapters(void)
 {
     if (m_playerCtx->m_buffer->BD() && m_playerCtx->m_buffer->BD()->IsOpen())
-        return m_playerCtx->m_buffer->BD()->GetNumChapters();
+        return static_cast<int>(m_playerCtx->m_buffer->BD()->GetNumChapters());
     return -1;
 }
 
 int MythBDPlayer::GetCurrentChapter(void)
 {
     if (m_playerCtx->m_buffer->BD() && m_playerCtx->m_buffer->BD()->IsOpen())
-        return m_playerCtx->m_buffer->BD()->GetCurrentChapter() + 1;
+        return static_cast<int>(m_playerCtx->m_buffer->BD()->GetCurrentChapter() + 1);
     return -1;
 }
 
-int64_t MythBDPlayer::GetChapter(int chapter)
+int64_t MythBDPlayer::GetChapter(int Chapter)
 {
-    uint total = GetNumChapters();
-    if (!total)
+    if (GetNumChapters() < 1)
         return -1;
-
-    return (int64_t)m_playerCtx->m_buffer->BD()->GetChapterStartFrame(chapter-1);
+    auto chapter = static_cast<uint32_t>(Chapter - 1);
+    return static_cast<int64_t>(m_playerCtx->m_buffer->BD()->GetChapterStartFrame(chapter));
 }
 
-void MythBDPlayer::GetChapterTimes(QList<long long> &times)
+void MythBDPlayer::GetChapterTimes(QList<std::chrono::seconds> &ChapterTimes)
 {
-    uint total = GetNumChapters();
-    if (!total)
-        return;
-
+    uint total = static_cast<uint>(GetNumChapters());
     for (uint i = 0; i < total; i++)
-        times.push_back(m_playerCtx->m_buffer->BD()->GetChapterStartTime(i));
+        ChapterTimes.push_back(m_playerCtx->m_buffer->BD()->GetChapterStartTime(i));
 }
 
 int MythBDPlayer::GetNumTitles(void) const
@@ -206,14 +202,14 @@ int MythBDPlayer::GetNumTitles(void) const
         return 0;
 
     if (m_playerCtx->m_buffer->BD() && m_playerCtx->m_buffer->BD()->IsOpen())
-        return m_playerCtx->m_buffer->BD()->GetNumTitles();
+        return static_cast<int>(m_playerCtx->m_buffer->BD()->GetNumTitles());
     return 0;
 }
 
 int MythBDPlayer::GetNumAngles(void) const
 {
     if (m_playerCtx->m_buffer->BD() && m_playerCtx->m_buffer->BD()->IsOpen())
-        return m_playerCtx->m_buffer->BD()->GetNumAngles();
+        return static_cast<int>(m_playerCtx->m_buffer->BD()->GetNumAngles());
     return 0;
 }
 
@@ -227,60 +223,52 @@ int MythBDPlayer::GetCurrentTitle(void) const
 int MythBDPlayer::GetCurrentAngle(void) const
 {
     if (m_playerCtx->m_buffer->BD() && m_playerCtx->m_buffer->BD()->IsOpen())
-        return m_playerCtx->m_buffer->BD()->GetCurrentAngle();
+        return static_cast<int>(m_playerCtx->m_buffer->BD()->GetCurrentAngle());
     return -1;
 }
 
-int MythBDPlayer::GetTitleDuration(int title) const
+std::chrono::seconds MythBDPlayer::GetTitleDuration(int Title) const
 {
     if (m_playerCtx->m_buffer->BD() && m_playerCtx->m_buffer->BD()->IsOpen() &&
-        title >= 0 && title < GetNumTitles())
+        Title >= 0 && Title < GetNumTitles())
     {
-        return m_playerCtx->m_buffer->BD()->GetTitleDuration(title);
+        return m_playerCtx->m_buffer->BD()->GetTitleDuration(Title);
     }
-    return 0;
+    return 0s;
 }
 
-QString MythBDPlayer::GetTitleName(int title) const
+QString MythBDPlayer::GetTitleName(int Title) const
 {
-    if (title >= 0 && title < GetNumTitles())
+    if (Title >= 0 && Title < GetNumTitles())
     {
-        int secs = GetTitleDuration(title);
         // BD doesn't provide title names, so show title number and duration
-        int hours = secs / 60 / 60;
-        int minutes = (secs / 60) - (hours * 60);
-        secs = secs % 60;
-        QString name = QString("%1 (%2:%3:%4)").arg(title+1)
-                .arg(hours, 2, 10, QChar(48)).arg(minutes, 2, 10, QChar(48))
-                .arg(secs, 2, 10, QChar(48));
+        QString timestr = MythDate::formatTime(GetTitleDuration(Title), "HH:mm:ss");
+        QString name = QString("%1 (%2)").arg(Title+1).arg(timestr);
         return name;
     }
     return QString();
 }
 
-QString MythBDPlayer::GetAngleName(int angle) const
+QString MythBDPlayer::GetAngleName(int Angle) const
 {
-    if (angle >= 1 && angle <= GetNumAngles())
-    {
-        QString name = tr("Angle %1").arg(angle);
-        return name;
-    }
+    if (Angle >= 1 && Angle <= GetNumAngles())
+        return tr("Angle %1").arg(Angle);
     return QString();
 }
 
-bool MythBDPlayer::SwitchTitle(int title)
+bool MythBDPlayer::SwitchTitle(int Title)
 {
     if (m_playerCtx->m_buffer->BD()->IsHDMVNavigation())
         return false;
 
-    uint total = GetNumTitles();
-    if (!total || title == GetCurrentTitle() || title >= (int)total)
+    int total = GetNumTitles();
+    if ((total < 1) || Title == GetCurrentTitle() || (Title >= total))
         return false;
 
     Pause();
 
     bool ok = false;
-    if (m_playerCtx->m_buffer->BD()->SwitchTitle(title))
+    if (m_playerCtx->m_buffer->BD()->SwitchTitle(static_cast<uint32_t>(Title)))
     {
         ResetCaptions();
         if (OpenFile() != 0)
@@ -303,9 +291,9 @@ bool MythBDPlayer::NextTitle(void)
     if (m_playerCtx->m_buffer->BD()->IsHDMVNavigation())
         return false;
 
-    uint total = GetNumTitles();
+    int total = GetNumTitles();
     int next = GetCurrentTitle() + 1;
-    if (!total || next >= (int)total)
+    if ((total < 1) || (next >= total))
         return false;
 
     return SwitchTitle(next);
@@ -316,7 +304,7 @@ bool MythBDPlayer::PrevTitle(void)
     if (m_playerCtx->m_buffer->BD()->IsHDMVNavigation())
         return false;
 
-    uint total = GetNumTitles();
+    uint total = static_cast<uint>(GetNumTitles());
     int prev = GetCurrentTitle() - 1;
     if (!total || prev < 0)
         return false;
@@ -324,65 +312,56 @@ bool MythBDPlayer::PrevTitle(void)
     return SwitchTitle(prev);
 }
 
-bool MythBDPlayer::SwitchAngle(int angle)
+bool MythBDPlayer::SwitchAngle(int Angle)
 {
-    uint total = GetNumAngles();
-    if (!total || angle == GetCurrentAngle())
+    int total = GetNumAngles();
+    if (!total || Angle == GetCurrentAngle())
         return false;
 
-    if (angle >= (int)total)
-        angle = 0;
+    if (Angle >= total)
+        Angle = 0;
 
-    return m_playerCtx->m_buffer->BD()->SwitchAngle(angle);
+    return m_playerCtx->m_buffer->BD()->SwitchAngle(static_cast<uint>(Angle));
 }
 
 bool MythBDPlayer::NextAngle(void)
 {
-    uint total = GetNumAngles();
+    int total = GetNumAngles();
     int next = GetCurrentAngle() + 1;
-    if (!total)
+    if (total < 1)
         return false;
-
-    if (next >= (int)total)
+    if (next >= total)
         next = 0;
-
     return SwitchAngle(next);
 }
 
 bool MythBDPlayer::PrevAngle(void)
 {
-    uint total = GetNumAngles();
+    int total = GetNumAngles();
     int prev = GetCurrentAngle() - 1;
-    if (!total || total == 1)
+    if ((total < 1) || total == 1)
         return false;
-
     if (prev < 0)
         prev = total;
-
     return SwitchAngle(prev);
 }
 
-void MythBDPlayer::SetBookmark(bool clear)
+void MythBDPlayer::SetBookmark(bool Clear)
 {
-    QStringList fields;
-    QString name;
-    QString serialid;
-    QString bdstate;
-
-    if (!m_playerCtx->m_buffer->IsInMenu() &&
-        (m_playerCtx->m_buffer->IsBookmarkAllowed() || clear))
+    if (!m_playerCtx->m_buffer->IsInMenu() && (m_playerCtx->m_buffer->IsBookmarkAllowed() || Clear))
     {
+        QString name;
+        QString serialid;
         if (!m_playerCtx->m_buffer->BD()->GetNameAndSerialNum(name, serialid))
         {
-            LOG(VB_GENERAL, LOG_ERR, LOC +
-                "BD has no name and serial number. Cannot set bookmark.");
+            LOG(VB_GENERAL, LOG_ERR, LOC + "BD has no name and serial number. Cannot set bookmark.");
             return;
         }
 
-        if (!clear && !m_playerCtx->m_buffer->BD()->GetBDStateSnapshot(bdstate))
+        QString bdstate;
+        if (!Clear && !m_playerCtx->m_buffer->BD()->GetBDStateSnapshot(bdstate))
         {
-            LOG(VB_GENERAL, LOG_ERR, LOC +
-                "Unable to retrieve BD state. Cannot set bookmark.");
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Unable to retrieve BD state. Cannot set bookmark.");
             return;
         }
 
@@ -391,19 +370,21 @@ void MythBDPlayer::SetBookmark(bool clear)
         m_playerCtx->LockPlayingInfo(__FILE__, __LINE__);
         if (m_playerCtx->m_playingInfo)
         {
+            QStringList fields;
             fields += serialid;
             fields += name;
 
-            if (!clear)
+            if (!Clear)
             {
                 LOG(VB_PLAYBACK, LOG_INFO, LOC + "Set bookmark");
                 fields += bdstate;
             }
             else
+            {
                 LOG(VB_PLAYBACK, LOG_INFO, LOC + "Clear bookmark");
+            }
 
             ProgramInfo::SaveBDBookmark(fields);
-
         }
         m_playerCtx->UnlockPlayingInfo(__FILE__, __LINE__);
     }
@@ -411,21 +392,20 @@ void MythBDPlayer::SetBookmark(bool clear)
 
 uint64_t MythBDPlayer::GetBookmark(void)
 {
-    if (gCoreContext->IsDatabaseIgnored() || !m_playerCtx->m_buffer->IsBD())
-        return 0;
-
-    QString name;
-    QString serialid;
     uint64_t frames = 0;
+    if (gCoreContext->IsDatabaseIgnored() || !m_playerCtx->m_buffer->IsBD())
+        return frames;
 
     m_playerCtx->LockPlayingInfo(__FILE__, __LINE__);
 
     if (m_playerCtx->m_playingInfo)
     {
+        QString name;
+        QString serialid;
         if (!m_playerCtx->m_buffer->BD()->GetNameAndSerialNum(name, serialid))
         {
             m_playerCtx->UnlockPlayingInfo(__FILE__, __LINE__);
-            return 0;
+            return frames;
         }
 
         QStringList bdbookmark = m_playerCtx->m_playingInfo->QueryBDBookmark(serialid);
@@ -439,15 +419,11 @@ uint64_t MythBDPlayer::GetBookmark(void)
     }
 
     m_playerCtx->UnlockPlayingInfo(__FILE__, __LINE__);
-    return frames;;
+    return frames;
 }
 
-void MythBDPlayer::CreateDecoder(char *testbuf, int testreadsize)
+void MythBDPlayer::CreateDecoder(TestBufferVec & TestBuffer)
 {
-    if (AvFormatDecoderBD::CanHandle(testbuf, m_playerCtx->m_buffer->GetFilename(),
-                                     testreadsize))
-    {
-        SetDecoder(new AvFormatDecoderBD(this, *m_playerCtx->m_playingInfo,
-                                         m_playerFlags));
-    }
+    if (MythBDDecoder::CanHandle(TestBuffer, m_playerCtx->m_buffer->GetFilename()))
+        SetDecoder(new MythBDDecoder(this, *m_playerCtx->m_playingInfo, m_playerFlags));
 }

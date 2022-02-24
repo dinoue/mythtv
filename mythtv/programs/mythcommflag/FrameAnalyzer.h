@@ -4,12 +4,14 @@
  * Provide a generic interface for plugging in video frame analysis algorithms.
  */
 
-#ifndef __FRAMEANALYZER_H__
-#define __FRAMEANALYZER_H__
+#ifndef FRAMEANALYZER_H
+#define FRAMEANALYZER_H
 
 /* Base class for commercial flagging video frame analyzers. */
 
 #include <climits>
+#include <memory>
+
 #include <QMap>
 #include "mythframe.h"
 
@@ -55,7 +57,7 @@ public:
      */
     static const long long kAnyFrame = LLONG_MAX;
     static const long long kNextFrame = -1;
-    virtual enum analyzeFrameResult analyzeFrame(const VideoFrame *frame,
+    virtual enum analyzeFrameResult analyzeFrame(const MythVideoFrame *frame,
             long long frameno, long long *pNextFrame /* [out] */) = 0;
 
     virtual int finished(long long nframes, bool final) {
@@ -96,6 +98,6 @@ FrameAnalyzer::FrameMap::const_iterator frameMapSearchBackwards(
 
 }; /* namespace */
 
-#endif  /* !__FRAMEANALYZER_H__ */
+#endif  /* !FRAMEANALYZER_H */
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */

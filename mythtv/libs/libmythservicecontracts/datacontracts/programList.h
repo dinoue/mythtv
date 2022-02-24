@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2010 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -41,14 +41,14 @@ class SERVICE_PUBLIC ProgramList : public QObject
     Q_PROPERTY( QString      Version        READ Version         WRITE setVersion        )
     Q_PROPERTY( QString      ProtoVer       READ ProtoVer        WRITE setProtoVer       )
 
-    Q_PROPERTY( QVariantList Programs     READ Programs DESIGNABLE true )
+    Q_PROPERTY( QVariantList Programs     READ Programs )
 
     PROPERTYIMP       ( int         , StartIndex      )
     PROPERTYIMP       ( int         , Count           )
     PROPERTYIMP       ( int         , TotalAvailable  )    
-    PROPERTYIMP       ( QDateTime   , AsOf            )
-    PROPERTYIMP       ( QString     , Version         )
-    PROPERTYIMP       ( QString     , ProtoVer        )
+    PROPERTYIMP_REF   ( QDateTime   , AsOf            )
+    PROPERTYIMP_REF   ( QString     , Version         )
+    PROPERTYIMP_REF   ( QString     , ProtoVer        )
 
     PROPERTYIMP_RO_REF( QVariantList, Programs      );
 

@@ -6,12 +6,12 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __UPNPTASKSEARCH_H__
-#define __UPNPTASKSEARCH_H__
+#ifndef UPNPTASKSEARCH_H
+#define UPNPTASKSEARCH_H
 
 // POSIX headers
 #include <sys/types.h>
@@ -43,7 +43,7 @@ class UPnpSearchTask : public Task
 
         QList<QHostAddress>     m_addressList;
         int                     m_nServicePort;
-        int                     m_nMaxAge      {3600};
+        std::chrono::seconds    m_nMaxAge      {1h};
 
         QHostAddress    m_peerAddress;
         int             m_nPeerPort;
@@ -76,4 +76,4 @@ class UPnpSearchTask : public Task
 };
 
 
-#endif
+#endif // UPNPTASKSEARCH_H

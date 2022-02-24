@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // Program Name: labelValue.h
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -32,11 +32,11 @@ class SERVICE_PUBLIC LabelValue : public QObject
     Q_PROPERTY( bool       Selected        READ Selected
                                            WRITE setSelected    )
 
-    PROPERTYIMP( QString  , Label       )
-    PROPERTYIMP( QString  , Value       )
-    PROPERTYIMP( QString  , Description )
-    PROPERTYIMP( bool     , Active      )
-    PROPERTYIMP( bool     , Selected    );
+    PROPERTYIMP_REF( QString  , Label       )
+    PROPERTYIMP_REF( QString  , Value       )
+    PROPERTYIMP_REF( QString  , Description )
+    PROPERTYIMP    ( bool     , Active      )
+    PROPERTYIMP    ( bool     , Selected    );
 
     public:
 

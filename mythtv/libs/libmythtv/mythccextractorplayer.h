@@ -30,9 +30,9 @@ class MTV_PUBLIC OneSubtitle
 {
   public:
     /// Time we have to start showing subtitle, msec.
-    int64_t m_startTime { 0 };
+    std::chrono::milliseconds m_startTime { 0 };
     /// Time we have to show subtitle, msec.
-    int m_length { -1 };
+    std::chrono::milliseconds m_length { -1ms };
     /// Is this a text subtitle.
     bool m_isText { true };
     /// Lines of text of subtitles.
@@ -44,7 +44,7 @@ class MTV_PUBLIC OneSubtitle
 
     OneSubtitle() = default;
 
-    static const int kDefaultLength;
+    static constexpr std::chrono::milliseconds kDefaultLength { 750ms };
 };
 
 /// Key is a CC number (1-4), values are the subtitles in chrono order.
@@ -112,7 +112,7 @@ using SubtitleReaders = QHash<uint, SubtitleReader*>;
 class MTV_PUBLIC MythCCExtractorPlayer : public MythPlayer
 {
   public:
-    MythCCExtractorPlayer(PlayerFlags flags, bool showProgress,
+    MythCCExtractorPlayer(PlayerContext* Context, PlayerFlags flags, bool showProgress,
                           QString fileName, const QString & destdir);
     MythCCExtractorPlayer(const MythCCExtractorPlayer& rhs);
     ~MythCCExtractorPlayer() override = default;
@@ -125,7 +125,7 @@ class MTV_PUBLIC MythCCExtractorPlayer : public MythPlayer
     TeletextReader *GetTeletextReader(uint id=0) override; // MythPlayer
 
   private:
-    void IngestSubtitle(QList<OneSubtitle> &list, const QStringList &content);
+    void IngestSubtitle(QList<OneSubtitle> &list, const QStringList &content) const;
     static void IngestSubtitle(QList<OneSubtitle> &list, const OneSubtitle &content);
 
     enum { kProcessNormal = 0, kProcessFinalize = 1 };
@@ -136,7 +136,7 @@ class MTV_PUBLIC MythCCExtractorPlayer : public MythPlayer
     void Ingest708Caption(uint streamId, uint serviceIdx, uint windowIdx,
                           uint start_row, uint start_column,
                           const CC708Window &win,
-                          const vector<CC708String*> &content);
+                          const std::vector<CC708String*> &content);
     void Process708Captions(uint flags);
 
     void IngestTeletext(void);
@@ -166,7 +166,7 @@ class MTV_PUBLIC MythCCExtractorPlayer : public MythPlayer
     QHash<uint, WindowsOnService > m_cc708Windows;
 
     /// Keeps track for decoding time to make timestamps for subtitles.
-    double  m_curTime;
+    std::chrono::milliseconds  m_curTime;
     uint64_t m_myFramesPlayed;
     bool    m_showProgress;
     QString m_fileName;

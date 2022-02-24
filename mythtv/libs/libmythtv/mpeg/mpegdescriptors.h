@@ -1,11 +1,11 @@
 // -*- Mode: c++ -*-
 // Copyright (c) 2003-2004, Daniel Thor Kristjansson
-#ifndef _MPEG_DESCRIPTORS_H_
-#define _MPEG_DESCRIPTORS_H_
+#ifndef MPEG_DESCRIPTORS_H
+#define MPEG_DESCRIPTORS_H
 
 // C++ headers
+#include <array>
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QMutex>
@@ -15,7 +15,7 @@ using namespace std;
 #include "iso639.h"
 #include "mythtvexp.h"
 
-using desc_list_t = vector<const unsigned char *>;
+using desc_list_t = std::vector<const unsigned char *>;
 
 class DescriptorID
 {
@@ -23,8 +23,8 @@ class DescriptorID
     enum
     {
         // MPEG
-        video                       = 0x02,
-        audio                       = 0x03,
+        video_stream                = 0x02,
+        audio_stream                = 0x03,
         hierarchy                   = 0x04,
         registration                = 0x05, /* implemented */
         data_stream_alignment       = 0x06,
@@ -32,10 +32,10 @@ class DescriptorID
         video_window                = 0x08,
         conditional_access          = 0x09, /* implemented */
         iso_639_language            = 0x0A, /* implemented */
-        system_clock                = 0x0B,
+        system_clock                = 0x0B, /* implemented */
         multiplex_buffer_utilization= 0x0C,
         copyright                   = 0x0D,
-        maximum_bitrate             = 0x0E,
+        maximum_bitrate             = 0x0E, /* implemented */
         private_data_indicator      = 0x0F,
         smoothing_buffer            = 0x10,
         std                         = 0x11,
@@ -68,7 +68,7 @@ class DescriptorID
         flex_mux_timing             = 0x2C,
         hevc_video                  = 0x38,
 
-        // DVB
+        // DVB Bluebook A038 (Feb 2019) p 36-38, Table 12
         network_name                = 0x40, /* implemented */
         service_list                = 0x41, /* implemented */
         dvb_stuffing                = 0x42, /* implemented */
@@ -135,7 +135,26 @@ class DescriptorID
         aac                            = 0x7C,
         xait_location                  = 0x7D,
         fta_content_management         = 0x7E,
-        t2_terrestrial_delivery_system = 0x7F,
+        extension                      = 0x7F,
+
+        // DVB Bluebook A038 (Feb 2019) p 94, Table 109
+        //
+        // Extension descriptors
+        image_icon                     = 0x00,
+        t2_delivery_system             = 0x04,
+        sh_delivery_system             = 0x05,
+        supplementary_audio            = 0x06,
+        network_change_notify          = 0x07,
+        message                        = 0x08,
+        target_region                  = 0x09,
+        target_region_name             = 0x0A,
+        service_relocated              = 0x0B,
+        xait_pid                       = 0x0C,
+        c2_delivery_system             = 0x0D,
+        uri_linkage                    = 0x13,
+        ci_ancillary_data              = 0x14,
+        c2_bundle_delivery_system      = 0x16,
+        s2x_satellite_delivery_system  = 0x17,
 
         // ATSC
         atsc_stuffing               = 0x80,
@@ -189,6 +208,7 @@ class PrivateDescriptorID
 
         // Private -- NL Casema
         casema_video_on_demand         = 0x87,
+        ziggo_package_descriptor       = 0xd4,
 
         // Private -- Dish Network
         dish_event_rights              = 0x87,
@@ -198,6 +218,9 @@ class PrivateDescriptorID
         dish_event_properties          = 0x94, /* implemented */
         dish_event_vchip               = 0x95, /* implemented */
         dish_event_tags                = 0x96, /* implemented */
+
+        // Private -- SES
+        nordig_content_protection      = 0xA0,
 
         // Private -- CH UPC Cablecom
         upc_event_episode_title        = 0xA7,
@@ -229,6 +252,9 @@ class PrivateDescriptorID
         opentv_summaries_3             = 0xAA,
         opentv_summaries_4             = 0xAB,
         opentv_channel_list            = 0xB1, /* sky_lcn_table */
+
+        // Private -- CI Plus LPP
+        ci_protection_descriptor       = 0xce,
     };
 };
 
@@ -240,13 +266,18 @@ class PrivateDataSpecifierID
   public:
     enum
     {
+        SES    = 0x00000001,    // Société Européenne des Satellites
         BSB1   = 0x00000002,    // UK Sky (Astra 28.2E), Sky New Zealand (Optus D1 160E0)
         CASEMA = 0x00000016,    // NL Casema
         EACEM  = 0x00000028,    // NL Ziggo
         NORDIG = 0x00000029,    // EU Nordig
+        CIPLUS = 0x00000040,    // CI Plus LPP
+        ORS    = 0x000001B0,    // ORS comm GmbH & Co KG
         UPC1   = 0x00000600,    // UPC Cablecom
         ITC    = 0x0000233A,    // Independent Television Commission
+        IRDETO = 0x00362275,    // Irdeto
         FSAT   = 0x46534154,    // UK BBC FreeSat on Astra 28.2E
+        OTV    = 0x4f545600,    // OpenTV
     };
 };
 
@@ -258,11 +289,13 @@ class OriginalNetworkID
   public:
     enum
     {
-        SES2    = 0x0002,       // Société Européenne des Satellites
-        BBC     = 0x003B,       // BBC / Freesat
-        TELENOR = 0x0046,       // Telenor Norway
-        SKYNZ   = 0x00A9,       // Sky New Zealand / Sky Network Television Ltd (NDS)
-        NOZEMA  = 0x2210,       // Netherlands Digital Terrestrial Television
+        SES2     = 0x0002,      // Société Européenne des Satellites
+        BBC      = 0x003B,      // BBC / Freesat
+        TELENOR  = 0x0046,      // Telenor Norway
+        PREMIERE = 0x0085,      // Sky Deutschland Fernsehen GmbH & Co. KG
+        SKYNZ    = 0x00A9,      // Sky New Zealand / Sky Network Television Ltd (NDS)
+        MCA      = 0x1800,      // Not defined in DVB-SI Original Network ID tables
+        NOZEMA   = 0x2210,      // Netherlands Digital Terrestrial Television
     };
 };
 
@@ -283,10 +316,23 @@ class MTV_PUBLIC MPEGDescriptor
         if ((len < 2) || (int(DescriptorLength()) + 2) > len)
             m_data = nullptr;
     }
+    explicit MPEGDescriptor(const std::vector<uint8_t> &data) : m_data(data.data())
+    {
+        if ((data.size() < 2) ||
+            ((static_cast<size_t>(DescriptorLength()) + 2) > data.size()))
+            m_data = nullptr;
+    }
     MPEGDescriptor(const unsigned char *data,
                    int len, uint tag) : m_data(data)
     {
         if ((len < 2) || ((int(DescriptorLength()) + 2) > len)
+            || (DescriptorTag() != tag))
+            m_data = nullptr;
+    }
+    MPEGDescriptor(const std::vector<uint8_t> &data, uint tag) : m_data(data.data())
+    {
+        if ((data.size() < 2) ||
+            ((static_cast<size_t>(DescriptorLength()) + 2) > data.size())
             || (DescriptorTag() != tag))
             m_data = nullptr;
     }
@@ -304,8 +350,9 @@ class MTV_PUBLIC MPEGDescriptor
     uint size(void) const { return DescriptorLength() + 2; }
 
     uint DescriptorTag(void) const { return m_data[0]; }
-    QString DescriptorTagString(void) const;
     uint DescriptorLength(void) const { return m_data[1]; }
+    uint DescriptorTagExtension(void) const { return m_data[2]; }
+    QString DescriptorTagString(void) const;
 
     virtual QString toString(void) const;
     virtual QString toStringPD(uint priv_dsid) const;
@@ -318,6 +365,7 @@ class MTV_PUBLIC MPEGDescriptor
                                         int excluded_descid);
 
     static const unsigned char *Find(const desc_list_t &parsed, uint desc_tag);
+    static const unsigned char *FindExtension(const desc_list_t &parsed, uint desc_tag);
     static desc_list_t FindAll(const desc_list_t &parsed, uint desc_tag);
 
   protected:
@@ -326,6 +374,57 @@ class MTV_PUBLIC MPEGDescriptor
   public:
     QString hexdump(void) const;
     QString descrDump(const QString &name) const;
+};
+
+// ISO 13181-1:2019 page 75
+class VideoStreamDescriptor : public MPEGDescriptor
+{
+  public:
+    explicit VideoStreamDescriptor(const unsigned char *data, int len = 300) :
+        MPEGDescriptor(data, len, DescriptorID::video_stream) { }
+    //       Name             bits  loc  expected value
+    // descriptor_tag           8   0.0       0x02
+    // descriptor_length        8   1.0
+    // multiple_frame_rate_flag 1   2.0
+    bool MultipleFrameRateFlag(void) const { return (m_data[2] & 0x80) != 0; }
+    // frame_rate_code          4   2.1
+    uint FrameRateCode(void) const { return (m_data[2]>>3) & 0x0F; }
+    // MPEG_1_only_flag         1   2.5
+    bool MPEG1OnlyFlag(void) const { return (m_data[2] & 0x04) != 0; }
+    // constrained_parameterflag 1   2.6
+    bool ConstrainedParameterFlag(void) const { return (m_data[2] & 0x02) != 0; }
+    // still_picture_flag        1   2.7
+    bool StillPictureFlag(void) const { return (m_data[2] & 0x01) != 0; }
+    // profile_and_level_indication 8   3.0
+    uint ProfileAndLevelIndication(void) const { return MPEG1OnlyFlag() ? 0 : m_data[3]; }
+    // chroma_format                2   4.0
+    uint ChromaFormat(void) const { return MPEG1OnlyFlag() ? 0 : (m_data[4] >> 6) & 0x03; }
+    // frame_rate_extension_flag    1   4.2
+    bool FrameRateExtensionFlag(void) const { return MPEG1OnlyFlag() ? false : (m_data[4] & 0x20) != 0; }
+
+    QString toString() const override; // MPEGDescriptor
+};
+
+// ISO 13181-1:2019 page 77
+class AudioStreamDescriptor : public MPEGDescriptor
+{
+  public:
+    explicit AudioStreamDescriptor(const unsigned char *data, int len = 300) :
+        MPEGDescriptor(data, len, DescriptorID::audio_stream) { }
+    //       Name             bits  loc  expected value
+    // descriptor_tag           8   0.0       0x03
+    // descriptor_length        8   1.0
+    // free_format_flag         1   2.0
+    bool FreeFormatFlag(void) const { return (m_data[2] & 0x80) != 0; }
+    // ID                       1   2.1
+    bool ID(void) const { return (m_data[2] & 0x40) != 0; }
+    // layer                    2   2.2
+    uint Layer(void) const { return (m_data[2] >> 4) & 0x03; }
+    // variable_rate_audio_indicator 1   2.4
+    bool VariableRateAudioIndicator(void) const { return (m_data[2] & 0x08) != 0; }
+    // reserved                      3   2.5
+
+    QString toString() const override; // MPEGDescriptor
 };
 
 // a_52a.pdf p119, Table A1
@@ -358,6 +457,21 @@ class RegistrationDescriptor : public MPEGDescriptor
     static QMutex                description_map_lock;
     static bool                  description_map_initialized;
     static QMap<QString,QString> description_map;
+};
+
+// ISO 13181-1:2019 page 79
+class DataStreamAlignmentDescriptor : public MPEGDescriptor
+{
+  public:
+    explicit DataStreamAlignmentDescriptor(const unsigned char *data, int len = 300) :
+        MPEGDescriptor(data, len, DescriptorID::data_stream_alignment) { }
+    //       Name             bits  loc  expected value
+    // descriptor_tag           8   0.0       0x06
+    // descriptor_length        8   1.0
+    // alignment_type           2   2.0
+    uint AlignmentType(void) const { return m_data[2]; }
+
+    QString toString() const override; // MPEGDescriptor
 };
 
 class ConditionalAccessDescriptor : public MPEGDescriptor
@@ -394,6 +508,64 @@ class ISO639LanguageDescriptor : public MPEGDescriptor
     QString toString() const override; // MPEGDescriptor
 };
 
+// ISO 13181-1:2019 page 84
+class SystemClockDescriptor : public MPEGDescriptor
+{
+  public:
+    explicit SystemClockDescriptor(const unsigned char *data, int len = 300) :
+        MPEGDescriptor(data, len, DescriptorID::system_clock) { }
+    //       Name             bits  loc  expected value
+    // descriptor_tag           8   0.0       0x0B
+    // descriptor_length        8   1.0
+    // external_clock_reference_indicator   2   2.0
+    bool ExternalClockReferenceIndicator(void) const { return ( m_data[2]&0x80 ) != 0; }
+    // reserved                 1   2.1
+    // clock_accuracy_integer   6   2.2
+    uint ClockAccuracyInteger(void) const { return m_data[2]&0x3F; }
+    // clock_accuracy_exponent  3   3.0
+    uint ClockAccuracyExponent(void) const { return m_data[3]>>5; }
+    // reserved                 5   3.3
+
+    QString toString() const override; // MPEGDescriptor
+};
+
+// ISO 13181-1:2019 page 86
+class MaximumBitrateDescriptor : public MPEGDescriptor
+{
+  public:
+    explicit MaximumBitrateDescriptor(const unsigned char *data, int len = 300) :
+        MPEGDescriptor(data, len, DescriptorID::maximum_bitrate) { }
+    //       Name             bits  loc  expected value
+    // descriptor_tag           8   0.0       0x0E
+    // descriptor_length        8   1.0       0x03
+    // reserved                 2   2.0
+    // maximum_bitrate         22   2.2
+    uint MaximumBitrate(void) const
+        { return (m_data[2] & 0x3f) << 16 | m_data[3]<<8 | m_data[4]; }
+    QString toString() const override; // MPEGDescriptor
+};
+
+// ISO/IEC 13818-1:2019 (E) p87
+class SmoothingBufferDescriptor : public MPEGDescriptor
+{
+  public:
+    explicit SmoothingBufferDescriptor(const unsigned char *data, int len = 300) :
+        MPEGDescriptor(data, len, DescriptorID::smoothing_buffer) { }
+    //       Name             bits  loc  expected value
+    // descriptor_tag           8   0.0       0x10
+    // descriptor_length        8   1.0       0x06
+
+    // reserved                 2   2.0
+    // sb_leak_rate            22   2.2
+    uint SBLeakRate(void) const
+        { return (m_data[2] & 0x3f) << 16 | m_data[3]<<8 | m_data[4]; }
+    // reserved                 2   5.0
+    // sb_size                  2   5.2
+    uint SBSize(void) const
+        { return (m_data[5] & 0x3f) << 16 | m_data[6]<<8 | m_data[7]; }
+    QString toString(void) const override; // MPEGDescriptor
+};
+
 /// ISO 13818-1:2000/Amd.3:2004 page 11
 class AVCVideoDescriptor : public MPEGDescriptor
 {
@@ -401,16 +573,16 @@ class AVCVideoDescriptor : public MPEGDescriptor
     explicit AVCVideoDescriptor(const unsigned char *data, int len = 300) :
         MPEGDescriptor(data, len, DescriptorID::avc_video) { }
     //       Name             bits  loc  expected value
-    // descriptor_tag           8   0.0       0x
+    // descriptor_tag           8   0.0       0x28
     // descriptor_length        8   1.0
     // profile_idc              8   2.0
     uint ProfileIDC(void)         const { return m_data[2]; }
     // constraint_set0_flag     1   3.0
-    bool ConstaintSet0(void)      const { return ( m_data[3]&0x80 ) != 0; }
+    bool ConstraintSet0(void)     const { return ( m_data[3]&0x80 ) != 0; }
     // constraint_set1_flag     1   3.1
-    bool ConstaintSet1(void)      const { return ( m_data[3]&0x40 ) != 0; }
+    bool ConstraintSet1(void)     const { return ( m_data[3]&0x40 ) != 0; }
     // constraint_set2_flag     1   3.2
-    bool ConstaintSet2(void)      const { return ( m_data[3]&0x20 ) != 0; }
+    bool ConstraintSet2(void)     const { return ( m_data[3]&0x20 ) != 0; }
     // AVC_compatible_flags     5   3.3
     uint AVCCompatible(void)      const { return m_data[3]&0x1f; }
     // level_idc                8   4.0
@@ -426,6 +598,7 @@ class AVCVideoDescriptor : public MPEGDescriptor
 };
 
 /// ISO 13818-1:2000/Amd.3:2004 page 12
+/// ISO/IEC 13818-1:2019 (E) p 103
 class AVCTimingAndHRDDescriptor : public MPEGDescriptor
 {
   public:
@@ -438,7 +611,7 @@ class AVCTimingAndHRDDescriptor : public MPEGDescriptor
     bool HRDManagementValid(void)      const { return ( m_data[2]&0x80 ) != 0; }
     // reserved                 6   2.1
     // picture_and_timing_info_present 1 2.7
-    bool HasPictureAndTimingInfo(void) const { return m_data[2]&0x01;}
+    bool HasPictureAndTimingInfo(void) const { return (m_data[2]&0x01) != 0;}
     // if (picture_and_timing_info_present) {
     //   90kHz_flag             1   3.0
     //   reserved               7   3.1
@@ -455,22 +628,23 @@ class AVCTimingAndHRDDescriptor : public MPEGDescriptor
 };
 
 /// ISO 13818-1:2013/FDAM 3 (E) page 7
+/// ISO/IEC 13818-1:2019 (E) page 121
 class HEVCVideoDescriptor : public MPEGDescriptor
 {
   public:
     explicit HEVCVideoDescriptor(const unsigned char *data, int len = 300) :
-        MPEGDescriptor(data, len, DescriptorID::avc_video) { }
+        MPEGDescriptor(data, len, DescriptorID::hevc_video) { }
     //       Name                      bits  loc  expected value
     // descriptor_tag                    8   0.0       0x38
     // descriptor_length                 8   1.0
 
     // the encoding of the following is specified in Rec. ITU-T H.265 | ISO/IEC 23008-2
     // profile_space                     2   2.0
-    uint ProfileSpace(void)       const { return m_data[2]&0xC0 >> 6; }
+    uint ProfileSpace(void)       const { return (m_data[2]&0xC0) >> 6; }
     // tier_flag                         1   2.2
-    bool Tier(void)               const { return ( m_data[2]&0x20 ) != 0; }
+    bool Tier(void)               const { return (m_data[2]&0x20) != 0; }
     // profile_idc                       5   2.3
-    uint ProfileIDC(void)         const { return m_data[2] >> 3; }
+    uint ProfileIDC(void)         const { return m_data[2]&0x1F; }
     // profile_compatibility_indication 32   3.0
     // progressive_source_flag           1   7.0
     // interlaced_source_flag            1   7.1
@@ -494,4 +668,13 @@ class HEVCVideoDescriptor : public MPEGDescriptor
     QString toString() const override; // MPEGDescriptor
 };
 
-#endif // _MPEG_DESCRIPTORS_H_
+// class HEVCTimingAndHRDDescriptor : public MPEGDescriptor
+// {
+//     explicit HEVCTimingAndHRDDescriptor(const unsigned char *data, int len = 300) :
+//         MPEGDescriptor(data, len, DescriptorID::hevc_timing_and_hrd) { }
+//     //       Name                      bits  loc  expected value
+//     // descriptor_tag                    8   0.0       0x38
+//     // descriptor_length                 8   1.0
+// };
+
+#endif // MPEG_DESCRIPTORS_H

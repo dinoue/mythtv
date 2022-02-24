@@ -1,4 +1,5 @@
 // c
+#include <chrono>
 #include <cstdlib>
 #include <unistd.h>
 
@@ -19,18 +20,16 @@
 #include <remotefile.h>
 
 // mytharchive
-#include "videoselector.h"
 #include "archiveutil.h"
-
-using namespace std;
+#include "videoselector.h"
 
 VideoSelector::VideoSelector(MythScreenStack *parent, QList<ArchiveItem *> *archiveList)
               :MythScreenType(parent, "VideoSelector"),
                m_archiveList(archiveList)
 {
     m_parentalLevelChecker = new ParentalLevelChangeChecker();
-    connect(m_parentalLevelChecker, SIGNAL(SigResultReady(bool, ParentalLevel::Level)),
-            this, SLOT(parentalLevelChanged(bool, ParentalLevel::Level)));
+    connect(m_parentalLevelChecker, &ParentalLevelChangeChecker::SigResultReady,
+            this, &VideoSelector::parentalLevelChanged);
 }
 
 VideoSelector::~VideoSelector(void)
@@ -67,17 +66,17 @@ bool VideoSelector::Create(void)
         return false;
     }
 
-    connect(m_okButton, SIGNAL(Clicked()), SLOT(OKPressed()));
-    connect(m_cancelButton, SIGNAL(Clicked()), SLOT(cancelPressed()));
+    connect(m_okButton, &MythUIButton::Clicked, this, &VideoSelector::OKPressed);
+    connect(m_cancelButton, &MythUIButton::Clicked, this, &VideoSelector::cancelPressed);
 
-    connect(m_categorySelector, SIGNAL(itemSelected(MythUIButtonListItem *)),
-            SLOT(setCategory(MythUIButtonListItem *)));
+    connect(m_categorySelector, &MythUIButtonList::itemSelected,
+            this, &VideoSelector::setCategory);
 
     getVideoList();
-    connect(m_videoButtonList, SIGNAL(itemSelected(MythUIButtonListItem *)),
-            SLOT(titleChanged(MythUIButtonListItem *)));
-    connect(m_videoButtonList, SIGNAL(itemClicked(MythUIButtonListItem *)),
-            SLOT(toggleSelected(MythUIButtonListItem *)));
+    connect(m_videoButtonList, &MythUIButtonList::itemSelected,
+            this, &VideoSelector::titleChanged);
+    connect(m_videoButtonList, &MythUIButtonList::itemClicked,
+            this, &VideoSelector::toggleSelected);
 
     BuildFocusList();
 
@@ -145,8 +144,8 @@ void VideoSelector::ShowMenu()
 
     menuPopup->SetReturnEvent(this, "action");
 
-    menuPopup->AddButton(tr("Clear All"), SLOT(clearAll()));
-    menuPopup->AddButton(tr("Select All"), SLOT(selectAll()));
+    menuPopup->AddButton(tr("Clear All"), &VideoSelector::clearAll);
+    menuPopup->AddButton(tr("Select All"), &VideoSelector::selectAll);
 }
 
 void VideoSelector::selectAll()
@@ -243,11 +242,11 @@ void VideoSelector::OKPressed()
     // loop though selected videos and add them to the list
     // remove any items that have been removed from the list
     QList<ArchiveItem *> tempAList;
-    foreach (auto a, *m_archiveList)
+    for (auto *a : qAsConst(*m_archiveList))
     {
         bool found = false;
 
-        foreach (auto v, m_selectedList)
+        for (const auto *v : qAsConst(m_selectedList))
         {
             if (a->type != "Video" || a->filename == v->filename)
             {
@@ -260,14 +259,14 @@ void VideoSelector::OKPressed()
             tempAList.append(a);
     }
 
-    foreach (auto x, tempAList)
+    for (auto *x : qAsConst(tempAList))
         m_archiveList->removeAll(x);
 
     // remove any items that are already in the list
     QList<VideoInfo *> tempSList;
-    foreach (auto v, m_selectedList)
+    for (auto *v : qAsConst(m_selectedList))
     {
-        foreach (auto a, *m_archiveList)
+        for (const auto *a : qAsConst(*m_archiveList))
         {
             if (a->filename == v->filename)
             {
@@ -277,11 +276,11 @@ void VideoSelector::OKPressed()
         }
     }
 
-    foreach (auto x, tempSList)
+    for (auto *x : qAsConst(tempSList))
         m_selectedList.removeAll(x);
 
     // add all that are left
-    foreach (auto v, m_selectedList)
+    for (const auto *v : qAsConst(m_selectedList))
     {
         auto *a = new ArchiveItem;
         a->type = "Video";
@@ -367,7 +366,7 @@ void VideoSelector::updateVideoList(void)
     }
 }
 
-vector<VideoInfo *> *VideoSelector::getVideoListFromDB(void)
+std::vector<VideoInfo *> *VideoSelector::getVideoListFromDB(void)
 {
     // get a list of category's
     using CategoryMap = QMap<int, QString>;
@@ -391,9 +390,7 @@ vector<VideoInfo *> *VideoSelector::getVideoListFromDB(void)
 
     if (query.exec() && query.size())
     {
-        auto *videoList = new vector<VideoInfo*>;
-        QString artist;
-        QString genre;
+        auto *videoList = new std::vector<VideoInfo*>;
         QString episode;
         while (query.next())
         {
@@ -411,10 +408,10 @@ vector<VideoInfo *> *VideoSelector::getVideoListFromDB(void)
                 if (episode.size() < 2)
                         episode.prepend("0");
                     info->title = QString("%1 %2x%3 - %4")
-                                .arg(query.value(1).toString())
-                                .arg(query.value(9).toString())
-                                .arg(episode)
-                                .arg(query.value(8).toString());
+                                .arg(query.value(1).toString(),
+                                     query.value(9).toString(),
+                                     episode,
+                                     query.value(8).toString());
             }
             else
                 info->title = query.value(1).toString();
@@ -487,7 +484,7 @@ void VideoSelector::getVideoList(void)
     }
     else
     {
-        QTimer::singleShot(100, this, SLOT(cancelPressed()));
+        QTimer::singleShot(100ms, this, &VideoSelector::cancelPressed);
         return;
     }
 
@@ -521,9 +518,9 @@ void VideoSelector::updateSelectedList()
 
     m_selectedList.clear();
 
-    foreach (auto a, *m_archiveList)
+    for (const auto *a : qAsConst(*m_archiveList))
     {
-        foreach (auto v, *m_videoList)
+        for (auto *v : qAsConst(*m_videoList))
         {
             if (v->filename == a->filename)
             {

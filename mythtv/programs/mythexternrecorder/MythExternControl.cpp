@@ -24,14 +24,15 @@
 #include <QFile>
 #include <QTextStream>
 
+#include <array>
 #include <unistd.h>
 #include <poll.h>
 
 #include <iostream>
 
-using namespace std;
+using namespace std::chrono_literals;
 
-const QString VERSION = "0.6";
+const QString VERSION = "1.0";
 
 #define LOC Desc()
 
@@ -54,16 +55,16 @@ MythExternControl::~MythExternControl(void)
 
 Q_SLOT void MythExternControl::Opened(void)
 {
-    std::lock_guard<std::mutex> lock(m_flow_mutex);
+    std::lock_guard<std::mutex> lock(m_flowMutex);
 
     m_ready = true;
-    m_flow_cond.notify_all();
+    m_flowCond.notify_all();
 }
 
 Q_SLOT void MythExternControl::Streaming(bool val)
 {
     m_streaming = val;
-    m_flow_cond.notify_all();
+    m_flowCond.notify_all();
 }
 
 void MythExternControl::Terminate(void)
@@ -73,18 +74,18 @@ void MythExternControl::Terminate(void)
 
 Q_SLOT void MythExternControl::Done(void)
 {
-    if (m_commands_running || m_buffer_running)
+    if (m_commandsRunning || m_bufferRunning)
     {
         m_run = false;
-        m_flow_cond.notify_all();
-        m_run_cond.notify_all();
+        m_flowCond.notify_all();
+        m_runCond.notify_all();
 
-        std::this_thread::sleep_for(std::chrono::microseconds(50));
+        std::this_thread::sleep_for(50us);
 
-        while (m_commands_running || m_buffer_running)
+        while (m_commandsRunning || m_bufferRunning)
         {
-            std::unique_lock<std::mutex> lk(m_flow_mutex);
-            m_flow_cond.wait_for(lk, std::chrono::milliseconds(1000));
+            std::unique_lock<std::mutex> lk(m_flowMutex);
+            m_flowCond.wait_for(lk, 1s);
         }
 
         LOG(VB_RECORD, LOG_CRIT, LOC + "Terminated.");
@@ -95,7 +96,7 @@ void MythExternControl::Error(const QString & msg)
 {
     LOG(VB_RECORD, LOG_CRIT, LOC + msg);
 
-    std::unique_lock<std::mutex> lk(m_msg_mutex);
+    std::unique_lock<std::mutex> lk(m_msgMutex);
     if (m_errmsg.isEmpty())
         m_errmsg = msg;
     else
@@ -113,13 +114,13 @@ Q_SLOT void MythExternControl::SendMessage(const QString & cmd,
                                            const QString & serial,
                                            const QString & msg)
 {
-    std::unique_lock<std::mutex> lk(m_msg_mutex);
+    std::unique_lock<std::mutex> lk(m_msgMutex);
     m_commands.SendStatus(cmd, serial, msg);
 }
 
 Q_SLOT void MythExternControl::ErrorMessage(const QString & msg)
 {
-    std::unique_lock<std::mutex> lk(m_msg_mutex);
+    std::unique_lock<std::mutex> lk(m_msgMutex);
     if (m_errmsg.isEmpty())
         m_errmsg = msg;
     else
@@ -131,11 +132,11 @@ Q_SLOT void MythExternControl::ErrorMessage(const QString & msg)
 
 void Commands::Close(void)
 {
-    std::lock_guard<std::mutex> lock(m_parent->m_flow_mutex);
+    std::lock_guard<std::mutex> lock(m_parent->m_flowMutex);
 
     emit m_parent->Close();
     m_parent->m_ready = false;
-    m_parent->m_flow_cond.notify_all();
+    m_parent->m_flowCond.notify_all();
 }
 
 void Commands::StartStreaming(const QString & serial)
@@ -201,9 +202,9 @@ void Commands::Cleanup(void)
 bool Commands::SendStatus(const QString & command, const QString & status)
 {
     int len = write(2, status.toUtf8().constData(), status.size());
-    write(2, "\n", 1);
+    len += write(2, "\n", 1);
 
-    if (len != status.size())
+    if (len != status.size() + 1)
     {
         LOG(VB_RECORD, LOG_ERR, LOC +
             QString("%1: Only wrote %2 of %3 bytes of message '%4'.")
@@ -212,7 +213,7 @@ bool Commands::SendStatus(const QString & command, const QString & status)
     }
 
     LOG(VB_RECORD, LOG_INFO, LOC + QString("Processing '%1' --> '%2'")
-        .arg(command).arg(status));
+        .arg(command, status));
 
     m_parent->ClearError();
     return true;
@@ -221,12 +222,12 @@ bool Commands::SendStatus(const QString & command, const QString & status)
 bool Commands::SendStatus(const QString & command, const QString & serial,
                           const QString & status)
 {
-    QString msg = QString("%1:%2").arg(serial).arg(status);
+    QString msg = QString("%1:%2").arg(serial, status);
 
     int len = write(2, msg.toUtf8().constData(), msg.size());
-    write(2, "\n", 1);
+    len += write(2, "\n", 1);
 
-    if (len != msg.size())
+    if (len != msg.size() + 1)
     {
         LOG(VB_RECORD, LOG_ERR, LOC +
             QString("%1: Only wrote %2 of %3 bytes of message '%4'.")
@@ -237,7 +238,7 @@ bool Commands::SendStatus(const QString & command, const QString & serial,
     if (!command.isEmpty())
     {
         LOG(VB_RECORD, LOG_INFO, LOC + QString("Processing '%1' --> '%2'")
-            .arg(command).arg(msg));
+            .arg(command, msg));
     }
 #if 0
     else
@@ -252,7 +253,7 @@ bool Commands::ProcessCommand(const QString & cmd)
 {
     LOG(VB_RECORD, LOG_DEBUG, LOC + QString("Processing '%1'").arg(cmd));
 
-    std::unique_lock<std::mutex> lk1(m_parent->m_msg_mutex);
+    std::unique_lock<std::mutex> lk1(m_parent->m_msgMutex);
 
     if (cmd.startsWith("APIVersion?"))
     {
@@ -263,7 +264,11 @@ bool Commands::ProcessCommand(const QString & cmd)
         return true;
     }
 
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList tokens = cmd.split(':', QString::SkipEmptyParts);
+#else
+    QStringList tokens = cmd.split(':', Qt::SkipEmptyParts);
+#endif
     if (tokens.size() < 2)
     {
         SendStatus(cmd, "0",
@@ -343,7 +348,7 @@ bool Commands::ProcessCommand(const QString & cmd)
         {
             SendStatus(cmd, tokens[0], "OK");
             m_parent->m_xon = true;
-            m_parent->m_flow_cond.notify_all();
+            m_parent->m_flowCond.notify_all();
         }
         else
             SendStatus(cmd, tokens[0], "WARN:Not streaming");
@@ -355,7 +360,7 @@ bool Commands::ProcessCommand(const QString & cmd)
             SendStatus(cmd, tokens[0], "OK");
             // Used when FlowControl is XON/XOFF
             m_parent->m_xon = false;
-            m_parent->m_flow_cond.notify_all();
+            m_parent->m_flowCond.notify_all();
         }
         else
             SendStatus(cmd, tokens[0], "WARN:Not streaming");
@@ -385,7 +390,7 @@ bool Commands::ProcessCommand(const QString & cmd)
     }
     else if (tokens[1].startsWith("IsOpen?"))
     {
-        std::unique_lock<std::mutex> lk2(m_parent->m_run_mutex);
+        std::unique_lock<std::mutex> lk2(m_parent->m_runMutex);
         if (m_parent->m_fatal)
             SendStatus(cmd, tokens[0], "ERR:" + m_parent->ErrorString());
         else if (m_parent->m_ready)
@@ -436,8 +441,7 @@ void Commands::Run(void)
 
     QString cmd;
 
-    struct pollfd polls[2];
-    memset(polls, 0, sizeof(polls));
+    std::array<struct pollfd,2> polls {};
 
     polls[0].fd      = 0;
     polls[0].events  = POLLIN | POLLPRI;
@@ -453,7 +457,7 @@ void Commands::Run(void)
     {
         int timeout = 250;
         int poll_cnt = 1;
-        int ret = poll(polls, poll_cnt, timeout);
+        int ret = poll(polls.data(), poll_cnt, timeout);
 
         if (polls[0].revents & POLLHUP)
         {
@@ -494,8 +498,8 @@ void Commands::Run(void)
     }
 
     LOG(VB_RECORD, LOG_INFO, LOC + "Command parser: shutting down");
-    m_parent->m_commands_running = false;
-    m_parent->m_flow_cond.notify_all();
+    m_parent->m_commandsRunning = false;
+    m_parent->m_flowCond.notify_all();
 }
 
 Buffer::Buffer(MythExternControl * parent)
@@ -512,7 +516,7 @@ bool Buffer::Fill(const QByteArray & buffer)
     static int s_dropped = 0;
     static int s_droppedBytes = 0;
 
-    m_parent->m_flow_mutex.lock();
+    m_parent->m_flowMutex.lock();
 
     if (!m_dataSeen)
     {
@@ -539,11 +543,11 @@ bool Buffer::Fill(const QByteArray & buffer)
             QString("Packet queue overrun. Dropped %1 packets, %2 bytes.")
             .arg(++s_dropped).arg(s_droppedBytes));
 
-        std::this_thread::sleep_for(std::chrono::microseconds(250));
+        std::this_thread::sleep_for(250us);
     }
 
-    m_parent->m_flow_mutex.unlock();
-    m_parent->m_flow_cond.notify_all();
+    m_parent->m_flowMutex.unlock();
+    m_parent->m_flowCond.notify_all();
 
     m_heartbeat = std::chrono::system_clock::now();
 
@@ -556,7 +560,7 @@ void Buffer::Run(void)
 
     bool       is_empty = false;
     bool       wait = false;
-    time_t     send_time = time (nullptr) + (60 * 5);
+    auto       send_time = std::chrono::system_clock::now() + 5min;
     uint64_t   write_total = 0;
     uint64_t   written = 0;
     uint64_t   write_cnt = 0;
@@ -567,17 +571,15 @@ void Buffer::Run(void)
     while (m_parent->m_run)
     {
         {
-            std::unique_lock<std::mutex> lk(m_parent->m_flow_mutex);
-            m_parent->m_flow_cond.wait_for(lk,
-                                           std::chrono::milliseconds
-                                           (wait ? 5000 : 25));
+            std::unique_lock<std::mutex> lk(m_parent->m_flowMutex);
+            m_parent->m_flowCond.wait_for(lk, wait ? 5s : 25ms);
             wait = false;
         }
 
-        if (send_time < static_cast<double>(time (nullptr)))
+        if (send_time < std::chrono::system_clock::now())
         {
             // Every 5 minutes, write out some statistics.
-            send_time = time (nullptr) + (60 * 5);
+            send_time = std::chrono::system_clock::now() + 5min;
             write_total += written;
             if (m_parent->m_streaming)
             {
@@ -599,14 +601,14 @@ void Buffer::Run(void)
             if (m_parent->m_xon)
             {
                 block_t pkt;
-                m_parent->m_flow_mutex.lock();
+                m_parent->m_flowMutex.lock();
                 if (!m_data.empty())
                 {
                     pkt = m_data.front();
                     m_data.pop();
                     is_empty = m_data.empty();
                 }
-                m_parent->m_flow_mutex.unlock();
+                m_parent->m_flowMutex.unlock();
 
                 if (!pkt.empty())
                 {
@@ -634,19 +636,19 @@ void Buffer::Run(void)
         else
         {
             // Clear packet queue
-            m_parent->m_flow_mutex.lock();
+            m_parent->m_flowMutex.lock();
             if (!m_data.empty())
             {
                 stack_t dummy;
                 std::swap(m_data, dummy);
             }
-            m_parent->m_flow_mutex.unlock();
+            m_parent->m_flowMutex.unlock();
 
             wait = true;
         }
     }
 
     LOG(VB_RECORD, LOG_INFO, LOC + "Buffer: shutting down");
-    m_parent->m_buffer_running = false;
-    m_parent->m_flow_cond.notify_all();
+    m_parent->m_bufferRunning = false;
+    m_parent->m_flowCond.notify_all();
 }

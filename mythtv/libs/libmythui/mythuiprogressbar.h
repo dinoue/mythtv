@@ -21,10 +21,11 @@ class MUI_PUBLIC MythUIProgressBar : public MythUIType
     enum LayoutType { LayoutVertical, LayoutHorizontal };
     enum EffectType { EffectReveal, EffectSlide, EffectAnimate };
 
+    void Set(int start, int total, int used);
     void SetStart(int value);
     void SetUsed(int value);
     void SetTotal(int value);
-    int  GetUsed(void) { return m_current; }
+    int  GetUsed(void) const { return m_current; }
     void SetVisible(bool visible) override; // MythUIType
 
   protected:

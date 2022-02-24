@@ -35,6 +35,7 @@
 #include <unistd.h>
 
 // QT headers
+#include <QtGlobal>
 #include <QCoreApplication>
 
 // libmythbase headers
@@ -43,7 +44,7 @@
 #include "mythevent.h"
 #include "mythlogging.h"
 
-#if CONFIG_CYGWIN || defined(_WIN32)
+#ifdef Q_OS_WIN
 #include "mythsystemwindows.h"
 #else
 #include "mythsystemunix.h"
@@ -56,7 +57,7 @@
 
 void MythSystemLegacy::initializePrivate(void)
 {
-#if CONFIG_CYGWIN || defined(_WIN32)
+#ifdef Q_OS_WIN
     d = new MythSystemLegacyWindows(this);
 #else
     d = new MythSystemLegacyUnix(this);
@@ -209,7 +210,7 @@ bool MythSystemLegacy::SetIOPrio(int prio)
 }
 
 /// \brief Runs a command inside the /bin/sh shell. Returns immediately
-void MythSystemLegacy::Run(time_t timeout)
+void MythSystemLegacy::Run(std::chrono::seconds timeout)
 {
     if (!d)
         m_status = GENERIC_EXIT_NO_HANDLER;
@@ -239,7 +240,7 @@ void MythSystemLegacy::Run(time_t timeout)
 
 // should there be a separate 'getstatus' call? or is using
 // Wait() for that purpose sufficient?
-uint MythSystemLegacy::Wait(time_t timeout)
+uint MythSystemLegacy::Wait(std::chrono::seconds timeout)
 {
     if (!d)
         m_status = GENERIC_EXIT_NO_HANDLER;
@@ -249,10 +250,10 @@ uint MythSystemLegacy::Wait(time_t timeout)
 
     if (GetSetting("ProcessEvents"))
     {
-        if (timeout > 0)
-            timeout += time(nullptr);
-
-        while (!timeout || time(nullptr) < timeout)
+        auto tt = (timeout > 0s)
+            ? SystemClock::now() + timeout
+            : SystemTime::max();
+        while (SystemClock::now() < tt)
         {
             // loop until timeout hits or process ends
             if (m_semReady.tryAcquire(1,100))
@@ -266,9 +267,10 @@ uint MythSystemLegacy::Wait(time_t timeout)
     }
     else
     {
-        if (timeout > 0)
+        if (timeout > 0s)
         {
-            if (m_semReady.tryAcquire(1, timeout*1000))
+            auto msec = duration_cast<std::chrono::milliseconds>(timeout);
+            if (m_semReady.tryAcquire(1, msec.count()))
                 m_semReady.release(1);
         }
         else
@@ -299,6 +301,9 @@ void MythSystemLegacy::Signal(MythSignal sig)
     if (m_status != GENERIC_EXIT_RUNNING)
         return;
 
+#ifndef SIGTRAP /* For Mingw */
+#define SIGTRAP -1
+#endif
     int posix_signal = SIGTRAP;
     switch (sig)
     {
@@ -498,24 +503,29 @@ MythSystemLegacyPrivate::MythSystemLegacyPrivate(const QString &debugName) :
 {
 }
 
-uint myth_system(const QString &command, uint flags, uint timeout)
+uint myth_system(const QString &command, uint flags, std::chrono::seconds timeout)
 {
     flags |= kMSRunShell | kMSAutoCleanup;
     auto *ms = new MythSystemLegacy(command, flags);
     ms->Run(timeout);
-    uint result = ms->Wait(0);
+    uint result = ms->Wait(0s);
     if (!ms->GetSetting("RunInBackground"))
         delete ms;
 
     return result;
 }
 
-extern "C" {
-    unsigned int myth_system_c(char *command, uint flags, uint timeout)
-    {
-        QString cmd(command);
-        return myth_system(cmd, flags, timeout);
-    }
+uint myth_system(const QString &Command, const QStringList& Args, uint Flags,
+                 std::chrono::seconds Timeout)
+{
+    Flags |= kMSRunShell | kMSAutoCleanup;
+    auto *ms = new MythSystemLegacy(Command, Args, Flags);
+    ms->Run(Timeout);
+    uint result = ms->Wait(0s);
+    if (!ms->GetSetting("RunInBackground"))
+        delete ms;
+
+    return result;
 }
 
 /*

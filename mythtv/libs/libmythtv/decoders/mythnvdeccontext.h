@@ -28,10 +28,10 @@ class MythNVDECContext : public MythCodecContext
    ~MythNVDECContext() override;
     void InitVideoCodec                  (AVCodecContext *Context, bool SelectedStream, bool &DirectRendering) override;
     int  HwDecoderInit                   (AVCodecContext *Context) override;
-    bool RetrieveFrame                   (AVCodecContext *Context, VideoFrame *Frame, AVFrame *AvFrame) override;
+    bool RetrieveFrame                   (AVCodecContext *Context, MythVideoFrame *Frame, AVFrame *AvFrame) override;
     void SetDeinterlacing                (AVCodecContext *Context,
-                                          VideoDisplayProfile *Profile, bool DoubleRate) override;
-    void PostProcessFrame                (AVCodecContext *Context, VideoFrame *Frame) override;
+                                          MythVideoProfile *Profile, bool DoubleRate) override;
+    void PostProcessFrame                (AVCodecContext *Context, MythVideoFrame *Frame) override;
     bool IsDeinterlacing                 (bool &DoubleRate, bool StreamChange = false) override;
     bool DecoderWillResetOnFlush         (void) override;
     static MythCodecID GetSupportedCodec (AVCodecContext **CodecContext,
@@ -40,10 +40,10 @@ class MythNVDECContext : public MythCodecContext
                                           AVStream       *Stream,
                                           uint            StreamType);
     static enum AVPixelFormat GetFormat  (AVCodecContext *Context, const AVPixelFormat *PixFmt);
-    static bool GetBuffer                (AVCodecContext *Context, VideoFrame *Frame,
+    static bool GetBuffer                (AVCodecContext *Context, MythVideoFrame *Frame,
                                           AVFrame *AvFrame, int Flags);
     static int  InitialiseDecoder        (AVCodecContext *Context);
-    static bool HaveNVDEC                (void);
+    static bool HaveNVDEC                (bool Reinit = false);
     static void GetDecoderList           (QStringList &Decoders);
 
   private:
@@ -53,7 +53,7 @@ class MythNVDECContext : public MythCodecContext
         MythNVDECCaps(cudaVideoCodec Codec, uint Depth, cudaVideoChromaFormat Format,
                       QSize Minimum, QSize Maximum, uint MacroBlocks);
         bool Supports(cudaVideoCodec Codec, cudaVideoChromaFormat Format, uint Depth,
-                      int Width, int Height);
+                      int Width, int Height) const;
 
         MythCodecContext::CodecProfile m_profile { MythCodecContext::NoProfile };
         VideoFrameType m_type           { FMT_NONE };

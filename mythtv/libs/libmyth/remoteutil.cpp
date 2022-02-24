@@ -13,7 +13,7 @@
 #include "mythevent.h"
 #include "mythsocket.h"
 
-vector<ProgramInfo *> *RemoteGetRecordedList(int sort)
+std::vector<ProgramInfo *> *RemoteGetRecordedList(int sort)
 {
     QString str = "QUERY_RECORDINGS ";
     if (sort < 0)
@@ -25,7 +25,7 @@ vector<ProgramInfo *> *RemoteGetRecordedList(int sort)
 
     QStringList strlist(str);
 
-    auto *info = new vector<ProgramInfo *>;
+    auto *info = new std::vector<ProgramInfo *>;
 
     if (!RemoteGetRecordingList(*info, strlist))
     {
@@ -36,7 +36,7 @@ vector<ProgramInfo *> *RemoteGetRecordedList(int sort)
     return info;
 }
 
-bool RemoteGetLoad(double load[3])
+bool RemoteGetLoad(system_load_array& load)
 {
     QStringList strlist(QString("QUERY_LOAD"));
 
@@ -51,7 +51,7 @@ bool RemoteGetLoad(double load[3])
     return false;
 }
 
-bool RemoteGetUptime(time_t &uptime)
+bool RemoteGetUptime(std::chrono::seconds &uptime)
 {
     QStringList strlist(QString("QUERY_UPTIME"));
 
@@ -62,11 +62,11 @@ bool RemoteGetUptime(time_t &uptime)
         return false;
 
     if (sizeof(time_t) == sizeof(int))
-        uptime = strlist[0].toUInt();
+        uptime = std::chrono::seconds(strlist[0].toUInt());
     else if (sizeof(time_t) == sizeof(long))
-        uptime = strlist[0].toULong();
+        uptime = std::chrono::seconds(strlist[0].toULong());
     else if (sizeof(time_t) == sizeof(long long))
-        uptime = strlist[0].toULongLong();
+        uptime = std::chrono::seconds(strlist[0].toULongLong());
 
     return true;
 }
@@ -115,10 +115,10 @@ bool RemoteDeleteRecording(uint recordingID, bool forceMetadataDelete,
     bool result = true;
     QString cmd =
         QString("DELETE_RECORDING %1 %2 %3 %4")
-        .arg(QString::number(recInfo.GetChanID()))
-        .arg(recInfo.GetRecordingStartTime().toString(Qt::ISODate))
-        .arg(forceMetadataDelete ? "FORCE" : "NO_FORCE")
-        .arg(forgetHistory ? "FORGET" : "NO_FORGET");
+        .arg(QString::number(recInfo.GetChanID()),
+             recInfo.GetRecordingStartTime().toString(Qt::ISODate),
+             forceMetadataDelete ? "FORCE" : "NO_FORCE",
+             forgetHistory ? "FORGET" : "NO_FORGET");
     QStringList strlist(cmd);
 
     if ((!gCoreContext->SendReceiveStringList(strlist) || strlist.isEmpty()) ||
@@ -159,20 +159,20 @@ bool RemoteUndeleteRecording(uint recordingID)
     return result;
 }
 
-void RemoteGetAllScheduledRecordings(vector<ProgramInfo *> &scheduledlist)
+void RemoteGetAllScheduledRecordings(std::vector<ProgramInfo *> &scheduledlist)
 {
     QStringList strList(QString("QUERY_GETALLSCHEDULED"));
     RemoteGetRecordingList(scheduledlist, strList);
 }
 
-void RemoteGetAllExpiringRecordings(vector<ProgramInfo *> &expiringlist)
+void RemoteGetAllExpiringRecordings(std::vector<ProgramInfo *> &expiringlist)
 {
     QStringList strList(QString("QUERY_GETEXPIRING"));
     RemoteGetRecordingList(expiringlist, strList);
 }
 
 uint RemoteGetRecordingList(
-    vector<ProgramInfo *> &reclist, QStringList &strList)
+    std::vector<ProgramInfo *> &reclist, QStringList &strList)
 {
     if (!gCoreContext->SendReceiveStringList(strList) || strList.isEmpty())
         return 0;
@@ -189,23 +189,23 @@ uint RemoteGetRecordingList(
     }
 
     uint reclist_initial_size = (uint) reclist.size();
-    QStringList::const_iterator it = strList.begin() + 1;
+    QStringList::const_iterator it = strList.cbegin() + 1;
     for (int i = 0; i < numrecordings; i++)
     {
-        auto *pginfo = new ProgramInfo(it, strList.end());
+        auto *pginfo = new ProgramInfo(it, strList.cend());
         reclist.push_back(pginfo);
     }
 
     return ((uint) reclist.size()) - reclist_initial_size;
 }
 
-vector<ProgramInfo *> *RemoteGetConflictList(const ProgramInfo *pginfo)
+std::vector<ProgramInfo *> *RemoteGetConflictList(const ProgramInfo *pginfo)
 {
     QString cmd = QString("QUERY_GETCONFLICTING");
     QStringList strlist( cmd );
     pginfo->ToStringList(strlist);
 
-    auto *retlist = new vector<ProgramInfo *>;
+    auto *retlist = new std::vector<ProgramInfo *>;
 
     RemoteGetRecordingList(*retlist, strlist);
     return retlist;
@@ -221,13 +221,8 @@ QDateTime RemoteGetPreviewLastModified(const ProgramInfo *pginfo)
 
     if (!strlist.isEmpty() && !strlist[0].isEmpty() && (strlist[0] != "BAD"))
     {
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        uint timet = strlist[0].toUInt();
-        return MythDate::fromTime_t(timet);
-#else
         qint64 timet = strlist[0].toLongLong();
         return MythDate::fromSecsSinceEpoch(timet);
-#endif
     }
 
     return QDateTime();
@@ -246,11 +241,7 @@ QDateTime RemoteGetPreviewIfModified(
 
     QStringList strlist("QUERY_PIXMAP_GET_IF_MODIFIED");
     strlist << ((cacheLastModified.isValid()) ? // unix secs, UTC
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-                QString::number(cacheLastModified.toTime_t()) :
-#else
                 QString::number(cacheLastModified.toSecsSinceEpoch()) :
-#endif
                 QString("-1"));
     strlist << QString::number(200 * 1024); // max size of preview file
     pginfo.ToStringList(strlist);
@@ -276,11 +267,7 @@ QDateTime RemoteGetPreviewIfModified(
     qlonglong timet = strlist[0].toLongLong();
     if (timet >= 0)
     {
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        retdatetime = MythDate::fromTime_t(timet);
-#else
         retdatetime = MythDate::fromSecsSinceEpoch(timet);
-#endif
     }
 
     if (strlist.size() < 4)
@@ -300,7 +287,12 @@ QDateTime RemoteGetPreviewIfModified(
     }
     data.resize(length);
 
-    if (checksum16 != qChecksum(data.constData(), data.size()))
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    quint16 calculated = qChecksum(data.constData(), data.size());
+#else
+    quint16 calculated = qChecksum(data);
+#endif
+    if (checksum16 != calculated)
     {
         LOG(VB_GENERAL, LOG_ERR, loc + "Preview checksum failed");
         return QDateTime();
@@ -445,7 +437,7 @@ bool RemoteGetFileList(const QString& host, const QString& path, QStringList* li
     *list << host;
     *list << StorageGroup::GetGroupToUse(host, sgroup);
     *list << path;
-    *list << QString::number(fileNamesOnly);
+    *list << QString::number(static_cast<int>(fileNamesOnly));
 
     bool ok = false;
 
@@ -533,14 +525,14 @@ int RemoteGetRecordingStatus(
 /**
  * \brief return list of currently recording shows
  */
-vector<ProgramInfo *> *RemoteGetCurrentlyRecordingList(void)
+std::vector<ProgramInfo *> *RemoteGetCurrentlyRecordingList(void)
 {
     QString str = "QUERY_RECORDINGS ";
     str += "Recording";
     QStringList strlist( str );
 
-    auto *reclist = new vector<ProgramInfo *>;
-    auto *info = new vector<ProgramInfo *>;
+    auto *reclist = new std::vector<ProgramInfo *>;
+    auto *info = new std::vector<ProgramInfo *>;
     if (!RemoteGetRecordingList(*info, strlist))
     {
         delete info;

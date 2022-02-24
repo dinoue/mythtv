@@ -9,7 +9,6 @@
 #include <thread> // for sleep_for
 #include <unistd.h>
 #include <vector>
-using namespace std;
 
 // System headers
 #include <sys/types.h>
@@ -24,7 +23,7 @@ using namespace std;
 
 // MythTV headers
 #include "mpegrecorder.h"
-#include "ringbuffer.h"
+#include "io/mythmediabuffer.h"
 #include "mythcorecontext.h"
 #include "programinfo.h"
 #include "recordingprofile.h"
@@ -32,42 +31,35 @@ using namespace std;
 #include "mythdate.h"
 #include "cardutil.h"
 
-// ivtv header
-extern "C" {
-#include "ivtv_myth.h"
-}
-
-#define IVTV_KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
-
 #define LOC QString("MPEGRec[%1](%2): ") \
             .arg(m_tvrec ? m_tvrec->GetInputId() : -1).arg(m_videodevice)
 
-const int MpegRecorder::kAudRateL1[] =
+const std::array<const int,14> MpegRecorder::kAudRateL1
 {
-    32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448, 0
+    32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448
 };
 
-const int MpegRecorder::kAudRateL2[] =
+const std::array<const int,14> MpegRecorder::kAudRateL2
 {
-    32, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384, 0
+    32, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384
 };
 
-const int MpegRecorder::kAudRateL3[] =
+const std::array<const int,14> MpegRecorder::kAudRateL3
 {
-    32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 0
+    32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320
 };
 
-const char* MpegRecorder::kStreamType[] =
+const std::array<const std::string,15> MpegRecorder::kStreamType
 {
     "MPEG-2 PS", "MPEG-2 TS",     "MPEG-1 VCD",    "PES AV",
     "",          "PES V",          "",             "PES A",
     "",          "",              "DVD",           "VCD",
-    "SVCD",      "DVD-Special 1", "DVD-Special 2", nullptr
+    "SVCD",      "DVD-Special 1", "DVD-Special 2"
 };
 
-const char* MpegRecorder::kAspectRatio[] =
+const std::array<const std::string,4> MpegRecorder::kAspectRatio
 {
-    "Square", "4:3", "16:9", "2.21:1", nullptr
+    "Square", "4:3", "16:9", "2.21:1"
 };
 
 void MpegRecorder::TeardownAll(void)
@@ -96,9 +88,9 @@ void MpegRecorder::TeardownAll(void)
 
 }
 
-static int find_index(const int *audio_rate, int value)
+static int find_index(const std::array<const int,14> &audio_rate, int value)
 {
-    for (uint i = 0; audio_rate[i] != 0; i++)
+    for (uint i = 0; i < audio_rate.size(); i++)
     {
         if (audio_rate[i] == value)
             return i;
@@ -182,18 +174,19 @@ void MpegRecorder::SetOption(const QString &opt, int value)
 
 void MpegRecorder::SetOption(const QString &opt, const QString &value)
 {
+    std::string value_ss = value.toStdString();
     if (opt == "mpeg2streamtype")
     {
         bool found = false;
-        for (size_t i = 0; i < sizeof(kStreamType) / sizeof(char*); i++)
+        for (size_t i = 0; i < kStreamType.size(); i++)
         {
-            if (QString(kStreamType[i]) == value)
+            if (kStreamType[i] == value_ss)
             {
-                if (QString(kStreamType[i]) == "MPEG-2 TS")
+                if (kStreamType[i] == "MPEG-2 TS")
                 {
                      m_containerFormat = formatMPEG2_TS;
                 }
-                else if (QString(kStreamType[i]) == "MPEG-2 PS")
+                else if (kStreamType[i] == "MPEG-2 PS")
                 {
                      m_containerFormat = formatMPEG2_PS;
                 }
@@ -228,9 +221,9 @@ void MpegRecorder::SetOption(const QString &opt, const QString &value)
     else if (opt == "mpeg2aspectratio")
     {
         bool found = false;
-        for (int i = 0; kAspectRatio[i] != nullptr; i++)
+        for (size_t i = 0; i < kAspectRatio.size(); i++)
         {
-            if (QString(kAspectRatio[i]) == value)
+            if (kAspectRatio[i] == value_ss)
             {
                 m_aspectRatio = i + 1;
                 found = true;
@@ -279,7 +272,7 @@ void MpegRecorder::SetOptionsFromProfile(RecordingProfile *profile,
     (void)audiodev;
     (void)vbidev;
 
-    if (videodev.toLower().startsWith("file:"))
+    if (videodev.startsWith("file:", Qt::CaseInsensitive))
     {
         m_deviceIsMpegFile = true;
         m_bufferSize = 64000;
@@ -384,7 +377,7 @@ bool MpegRecorder::OpenV4L2DeviceAsInput(void)
         if (m_driver == "hdpvr")
         {
             m_bufferSize = 1500 * TSPacket::kSize;
-            m_h264Parser.use_I_forKeyframes(false);
+            m_useIForKeyframe = false;
         }
     }
 
@@ -562,7 +555,7 @@ bool MpegRecorder::SetRecordingVolume(int chanfd)
     // calculate volume in card units.
     int range = qctrl.maximum - qctrl.minimum;
     int value = (int) ((range * m_audVolume * 0.01F) + qctrl.minimum);
-    int ctrl_volume = min(qctrl.maximum, max(qctrl.minimum, value));
+    int ctrl_volume = std::min(qctrl.maximum, std::max(qctrl.minimum, value));
 
     // Set recording volume
     struct v4l2_control ctrl {V4L2_CID_AUDIO_VOLUME, ctrl_volume};
@@ -601,7 +594,9 @@ uint MpegRecorder::GetFilteredStreamType(void) const
         LOG(VB_GENERAL, LOG_WARNING, LOC +
             QString("Stream type '%1'\n\t\t\t"
                     "is not supported by %2 driver, using '%3' instead.")
-                .arg(kStreamType[m_streamType]).arg(m_driver).arg(kStreamType[st]));
+                .arg(QString::fromStdString(kStreamType[m_streamType]),
+                     m_driver,
+                     QString::fromStdString(kStreamType[st])));
     }
 
     return st;
@@ -634,7 +629,7 @@ uint MpegRecorder::GetFilteredAudioLayer(void) const
 {
     uint layer = (uint) m_audType;
 
-    layer = max(min(layer, 3U), 1U);
+    layer = std::max(std::min(layer, 3U), 1U);
 
     layer = (m_driver == "ivtv") ? 2 : layer;
 
@@ -651,8 +646,8 @@ uint MpegRecorder::GetFilteredAudioLayer(void) const
 
 uint MpegRecorder::GetFilteredAudioBitRate(uint audio_layer) const
 {
-    return ((2 == audio_layer) ? max(m_audBitrateL2, 10) :
-            ((3 == audio_layer) ? m_audBitrateL3 : max(m_audBitrateL1, 6)));
+    return ((2 == audio_layer) ? std::max(m_audBitrateL2, 10) :
+            ((3 == audio_layer) ? m_audBitrateL3 : std::max(m_audBitrateL1, 6)));
 }
 
 static int streamtype_ivtv_to_v4l2(int st)
@@ -676,7 +671,7 @@ static int streamtype_ivtv_to_v4l2(int st)
     }
 }
 
-static void add_ext_ctrl(vector<struct v4l2_ext_control> &ctrl_list,
+static void add_ext_ctrl(std::vector<struct v4l2_ext_control> &ctrl_list,
                          uint32_t id, int32_t value)
 {
     struct v4l2_ext_control tmp_ctrl {};
@@ -685,7 +680,7 @@ static void add_ext_ctrl(vector<struct v4l2_ext_control> &ctrl_list,
     ctrl_list.push_back(tmp_ctrl);
 }
 
-static void set_ctrls(int fd, vector<struct v4l2_ext_control> &ext_ctrls)
+static void set_ctrls(int fd, std::vector<struct v4l2_ext_control> &ext_ctrls)
 {
     static QMutex s_controlDescriptionLock;
     static QMap<uint32_t,QString> s_controlDescription;
@@ -735,7 +730,7 @@ static void set_ctrls(int fd, vector<struct v4l2_ext_control> &ext_ctrls)
 
 bool MpegRecorder::SetV4L2DeviceOptions(int chanfd)
 {
-    vector<struct v4l2_ext_control> ext_ctrls;
+    std::vector<struct v4l2_ext_control> ext_ctrls;
 
     // Set controls
     if (m_driver != "hdpvr")
@@ -813,7 +808,7 @@ bool MpegRecorder::SetV4L2DeviceOptions(int chanfd)
 
         if (!ioctl(chanfd, VIDIOC_QUERYCTRL, &qctrl))
         {
-            uint audio_enc = max(min(m_audType-1, qctrl.maximum), qctrl.minimum);
+            uint audio_enc = std::max(std::min(m_audType-1, qctrl.maximum), qctrl.minimum);
             add_ext_ctrl(ext_ctrls, V4L2_CID_MPEG_AUDIO_ENCODING, audio_enc);
         }
         else
@@ -960,11 +955,12 @@ void MpegRecorder::run(void)
     MythTimer elapsedTimer;
     float elapsed = NAN;
     long long bytesRead = 0;
-    int dummyBPS = 0;  // Bytes per second, but env var is BITS PER SECOND
 
-    if (getenv("DUMMYBPS"))
+    bool ok { false };
+    // Bytes per second, but env var is BITS PER SECOND
+    int dummyBPS = qEnvironmentVariableIntValue("DUMMYBPS", &ok) / 8;
+    if (ok)
     {
-        dummyBPS = atoi(getenv("DUMMYBPS")) / 8;
         LOG(VB_GENERAL, LOG_INFO,
             LOC + QString("Throttling dummy recorder to %1 bits per second")
                 .arg(dummyBPS * 8));
@@ -984,27 +980,27 @@ void MpegRecorder::run(void)
     QByteArray vdevice = m_videodevice.toLatin1();
     while (IsRecordingRequested() && !IsErrored())
     {
-        if (PauseAndWait(100))
+        if (PauseAndWait(100ms))
             continue;
 
         if (m_deviceIsMpegFile)
         {
             if (dummyBPS && bytesRead)
             {
-                elapsed = (elapsedTimer.elapsed() / 1000.0) + 1;
+                elapsed = (elapsedTimer.elapsed().count() / 1000.0) + 1;
                 while ((bytesRead / elapsed) > dummyBPS)
                 {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(50));
-                    elapsed = (elapsedTimer.elapsed() / 1000.0) + 1;
+                    std::this_thread::sleep_for(50ms);
+                    elapsed = (elapsedTimer.elapsed().count() / 1000.0) + 1;
                 }
             }
             else if (GetFramesWritten())
             {
-                elapsed = (elapsedTimer.elapsed() / 1000.0) + 1;
+                elapsed = (elapsedTimer.elapsed().count() / 1000.0) + 1;
                 while ((GetFramesWritten() / elapsed) > 30)
                 {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(50));
-                    elapsed = (elapsedTimer.elapsed() / 1000.0) + 1;
+                    std::this_thread::sleep_for(50ms);
+                    elapsed = (elapsedTimer.elapsed().count() / 1000.0) + 1;
                 }
             }
         }
@@ -1221,6 +1217,9 @@ void MpegRecorder::Reset(void)
     LOG(VB_RECORD, LOG_INFO, LOC + "Reset(void)");
     ResetForNewFile();
 
+    if (m_h2645Parser != nullptr)
+        m_h2645Parser->Reset();
+
     m_startCode = 0xffffffff;
 
     if (m_curRecording)
@@ -1239,7 +1238,7 @@ void MpegRecorder::Pause(bool clear)
     m_requestPause = true;
 }
 
-bool MpegRecorder::PauseAndWait(int timeout)
+bool MpegRecorder::PauseAndWait(std::chrono::milliseconds timeout)
 {
     QMutexLocker locker(&m_pauseLock);
     if (m_requestPause)
@@ -1257,7 +1256,7 @@ bool MpegRecorder::PauseAndWait(int timeout)
                 m_tvrec->RecorderPaused();
         }
 
-        m_unpauseWait.wait(&m_pauseLock, timeout);
+        m_unpauseWait.wait(&m_pauseLock, timeout.count());
     }
 
     if (!m_requestPause && IsPaused(true))
@@ -1266,9 +1265,6 @@ bool MpegRecorder::PauseAndWait(int timeout)
 
         if (m_driver == "hdpvr")
         {
-            m_h264Parser.Reset();
-            m_waitForKeyframeOption = true;
-            m_seenSps = false;
             // HD-PVR will sometimes reset to defaults
             SetV4L2DeviceOptions(m_chanfd);
         }
@@ -1326,10 +1322,12 @@ bool MpegRecorder::StartEncoding(void)
         }
     }
 
+    if (m_h2645Parser != nullptr)
+        m_h2645Parser->Reset();
+
     bool good_res = true;
     if (m_driver == "hdpvr")
     {
-        m_h264Parser.Reset();
         m_waitForKeyframeOption = true;
         m_seenSps = false;
         good_res = HandleResolutionChanges();
@@ -1351,7 +1349,7 @@ bool MpegRecorder::StartEncoding(void)
             LOG(VB_GENERAL, LOG_ERR, LOC +
                 "StartEncoding: read failing, re-opening device: " + ENO);
             close(m_readfd);
-            std::this_thread::sleep_for(std::chrono::milliseconds(2));
+            std::this_thread::sleep_for(2ms);
             m_readfd = open(m_videodevice.toLatin1().constData(),
                           O_RDWR | O_NONBLOCK);
             if (m_readfd < 0)
@@ -1367,7 +1365,7 @@ bool MpegRecorder::StartEncoding(void)
             LOG(VB_GENERAL, LOG_ERR, LOC +
                 QString("StartEncoding: read failed, retry in %1 msec:")
                 .arg(100 * idx) + ENO);
-            std::this_thread::sleep_for(std::chrono::microseconds(idx * 100));
+            std::this_thread::sleep_for(idx * 100us);
         }
     }
     if (idx == 50)
@@ -1431,7 +1429,7 @@ void MpegRecorder::StopEncoding(void)
     if (m_deviceReadBuffer && m_deviceReadBuffer->IsRunning())
     {
         // allow last bits of data through..
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        std::this_thread::sleep_for(20ms);
         m_deviceReadBuffer->Stop();
     }
 
@@ -1460,7 +1458,7 @@ void MpegRecorder::SetBitrate(int bitrate, int maxbitrate,
                 .arg(reason).arg(bitrate).arg(maxbitrate));
     }
 
-    vector<struct v4l2_ext_control> ext_ctrls;
+    std::vector<struct v4l2_ext_control> ext_ctrls;
     add_ext_ctrl(ext_ctrls, V4L2_CID_MPEG_VIDEO_BITRATE_MODE,
                  (maxbitrate == bitrate) ?
                  V4L2_MPEG_VIDEO_BITRATE_MODE_CBR :

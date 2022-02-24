@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2011 Peter Bennett <pbennett@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -39,15 +39,15 @@ class SERVICE_PUBLIC VideoStreamInfoList : public QObject
     Q_PROPERTY( int          ErrorCode      READ ErrorCode       WRITE setErrorCode      )
     Q_PROPERTY( QString      ErrorMsg       READ ErrorMsg        WRITE setErrorMsg       )
 
-    Q_PROPERTY( QVariantList VideoStreamInfos READ VideoStreamInfos DESIGNABLE true )
+
+    Q_PROPERTY( QVariantList VideoStreamInfos READ VideoStreamInfos )
 
     PROPERTYIMP       ( int         , Count           )
-    PROPERTYIMP       ( QDateTime   , AsOf            )
-    PROPERTYIMP       ( QString     , Version         )
-    PROPERTYIMP       ( QString     , ProtoVer        )
+    PROPERTYIMP_REF   ( QDateTime   , AsOf            )
+    PROPERTYIMP_REF   ( QString     , Version         )
+    PROPERTYIMP_REF   ( QString     , ProtoVer        )
     PROPERTYIMP       ( int         , ErrorCode       )
-    PROPERTYIMP       ( QString     , ErrorMsg        )
-
+    PROPERTYIMP_REF   ( QString     , ErrorMsg        )
     PROPERTYIMP_RO_REF( QVariantList, VideoStreamInfos );
 
     public:

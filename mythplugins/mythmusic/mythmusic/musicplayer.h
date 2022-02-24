@@ -12,7 +12,7 @@
 #include "decoderhandler.h"
 
 // how long to wait before updating the lastplay and playcount fields
-#define LASTPLAY_DELAY 15
+static constexpr std::chrono::seconds LASTPLAY_DELAY { 15s };
 
 class AudioOutput;
 class MainVisual;
@@ -49,6 +49,14 @@ class MusicPlayerEvent : public MythEvent
         static Type CDChangedEvent;
         static Type PlaylistChangedEvent;
         static Type PlayedTracksChangedEvent;
+
+    // No implicit copying.
+    protected:
+        MusicPlayerEvent(const MusicPlayerEvent &other) = default;
+        MusicPlayerEvent &operator=(const MusicPlayerEvent &other) = default;
+    public:
+        MusicPlayerEvent(MusicPlayerEvent &&) = delete;
+        MusicPlayerEvent &operator=(MusicPlayerEvent &&) = delete;
 };
 
 class MusicPlayer : public QObject, public MythObservable
@@ -89,7 +97,7 @@ class MusicPlayer : public QObject, public MythObservable
     void  setSpeed(float speed);
     void  incSpeed();
     void  decSpeed();
-    float getSpeed() { return m_playSpeed; }
+    float getSpeed() const { return m_playSpeed; }
 
     void play(void);
     void stop(bool stopAll = false);
@@ -99,18 +107,18 @@ class MusicPlayer : public QObject, public MythObservable
 
     void nextAuto(void);
 
-    bool isPlaying(void) { return m_isPlaying; }
+    bool isPlaying(void) const { return m_isPlaying; }
     bool isPaused(void) { return getOutput() ? getOutput()->IsPaused() : false; }
     bool isStopped(void) { return !(isPlaying() || isPaused()); }
     bool hasClient(void) { return hasListeners(); }
 
     /// This will allow/disallow the mini player showing on track changes
     void autoShowPlayer(bool autoShow) { m_autoShowPlayer = autoShow; }
-    bool getAutoShowPlayer(void) { return m_autoShowPlayer; }
+    bool getAutoShowPlayer(void) const { return m_autoShowPlayer; }
 
     /// This will allow/disallow the mini player showing even using its jumppoint
     void canShowPlayer(bool canShow) { m_canShowPlayer = canShow; }
-    bool getCanShowPlayer(void) { return m_canShowPlayer; }
+    bool getCanShowPlayer(void) const { return m_canShowPlayer; }
 
     Decoder        *getDecoder(void) { return m_decoderHandler ? m_decoderHandler->getDecoder() : nullptr; }
     DecoderHandler *getDecoderHandler(void) { return m_decoderHandler; }
@@ -129,11 +137,11 @@ class MusicPlayer : public QObject, public MythObservable
 
     QList<MusicMetadata*> &getPlayedTracksList(void) { return m_playedList; }
 
-    int          getCurrentTrackPos(void) { return m_currentTrack; }
+    int          getCurrentTrackPos(void) const { return m_currentTrack; }
     bool         setCurrentTrackPos(int pos);
     void         changeCurrentTrack(int trackNo);
 
-    int          getCurrentTrackTime(void) { return m_currentTime; }
+    std::chrono::seconds getCurrentTrackTime(void) const { return m_currentTime; }
 
     void         activePlaylistChanged(int trackID, bool deleted);
     void         playlistChanged(int playlistID);
@@ -141,7 +149,7 @@ class MusicPlayer : public QObject, public MythObservable
     void         savePosition(void);
     void         restorePosition(void);
     void         setAllowRestorePos(bool allow) { m_allowRestorePos = allow; }
-    void         seek(int pos);
+    void         seek(std::chrono::seconds pos);
 
     MusicMetadata *getCurrentMetadata(void);
     MusicMetadata *getNextMetadata(void);
@@ -151,9 +159,9 @@ class MusicPlayer : public QObject, public MythObservable
     void         sendTrackUnavailableEvent(int trackID);
     void         sendCDChangedEvent(void);
 
-    void         toMap(InfoMap &infoMap);
+    void         toMap(InfoMap &infoMap) const;
 
-    void         showMiniPlayer(void);
+    void         showMiniPlayer(void) const;
     enum RepeatMode
     { REPEAT_OFF = 0,
       REPEAT_TRACK, 
@@ -187,7 +195,7 @@ class MusicPlayer : public QObject, public MythObservable
 
     ResumeMode  getResumeMode(void);
 
-    void getBufferStatus(int *bufferAvailable, int *bufferSize);
+    void getBufferStatus(int *bufferAvailable, int *bufferSize) const;
 
   public slots:
     void StartPlayback(void);
@@ -210,7 +218,7 @@ class MusicPlayer : public QObject, public MythObservable
     void decoderHandlerReady(void);
 
     int          m_currentTrack {-1};
-    int          m_currentTime {0};
+    std::chrono::seconds  m_currentTime {0s};
 
     MusicMetadata  *m_oneshotMetadata {nullptr};
 
@@ -228,7 +236,7 @@ class MusicPlayer : public QObject, public MythObservable
     bool         m_updatedLastplay    {false};
     bool         m_allowRestorePos    {true};
 
-    int          m_lastplayDelay      {LASTPLAY_DELAY};
+    std::chrono::seconds  m_lastplayDelay      {LASTPLAY_DELAY};
 
     ShuffleMode  m_shuffleMode        {SHUFFLE_OFF};
     RepeatMode   m_repeatMode         {REPEAT_OFF};
@@ -244,7 +252,7 @@ class MusicPlayer : public QObject, public MythObservable
 
     // radio stuff
     QList<MusicMetadata*>  m_playedList;
-    int          m_lastTrackStart     {0};
+    std::chrono::seconds   m_lastTrackStart     {0s};
     int          m_bufferAvailable    {0};
     int          m_bufferSize         {0};
 

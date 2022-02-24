@@ -1,21 +1,29 @@
+#include "mythcdrom.h"
+
+#ifdef HAVE_LIBUDFREAD
+#include <udfread/udfread.h>
+#include <udfread/blockinput.h>
+#else
+#include "udfread.h"
+#include "blockinput.h"
+#endif
+
+#include <QtGlobal>
 #include <QDir>
 #include <QFileInfo>
 
 #include "compat.h"
-#include "mythcdrom.h"
 #include "mythconfig.h"
-#include "remotefile.h"
-#include "blockinput.h"
-#include "udfread.h"
-#ifdef linux
-#include "mythcdrom-linux.h"
-#elif defined(__FreeBSD__)
-#include "mythcdrom-freebsd.h"
-#elif CONFIG_DARWIN
-#include "mythcdrom-darwin.h"
-#endif
 #include "mythlogging.h"
+#include "remotefile.h"
 
+#ifdef __linux__
+#   include "mythcdrom-linux.h"
+#elif defined(__FreeBSD__)
+#   include "mythcdrom-freebsd.h"
+#elif defined(Q_OS_DARWIN)
+#   include "mythcdrom-darwin.h"
+#endif
 
 // If your DVD has directories in lowercase, then it is wrongly mounted!
 // DVDs use the UDF filesystem, NOT ISO9660. Fix your /etc/fstab.
@@ -32,21 +40,21 @@
 #define PATHTO_AUDIO_DETECT "/.TOC.plist"
 
 
-MythCDROM* MythCDROM::get(QObject* par, const char* devicePath,
+MythCDROM* MythCDROM::get(QObject* par, const QString& devicePath,
                           bool SuperMount, bool AllowEject)
 {
-#if defined(linux) && !defined(Q_OS_ANDROID)
+#if defined(__linux__) && !defined(Q_OS_ANDROID)
     return GetMythCDROMLinux(par, devicePath, SuperMount, AllowEject);
 #elif defined(__FreeBSD__)
     return GetMythCDROMFreeBSD(par, devicePath, SuperMount, AllowEject);
-#elif CONFIG_DARWIN
+#elif defined(Q_OS_DARWIN)
     return GetMythCDROMDarwin(par, devicePath, SuperMount, AllowEject);
 #else
     return new MythCDROM(par, devicePath, SuperMount, AllowEject);
 #endif
 }
 
-MythCDROM::MythCDROM(QObject* par, const char* DevicePath, bool SuperMount,
+MythCDROM::MythCDROM(QObject* par, const QString& DevicePath, bool SuperMount,
                      bool AllowEject)
          : MythMediaDevice(par, DevicePath, SuperMount, AllowEject)
 {
@@ -54,51 +62,51 @@ MythCDROM::MythCDROM(QObject* par, const char* DevicePath, bool SuperMount,
 
 void MythCDROM::onDeviceMounted()
 {
-    if (!QDir(m_MountPath).exists())
+    if (!QDir(m_mountPath).exists())
     {
         LOG(VB_GENERAL, LOG_ERR, QString("Mountpoint '%1' doesn't exist")
-                                     .arg(m_MountPath));
-        m_MediaType = MEDIATYPE_UNKNOWN;
-        m_Status    = MEDIASTAT_ERROR;
+                                     .arg(m_mountPath));
+        m_mediaType = MEDIATYPE_UNKNOWN;
+        m_status    = MEDIASTAT_ERROR;
         return;
     }
 
-    QFileInfo audio = QFileInfo(m_MountPath + PATHTO_AUDIO_DETECT);
-    QDir        dvd = QDir(m_MountPath  + PATHTO_DVD_DETECT);
-    QDir       svcd = QDir(m_MountPath  + PATHTO_SVCD_DETECT);
-    QDir        vcd = QDir(m_MountPath  + PATHTO_VCD_DETECT);
-    QDir    bad_dvd = QDir(m_MountPath  + PATHTO_BAD_DVD_MOUNT);
-    QDir         bd = QDir(m_MountPath  + PATHTO_BD_DETECT);
+    QFileInfo audio = QFileInfo(m_mountPath + PATHTO_AUDIO_DETECT);
+    QDir        dvd = QDir(m_mountPath  + PATHTO_DVD_DETECT);
+    QDir       svcd = QDir(m_mountPath  + PATHTO_SVCD_DETECT);
+    QDir        vcd = QDir(m_mountPath  + PATHTO_VCD_DETECT);
+    QDir    bad_dvd = QDir(m_mountPath  + PATHTO_BAD_DVD_MOUNT);
+    QDir         bd = QDir(m_mountPath  + PATHTO_BD_DETECT);
 
     // Default is data media
-    m_MediaType = MEDIATYPE_DATA;
+    m_mediaType = MEDIATYPE_DATA;
 
     // Default is mounted media
-    m_Status = MEDIASTAT_MOUNTED;
+    m_status = MEDIASTAT_MOUNTED;
 
     if (dvd.exists())
     {
         LOG(VB_MEDIA, LOG_INFO, "Probable DVD detected.");
-        m_MediaType = MEDIATYPE_DVD;
-        m_Status = MEDIASTAT_USEABLE;
+        m_mediaType = MEDIATYPE_DVD;
+        m_status = MEDIASTAT_USEABLE;
     }
     else if (bd.exists())
     {
         LOG(VB_MEDIA, LOG_INFO, "Probable Blu-ray detected.");
-        m_MediaType = MEDIATYPE_BD;
-        m_Status = MEDIASTAT_USEABLE;
+        m_mediaType = MEDIATYPE_BD;
+        m_status = MEDIASTAT_USEABLE;
     }
     else if (audio.exists())
     {
         LOG(VB_MEDIA, LOG_INFO, "Probable Audio CD detected.");
-        m_MediaType = MEDIATYPE_AUDIO;
-        m_Status = MEDIASTAT_USEABLE;
+        m_mediaType = MEDIATYPE_AUDIO;
+        m_status = MEDIASTAT_USEABLE;
     }
     else if (vcd.exists() || svcd.exists())
     {
         LOG(VB_MEDIA, LOG_INFO, "Probable VCD/SVCD detected.");
-        m_MediaType = MEDIATYPE_VCD;
-        m_Status = MEDIASTAT_USEABLE;
+        m_mediaType = MEDIATYPE_VCD;
+        m_status = MEDIASTAT_USEABLE;
     }
     else if (bad_dvd.exists())
     {
@@ -108,23 +116,23 @@ void MythCDROM::onDeviceMounted()
     else
     {
         LOG(VB_GENERAL, LOG_ERR,
-                QString("CD/DVD '%1' contained none of\n").arg(m_MountPath) +
-                QString("\t\t\t%1, %2, %3 or %4").arg(PATHTO_DVD_DETECT)
-                .arg(PATHTO_AUDIO_DETECT).arg(PATHTO_VCD_DETECT)
-                .arg(PATHTO_SVCD_DETECT));
+                QString("CD/DVD '%1' contained none of\n").arg(m_mountPath) +
+            QString("\t\t\t%1, %2, %3 or %4")
+                .arg(PATHTO_DVD_DETECT, PATHTO_AUDIO_DETECT,
+                     PATHTO_VCD_DETECT,  PATHTO_SVCD_DETECT));
         LOG(VB_GENERAL, LOG_INFO, "Searching CD statistically - file by file!");
     }
 
     // If not DVD/AudioCD/VCD/SVCD, use parent's more generic version
-    if (MEDIATYPE_DATA == m_MediaType)
+    if (MEDIATYPE_DATA == m_mediaType)
         MythMediaDevice::onDeviceMounted();
 
     // Unlock the door, and if appropriate unmount the media,
     // so the user can press the manual eject button
-    if (m_AllowEject)
+    if (m_allowEject)
     {
         unlock();
-        if (m_MediaType == MEDIATYPE_DVD || m_MediaType == MEDIATYPE_VCD)
+        if (m_mediaType == MEDIATYPE_DVD || m_mediaType == MEDIATYPE_VCD)
             unmount();
     }
 }
@@ -142,7 +150,7 @@ struct blockInput_t
     RemoteFile*         m_file;
 };
 
-static int _def_close(udfread_block_input *p_gen)
+static int def_close(udfread_block_input *p_gen)
 {
     auto *p = (blockInput_t *)p_gen;
     int result = -1;
@@ -157,14 +165,14 @@ static int _def_close(udfread_block_input *p_gen)
     return result;
 }
 
-static uint32_t _def_size(udfread_block_input *p_gen)
+static uint32_t def_size(udfread_block_input *p_gen)
 {
     auto *p = (blockInput_t *)p_gen;
 
     return (uint32_t)(p->m_file->GetRealFileSize() / UDF_BLOCK_SIZE);
 }
 
-static int _def_read(udfread_block_input *p_gen, uint32_t lba, void *buf, uint32_t nblocks, int flags)
+static int def_read(udfread_block_input *p_gen, uint32_t lba, void *buf, uint32_t nblocks, int flags)
 {
     (void)flags;
     int result = -1;
@@ -189,9 +197,9 @@ MythCDROM::ImageType MythCDROM::inspectImage(const QString &path)
         blockInput_t blockInput {};
 
         blockInput.m_file = new RemoteFile(path); // Normally deleted via a call to udfread_close
-        blockInput.m_input.close = _def_close;
-        blockInput.m_input.read = _def_read;
-        blockInput.m_input.size = _def_size;
+        blockInput.m_input.close = def_close;
+        blockInput.m_input.read = def_read;
+        blockInput.m_input.size = def_size;
 
         if (blockInput.m_file->isOpen())
         {

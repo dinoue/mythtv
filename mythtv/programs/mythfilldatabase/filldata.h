@@ -1,9 +1,8 @@
-#ifndef _FILLDATA_H_
-#define _FILLDATA_H_
+#ifndef FILLDATA_H
+#define FILLDATA_H
 
 // C++ headers
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QString>
@@ -34,10 +33,11 @@ struct Source
     bool    xmltvgrabber_baseline     {false};
     bool    xmltvgrabber_manualconfig {false};
     bool    xmltvgrabber_cache        {false};
+    bool    xmltvgrabber_apiconfig    {false};
+    bool    xmltvgrabber_lineups      {false};
     QString xmltvgrabber_prefmethod;
-    vector<int> dd_dups;
 };
-using SourceList = vector<Source>;
+using SourceList = std::vector<Source>;
 
 class FillData
 {
@@ -49,7 +49,7 @@ class FillData
 
     void SetRefresh(int day, bool set);
 
-    bool GrabDataFromFile(int id, QString &filename);
+    bool GrabDataFromFile(int id, const QString &filename);
     bool GrabData(const Source& source, int offset);
     bool Run(SourceList &sourcelist);
 
@@ -80,4 +80,4 @@ class FillData
     mutable QStringList m_fatalErrors;
 };
 
-#endif // _FILLDATA_H_
+#endif // FILLDATA_H

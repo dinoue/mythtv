@@ -1,5 +1,5 @@
-#ifndef __BACKENDSELECT_H__
-#define __BACKENDSELECT_H__
+#ifndef BACKENDSELECT_H
+#define BACKENDSELECT_H
 
 #include <QMutex>
 
@@ -68,7 +68,7 @@ class BackendSelection : public MythScreenType
     bool ConnectBackend(DeviceLocation *dev);
     void AddItem(DeviceLocation *dev);
     void RemoveItem(const QString& USN);
-    bool TryDBfromURL(const QString &error, QString URL);
+    bool TryDBfromURL(const QString &error, const QString& URL);
     void PromptForPassword(void);
     void CloseWithDecision(Decision d);
 
@@ -81,7 +81,6 @@ class BackendSelection : public MythScreenType
     MythUIButton     *m_manualButton    {nullptr};
     MythUIButton     *m_saveButton      {nullptr};
     MythUIButton     *m_cancelButton    {nullptr};
-    //MythUIButton   *m_searchButton    {nullptr};
 
     QString           m_pinCode;
     QString           m_usn;
@@ -94,4 +93,4 @@ class BackendSelection : public MythScreenType
 
 Q_DECLARE_METATYPE(DeviceLocation*)
 
-#endif
+#endif // BACKENDSELECT_H

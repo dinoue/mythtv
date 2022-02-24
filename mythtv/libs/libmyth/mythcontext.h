@@ -13,6 +13,7 @@ class MythContextPrivate;
 
 class MythContextSlotHandler : public QObject
 {
+    friend class MythContextPrivate;
     Q_OBJECT
 
   public:
@@ -57,15 +58,13 @@ class MPUBLIC MythContext
     void SetDisableEventPopup(bool check);
 
   private:
+    Q_DISABLE_COPY(MythContext)
     MythContextPrivate *d {nullptr}; // NOLINT(readability-identifier-naming)
     QString             m_appBinaryVersion;
 };
 
 /// This global variable contains the MythContext instance for the application
 extern MPUBLIC MythContext *gContext;
-
-/// Service type for the backend's UPnP server
-extern const QString kBackendURI;
 
 #endif
 

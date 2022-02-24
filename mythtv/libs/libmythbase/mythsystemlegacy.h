@@ -19,8 +19,8 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#ifndef _MYTHSYSTEMLEGACY_H_
-#define _MYTHSYSTEMLEGACY_H_
+#ifndef MYTHSYSTEMLEGACY_H
+#define MYTHSYSTEMLEGACY_H
 
 #include "mythbaseexp.h"
 
@@ -41,10 +41,9 @@
 // review and some cleanup.
 
 // C headers
+#include <array>
 #include <cstdint>
 #include <ctime>
-
-#ifdef __cplusplus
 
 #include "exitcodes.h"  // included for GENERIC_EXIT_OK
 #include "mythsystem.h" // included for MythSystemFlag and MythSignal
@@ -67,7 +66,7 @@ void MBASE_PUBLIC ShutdownMythSystemLegacy(void);
 class MythSystemLegacyPrivate;
 class MBASE_PUBLIC MythSystemLegacy : public QObject
 {
-    Q_OBJECT;
+    Q_OBJECT
 
   public:
     explicit MythSystemLegacy(QObject *parent = nullptr);
@@ -89,9 +88,9 @@ class MBASE_PUBLIC MythSystemLegacy : public QObject
 
     // FIXME: Forks, should be called Start() for consistency with MThread.
     // FIXME: Do we need this call at all?
-    void Run(time_t timeout = 0);
+    void Run(std::chrono::seconds timeout = 0s);
     // FIXME: This should just return a bool telling us if we hit the timeout.
-    uint Wait(time_t timeout = 0);
+    uint Wait(std::chrono::seconds timeout = 0s);
 
     int Write(const QByteArray &ba);
     QByteArray Read(int size);
@@ -120,7 +119,7 @@ class MBASE_PUBLIC MythSystemLegacy : public QObject
     // FIXME: Rename "GetExitStatus" and document that this does not
     //        block until an exit status exists.
     // FIXME: Document what this actually returns.
-    uint GetStatus(void)             { return m_status; }
+    uint GetStatus(void) const       { return m_status; }
     // FIXME Make private.
     void SetStatus(uint status)      { m_status = status; }
 
@@ -148,8 +147,8 @@ class MBASE_PUBLIC MythSystemLegacy : public QObject
     //        after construcion.
     void SetArgs(const QStringList &args)  { m_args = args; }
 
-    int GetNice(void)                { return m_nice; }
-    int GetIOPrio(void)              { return m_ioprio; }
+    int GetNice(void) const          { return m_nice; }
+    int GetIOPrio(void) const        { return m_ioprio; }
 
     // FIXME: We should not return a pointer to a QBuffer
     QBuffer *GetBuffer(int index)    { return &m_stdbuff[index]; }
@@ -192,20 +191,16 @@ class MBASE_PUBLIC MythSystemLegacy : public QObject
     int         m_ioprio {0};
 
     Setting     m_settings;
-    QBuffer     m_stdbuff[3];
+    std::array<QBuffer,3> m_stdbuff;
 };
 
 MBASE_PUBLIC uint myth_system(const QString &command,
                               uint flags = kMSNone,
-                              uint timeout = 0);
-#endif // __cplusplus
+                              std::chrono::seconds timeout = 0s);
+MBASE_PUBLIC uint myth_system(const QString &Command, const QStringList& Args,
+                              uint Flags = kMSNone, std::chrono::seconds Timeout = 0s);
 
-#ifdef __cplusplus
-extern "C"
-#endif // __cplusplus
-MBASE_PUBLIC uint myth_system_c(char *command, uint flags, uint timeout);
-
-#endif // _MYTHSYSTEMLEGACY_H_
+#endif // MYTHSYSTEMLEGACY_H
 /*
  * vim:ts=4:sw=4:ai:et:si:sts=4
  */

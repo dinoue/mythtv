@@ -2,26 +2,42 @@
 #define VIDEOOUT_TYPES_H_
 
 // Qt
+#include <QPoint>
 #include <QString>
 #include <QObject>
 
-enum PIPState
+// Caption Display modes
+enum
 {
-    kPIPOff = 0,
-    kPIPonTV,
-    kPIPStandAlone,
-    kPBPLeft,
-    kPBPRight,
+    kDisplayNone                = 0x000,
+    kDisplayNUVTeletextCaptions = 0x001,
+    kDisplayTeletextCaptions    = 0x002,
+    kDisplayAVSubtitle          = 0x004,
+    kDisplayCC608               = 0x008,
+    kDisplayCC708               = 0x010,
+    kDisplayTextSubtitle        = 0x020,
+    kDisplayDVDButton           = 0x040,
+    kDisplayRawTextSubtitle     = 0x080,
+    kDisplayAllCaptions         = 0x0FF,
+    kDisplayTeletextMenu        = 0x100,
+    kDisplayAllTextCaptions     = ~kDisplayDVDButton & kDisplayAllCaptions
 };
 
-enum PIPLocation
+/*! \brief Return whether any *optional* captions are enabled
+ *
+ * Which currently means anything except DVD buttons.
+*/
+inline bool OptionalCaptionEnabled(uint Captions)
 {
-    kPIPTopLeft = 0,
-    kPIPBottomLeft,
-    kPIPTopRight,
-    kPIPBottomRight,
-    kPIP_END
-};
+    return (kDisplayNUVTeletextCaptions == Captions) ||
+           (kDisplayTeletextCaptions    == Captions) ||
+           (kDisplayAVSubtitle          == Captions) ||
+           (kDisplayCC608               == Captions) ||
+           (kDisplayCC708               == Captions) ||
+           (kDisplayTextSubtitle        == Captions) ||
+           (kDisplayRawTextSubtitle     == Captions) ||
+           (kDisplayTeletextMenu        == Captions);
+}
 
 enum ZoomDirection
 {
@@ -117,11 +133,10 @@ enum PictureAttributeSupported
 
 enum StereoscopicMode
 {
-    kStereoscopicModeNone,
-    kStereoscopicModeSideBySide,
+    kStereoscopicModeAuto,
+    kStereoscopicModeIgnore3D,
     kStereoscopicModeSideBySideDiscard,
-    kStereoscopicModeTopAndBottom,
-    kStereoscopicModeTopAndBottomDiscard,
+    kStereoscopicModeTopAndBottomDiscard
 };
 
 enum PrimariesMode
@@ -145,7 +160,7 @@ inline QString toDBString(PrimariesMode Mode)
     return "auto";
 }
 
-inline PrimariesMode toPrimariesMode(QString Mode)
+inline PrimariesMode toPrimariesMode(const QString& Mode)
 {
     if (Mode == "disabled") return PrimariesDisabled;
     if (Mode == "exact")    return PrimariesExact;
@@ -156,10 +171,9 @@ inline QString StereoscopictoString(StereoscopicMode Mode)
 {
     switch (Mode)
     {
-        case kStereoscopicModeNone:                return QObject::tr("No 3D");
-        case kStereoscopicModeSideBySide:          return QObject::tr("3D Side by Side");
+        case kStereoscopicModeAuto:                return QObject::tr("Auto 3D");
+        case kStereoscopicModeIgnore3D:            return QObject::tr("Ignore 3D");
         case kStereoscopicModeSideBySideDiscard:   return QObject::tr("Discard 3D Side by Side");
-        case kStereoscopicModeTopAndBottom:        return QObject::tr("3D Top and Bottom");
         case kStereoscopicModeTopAndBottomDiscard: return QObject::tr("Discard 3D Top and Bottom");
     }
     return QObject::tr("Unknown");
@@ -181,44 +195,29 @@ inline bool is_progressive(FrameScanType Scan)
     return (kScan_Progressive == Scan);
 }
 
-// Note - minor tweak to avoid late translation changes for fixes/31
-inline QString ScanTypeToString(FrameScanType Scan, bool /*Forced*/ = false)
+inline QString ScanTypeToUserString(FrameScanType Scan, bool Forced = false)
 {
     switch (Scan)
     {
         case kScan_Ignore:       return QObject::tr("Ignore");
         case kScan_Detect:       return QObject::tr("Detect");
-        case kScan_Progressive:  return QObject::tr("Progressive");
-        case kScan_Interlaced:   return QObject::tr("Interlaced");
-        case kScan_Intr2ndField: return QObject::tr("Interlaced (Reversed)");
+        case kScan_Progressive:  return Forced ? QObject::tr("Progressive (Forced)") : QObject::tr("Progressive");
+        case kScan_Interlaced:   return Forced ? QObject::tr("Interlaced (Forced)") : QObject::tr("Interlaced");
+        case kScan_Intr2ndField: return Forced ? QObject::tr("Interlaced (Reversed, Forced)") : QObject::tr("Interlaced (Reversed)");
     }
     return QObject::tr("Unknown");
 }
 
-inline QString toString(PIPState State)
+inline QString ScanTypeToString(FrameScanType Scan)
 {
-    switch (State)
+    switch (Scan)
     {
-        case kPIPOff:        return QString("Pip Off");
-        case kPIPonTV:       return QString("Pip on TV");
-        case kPIPStandAlone: return QString("Pip Standalone");
-        case kPBPLeft:       return QString("PBP Left");
-        case kPBPRight:      return QString("PBP Right");
+        case kScan_Ignore:      return QString("Ignore Scan");
+        case kScan_Detect:      return QString("Detect Scan");
+        case kScan_Interlaced:  return QString("Interlaced Scan");
+        case kScan_Progressive: return QString("Progressive Scan");
+        default:                return QString("Unknown Scan");
     }
-    return QString("Unknown");
-}
-
-inline QString toString(PIPLocation Location)
-{
-    switch (Location)
-    {
-        case kPIPTopLeft:     return QObject::tr("Top Left");
-        case kPIPBottomLeft:  return QObject::tr("Bottom Left");
-        case kPIPTopRight:    return QObject::tr("Top Right");
-        case kPIPBottomRight: return QObject::tr("Bottom Right");
-        case kPIP_END:        break;
-    }
-    return "";
 }
 
 inline QString toString(AspectOverrideMode Aspectmode)
@@ -348,8 +347,7 @@ inline PictureAttributeSupported toMask(PictureAttribute PictureAttribute)
     return kPictureAttributeSupported_None;
 }
 
-inline PictureAttribute next(PictureAttributeSupported Supported,
-                             PictureAttribute          Attribute)
+inline PictureAttribute next_picattr(PictureAttributeSupported Supported, PictureAttribute Attribute)
 {
     int i = static_cast<int>(Attribute + 1) % static_cast<int>(kPictureAttribute_MAX);
     for (int j = 0; j < kPictureAttribute_MAX; (i = (i +1 ) % kPictureAttribute_MAX), j++)
@@ -358,4 +356,12 @@ inline PictureAttribute next(PictureAttributeSupported Supported,
     return kPictureAttribute_None;
 }
 
-#endif // VIDEOOUT_TYPES_H_
+inline QString GetZoomString(float HorizScale, float VertScale, QPoint Move)
+{
+    return QObject::tr("Zoom %1x%2 @ (%3,%4)")
+            .arg(static_cast<double>(HorizScale), 0, 'f', 2)
+            .arg(static_cast<double>(VertScale), 0, 'f', 2)
+            .arg(Move.x()).arg(Move.y());
+}
+
+#endif

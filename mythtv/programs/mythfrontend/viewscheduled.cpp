@@ -13,6 +13,7 @@
 #include "mythuitext.h"
 #include "mythuistatetype.h"
 #include "mythuibuttonlist.h"
+#include "mythuiprogressbar.h"
 #include "mythdialogbox.h"
 #include "mythmainwindow.h"
 
@@ -43,11 +44,13 @@ void *ViewScheduled::RunViewScheduled(void *player, bool showTV)
 }
 
 ViewScheduled::ViewScheduled(MythScreenStack *parent, TV* player, bool /*showTV*/)
-             : ScheduleCommon(parent, "ViewScheduled"),
-               m_showAll(!gCoreContext->GetBoolSetting("ViewSchedShowLevel", false)),
-               m_player(player)
+  : ScheduleCommon(parent, "ViewScheduled"),
+    m_showAll(!gCoreContext->GetBoolSetting("ViewSchedShowLevel", false)),
+    m_player(player)
 {
     gCoreContext->addListener(this);
+    if (m_player)
+        m_player->IncrRef();
 }
 
 ViewScheduled::~ViewScheduled()
@@ -58,8 +61,8 @@ ViewScheduled::~ViewScheduled()
     // if we have a player, we need to tell we are done
     if (m_player)
     {
-        QString message = QString("VIEWSCHEDULED_EXITING");
-        qApp->postEvent(m_player, new MythEvent(message));
+        emit m_player->RequestEmbedding(false);
+        m_player->DecrRef();
     }
 }
 
@@ -70,6 +73,7 @@ bool ViewScheduled::Create()
 
     m_groupList     = dynamic_cast<MythUIButtonList *> (GetChild("groups"));
     m_schedulesList = dynamic_cast<MythUIButtonList *> (GetChild("schedules"));
+    m_progressBar   = dynamic_cast<MythUIProgressBar *>(GetChild("recordedprogressbar"));
 
     if (!m_schedulesList)
     {
@@ -77,10 +81,10 @@ bool ViewScheduled::Create()
         return false;
     }
 
-    connect(m_schedulesList, SIGNAL(itemSelected(MythUIButtonListItem*)),
-            SLOT(updateInfo(MythUIButtonListItem*)));
-    connect(m_schedulesList, SIGNAL(itemClicked(MythUIButtonListItem*)),
-            SLOT(EditRecording()));
+    connect(m_schedulesList, &MythUIButtonList::itemSelected,
+            this, &ViewScheduled::updateInfo);
+    connect(m_schedulesList, &MythUIButtonList::itemClicked,
+            this, qOverload<MythUIButtonListItem*>(&ViewScheduled::EditRecording));
 
     m_schedulesList->SetLCDTitles(tr("Scheduled Recordings"),
                               "shortstarttimedate|channel|titlesubtitle|card");
@@ -88,10 +92,10 @@ bool ViewScheduled::Create()
 
     if (m_groupList)
     {
-        connect(m_groupList, SIGNAL(itemSelected(MythUIButtonListItem*)),
-                SLOT(ChangeGroup(MythUIButtonListItem*)));
-        connect(m_groupList, SIGNAL(itemClicked(MythUIButtonListItem*)),
-                SLOT(SwitchList()));
+        connect(m_groupList, &MythUIButtonList::itemSelected,
+                this, &ViewScheduled::ChangeGroup);
+        connect(m_groupList, &MythUIButtonList::itemClicked,
+                this, &ViewScheduled::SwitchList);
         m_groupList->SetLCDTitles(tr("Group List"), "");
     }
 
@@ -265,13 +269,16 @@ void ViewScheduled::LoadList(bool useExistingData)
     if (!useExistingData)
         LoadFromScheduler(m_recList, m_conflictBool);
 
-    auto pit = m_recList.begin();
-    QString currentDate;
     m_recgroupList[m_defaultGroup] = ProgramList(false);
     m_recgroupList[m_defaultGroup].setAutoDelete(false);
+
+    auto pit = m_recList.begin();
     while (pit != m_recList.end())
     {
         ProgramInfo *pginfo = *pit;
+
+        pginfo->CalculateRecordedProgress();
+
         const RecStatus::Type recstatus = pginfo->GetRecordingStatus();
         if ((pginfo->GetRecordingEndTime() >= now ||
              pginfo->GetScheduledEndTime() >= now ||
@@ -366,12 +373,60 @@ void ViewScheduled::ChangeGroup(MythUIButtonListItem* item)
     if (!item || m_recList.empty())
         return;
 
-    QDate group = item->GetData().value<QDate>();
+    auto group = item->GetData().value<QDate>();
 
     m_currentGroup = group;
 
     if (!m_inFill)
         FillList();
+}
+
+void ViewScheduled::UpdateUIListItem(MythUIButtonListItem* item,
+                                     ProgramInfo *pginfo) const
+{
+    QString state;
+
+    const RecStatus::Type recstatus = pginfo->GetRecordingStatus();
+    if (recstatus == RecStatus::Recording      ||
+        recstatus == RecStatus::Tuning)
+        state = "running";
+    else if (recstatus == RecStatus::Conflict  ||
+             recstatus == RecStatus::Offline   ||
+             recstatus == RecStatus::TunerBusy ||
+             recstatus == RecStatus::Failed    ||
+             recstatus == RecStatus::Failing   ||
+             recstatus == RecStatus::Aborted   ||
+             recstatus == RecStatus::Missed)
+        state = "error";
+    else if (recstatus == RecStatus::WillRecord ||
+             recstatus == RecStatus::Pending)
+    {
+        if (m_curinput == 0 || pginfo->GetInputID() == m_curinput)
+        {
+            if (pginfo->GetRecordingPriority2() < 0)
+                state = "warning";
+            else
+                state = "normal";
+        }
+    }
+    else if (recstatus == RecStatus::Repeat ||
+             recstatus == RecStatus::NeverRecord ||
+             recstatus == RecStatus::DontRecord ||
+             (recstatus != RecStatus::DontRecord &&
+              recstatus <= RecStatus::EarlierShowing))
+        state = "disabled";
+    else
+        state = "warning";
+
+    InfoMap infoMap;
+    pginfo->ToMap(infoMap);
+    item->SetTextFromMap(infoMap, state);
+
+    item->SetProgress2(0, 100, pginfo->GetRecordedPercent());
+
+    QString rating = QString::number(pginfo->GetStars(10));
+    item->DisplayState(rating, "ratingstate");
+    item->DisplayState(state, "status");
 }
 
 void ViewScheduled::FillList()
@@ -398,57 +453,12 @@ void ViewScheduled::FillList()
     while (pit != plist.end())
     {
         ProgramInfo *pginfo = *pit;
-        if (!pginfo)
+        if (pginfo)
         {
-            ++pit;
-            continue;
+            auto *item = new MythUIButtonListItem(m_schedulesList,"",
+                                                  QVariant::fromValue(pginfo));
+            UpdateUIListItem(item, pginfo);
         }
-
-        QString state;
-
-        const RecStatus::Type recstatus = pginfo->GetRecordingStatus();
-        if (recstatus == RecStatus::Recording      ||
-            recstatus == RecStatus::Tuning)
-            state = "running";
-        else if (recstatus == RecStatus::Conflict  ||
-                 recstatus == RecStatus::Offline   ||
-                 recstatus == RecStatus::TunerBusy ||
-                 recstatus == RecStatus::Failed    ||
-                 recstatus == RecStatus::Failing   ||
-                 recstatus == RecStatus::Aborted   ||
-                 recstatus == RecStatus::Missed)
-            state = "error";
-        else if (recstatus == RecStatus::WillRecord ||
-                 recstatus == RecStatus::Pending)
-        {
-            if (m_curinput == 0 || pginfo->GetInputID() == m_curinput)
-            {
-                if (pginfo->GetRecordingPriority2() < 0)
-                    state = "warning";
-                else
-                    state = "normal";
-            }
-        }
-        else if (recstatus == RecStatus::Repeat ||
-                 recstatus == RecStatus::NeverRecord ||
-                 recstatus == RecStatus::DontRecord ||
-                 (recstatus != RecStatus::DontRecord &&
-                  recstatus <= RecStatus::EarlierShowing))
-            state = "disabled";
-        else
-            state = "warning";
-
-        auto *item = new MythUIButtonListItem(m_schedulesList,"",
-                                              QVariant::fromValue(pginfo));
-
-        InfoMap infoMap;
-        pginfo->ToMap(infoMap);
-        item->SetTextFromMap(infoMap, state);
-
-        QString rating = QString::number(pginfo->GetStars(10));
-        item->DisplayState(rating, "ratingstate");
-        item->DisplayState(state, "status");
-
         ++pit;
     }
 
@@ -490,6 +500,9 @@ void ViewScheduled::FillList()
     }
 }
 
+// Called whenever a new recording is selected from the list of
+// recordings. This function updates the screen with the information
+// on the newly selected recording.
 void ViewScheduled::updateInfo(MythUIButtonListItem *item)
 {
     if (!item)
@@ -501,6 +514,8 @@ void ViewScheduled::updateInfo(MythUIButtonListItem *item)
         InfoMap infoMap;
         pginfo->ToMap(infoMap);
         SetTextFromMap(infoMap);
+        if (m_progressBar != nullptr)
+            m_progressBar->Set(0, 100, pginfo->GetRecordedPercent());
 
         MythUIStateType *ratingState = dynamic_cast<MythUIStateType*>
                                                     (GetChild("ratingstate"));
@@ -530,8 +545,8 @@ void ViewScheduled::deleteRule()
         return;
     }
 
-    QString message = tr("Delete '%1' %2 rule?").arg(record->m_title)
-        .arg(toString(pginfo->GetRecordingRuleType()));
+    QString message = tr("Delete '%1' %2 rule?")
+        .arg(record->m_title, toString(pginfo->GetRecordingRuleType()));
 
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
 
@@ -569,7 +584,7 @@ void ViewScheduled::viewInputs()
 void ViewScheduled::EmbedTVWindow(void)
 {
     if (m_player)
-        m_player->StartEmbedding(QRect());
+        emit m_player->RequestEmbedding(true);
 }
 
 void ViewScheduled::customEvent(QEvent *event)
@@ -581,19 +596,62 @@ void ViewScheduled::customEvent(QEvent *event)
             return;
 
         const QString& message = me->Message();
-        if (message != "SCHEDULE_CHANGE")
-            return;
+        if (message == "SCHEDULE_CHANGE")
+        {
+            m_needFill = true;
 
-        m_needFill = true;
+            if (m_inEvent)
+                return;
 
-        if (m_inEvent)
-            return;
+            m_inEvent = true;
 
-        m_inEvent = true;
+            LoadList();
 
-        LoadList();
+            m_inEvent = false;
+        }
+        else if (message.startsWith("UPDATE_FILE_SIZE"))
+        {
+            QStringList tokens = message.simplified().split(" ");
+            if (tokens.size() < 3)
+                return;
 
-        m_inEvent = false;
+            bool ok {false};
+            uint recordingID  = tokens[1].toUInt();
+            uint64_t filesize = tokens[2].toLongLong(&ok);
+
+            // Locate program
+            auto pit = m_recList.begin();
+            while (pit != m_recList.end())
+            {
+                ProgramInfo* pginfo = *pit;
+                if (pginfo && pginfo->GetRecordingID() == recordingID)
+                {
+                    // Update size & progress
+                    pginfo->SetFilesize(filesize);
+                    uint current = pginfo->GetRecordedPercent();
+                    pginfo->CalculateRecordedProgress();
+                    if (pginfo->GetRecordedPercent() != current)
+                    {
+                        // Update display, if it's shown
+                        MythUIButtonListItem *item =
+                            m_schedulesList->
+                            GetItemByData(QVariant::fromValue(pginfo));
+                        if (item)
+                        {
+                            UpdateUIListItem(item, pginfo);
+
+                            // Update selected item if necessary
+                            MythUIButtonListItem *selected =
+                                m_schedulesList->GetItemCurrent();
+                            if (item == selected)
+                                updateInfo(selected);
+                        }
+                    }
+                    break;
+                }
+                ++pit;
+            }
+        }
     }
     else if (event->type() == DialogCompletionEvent::kEventType)
     {

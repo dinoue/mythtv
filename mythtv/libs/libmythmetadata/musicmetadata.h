@@ -2,6 +2,7 @@
 #define MUSICMETADATA_H_
 
 // C/C++
+#include <array>
 #include <cstdint>
 #include <utility>
 
@@ -41,7 +42,7 @@ class META_PUBLIC AlbumArtImage
   public:
     AlbumArtImage(void) :
             m_filename(""), m_hostname(""), m_description("") {}
-    AlbumArtImage(AlbumArtImage *image) :
+    explicit AlbumArtImage(const AlbumArtImage * const image) :
             m_id(image->m_id), m_filename(image->m_filename),
             m_hostname(image->m_hostname), m_imageType(image->m_imageType),
             m_description(image->m_description), m_embedded(image->m_embedded) {}
@@ -75,7 +76,7 @@ enum RepoType
 #define STREAMUPDATEURL "https://services.mythtv.org/music/data/?data=streams"
 #define STREAMURLCOUNT 5
 
-using UrlList = QString[STREAMURLCOUNT];
+using UrlList = std::array<QString,STREAMURLCOUNT>;
 
 class META_PUBLIC MusicMetadata
 {
@@ -87,7 +88,7 @@ class META_PUBLIC MusicMetadata
 
     explicit MusicMetadata(QString lfilename = "", QString lartist = "", QString lcompilation_artist = "",
              QString lalbum = "", QString ltitle = "", QString lgenre = "",
-             int lyear = 0, int ltracknum = 0, int llength = 0, int lid = 0,
+             int lyear = 0, int ltracknum = 0, std::chrono::milliseconds llength = 0ms, int lid = 0,
              int lrating = 0, int lplaycount = 0, QDateTime llastplay = QDateTime(),
              QDateTime ldateadded = QDateTime(), bool lcompilation = false, QString lformat = "")
                 : m_artist(std::move(lartist)),
@@ -110,7 +111,7 @@ class META_PUBLIC MusicMetadata
         checkEmptyFields();
     }
 
-    MusicMetadata(int lid, QString lbroadcaster, QString lchannel, QString ldescription, UrlList lurls, QString llogourl,
+    MusicMetadata(int lid, QString lbroadcaster, QString lchannel, QString ldescription, const UrlList &lurls, QString llogourl,
              QString lgenre, QString lmetaformat, QString lcountry, QString llanguage, QString lformat);
 
     ~MusicMetadata();
@@ -202,8 +203,10 @@ class META_PUBLIC MusicMetadata
     int GetTrackCount() const { return m_trackCount; }
     void setTrackCount(int ltrackcount) { m_trackCount = ltrackcount; }
 
-    int Length() const { return m_length; }
-    void setLength(int llength) { m_length = llength; }
+    std::chrono::milliseconds Length() const { return m_length; }
+    template <typename T>
+    typename std::enable_if_t<std::chrono::__is_duration<T>::value, void>
+    setLength(T llength) { m_length = llength; }
 
     int DiscNumber() const {return m_discNum;}
     void setDiscNumber(int discnum) { m_discNum = discnum; }
@@ -339,7 +342,7 @@ class META_PUBLIC MusicMetadata
     int     m_trackCount       {0};
     int     m_discNum          {0};
     int     m_discCount        {0};
-    int     m_length           {0};
+    std::chrono::milliseconds  m_length  {0ms};
     int     m_rating           {0};
     int     m_directoryId      {-1};
     int     m_artistId         {-1};
@@ -466,13 +469,8 @@ class META_PUBLIC AllMusic
 
     int                      m_playCountMin    {0};
     int                      m_playCountMax    {0};
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-    double                   m_lastPlayMin     {0.0};
-    double                   m_lastPlayMax     {0.0};
-#else
     qint64                   m_lastPlayMin     {0};
     qint64                   m_lastPlayMax     {0};
-#endif
 };
 
 using StreamList = QList<MusicMetadata*>;
@@ -530,7 +528,7 @@ class META_PUBLIC AlbumArtImages
     ~AlbumArtImages();
 
     void           scanForImages(void);
-    void           addImage(const AlbumArtImage &newImage);
+    void           addImage(const AlbumArtImage * newImage);
     uint           getImageCount() { return m_imageList.size(); }
     AlbumArtImage *getImage(ImageType type);
     AlbumArtImage *getImageByID(int imageID);

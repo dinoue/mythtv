@@ -6,7 +6,7 @@
 //
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -25,8 +25,6 @@
 UPnpDeviceDesc      UPnp::g_UPnpDeviceDesc;
 QList<QHostAddress> UPnp::g_IPAddrList;
 
-Configuration   *UPnp::g_pConfig        = nullptr;
-
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -35,17 +33,12 @@ Configuration   *UPnp::g_pConfig        = nullptr;
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////
-//
-//////////////////////////////////////////////////////////////////////////////
-
 UPnp::UPnp()
-  : QObject()
 {
     LOG(VB_UPNP, LOG_DEBUG, "UPnp - Constructor");
     // N.B. Ask for 5 second delay to send Bye Bye twice
     // TODO Check whether we actually send Bye Bye twice:)
-    m_power = MythPower::AcquireRelease(this, true, 5);
+    m_power = MythPower::AcquireRelease(this, true, 5s);
     if (m_power)
     {
         // NB We only listen for WillXXX signals which should give us time to send notifications
@@ -72,26 +65,6 @@ UPnp::~UPnp()
 //
 //////////////////////////////////////////////////////////////////////////////
 
-void UPnp::SetConfiguration( Configuration *pConfig )
-{
-    delete g_pConfig;
-    g_pConfig = pConfig;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-//
-//////////////////////////////////////////////////////////////////////////////
-
-Configuration *UPnp::GetConfiguration()
-{
-    // If someone is asking for a config and it's nullptr, create a 
-    // new XmlConfiguration since we don't have database info yet.
-    
-    if (g_pConfig == nullptr)
-        g_pConfig = new XmlConfiguration( "config.xml" );
-
-    return g_pConfig;
-}
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -121,13 +94,6 @@ bool UPnp::Initialize( QList<QHostAddress> &sIPAddrList, int nServicePort, HttpS
     {
         LOG(VB_GENERAL, LOG_ERR,
             "UPnp::Initialize - Already initialized, programmer error.");
-        return false;
-    }
-
-    if (g_pConfig == nullptr)
-    {
-        LOG(VB_GENERAL, LOG_ERR,
-            "UPnp::Initialize - Must call SetConfiguration.");
         return false;
     }
 
@@ -195,13 +161,6 @@ void UPnp::CleanUp()
     LOG(VB_UPNP, LOG_INFO, "UPnp::CleanUp() - disabling SSDP notifications");
 
     SSDP::Instance()->DisableNotifications();
-
-    if (g_pConfig)
-    {
-        delete g_pConfig;
-        g_pConfig = nullptr;
-    }
-
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -322,9 +281,11 @@ void UPnp::FormatRedirectResponse( HTTPRequest   *pRequest,
     pRequest->m_nResponseStatus   = 301;
 
     QStringList sItems = pRequest->m_sRawRequest.split( ' ' );
-    QString sUrl = "http://" + pRequest->m_mapHeaders[ "host" ] + sItems[1];
+    QString sUrl = "http://" + pRequest->GetLastHeader( "host" ) + sItems[1];
     QUrl url( sUrl );
-    url.setHost( hostName );
+    QString ipAddress = gCoreContext->GetSettingOnHost
+                            ("BackendServerAddr",hostName,hostName);
+    url.setHost( ipAddress );
 
     pRequest->m_mapRespHeaders[ "Location" ] = url.toString();
 
@@ -334,12 +295,12 @@ void UPnp::FormatRedirectResponse( HTTPRequest   *pRequest,
     pRequest->SendResponse();
 }
 
-void UPnp::DisableNotifications(uint)
+void UPnp::DisableNotifications(std::chrono::milliseconds /*unused*/)
 {
     SSDP::Instance()->DisableNotifications();
 }
 
-void UPnp::EnableNotificatins(qint64)
+void UPnp::EnableNotificatins(std::chrono::milliseconds /*unused*/) const
 {
     SSDP::Instance()->EnableNotifications(m_nServicePort);
 }

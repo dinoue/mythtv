@@ -1,9 +1,5 @@
 // -*- Mode: c++ -*-
 
-#ifdef USING_V4L1
-#include <linux/videodev.h> // for vbi_format
-#endif // USING_V4L1
-
 #ifdef USING_V4L2
 #include <linux/videodev2.h>
 #endif // USING_V4L2
@@ -13,7 +9,7 @@
 #include <unistd.h>         // for IO_NONBLOCK
 #include <fcntl.h>          // for IO_NONBLOCK
 
-#include "vbi608extractor.h"
+#include "captions/vbi608extractor.h"
 #include "mythcontext.h"
 #include "mythlogging.h"
 #include "v4lrecorder.h"
@@ -24,7 +20,7 @@
         ((m_tvrec != nullptr) ? QString::number(m_tvrec->GetInputId()) : "NULL")
 
 #define LOC QString("V4LRec[%1](%2): ") \
-            .arg(TVREC_CARDNUM).arg(m_videodevice)
+            .arg(TVREC_CARDNUM, m_videodevice)
 
 V4LRecorder::~V4LRecorder()
 {
@@ -68,8 +64,9 @@ void V4LRecorder::SetOption(const QString &name, const QString &value)
         DTVRecorder::SetOption(name, value);
 }
 
-static void vbi_event(struct VBIData *data, struct vt_event *ev)
+static void vbi_event(void *data_in, struct vt_event *ev)
 {
+    auto *data = static_cast<struct VBIData *>(data_in);
     switch (ev->type)
     {
        case EV_PAGE:
@@ -115,7 +112,7 @@ int V4LRecorder::OpenVBIDevice(void)
             vbi_cb = new VBIData;
             memset(vbi_cb, 0, sizeof(VBIData));
             vbi_cb->nvr = this;
-            vbi_add_handler(pal_tt, (void*) vbi_event, vbi_cb);
+            vbi_add_handler(pal_tt, vbi_event, vbi_cb);
         }
     }
     else if (VBIMode::NTSC_CC == m_vbiMode)
@@ -142,31 +139,9 @@ int V4LRecorder::OpenVBIDevice(void)
         fmt.type = V4L2_BUF_TYPE_VBI_CAPTURE;
         if (0 != ioctl(fd, VIDIOC_G_FMT, &fmt))
         {
-#ifdef USING_V4L1
-            LOG(VB_RECORD, LOG_INFO, "V4L2 VBI setup failed, trying v1 ioctl");
-            // Try V4L v1 VBI ioctls, iff V4L v2 fails
-            struct vbi_format old_fmt;
-            memset(&old_fmt, 0, sizeof(vbi_format));
-            if (ioctl(fd, VIDIOCGVBIFMT, &old_fmt) < 0)
-            {
-                LOG(VB_GENERAL, LOG_ERR, LOC +
-                    "Failed to query vbi capabilities (V4L1)");
-                close(fd);
-                return -1;
-            }
-            fmt.fmt.vbi.sampling_rate    = old_fmt.sampling_rate;
-            fmt.fmt.vbi.offset           = 0;
-            fmt.fmt.vbi.samples_per_line = old_fmt.samples_per_line;
-            fmt.fmt.vbi.start[0]         = old_fmt.start[0];
-            fmt.fmt.vbi.start[1]         = old_fmt.start[1];
-            fmt.fmt.vbi.count[0]         = old_fmt.count[0];
-            fmt.fmt.vbi.count[1]         = old_fmt.count[1];
-            fmt.fmt.vbi.flags            = old_fmt.flags;
-#else // if !USING_V4L1
             LOG(VB_RECORD, LOG_ERR, "V4L2 VBI setup failed");
             close(fd);
             return -1;
-#endif // !USING_V4L1
         }
         LOG(VB_RECORD, LOG_INFO, LOC +
             QString("vbi_format  rate: %1"
@@ -230,7 +205,7 @@ void V4LRecorder::CloseVBIDevice(void)
 
     if (m_palVbiTt)
     {
-        vbi_del_handler(m_palVbiTt, (void*) vbi_event, m_palVbiCb);
+        vbi_del_handler(m_palVbiTt, vbi_event, m_palVbiCb);
         vbi_close(m_palVbiTt);
         delete m_palVbiCb;
         m_palVbiCb = nullptr;

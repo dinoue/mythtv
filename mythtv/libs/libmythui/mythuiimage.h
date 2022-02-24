@@ -45,7 +45,7 @@ class ImageProperties
             rect = m_maskImage->rect();
         return rect;
     }
-    QImage GetMaskImageSubset(const QRect &imageArea)
+    QImage GetMaskImageSubset(QRect imageArea)
     {
         if (m_maskImage)
             return m_maskImage->copy(imageArea);
@@ -84,7 +84,7 @@ class ImageProperties
     QString m_maskImageFilename;
 };
 
-using AnimationFrame = QPair<MythImage *, int>;
+using AnimationFrame = QPair<MythImage *, std::chrono::milliseconds>;
 using AnimationFrames = QVector<AnimationFrame>;
 
 /**
@@ -99,13 +99,13 @@ class MUI_PUBLIC MythUIImage : public MythUIType
     Q_OBJECT
 
   public:
-    MythUIImage(const QString &filepattern, int low, int high, int delayms,
+    MythUIImage(const QString &filepattern, int low, int high, std::chrono::milliseconds delay,
                 MythUIType *parent, const QString &name);
     MythUIImage(const QString &filename, MythUIType *parent, const QString &name);
     MythUIImage(MythUIType *parent, const QString &name);
    ~MythUIImage() override;
 
-    QString GetFilename(void) { return m_Filename; }
+    QString GetFilename(void) { return m_filename; }
 
     /** Must be followed by a call to Load() to load the image. */
     void SetFilename(const QString &filename);
@@ -125,8 +125,8 @@ class MUI_PUBLIC MythUIImage : public MythUIType
      */
     void SetImages(QVector<MythImage *> *images);
 
-    void SetDelay(int delayms);
-    void SetDelays(const QVector<int>& delays);
+    void SetDelay(std::chrono::milliseconds delayms);
+    void SetDelays(const QVector<std::chrono::milliseconds>& delays);
 
     void Reset(void) override; // MythUIType
     bool Load(bool allowLoadInBackground = true, bool forceStat = false);
@@ -156,29 +156,29 @@ class MUI_PUBLIC MythUIImage : public MythUIType
     void Finalize(void) override; // MythUIType
 
     void SetSize(int width, int height);
-    void SetSize(const QSize &size) override; // MythUIType
-    void ForceSize(const QSize &size);
+    void SetSize(QSize size) override; // MythUIType
+    void ForceSize(QSize size);
 
     void SetCropRect(int x, int y, int width, int height);
     void SetCropRect(const MythRect &rect);
 
     void FindRandomImage(void);
 
-    QString m_Filename;
-    QString m_OrigFilename;
+    QString m_filename;
+    QString m_origFilename;
 
-    QHash<int, MythImage *> m_Images;
-    QHash<int, int>         m_Delays;
-    QMutex                  m_ImagesLock;
+    QHash<int, MythImage *> m_images;
+    QHash<int, std::chrono::milliseconds> m_delays;
+    QMutex                  m_imagesLock;
 
-    int m_Delay;
-    int m_LowNum;
-    int m_HighNum;
+    std::chrono::milliseconds m_delay { -1ms };
+    int m_lowNum  {0};
+    int m_highNum {0};
 
-    unsigned int    m_CurPos             {0};
-    QTime           m_LastDisplay        {QTime::currentTime()};
+    unsigned int    m_curPos             {0};
+    QTime           m_lastDisplay        {QTime::currentTime()};
 
-    bool            m_NeedLoad           {false};
+    bool            m_needLoad           {false};
 
     ImageProperties m_imageProperties;
 
@@ -186,6 +186,8 @@ class MUI_PUBLIC MythUIImage : public MythUIType
 
     bool            m_showingRandomImage {false};
     QString         m_imageDirectory;
+    QStringList     m_imageList;
+    int             m_imageListIndex     {0};
 
     MythUIImagePrivate *d                {nullptr}; // NOLINT(readability-identifier-naming)
 

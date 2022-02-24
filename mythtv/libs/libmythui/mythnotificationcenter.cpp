@@ -31,7 +31,7 @@
 #define LOC QString("NotificationCenter: ")
 
 #define HGAP 5
-#define DEFAULT_DURATION 5000  // in ms
+static constexpr std::chrono::milliseconds DEFAULT_DURATION { 5s };
 
 //// MythNotificationCenterEvent
 
@@ -50,29 +50,29 @@ void MythNotificationScreenStack::PopScreen(MythScreenType *screen, bool allowFa
 
     screen->aboutToHide();
 
-    if (m_Children.isEmpty())
+    if (m_children.isEmpty())
         return;
 
     MythMainWindow *mainwindow = GetMythMainWindow();
 
     screen->setParent(nullptr);
-    if (allowFade && m_DoTransitions && !mainwindow->IsExitingToMain())
+    if (allowFade && m_doTransitions && !mainwindow->IsExitingToMain())
     {
         screen->SetFullscreen(false);
         if (deleteScreen)
         {
             screen->SetDeleting(true);
-            m_ToDelete.push_back(screen);
+            m_toDelete.push_back(screen);
         }
         screen->AdjustAlpha(1, -kFadeVal);
     }
     else
     {
-        for (int i = 0; i < m_Children.size(); ++i)
+        for (int i = 0; i < m_children.size(); ++i)
         {
-            if (m_Children.at(i) == screen)
+            if (m_children.at(i) == screen)
             {
-                m_Children.remove(i);
+                m_children.remove(i);
                 break;
             }
         }
@@ -87,12 +87,12 @@ void MythNotificationScreenStack::PopScreen(MythScreenType *screen, bool allowFa
     RecalculateDrawOrder();
 
     // If we're fading it, we still want to draw it.
-    if (screen && !m_DrawOrder.contains(screen))
-        m_DrawOrder.push_back(screen);
+    if (screen && !m_drawOrder.contains(screen))
+        m_drawOrder.push_back(screen);
 
-    if (!m_Children.isEmpty())
+    if (!m_children.isEmpty())
     {
-        foreach (auto & draw, m_DrawOrder)
+        for (auto *draw : qAsConst(m_drawOrder))
         {
             if (draw != screen && !draw->IsDeleting())
             {
@@ -123,17 +123,17 @@ void MythNotificationScreenStack::PopScreen(MythScreenType *screen, bool allowFa
 
 MythScreenType *MythNotificationScreenStack::GetTopScreen(void) const
 {
-    if (m_Children.isEmpty())
+    if (m_children.isEmpty())
         return nullptr;
     // The top screen is the only currently displayed first, if there's a
     // fullscreen notification displayed, it's the last one
-    MythScreenType *top = m_Children.front();
-    QVector<MythScreenType *>::const_iterator it = m_Children.end() - 1;
+    MythScreenType *top = m_children.front();
+    QVector<MythScreenType *>::const_iterator it = m_children.end() - 1;
 
     // loop from last to 2nd
-    for (; it != m_Children.begin(); --it)
+    for (; it != m_children.begin(); --it)
     {
-        auto *s = dynamic_cast<MythNotificationScreen *>(*it);
+        auto *s = qobject_cast<MythNotificationScreen *>(*it);
         if (!s)
         {
             // if for whatever reason it's not a notification on our screen
@@ -159,7 +159,7 @@ MythNotificationScreen::MythNotificationScreen(MythScreenStack *stack,
 {
     // Set timer if need be
     SetSingleShotTimer(m_duration);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(ProcessTimer()));
+    connect(m_timer, &QTimer::timeout, this, &MythNotificationScreen::ProcessTimer);
 }
 
 MythNotificationScreen::MythNotificationScreen(MythScreenStack *stack,
@@ -169,7 +169,7 @@ MythNotificationScreen::MythNotificationScreen(MythScreenStack *stack,
       m_timer(new QTimer(this))
 {
     SetNotification(notification);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(ProcessTimer()));
+    connect(m_timer, &QTimer::timeout, this, &MythNotificationScreen::ProcessTimer);
 }
 
 MythNotificationScreen::MythNotificationScreen(MythScreenStack *stack,
@@ -192,7 +192,7 @@ MythNotificationScreen::MythNotificationScreen(MythScreenStack *stack,
       m_timer(new QTimer(this)),
       m_style(s.m_style)
 {
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(ProcessTimer()));
+    connect(m_timer, &QTimer::timeout, this, &MythNotificationScreen::ProcessTimer);
 }
 
 MythNotificationScreen::~MythNotificationScreen()
@@ -494,7 +494,7 @@ void MythNotificationScreen::Init(void)
     m_refresh = false;
 }
 
-void MythNotificationScreen::SetErrorState(void)
+void MythNotificationScreen::SetErrorState(void) const
 {
     if (!m_errorState)
         return;
@@ -700,20 +700,20 @@ void MythNotificationScreen::ProcessTimer(void)
     GetScreenStack()->PopScreen(this, true, true);
 }
 
-void MythNotificationScreen::SetSingleShotTimer(int s, bool update)
+void MythNotificationScreen::SetSingleShotTimer(std::chrono::seconds s, bool update)
 {
     // only registered application can display non-expiring notification
-    if (m_id > 0 && s < 0)
+    if (m_id > 0 && s < 0s)
         return;
 
-    int ms = s * 1000;
+    std::chrono::milliseconds ms = s;
     ms = ms <= DEFAULT_DURATION ? DEFAULT_DURATION : ms;
 
     if (!update)
     {
         m_creation = MythDate::current();
     }
-    m_expiry = MythDate::current().addMSecs(ms);
+    m_expiry = MythDate::current().addMSecs(ms.count());
 
     m_timer->stop();
     m_timer->setSingleShot(true);
@@ -773,7 +773,7 @@ NCPrivate::~NCPrivate()
     DeleteAllScreens();
 
     // Delete all outstanding queued notifications
-    foreach(MythNotification *n, m_notifications)
+    for (MythNotification *n : qAsConst(m_notifications))
     {
         delete n;
     }
@@ -789,7 +789,9 @@ NCPrivate::~NCPrivate()
  */
 void NCPrivate::ScreenDeleted(void)
 {
-    auto *screen = static_cast<MythNotificationScreen*>(sender());
+    auto *screen = qobject_cast<MythNotificationScreen*>(sender());
+    if (screen == nullptr)
+        return;
 
     bool duefordeletion = m_deletedScreens.contains(screen);
 
@@ -839,7 +841,7 @@ void NCPrivate::ScreenDeleted(void)
                 // re-create the screen
                 auto *newscreen =
                     new MythNotificationScreen(m_screenStack, *screen);
-                connect(newscreen, SIGNAL(ScreenDeleted()), this, SLOT(ScreenDeleted()));
+                connect(newscreen, &MythNotificationScreen::ScreenDeleted, this, &NCPrivate::ScreenDeleted);
                 m_registrations[screen->m_id] = newscreen;
                 // Screen was deleted, add it to suspended list
                 m_suspended.append(screen->m_id);
@@ -867,7 +869,6 @@ bool NCPrivate::Queue(const MythNotification &notification)
     int id = notification.GetId();
     void *parent = notification.GetParent();
 
-    auto *tmp = static_cast<MythNotification*>(notification.clone());
     if (id > 0)
     {
         // quick sanity check to ensure the right caller is attempting
@@ -886,16 +887,16 @@ bool NCPrivate::Queue(const MythNotification &notification)
             if (m_suspended.contains(id))
             {
                 if (notification.type() == MythNotification::Update)
-                {
-                    delete tmp;
                     return false;
-                }
                 // got something else than an update, remove it from the
                 // suspended list
                 m_suspended.removeAll(id);
             }
         }
     }
+    auto *tmp = dynamic_cast<MythNotification*>(notification.clone());
+    if (tmp == nullptr)
+        return false;
     m_notifications.append(tmp);
 
     // Tell the GUI thread we have new notifications to process
@@ -911,7 +912,7 @@ void NCPrivate::ProcessQueue(void)
 
     DeleteAllScreens();
 
-    foreach (MythNotification *n, m_notifications)
+    for (MythNotification *n : qAsConst(m_notifications))
     {
         int id = n->GetId();
         bool created = false;
@@ -1005,7 +1006,7 @@ MythNotificationScreen *NCPrivate::CreateScreen(MythNotification *n, int id)
         delete screen;
         return nullptr;
     }
-    connect(screen, SIGNAL(ScreenDeleted()), this, SLOT(ScreenDeleted()));
+    connect(screen, &MythNotificationScreen::ScreenDeleted, this, &NCPrivate::ScreenDeleted);
     return screen;
 }
 
@@ -1056,7 +1057,7 @@ void NCPrivate::UnRegister(void *from, int id, bool closeimemdiately)
 
 void NCPrivate::DeleteAllRegistrations(void)
 {
-    foreach (auto & registration, m_registrations)
+    for (auto *registration : qAsConst(m_registrations))
     {
         if (registration)
         {
@@ -1114,7 +1115,7 @@ void NCPrivate::DeleteUnregistered(void)
             if (screen != nullptr && !m_suspended.contains(id))
             {
                 // mark the screen for deletion if no timer is set
-                if (screen->m_duration <= 0 || closeimemdiately)
+                if (screen->m_duration <= 0s || closeimemdiately)
                 {
                     m_deletedScreens.append(screen);
                     needdelete = true;
@@ -1233,9 +1234,9 @@ void NCPrivate::GetNotificationScreens(QList<MythScreenType*> &_screens)
     m_screenStack->GetScreenList(screens);
 
     int position = 0;
-    foreach (auto item, screens)
+    for (auto *item : qAsConst(screens))
     {
-        auto *screen = dynamic_cast<MythNotificationScreen*>(item);
+        auto *screen = qobject_cast<MythNotificationScreen*>(item);
         if (screen)
         {
             if ((screen->m_visibility & MythNotification::kPlayback) == 0)
@@ -1292,10 +1293,10 @@ bool NCPrivate::RemoveFirst(void)
     // The top screen is the only currently displayed first, if there's a
     // fullscreen notification displayed, it's the last one
     MythNotificationScreen *top = m_screens.front();
-    QList<MythNotificationScreen *>::const_iterator it = m_screens.end() - 1;
+    QList<MythNotificationScreen *>::const_iterator it = m_screens.cend() - 1;
 
     // loop from last to 2nd
-    for (; it != m_screens.begin(); --it)
+    for (; it != m_screens.cbegin(); --it)
     {
         MythNotificationScreen *s = *it;
 
@@ -1378,7 +1379,7 @@ void MythNotificationCenter::UnRegister(void *from, int id, bool closeimemdiatel
 
 QDateTime MythNotificationCenter::ScreenExpiryTime(const MythScreenType *screen)
 {
-    const auto *s = dynamic_cast<const MythNotificationScreen*>(screen);
+    const auto *s = qobject_cast<const MythNotificationScreen*>(screen);
     if (!s)
         return QDateTime();
     return s->m_expiry;
@@ -1386,7 +1387,7 @@ QDateTime MythNotificationCenter::ScreenExpiryTime(const MythScreenType *screen)
 
 bool MythNotificationCenter::ScreenCreated(const MythScreenType *screen)
 {
-    const auto *s = dynamic_cast<const MythNotificationScreen*>(screen);
+    const auto *s = qobject_cast<const MythNotificationScreen*>(screen);
     if (!s)
         return true;
     return s->m_created;
@@ -1399,7 +1400,7 @@ void MythNotificationCenter::GetNotificationScreens(QList<MythScreenType*> &_scr
 
 void MythNotificationCenter::UpdateScreen(MythScreenType *screen)
 {
-    auto *s = dynamic_cast<MythNotificationScreen*>(screen);
+    auto *s = qobject_cast<MythNotificationScreen*>(screen);
     if (!s)
         return;
 
@@ -1431,7 +1432,7 @@ void ShowNotificationError(const QString &msg,
                            const MythNotification::Priority priority)
 {
     ShowNotification(true, msg, from, detail,
-                     QString(), QString(), QString(), -1, -1, false,
+                     QString(), QString(), QString(), -1, -1s, false,
                      visibility, priority);
 }
 
@@ -1442,7 +1443,7 @@ void ShowNotification(const QString &msg,
                       const MythNotification::Priority priority)
 {
     ShowNotification(false, msg, from, detail,
-                     QString(), QString(), QString(), -1, -1, false,
+                     QString(), QString(), QString(), -1, -1s, false,
                      visibility, priority);
 }
 
@@ -1453,7 +1454,7 @@ void ShowNotification(bool  error,
                       const QString &image,
                       const QString &extra,
                       const QString &progress_text, float progress,
-                      int   duration,
+                      std::chrono::seconds   duration,
                       bool  fullscreen,
                       const VNMask visibility,
                       const MythNotification::Priority priority,
@@ -1471,7 +1472,7 @@ void ShowNotification(MythNotification::Type type,
                       const QString &image,
                       const QString &extra,
                       const QString &progress_text, float progress,
-                      int   duration,
+                      std::chrono::seconds duration,
                       bool  fullscreen,
                       const VNMask visibility,
                       const MythNotification::Priority priority,
@@ -1495,12 +1496,12 @@ void ShowNotification(MythNotification::Type type,
         type == MythNotification::Busy)
     {
         n = new MythNotification(type, data);
-        if (!duration &&
+        if (duration != 0s &&
             type != MythNotification::Check &&
             type != MythNotification::Busy)
         {
             // default duration for those type of notifications is 10s
-            duration = 10;
+            duration = 10s;
         }
     }
     else

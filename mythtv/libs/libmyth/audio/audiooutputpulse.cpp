@@ -24,7 +24,6 @@
 
 // C++ headers
 #include <algorithm>
-using std::min;
 
 #define LOC     QString("PulseAudio: ")
 
@@ -152,9 +151,9 @@ bool AudioOutputPulseAudio::OpenDevice()
         VBERROR(fn_log_tag + "invalid sample spec");
         return false;
     }
-    char spec[PA_SAMPLE_SPEC_SNPRINT_MAX];
-    pa_sample_spec_snprint(spec, sizeof(spec), &m_sampleSpec);
-    VBAUDIO(fn_log_tag + QString("using sample spec %1").arg(spec));
+    std::string spec(PA_SAMPLE_SPEC_SNPRINT_MAX,'\0');
+    pa_sample_spec_snprint(spec.data(), spec.size(), &m_sampleSpec);
+    VBAUDIO(fn_log_tag + "using sample spec " + spec.data());
 
     if(!pa_channel_map_init_auto(&m_channelMap, m_channels, PA_CHANNEL_MAP_WAVEEX))
     {
@@ -243,7 +242,7 @@ void AudioOutputPulseAudio::WriteAudio(uchar *aubuf, int size)
             size_t writable = pa_stream_writable_size(m_pstream);
             if (writable > 0)
             {
-                size_t write = min(to_write, writable);
+                size_t write = std::min(to_write, writable);
                 write_status = pa_stream_write(m_pstream, buf_ptr, write,
                                                nullptr, 0, PA_SEEK_RELATIVE);
 
@@ -334,8 +333,7 @@ void AudioOutputPulseAudio::SetVolumeChannel(int channel, int volume)
 
 // FIXME: This code did nothing at all so has been commented out for now
 //        until it's decided whether it was ever required
-//     volume = min(100, volume);
-//     volume = max(0, volume);
+//     volume = std::clamp(volume, 0, 100);
 
     if (gCoreContext->GetSetting("MixerControl", "PCM").toLower() == "pcm")
     {
@@ -421,11 +419,10 @@ bool AudioOutputPulseAudio::ContextConnect(void)
     }
     pa_context_set_state_callback(m_pcontext, ContextStateCallback, this);
 
-    char *pulse_host = ChooseHost();
-    int chk = pa_context_connect(
-        m_pcontext, pulse_host, (pa_context_flags_t)0, nullptr);
-
-    delete[] pulse_host;
+    QString pulse_host = ChooseHost();
+    int chk = pa_context_connect(m_pcontext,
+                                 !pulse_host.isEmpty() ? qPrintable(pulse_host) : nullptr,
+                                 (pa_context_flags_t)0, nullptr);
 
     if (chk < 0)
     {
@@ -469,52 +466,29 @@ bool AudioOutputPulseAudio::ContextConnect(void)
     return true;
 }
 
-char *AudioOutputPulseAudio::ChooseHost(void)
+QString AudioOutputPulseAudio::ChooseHost(void)
 {
     QString fn_log_tag = "ChooseHost, ";
-    char *pulse_host = nullptr;
-    char *device = strdup(m_mainDevice.toLatin1().constData());
-    const char *host = nullptr;
+    QStringList parts = m_mainDevice.split(':');
+    QString host = parts.size() > 1 ? parts[1] : QString();
+    QString pulse_host;
 
-    for (host=device; host && *host != ':' && *host != 0; host++);
+    if (host != "default")
+        pulse_host = host;
 
-    if (host && *host != 0)
-        host++;
-
-    if (host && *host != 0 && strcmp(host,"default") != 0)
+    if (pulse_host.isEmpty() && host != "default")
     {
-        if ((pulse_host = new char[strlen(host) + 1]))
-            strcpy(pulse_host, host);
-        else
-        {
-            VBERROR(fn_log_tag +
-                    QString("allocation of pulse host '%1' char[%2] failed")
-                    .arg(host).arg(strlen(host) + 1));
-        }
-    }
-
-    if (!pulse_host && host && strcmp(host,"default") != 0)
-    {
-        char *env_pulse_host = getenv("PULSE_SERVER");
-        if (env_pulse_host && (*env_pulse_host != '\0'))
-        {
-            int host_len = strlen(env_pulse_host) + 1;
-
-            if ((pulse_host = new char[host_len]))
-                strcpy(pulse_host, env_pulse_host);
-            else
-            {
-                VBERROR(fn_log_tag +
-                        QString("allocation of pulse host '%1' char[%2] failed")
-                        .arg(env_pulse_host).arg(host_len));
-            }
-        }
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
+        QString env_pulse_host = qgetenv("PULSE_SERVER");
+#else
+        QString env_pulse_host = qEnvironmentVariable("PULSE_SERVER");
+#endif
+        if (!env_pulse_host.isEmpty())
+            pulse_host = env_pulse_host;
     }
 
     VBAUDIO(fn_log_tag + QString("chosen PulseAudio server: %1")
                          .arg((pulse_host != nullptr) ? pulse_host : "default"));
-
-    free(device);
 
     return pulse_host;
 }
@@ -553,11 +527,11 @@ bool AudioOutputPulseAudio::ConnectPlaybackStream(void)
 
     m_fragmentSize = (m_sampleRate * 25 * m_outputBytesPerFrame) / 1000;
 
-    m_bufferSettings.maxlength   = (uint32_t)-1;
+    m_bufferSettings.maxlength   = UINT32_MAX;
     m_bufferSettings.tlength     = m_fragmentSize * 4;
-    m_bufferSettings.prebuf      = (uint32_t)-1;
-    m_bufferSettings.minreq      = (uint32_t)-1;
-    m_bufferSettings.fragsize    = (uint32_t) -1;
+    m_bufferSettings.prebuf      = UINT32_MAX;
+    m_bufferSettings.minreq      = UINT32_MAX;
+    m_bufferSettings.fragsize    = UINT32_MAX;
 
     int flags = PA_STREAM_INTERPOLATE_TIMING
         | PA_STREAM_ADJUST_LATENCY
@@ -567,14 +541,14 @@ bool AudioOutputPulseAudio::ConnectPlaybackStream(void)
     pa_stream_connect_playback(m_pstream, nullptr, &m_bufferSettings,
                                (pa_stream_flags_t)flags, nullptr, nullptr);
 
-    pa_context_state_t cstate = PA_CONTEXT_UNCONNECTED;
     pa_stream_state_t sstate = PA_STREAM_UNCONNECTED;
     bool connected = false;
     bool failed = false;
 
     while (!(connected || failed))
     {
-        switch (cstate = pa_context_get_state(m_pcontext))
+        pa_context_state_t cstate = pa_context_get_state(m_pcontext);
+        switch (cstate)
         {
             case PA_CONTEXT_FAILED:
             case PA_CONTEXT_TERMINATED:
@@ -626,7 +600,6 @@ void AudioOutputPulseAudio::FlushStream(const char *caller)
 
 void AudioOutputPulseAudio::ContextStateCallback(pa_context *c, void *arg)
 {
-    QString fn_log_tag = "_ContextStateCallback, ";
     auto *audoutP = static_cast<AudioOutputPulseAudio*>(arg);
     switch (pa_context_get_state(c))
     {
@@ -645,7 +618,6 @@ void AudioOutputPulseAudio::ContextStateCallback(pa_context *c, void *arg)
 
 void AudioOutputPulseAudio::StreamStateCallback(pa_stream *s, void *arg)
 {
-    QString fn_log_tag = "StreamStateCallback, ";
     auto *audoutP = static_cast<AudioOutputPulseAudio*>(arg);
     switch (pa_stream_get_state(s))
     {
@@ -692,8 +664,8 @@ void AudioOutputPulseAudio::ServerInfoCallback(
     VBAUDIO(fn_log_tag +
             QString("PulseAudio server info - host name: %1, server version: "
                     "%2, server name: %3, default sink: %4")
-            .arg(inf->host_name).arg(inf->server_version)
-            .arg(inf->server_name).arg(inf->default_sink_name));
+            .arg(inf->host_name, inf->server_version,
+                 inf->server_name, inf->default_sink_name));
 }
 
 void AudioOutputPulseAudio::SinkInfoCallback(

@@ -21,7 +21,12 @@
 #  SOFTWARE.
 
 
-from __future__ import unicode_literals
+# ---------------------------------------------------
+# Steve Erlenborn
+# Changes implemented for MythTV:
+# - added show_artwork
+#
+# ---------------------------------------------------
 
 
 API_URL = 'https://api.tvmaze.com'
@@ -38,3 +43,4 @@ show_alias_list = 'http://api.tvmaze.com/shows/{0}/akas'
 episode_information = 'http://api.tvmaze.com/episodes/{0}?'
 show_cast = 'http://api.tvmaze.com/shows/{0}/cast'
 show_crew = 'http://api.tvmaze.com/shows/{0}/crew'
+show_artwork = 'http://api.tvmaze.com/shows/{0}/images'

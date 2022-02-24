@@ -8,6 +8,11 @@
 // Taglib
 #include <id3v1tag.h>
 #include <id3v2tag.h>
+#ifdef Q_OS_WIN
+// The above indirectly includes winuser.h, which unconditionally
+// redefines the string SendMessage to SendMessageA.
+#undef SendMessage
+#endif
 #include <textidentificationframe.h>
 #include <attachedpictureframe.h>
 #include <popularimeterframe.h>
@@ -70,8 +75,8 @@ class META_PUBLIC MetaIOID3 : public MetaIOTagLib
                                       const String &description);
     static PopularimeterFrame* findPOPM(TagLib::ID3v2::Tag *tag, const String &email);
     static AttachedPictureFrame* findAPIC(TagLib::ID3v2::Tag *tag,
-                                   const AttachedPictureFrame::Type &type,
-                                   const String &description = String::null);
+                                   AttachedPictureFrame::Type type,
+                                   const String &description = String());
     static QString getExtFromMimeType(const QString &mimeType);
 
     TagLib::File *m_file {nullptr};

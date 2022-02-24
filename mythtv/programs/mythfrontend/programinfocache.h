@@ -1,12 +1,11 @@
 // -*- Mode: c++ -*-
 // vim:set sw=4 ts=4 expandtab:
-#ifndef _PROGRAM_INFO_CACHE_H_
-#define _PROGRAM_INFO_CACHE_H_
+#ifndef PROGRAM_INFO_CACHE_H
+#define PROGRAM_INFO_CACHE_H
 
 // C++ headers
 #include <cstdint>
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QWaitCondition>
@@ -21,7 +20,16 @@ class QObject;
 class ProgramInfoCache
 {
     friend class ProgramInfoLoader;
+
   public:
+    enum UpdateState {
+        PIC_NONE              = 0x00,
+        PIC_MARK_CHANGED      = 0x01,
+        PIC_RECGROUP_CHANGED  = 0x02,
+        PIC_NO_ACTION         = 0x80,
+    };
+    Q_DECLARE_FLAGS(UpdateStates, UpdateState);
+
     explicit ProgramInfoCache(QObject *o)
         : m_listener(o) {}
     ~ProgramInfoCache();
@@ -34,10 +42,9 @@ class ProgramInfoCache
     void Refresh(void);
     void Add(const ProgramInfo &pginfo);
     bool Remove(uint recordingID);
-    bool Update(const ProgramInfo &pginfo);
-    bool UpdateFileSize(uint recordingID, uint64_t filesize);
-    QString GetRecGroup(uint recordingID) const;
-    void GetOrdered(vector<ProgramInfo*> &list, bool newest_first = false);
+    ProgramInfoCache::UpdateStates Update(const ProgramInfo &pginfo);
+    void UpdateFileSize(uint recordingID, uint64_t filesize, UpdateStates flags);
+    void GetOrdered(std::vector<ProgramInfo*> &list, bool newest_first = false);
     /// \note This must only be called from the UI thread.
     bool empty(void) const { return m_cache.empty(); }
     ProgramInfo *GetRecordingInfo(uint recordingID) const;
@@ -56,11 +63,13 @@ class ProgramInfoCache
 
     mutable QMutex          m_lock;
     Cache                   m_cache;
-    vector<ProgramInfo*>   *m_nextCache         {nullptr};
+    std::vector<ProgramInfo*> *m_nextCache      {nullptr};
     QObject                *m_listener          {nullptr};
     bool                    m_loadIsQueued      {false};
     uint                    m_loadsInProgress   {0};
     mutable QWaitCondition  m_loadWait;
 };
 
-#endif // _PROGRAM_INFO_CACHE_H_
+Q_DECLARE_OPERATORS_FOR_FLAGS(ProgramInfoCache::UpdateStates)
+
+#endif // PROGRAM_INFO_CACHE_H

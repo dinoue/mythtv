@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2017 Paul Harrison <pharrison@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +32,7 @@ class SERVICE_PUBLIC GenreList : public QObject
 
     Q_CLASSINFO( "GenreList", "type=DTC::Genre");
 
-    Q_PROPERTY( QVariantList GenreList     READ Genres DESIGNABLE true )
+    Q_PROPERTY( QVariantList GenreList     READ Genres )
 
     PROPERTYIMP_RO_REF( QVariantList, Genres );
 
@@ -55,7 +55,7 @@ class SERVICE_PUBLIC GenreList : public QObject
             // We must make sure the object added to the QVariantList has
             // a parent of 'this'
 
-            Genre *pObject = new Genre( this );
+            auto *pObject = new Genre( this );
             m_Genres.append( QVariant::fromValue<QObject *>( pObject ));
 
             return pObject;

@@ -4,7 +4,7 @@ win32-msvc*:INCLUDEPATH -= $$SRC_PATH_BARE/../platform/win32/msvc/external/pthre
 INCLUDEPATH += ../.. ../../libs/ ../../libs/libmyth ../../libs/libmyth/audio
 INCLUDEPATH +=  ../../libs/libmythtv ../.. ../../external/FFmpeg
 INCLUDEPATH += ../../libs/libmythupnp ../../libs/libmythui ../../libs/libmythmetadata
-INCLUDEPATH += ../../libs/libmythlivemedia ../../libs/libmythbase
+INCLUDEPATH += ../../libs/libmythbase
 
 !win32-msvc* {
   QMAKE_CXXFLAGS += -isystem ../../external/libmythdvdnav/dvdnav
@@ -16,9 +16,7 @@ win32-msvc* {
   INCLUDEPATH += ../../external/libmythdvdnav/dvdread
 }
 
-!using_libbluray_external:INCLUDEPATH += ../../external/libmythbluray/src
-INCLUDEPATH += ../../external/libmythsoundtouch
-INCLUDEPATH += ../../external/libudfread
+!using_system_libbluray:INCLUDEPATH += ../../external/libmythbluray/src
 INCLUDEPATH += ../../libs/libmythtv/mpeg
 INCLUDEPATH += ../../libs/libmythtv/vbitext
 INCLUDEPATH += ../../libs/libmythservicecontracts
@@ -64,16 +62,23 @@ LIBS += -lmythmetadata-$$LIBVERSION
 LIBS += -lmythservicecontracts-$$LIBVERSION
 LIBS += -lmythprotoserver-$$LIBVERSION
 
-using_live:LIBS += -L../../libs/libmythlivemedia -lmythlivemedia-$$LIBVERSION
+using_frontend: using_opengl: QT += opengl
 using_mheg:LIBS += -L../../libs/libmythfreemheg -lmythfreemheg-$$LIBVERSION
 using_hdhomerun:LIBS += -lhdhomerun
 using_taglib: LIBS += $$CONFIG_TAGLIB_LIBS
+
+using_system_libbluray: DEFINES += HAVE_LIBBLURAY
+!using_system_libexiv2 {
+    LIBS += -L../../external/libexiv2 -lmythexiv2-0.28 -lexpat
+    freebsd: LIBS += -lprocstat -liconv
+    darwin: LIBS += -liconv -lz
+}
 
 win32 {
     CONFIG += console
 }
 
-!win32-msvc* {
+!mingw || win32-msvc* {
     POST_TARGETDEPS += ../../libs/libmythui/libmythui-$${MYTH_SHLIB_EXT}
     POST_TARGETDEPS += ../../libs/libmyth/libmyth-$${MYTH_SHLIB_EXT}
     POST_TARGETDEPS += ../../libs/libmythtv/libmythtv-$${MYTH_SHLIB_EXT}
@@ -89,8 +94,6 @@ win32 {
     POST_TARGETDEPS += ../../libs/libmythbase/libmythbase-$${MYTH_SHLIB_EXT}
     POST_TARGETDEPS += ../../libs/libmythservicecontracts/libmythservicecontracts-$${MYTH_SHLIB_EXT}
     POST_TARGETDEPS += ../../libs/libmythprotoserver/libmythprotoserver-$${MYTH_SHLIB_EXT}
-
-    using_live: POST_TARGETDEPS += ../../libs/libmythlivemedia/libmythlivemedia-$${MYTH_SHLIB_EXT}
 }
 
 DEPENDPATH += ../.. ../../libs ../../libs/libmyth ../../libs/libmyth/audio
@@ -98,7 +101,7 @@ DEPENDPATH += ../../libs/libmythtv
 DEPENDPATH += ../../libs/libmythtv/mpeg ../../libs/libmythtv/vbitext
 DEPENDPATH += ../.. ../../external/FFmpeg
 DEPENDPATH += ../../libs/libmythupnp ../../libs/libmythui
-DEPENDPATH += ../../libs/libmythlivemedia ../../libmythbase
+DEPENDPATH += ../../libmythbase
 DEPENDPATH +=../../libs/libmythservicecontracts ../../libs/libmythprotoserver
 
 using_mingw:DEFINES += USING_MINGW

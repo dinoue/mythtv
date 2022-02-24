@@ -1,26 +1,26 @@
 #ifndef DECODERBASE_H_
 #define DECODERBASE_H_
 
+#include <array>
 #include <cstdint>
 #include <vector>
-using namespace std;
 
-#include "ringbuffer.h"
+#include "io/mythmediabuffer.h"
 #include "remoteencoder.h"
 #include "mythcontext.h"
 #include "mythdbcon.h"
 #include "programinfo.h"
 #include "mythcodecid.h"
 #include "mythavutil.h"
-#include "videodisplayprofile.h"
+#include "mythvideoprofile.h"
 
-class RingBuffer;
 class TeletextViewer;
 class MythPlayer;
 class AudioPlayer;
 class MythCodecContext;
 
 const int kDecoderProbeBufferSize = 256 * 1024;
+using TestBufferVec = std::vector<char>;
 
 /// Track types
 enum TrackType
@@ -108,7 +108,7 @@ class StreamInfo
         return (this->m_stream_id < b.m_stream_id);
     }
 };
-using sinfo_vec_t = vector<StreamInfo>;
+using sinfo_vec_t = std::vector<StreamInfo>;
 
 inline AVRational AVRationalInit(int num, int den = 1) {
     AVRational result;
@@ -121,14 +121,12 @@ class DecoderBase
 {
   public:
     DecoderBase(MythPlayer *parent, const ProgramInfo &pginfo);
-    DecoderBase(const DecoderBase& rhs);
     virtual ~DecoderBase();
 
+    void SetRenderFormats(const VideoFrameTypes* RenderFormats);
     virtual void Reset(bool reset_video_data, bool seek_reset, bool reset_file);
-
-    virtual int OpenFile(RingBuffer *rbuffer, bool novideo,
-                         char testbuf[kDecoderProbeBufferSize],
-                         int testbufsize = kDecoderProbeBufferSize) = 0;
+    virtual int OpenFile(MythMediaBuffer *Buffer, bool novideo,
+                         TestBufferVec & testbuf) = 0;
 
     virtual void SetEofState(EofState eof)  { m_atEof = eof;  }
     virtual void SetEof(bool eof)  {
@@ -155,7 +153,7 @@ class DecoderBase
 
     virtual int GetNumChapters(void)                      { return 0; }
     virtual int GetCurrentChapter(long long /*framesPlayed*/) { return 0; }
-    virtual void GetChapterTimes(QList<long long> &/*times*/) { }
+    virtual void GetChapterTimes(QList<std::chrono::seconds> &/*times*/) { }
     virtual long long GetChapter(int /*chapter*/)             { return m_framesPlayed; }
     virtual bool DoRewind(long long desiredFrame, bool discardFrames = true);
     virtual bool DoFastForward(long long desiredFrame, bool discardFrames = true);
@@ -174,20 +172,21 @@ class DecoderBase
     static uint64_t TranslatePosition(const frm_pos_map_t &map,
                                       long long key,
                                       float fallback_ratio);
-    uint64_t TranslatePositionFrameToMs(long long position,
+    std::chrono::milliseconds TranslatePositionFrameToMs(long long position,
                                         float fallback_framerate,
                                         const frm_dir_map_t &cutlist);
-    uint64_t TranslatePositionMsToFrame(uint64_t dur_ms,
+    uint64_t TranslatePositionMsToFrame(std::chrono::milliseconds dur_ms,
                                         float fallback_framerate,
                                         const frm_dir_map_t &cutlist);
 
     float GetVideoAspect(void) const { return m_currentAspect; }
 
-    virtual int64_t NormalizeVideoTimecode(int64_t timecode) { return timecode; }
+    virtual std::chrono::milliseconds NormalizeVideoTimecode(std::chrono::milliseconds timecode)
+        { return timecode; }
 
     virtual bool IsLastFrameKey(void) const = 0;
-    virtual void WriteStoredData(RingBuffer *rb, bool storevid,
-                                 long timecodeOffset) = 0;
+    virtual void WriteStoredData(MythMediaBuffer *Buffer, bool storevid,
+                                 std::chrono::milliseconds timecodeOffset) = 0;
     virtual void ClearStoredData(void) { }
     virtual void SetRawAudioState(bool state) { m_getRawFrames = state; }
     virtual bool GetRawAudioState(void) const { return m_getRawFrames; }
@@ -225,33 +224,30 @@ class DecoderBase
 
     bool IsErrored() const { return m_errored; }
 
-    bool HasPositionMap(void) const { return GetPositionMapSize(); }
+    bool HasPositionMap(void) const { return GetPositionMapSize() != 0U; }
 
     void SetWaitForChange(void);
     bool GetWaitForChange(void) const;
     void SetReadAdjust(long long adjust);
 
     // Audio/Subtitle/EIA-608/EIA-708 stream selection
-    void SetDecodeAllSubtitles(bool val) { m_decodeAllSubtitles = val; }
-    virtual QStringList GetTracks(uint type) const;
-    virtual uint GetTrackCount(uint type) const
-        { return m_tracks[type].size(); }
+    void         SetDecodeAllSubtitles(bool DecodeAll);
+    virtual QStringList GetTracks(uint Type);
+    virtual uint GetTrackCount(uint Type);
 
-    virtual int  GetTrackLanguageIndex(uint type, uint trackNo) const;
-    virtual QString GetTrackDesc(uint type, uint trackNo) const;
-    virtual int  SetTrack(uint type, int trackNo);
-    int          GetTrack(uint type) const { return m_currentTrack[type]; }
-    StreamInfo   GetTrackInfo(uint type, uint trackNo) const;
-    inline  int  IncrementTrack(uint type);
-    inline  int  DecrementTrack(uint type);
-    inline  int  ChangeTrack(uint type, int dir);
-    virtual bool InsertTrack(uint type, const StreamInfo &info);
-    inline int   NextTrack(uint type);
+    virtual int  GetTrackLanguageIndex(uint Type, uint TrackNo);
+    virtual QString GetTrackDesc(uint Type, uint TrackNo);
+    virtual int  SetTrack(uint Type, int TrackNo);
+    int          GetTrack(uint Type);
+    StreamInfo   GetTrackInfo(uint Type, uint TrackNo);
+    int          ChangeTrack(uint Type, int Dir);
+    virtual bool InsertTrack(uint Type, const StreamInfo &Info);
+    int          NextTrack(uint Type);
 
     virtual int  GetTeletextDecoderType(void) const { return -1; }
 
     virtual QString GetXDS(const QString &/*key*/) const { return QString(); }
-    virtual QByteArray GetSubHeader(uint /*trackNo*/) const { return QByteArray(); }
+    virtual QByteArray GetSubHeader(uint /*trackNo*/) { return QByteArray(); }
     virtual void GetAttachmentData(uint /*trackNo*/, QByteArray &/*filename*/,
                                    QByteArray &/*data*/) {}
 
@@ -263,18 +259,15 @@ class DecoderBase
     void ResetTotalDuration(void) { m_totalDuration = AVRationalInit(0); }
     void SaveTotalFrames(void);
     void TrackTotalDuration(bool track) { m_trackTotalDuration = track; }
-    int GetfpsMultiplier(void) { return m_fpsMultiplier; }
+    int GetfpsMultiplier(void) const { return m_fpsMultiplier; }
     MythCodecContext *GetMythCodecContext(void) { return m_mythCodecCtx; }
-    VideoDisplayProfile * GetVideoDisplayProfile(void) { return &m_videoDisplayProfile; }
-    AVPixelFormat GetBestVideoFormat(AVPixelFormat* Formats);
+    static AVPixelFormat GetBestVideoFormat(AVPixelFormat* Formats, const VideoFrameTypes* RenderFormats);
 
   protected:
-    virtual int  AutoSelectTrack(uint type);
-    inline  void AutoSelectTracks(void);
-    inline  void ResetTracks(void);
-
-    void FileChanged(void);
-
+    virtual int  AutoSelectTrack(uint Type);
+    void         AutoSelectTracks(void);
+    void         ResetTracks(void);
+    void         FileChanged(void);
     virtual bool DoRewindSeek(long long desiredFrame);
     virtual void DoFastForwardSeek(long long desiredFrame, bool &needflush);
 
@@ -293,32 +286,33 @@ class DecoderBase
     MythPlayer          *m_parent                  {nullptr};
     ProgramInfo         *m_playbackInfo            {nullptr};
     AudioPlayer         *m_audio                   {nullptr};
-    RingBuffer          *m_ringBuffer              {nullptr};
+    MythMediaBuffer     *m_ringBuffer              {nullptr};
 
-    int                  m_currentWidth            {640};
-    int                  m_currentHeight           {480};
-    float                m_currentAspect           {1.33333F};
     double               m_fps                     {29.97};
     int                  m_fpsMultiplier           {1};
     int                  m_fpsSkip                 {0};
     uint                 m_bitrate                 {4000};
+    int                  m_currentWidth            {640};
+    int                  m_currentHeight           {480};
+    float                m_currentAspect           {1.33333F};
 
     long long            m_framesPlayed            {0};
     long long            m_framesRead              {0};
-    unsigned long long   m_frameCounter            {0};
+    uint64_t             m_frameCounter            {0};
     AVRational           m_totalDuration;
+	int                  m_keyframeDist            {-1};
     long long            m_lastKey                 {0};
-    bool                 m_nextDecodedFrameIsKeyFrame { false };
-    int                  m_keyframeDist            {-1};
     long long            m_indexOffset             {0};
     MythAVCopy           m_copyFrame;
+    bool                 m_nextDecodedFrameIsKeyFrame { false };
+
+    EofState             m_atEof                   {kEofStateNone};
 
     // The totalDuration field is only valid when the video is played
     // from start to finish without any jumping.  trackTotalDuration
     // indicates whether this is the case.
     bool                 m_trackTotalDuration      {false};
 
-    EofState             m_atEof                   {kEofStateNone};
     bool                 m_exitAfterDecoded        {false};
     bool                 m_transcoding             {false};
 
@@ -327,14 +321,18 @@ class DecoderBase
     bool                 m_posmapStarted           {false};
     MarkTypes            m_positionMapType         {MARK_UNSET};
 
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     mutable QMutex       m_positionMapLock         {QMutex::Recursive};
-    vector<PosMapEntry>  m_positionMap;
+#else
+    mutable QRecursiveMutex m_positionMapLock;
+#endif
+    std::vector<PosMapEntry>  m_positionMap;
     frm_pos_map_t        m_frameToDurMap; // guarded by m_positionMapLock
     frm_pos_map_t        m_durToFrameMap; // guarded by m_positionMapLock
-    bool                 m_dontSyncPositionMap     {false};
     mutable QDateTime    m_lastPositionMapUpdate; // guarded by m_positionMapLock
 
     uint64_t             m_seekSnap                {UINT64_MAX};
+    bool                 m_dontSyncPositionMap     {false};
     bool                 m_livetv                  {false};
     bool                 m_watchingRecording       {false};
 
@@ -346,65 +344,30 @@ class DecoderBase
     bool                 m_errored                 {false};
 
     bool                 m_waitingForChange        {false};
-    long long            m_readAdjust              {0};
     bool                 m_justAfterChange         {false};
+    long long            m_readAdjust              {0};
     int                  m_videoRotation           {0};
+    uint                 m_stereo3D                {0};
 
     // Audio/Subtitle/EIA-608/EIA-708 stream selection
-    bool                 m_decodeAllSubtitles      {false};
-    int                  m_currentTrack[kTrackTypeCount] {};
-    sinfo_vec_t          m_tracks[kTrackTypeCount];
-    StreamInfo           m_wantedTrack[kTrackTypeCount];
-    StreamInfo           m_selectedTrack[(uint)kTrackTypeCount];
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
+    QMutex               m_trackLock                     { QMutex::Recursive };
+#else
+    QRecursiveMutex      m_trackLock;
+#endif
+    bool                 m_decodeAllSubtitles            { false };
+    std::array<int,        kTrackTypeCount> m_currentTrack {};
+    std::array<sinfo_vec_t,kTrackTypeCount> m_tracks;
+    std::array<StreamInfo, kTrackTypeCount> m_wantedTrack;
+    std::array<StreamInfo, kTrackTypeCount> m_selectedTrack;
+
     /// language preferences for auto-selection of streams
-    vector<int>  m_languagePreference;
-    MythCodecContext    *m_mythCodecCtx            {nullptr};
-    VideoDisplayProfile  m_videoDisplayProfile;
+    std::vector<int>     m_languagePreference;
+    MythCodecContext    *m_mythCodecCtx         { nullptr };
+    MythVideoProfile     m_videoDisplayProfile;
+    const VideoFrameTypes* m_renderFormats { &MythVideoFrame::kDefaultRenderFormats };
+
+  private:
+    Q_DISABLE_COPY(DecoderBase)
 };
-
-inline int DecoderBase::IncrementTrack(uint type)
-{
-    int next_track = -1;
-    int size = m_tracks[type].size();
-    if (size)
-        next_track = (max(-1, m_currentTrack[type]) + 1) % size;
-    return SetTrack(type, next_track);
-}
-
-inline int DecoderBase::DecrementTrack(uint type)
-{
-    int next_track = -1;
-    int size = m_tracks[type].size();
-    if (size)
-        next_track = (max(+0, m_currentTrack[type]) + size - 1) % size;
-    return SetTrack(type, next_track);
-}
-
-inline int DecoderBase::ChangeTrack(uint type, int dir)
-{
-    if (dir > 0)
-        return IncrementTrack(type);
-    return DecrementTrack(type);
-}
-
-inline void DecoderBase::AutoSelectTracks(void)
-{
-    for (uint i = 0; i < kTrackTypeCount; i++)
-        AutoSelectTrack(i);
-}
-
-inline void DecoderBase::ResetTracks(void)
-{
-    for (int & i : m_currentTrack)
-        i = -1;
-}
-
-inline int DecoderBase::NextTrack(uint type)
-{
-    int next_track = -1;
-    int size = m_tracks[type].size();
-    if (size)
-        next_track = (max(0, m_currentTrack[type]) + 1) % size;
-    return next_track;
-}
 #endif

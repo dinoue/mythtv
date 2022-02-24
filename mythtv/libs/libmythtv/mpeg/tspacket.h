@@ -1,8 +1,10 @@
 // -*- Mode: c++ -*-
 // Copyright (c) 2003-2004,2010 Daniel Thor Kristjansson
-#ifndef _TS_PACKET_H_
-#define _TS_PACKET_H_
+#ifndef TS_PACKET_H
+#define TS_PACKET_H
 
+#include <algorithm>
+#include <array>
 #include <chrono>
 #include <cstdlib>
 #include "mythcontext.h"
@@ -13,6 +15,8 @@
 #define VIDEO_PID(bp) ((bp)+1)
 #define AUDIO_PID(bp) ((bp)+4)
 #define SYNC_BYTE     0x0047
+
+using TSHeaderArray = std::array<uint8_t,4>;
 
 /** \class TSHeader
  *  \brief Used to access header of a TSPacket.
@@ -149,13 +153,13 @@ class MTV_PUBLIC TSHeader
         m_tsData[3] = (m_tsData[3] & 0xf0) | (cc & 0xf);
     }
 
-    const unsigned char* data(void) const { return m_tsData; }
-    unsigned char* data(void) { return m_tsData; }
+    const unsigned char* data(void) const { return m_tsData.data(); }
+    unsigned char* data(void) { return m_tsData.data(); }
 
-    static const unsigned int kHeaderSize;
-    static const unsigned char kPayloadOnlyHeader[4];
+    static constexpr unsigned int kHeaderSize {4};
+    static const TSHeaderArray kPayloadOnlyHeader;
   private:
-    unsigned char m_tsData[4] {};
+    TSHeaderArray m_tsData {};
 };
 
 /** \class TSPacket
@@ -174,8 +178,8 @@ class MTV_PUBLIC TSPacket : public TSHeader
     static TSPacket* CreatePayloadOnlyPacket(void)
     {
         auto *pkt = new TSPacket();
-        pkt->InitHeader(kPayloadOnlyHeader);
-        memset(pkt->m_tsPayload, 0xFF, kPayloadSize);
+        pkt->InitHeader(kPayloadOnlyHeader.data());
+        pkt->m_tsPayload.fill(0xFF);
         pkt->SetStartOfFieldPointer(0);
         return pkt;
     }
@@ -189,18 +193,18 @@ class MTV_PUBLIC TSPacket : public TSHeader
     void InitPayload(const unsigned char *payload)
     {
         if (payload)
-            memcpy(m_tsPayload, payload, kPayloadSize);
+            std::copy(payload, payload+kPayloadSize, m_tsPayload.data());
     }
 
     void InitPayload(const unsigned char *payload, uint size)
     {
         if (payload)
-            memcpy(m_tsPayload, payload, size);
+            std::copy(payload, payload+size, m_tsPayload.data());
         else
             size = 0;
 
         if (size < TSPacket::kPayloadSize)
-            memset(m_tsPayload + size, 0xff, TSPacket::kPayloadSize - size);
+            std::fill_n(&m_tsPayload[size], TSPacket::kPayloadSize - size, 0xff);
     }
 
     // This points outside the TSHeader data, but is declared here because
@@ -217,14 +221,14 @@ class MTV_PUBLIC TSPacket : public TSHeader
 
     QString toString(void) const;
 
-    static const unsigned int kSize;
-    static const unsigned int kPayloadSize;
-    static const unsigned int kDVBEmissionSize;
-    static const unsigned int kISDBEmissionSize;
-    static const unsigned int k8VSBEmissionSize;
+    static constexpr unsigned int kSize             {188};
+    static constexpr unsigned int kPayloadSize      {188-4};
+    static constexpr unsigned int kDVBEmissionSize  {204};
+    static constexpr unsigned int kISDBEmissionSize {204};
+    static constexpr unsigned int k8VSBEmissionSize {208};
     static const TSPacket    *kNullPacket;
   private:
-    unsigned char m_tsPayload[184] {};
+    std::array<uint8_t,184> m_tsPayload {};
 };
 
 #if 0 /* not used yet */
@@ -256,4 +260,4 @@ class MTV_PUBLIC TS8VSBEmissionPacket : public TSPacket
 };
 #endif
 
-#endif // _TS_PACKET_H_
+#endif // TS_PACKET_H

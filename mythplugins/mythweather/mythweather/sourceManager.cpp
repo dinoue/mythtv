@@ -64,8 +64,8 @@ bool SourceManager::findScriptsDB()
         auto *si = new ScriptInfo;
         si->id = db.value(0).toInt();
         si->name = db.value(1).toString();
-        si->updateTimeout = db.value(2).toUInt() * 1000;
-        si->scriptTimeout = db.value(3).toUInt();
+        si->updateTimeout = std::chrono::seconds(db.value(2).toUInt());
+        si->scriptTimeout = std::chrono::seconds(db.value(3).toUInt());
         si->path = fi.absolutePath();
         si->program = fi.absoluteFilePath();
         si->author = db.value(5).toString();
@@ -108,7 +108,7 @@ bool SourceManager::findScripts()
         busyPopup = nullptr;
     }
 
-    qApp->processEvents();
+    QCoreApplication::processEvents();
 
     recurseDirs(dir);
 
@@ -196,7 +196,7 @@ void SourceManager::setupSources()
 ScriptInfo *SourceManager::getSourceByName(const QString &name)
 {
     ScriptInfo *src = nullptr;
-    foreach (auto script, m_scripts)
+    for (auto *script : qAsConst(m_scripts))
     {
         src = script;
         if (src->name == name)
@@ -230,7 +230,7 @@ WeatherSource *SourceManager::needSourceFor(int id, const QString &loc,
                                             units_t units)
 {
     // matching source exists?
-    foreach (auto src, m_sources)
+    for (auto *src : qAsConst(m_sources))
     {
         if (src->getId() == id && src->getLocale() == loc &&
             src->getUnits() == units)
@@ -240,16 +240,15 @@ WeatherSource *SourceManager::needSourceFor(int id, const QString &loc,
     }
 
     // no matching source, make one
-    foreach (auto si, m_scripts)
+    auto idmatch = [id](auto *si){ return si->id == id; };
+    auto it = std::find_if(m_scripts.cbegin(), m_scripts.cend(), idmatch);
+    if (it != m_scripts.cend())
     {
-        if (si->id == id)
-        {
-            auto *ws = new WeatherSource(si);
-            ws->setLocale(loc);
-            ws->setUnits(units);
-            m_sources.append(ws);
-            return ws;
-        }
+        auto *ws = new WeatherSource(*it);
+        ws->setLocale(loc);
+        ws->setUnits(units);
+        m_sources.append(ws);
+        return ws;
     }
 
     LOG(VB_GENERAL, LOG_ERR, LOC +
@@ -260,19 +259,19 @@ WeatherSource *SourceManager::needSourceFor(int id, const QString &loc,
 
 void SourceManager::startTimers()
 {
-    foreach (auto src, m_sources)
+    for (auto *src : qAsConst(m_sources))
         src->startUpdateTimer();
 }
 
 void SourceManager::stopTimers()
 {
-    foreach (auto src, m_sources)
+    for (auto *src : qAsConst(m_sources))
         src->stopUpdateTimer();
 }
 
 void SourceManager::doUpdate(bool forceUpdate)
 {
-    foreach (auto src, m_sources)
+    for (auto *src : qAsConst(m_sources))
     {
         if (src->inUse())
             src->startUpdate(forceUpdate);
@@ -282,7 +281,7 @@ void SourceManager::doUpdate(bool forceUpdate)
 bool SourceManager::findPossibleSources(QStringList types,
                                         QList<ScriptInfo *> &sources)
 {
-    foreach (auto si, m_scripts)
+    for (auto *si : qAsConst(m_scripts))
     {
         QStringList stypes = si->types;
         bool handled = true;
@@ -360,7 +359,7 @@ void SourceManager::recurseDirs( QDir dir )
 
     for (const auto & file : files)
     {
-        qApp->processEvents();
+        QCoreApplication::processEvents();
         if (file.isDir())
         {
             QDir recurseTo(file.filePath());

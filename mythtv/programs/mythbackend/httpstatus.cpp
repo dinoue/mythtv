@@ -17,8 +17,11 @@
 #include <cstdlib>
 
 // Qt headers
+#include <QtGlobal>
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#include <QStringConverter>
+#endif
 #include <QTextStream>
-#include <QRegExp>
 
 // MythTV headers
 #include "httpstatus.h"
@@ -34,6 +37,7 @@
 #include "scheduler.h"
 #include "mainserver.h"
 #include "cardutil.h"
+#include "mythmiscutil.h"
 #include "mythsystemlegacy.h"
 #include "exitcodes.h"
 #include "jobqueue.h"
@@ -133,7 +137,7 @@ void HttpStatus::GetStatusXML( HTTPRequest *pRequest )
     // UTF-8 is the default, but good practice to specify it anyway
     QDomProcessingInstruction encoding =
         doc.createProcessingInstruction("xml",
-                                        "version=\"1.0\" encoding=\"UTF-8\"");
+                                        R"(version="1.0" encoding="UTF-8")");
     doc.appendChild(encoding);
 
     FillStatusXML( &doc );
@@ -142,7 +146,11 @@ void HttpStatus::GetStatusXML( HTTPRequest *pRequest )
     pRequest->m_mapRespHeaders[ "Cache-Control" ] = "no-cache=\"Ext\", max-age = 5000";
 
     QTextStream stream( &pRequest->m_response );
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     stream.setCodec("UTF-8");   // Otherwise locale default is used.
+#else
+    stream.setEncoding(QStringConverter::Utf8);
+#endif
     stream << doc.toString();
 }
 
@@ -265,7 +273,7 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
     unsigned int iNum = 10;
     unsigned int iNumRecordings = 0;
 
-    RecConstIter itProg = recordingList.begin();
+    auto itProg = recordingList.begin();
     for (; (itProg != recordingList.end()) && iNumRecordings < iNum; ++itProg)
     {
         if (((*itProg)->GetRecordingStatus() <= RecStatus::WillRecord) &&
@@ -301,7 +309,7 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
         fes = nullptr;
 
         frontends.setAttribute( "count", map.size() );
-        foreach (auto & entry, map)
+        for (const auto & entry : qAsConst(map))
         {
             QDomElement fe = pDoc->createElement("Frontend");
             frontends.appendChild(fe);
@@ -329,7 +337,7 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
         backends.appendChild(mbe);
         mbe.setAttribute("type", "Master");
         mbe.setAttribute("name", masterhost);
-        mbe.setAttribute("url" , masterip + ":" + masterport);
+        mbe.setAttribute("url" , masterip + ":" + QString::number(masterport));
     }
 
     SSDPCacheEntries *sbes = SSDP::Find(
@@ -346,7 +354,7 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
         sbes->DecrRef();
         sbes = nullptr;
 
-        foreach (auto & entry, map)
+        for (const auto & entry : qAsConst(map))
         {
             QUrl url(entry->m_sLocation);
             if (url.host() != ipaddress)
@@ -430,12 +438,10 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
     // drive space   ---------------------
 
     QStringList strlist;
-    QString dirs;
     QString hostname;
     QString directory;
     QString isLocalstr;
     QString fsID;
-    QString ids;
 
     if (m_pMainServer)
         m_pMainServer->BackendQueryDiskSpace(strlist, true, m_bIsMaster);
@@ -445,13 +451,11 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
     // Make a temporary list to hold the per-filesystem elements so that the
     // total is always the first element.
     QList<QDomElement> fsXML;
-    QStringList::const_iterator sit = strlist.begin();
-    while (sit != strlist.end())
+    QStringList::const_iterator sit = strlist.cbegin();
+    while (sit != strlist.cend())
     {
-        // cppcheck-suppress unreadVariable
         hostname   = *(sit++);
         directory  = *(sit++);
-        // cppcheck-suppress unreadVariable
         isLocalstr = *(sit++);
         fsID       = *(sit++);
         ++sit; // ignore dirID
@@ -520,9 +524,8 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
     load.setAttribute("avg2", 1);
     load.setAttribute("avg3", 2);
 #else
-    double rgdAverages[3];
-
-    if (getloadavg(rgdAverages, 3) != -1)
+    loadArray rgdAverages = getLoadAvgs();
+    if (rgdAverages[0] != -1)
     {
         load.setAttribute("avg1", rgdAverages[0]);
         load.setAttribute("avg2", rgdAverages[1]);
@@ -571,7 +574,7 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
 
         uint flags = kMSRunShell | kMSStdOut;
         MythSystemLegacy ms(info_script, flags);
-        ms.Run(10);
+        ms.Run(10s);
         if (ms.Wait() != GENERIC_EXIT_OK)
         {
             LOG(VB_GENERAL, LOG_ERR,
@@ -582,10 +585,15 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
 
         QByteArray input = ms.ReadAll();
 
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
         QStringList output = QString(input).split('\n',
                                                   QString::SkipEmptyParts);
+#else
+        QStringList output = QString(input).split('\n',
+                                                  Qt::SkipEmptyParts);
+#endif
 
-        foreach (auto & line, output)
+        for (const auto & line : qAsConst(output))
         {
             QDomElement info = pDoc->createElement("Information");
 
@@ -621,7 +629,11 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
 
 void HttpStatus::PrintStatus( QTextStream &os, QDomDocument *pDoc )
 {
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     os.setCodec("UTF-8");
+#else
+    os.setEncoding(QStringConverter::Utf8);
+#endif
 
     QDateTime qdtNow = MythDate::current();
 
@@ -739,7 +751,7 @@ int HttpStatus::PrintEncoderStatus( QTextStream &os, const QDomElement& encoders
                 {
                     SleepStatus sleepStatus =
                         (SleepStatus) e.attribute("sleepstatus",
-                            QString((int)sStatus_Undefined)).toInt();
+                            QString::number(sStatus_Undefined)).toInt();
 
                     if (sleepStatus == sStatus_Asleep)
                         os << " (currently asleep).<br />";
@@ -1126,7 +1138,7 @@ int HttpStatus::PrintJobQueue( QTextStream &os, const QDomElement& jobs )
                             break;
                     }
 
-                    QString   sTitle       = p.attribute( "title"   , "" );       //.replace(QRegExp("\""), "&quot;");
+                    QString   sTitle       = p.attribute( "title"   , "" );       //.replace("\"", "&quot;");
                     QString   sSubTitle    = p.attribute( "subTitle", "" );
                     QDateTime startTs      = MythDate::fromString( p.attribute( "startTime" ,"" ));
                     QDateTime endTs        = MythDate::fromString( p.attribute( "endTime"   ,"" ));
@@ -1260,7 +1272,7 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, const QDomElement& info )
                 int nExpirable = g.attribute("expirable" , "0" ).toInt();
                 QString nDir = g.attribute("dir"  , "" );
 
-                nDir.replace(QRegExp(","), ", ");
+                nDir.replace(",", ", ");
 
                 os << "      Disk Usage Summary:<br />\r\n";
                 os << "      <ul>\r\n";
@@ -1334,7 +1346,7 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, const QDomElement& info )
             QString nDir = g.attribute("dir"  , "" );
             QString id   = g.attribute("id"   , "" );
 
-            nDir.replace(QRegExp(","), ", ");
+            nDir.replace(",", ", ");
 
 
             if (id != "total")

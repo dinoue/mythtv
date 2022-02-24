@@ -1,76 +1,57 @@
 #ifndef MYTHBDPLAYER_H
 #define MYTHBDPLAYER_H
 
-// Qt headers
+// Qt
 #include <QCoreApplication>
 
-// MythTV headers
-#include "mythplayer.h"
+// MythTV
+#include "mythplayerui.h"
 
-class MythBDPlayer : public MythPlayer
+class MythBDPlayer : public MythPlayerUI
 {
-    Q_DECLARE_TR_FUNCTIONS(MythBDPlayer);
+    Q_OBJECT
 
   public:
-    explicit MythBDPlayer(PlayerFlags flags = kNoFlags)
-        : MythPlayer(flags) {}
-    bool    HasReachedEof(void) const override; // MythPlayer
-    bool    GoToMenu(const QString& str) override; // MythPlayer
-    int     GetNumChapters(void) override; // MythPlayer
-    int     GetCurrentChapter(void) override; // MythPlayer
-    void    GetChapterTimes(QList<long long> &times) override; // MythPlayer
-    int64_t GetChapter(int chapter) override; // MythPlayer
+    MythBDPlayer(MythMainWindow* MainWindow, TV* Tv, PlayerContext* Context, PlayerFlags Flags = kNoFlags);
+    bool     HasReachedEof     (void) const override;
+    int      GetNumChapters    (void) override;
+    int      GetCurrentChapter (void) override;
+    void     GetChapterTimes   (QList<std::chrono::seconds> &ChapterTimes) override;
+    int64_t  GetChapter        (int Chapter) override;
+    int      GetNumTitles      (void) const override;
+    int      GetNumAngles      (void) const override;
+    int      GetCurrentTitle   (void) const override;
+    int      GetCurrentAngle   (void) const override;
+    std::chrono::seconds  GetTitleDuration  (int Title) const override;
+    QString  GetTitleName      (int Title) const override;
+    QString  GetAngleName      (int Angle) const override;
+    bool     SwitchTitle       (int Title) override;
+    bool     PrevTitle         (void) override;
+    bool     NextTitle         (void) override;
+    bool     SwitchAngle       (int Angle) override;
+    bool     PrevAngle         (void) override;
+    bool     NextAngle         (void) override;
+    uint64_t GetBookmark       (void) override;
 
-    int GetNumTitles(void) const override; // MythPlayer
-    int GetNumAngles(void) const override; // MythPlayer
-    int GetCurrentTitle(void) const override; // MythPlayer
-    int GetCurrentAngle(void) const override; // MythPlayer
-    int GetTitleDuration(int title) const override; // MythPlayer
-    QString GetTitleName(int title) const override; // MythPlayer
-    QString GetAngleName(int angle) const override; // MythPlayer
-    bool SwitchTitle(int title) override; // MythPlayer
-    bool PrevTitle(void) override; // MythPlayer
-    bool NextTitle(void) override; // MythPlayer
-    bool SwitchAngle(int angle) override; // MythPlayer
-    bool PrevAngle(void) override; // MythPlayer
-    bool NextAngle(void) override; // MythPlayer
-    void SetBookmark(bool clear) override; // MythPlayer
-    uint64_t GetBookmark(void) override; // MythPlayer
-
-    // Non-const gets
-    // Disable screen grabs for Bluray
-    char *GetScreenGrabAtFrame(uint64_t /*frameNum*/, bool /*absolute*/,
-                               int &/*buflen*/, int &/*vw*/, int &/*vh*/,
-                               float &/*ar*/) override // MythPlayer
-        { return nullptr; }
-    char *GetScreenGrab(int /*secondsin*/, int &/*bufflen*/,
-                        int &/*vw*/, int &/*vh*/, float &/*ar*/) override // MythPlayer
-        { return nullptr; }
+  protected slots:
+    void     GoToMenu          (const QString& Menu);
+    void     SetBookmark       (bool Clear) override;
 
   protected:
-    // Playback
-    void VideoStart(void) override; // MythPlayer
-    bool VideoLoop(void) override; // MythPlayer
-    void EventStart(void) override; // MythPlayer
-    void DisplayPauseFrame(void) override; // MythPlayer
-    void PreProcessNormalFrame(void) override; // MythPlayer
-
-    // Seek stuff
-    bool JumpToFrame(uint64_t frame) override; // MythPlayer
-
-    // Private decoder stuff
-    void CreateDecoder(char *testbuf, int testreadsize) override; // MythPlayer
-
-    // Non-const gets
-    // Disable screen grabs for Bluray
-    void SeekForScreenGrab(uint64_t &/*number*/, uint64_t /*frameNum*/,
-                           bool /*absolute*/) override // MythPlayer
-        {}
+    void     VideoStart        (void) override;
+    bool     VideoLoop         (void) override;
+    void     EventStart        (void) override;
+    void     DisplayPauseFrame (void) override;
+    void     PreProcessNormalFrame(void) override;
+    bool     JumpToFrame       (uint64_t Frame) override;
+    void     CreateDecoder     (TestBufferVec & TestBuffer) override;
 
   private:
-    void    DisplayMenu(void);
-    bool    m_stillFrameShowing {false};
-    QString m_initialBDState;
+    Q_DISABLE_COPY(MythBDPlayer)
+    void     DisplayMenu(void);
+
+    bool     m_stillFrameShowing { false };
+    QString  m_initialBDState;
 };
 
-#endif // MYTHBDPLAYER_H
+#endif

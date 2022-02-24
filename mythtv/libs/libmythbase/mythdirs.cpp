@@ -1,17 +1,17 @@
 #include <iostream>
 #include <cstdlib>
 
+#include <QtGlobal>
 #include <QDir>
 #include <QCoreApplication>
-
-#include "mythconfig.h"  // for CONFIG_DARWIN
-#include "mythdirs.h"
-#include "mythlogging.h"
 
 #ifdef Q_OS_ANDROID
 #include <QStandardPaths>
 #include <sys/statfs.h>
 #endif
+
+#include "mythdirs.h"
+#include "mythlogging.h"
 
 static QString installprefix;
 static QString appbindir;
@@ -32,7 +32,7 @@ void InitializeMythDirs(void)
     installprefix = qgetenv( "MYTHTVDIR"   );
     confdir       = qgetenv( "MYTHCONFDIR" );
 
-    if (confdir.length())
+    if (!confdir.isEmpty())
     {
         LOG(VB_GENERAL, LOG_NOTICE, QString("Read conf dir = %1").arg(confdir));
         confdir.replace("$HOME", QDir::homePath());
@@ -164,7 +164,7 @@ void InitializeMythDirs(void)
         // use relative PREFIX values with care.
 
         LOG(VB_GENERAL, LOG_DEBUG, QString("Relative PREFIX! (%1), appDir=%2")
-            .arg(installprefix) .arg(prefixDir.canonicalPath()));
+            .arg(installprefix, prefixDir.canonicalPath()));
 
         if (!prefixDir.cd(installprefix))
         {
@@ -258,17 +258,17 @@ QString GetThemeBaseCacheDir(void) { return themebasecachedir; }
 
 // These defines provide portability for different
 // plugin file names.
-#if CONFIG_DARWIN
+#ifdef Q_OS_DARWIN
 static const QString kPluginLibPrefix = "lib";
 static const QString kPluginLibSuffix = ".dylib";
 static const QString kFilterLibPrefix = "lib";
 static const QString kFilterLibSuffix = ".dylib";
-#elif _WIN32
+#elif defined(_WIN32)
 static const QString kPluginLibPrefix = "lib";
 static const QString kPluginLibSuffix = ".dll";
 static const QString kFilterLibPrefix = "lib";
 static const QString kFilterLibSuffix = ".dll";
-#elif ANDROID
+#elif defined(Q_OS_ANDROID)
 static const QString kPluginLibPrefix = "libmythplugin";
 static const QString kPluginLibSuffix = ".so";
 static const QString kFilterLibPrefix = "libmythfilter";

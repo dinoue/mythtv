@@ -30,7 +30,7 @@
 #include "v4l2encstreamhandler.h"
 #include "v4l2encrecorder.h"
 #include "v4lchannel.h"
-#include "ringbuffer.h"
+#include "io/mythmediabuffer.h"
 #include "tv_rec.h"
 
 #define LOC QString("V4L2Rec[%1](%2): ") \
@@ -157,7 +157,7 @@ void V4L2encRecorder::run(void)
         const ProgramAssociationTable *pat = m_channel->GetGeneratedPAT();
         const ProgramMapTable         *pmt = m_channel->GetGeneratedPMT();
         m_streamData->Reset(pat->ProgramNumber(0));
-        m_streamData->HandleTables(MPEG_PAT_PID, *pat);
+        m_streamData->HandleTables(PID::MPEG_PAT_PID, *pat);
         m_streamData->HandleTables(pat->ProgramPID(0), *pmt);
         LOG(VB_GENERAL, LOG_INFO, LOC + "PMT set"); // debugging
     }
@@ -190,7 +190,7 @@ void V4L2encRecorder::run(void)
         {
             LOG(VB_GENERAL, LOG_WARNING, LOC +
                 "Recording will not commence until a PMT is set.");
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            std::this_thread::sleep_for(5ms);
             continue;
         }
 
@@ -265,7 +265,7 @@ bool V4L2encRecorder::Open(void)
         return false;
     }
 
-    m_h264Parser.use_I_forKeyframes(false);
+    m_useIForKeyframe = false;
 
     LOG(VB_RECORD, LOG_INFO, LOC + "Open() -- Success.");
     return true;
@@ -283,7 +283,7 @@ void V4L2encRecorder::Close(void)
     LOG(VB_RECORD, LOG_INFO, LOC + "Close() -- end");
 }
 
-bool V4L2encRecorder::PauseAndWait(int timeout)
+bool V4L2encRecorder::PauseAndWait(std::chrono::milliseconds timeout)
 {
     QMutexLocker locker(&m_pauseLock);
     if (m_requestPause)
@@ -313,7 +313,7 @@ bool V4L2encRecorder::PauseAndWait(int timeout)
     }
 
     // Always wait a little bit, unless woken up
-    m_unpauseWait.wait(&m_pauseLock, timeout);
+    m_unpauseWait.wait(&m_pauseLock, timeout.count());
 
     return IsPaused(true);
 }
@@ -321,7 +321,8 @@ bool V4L2encRecorder::PauseAndWait(int timeout)
 bool V4L2encRecorder::StartEncoding(void)
 {
     LOG(VB_RECORD, LOG_DEBUG, LOC + "V4L2encRecorder::StartEncoding() -- begin");
-    m_h264Parser.Reset();
+    if (m_h2645Parser != nullptr)
+        m_h2645Parser->Reset();
     m_waitForKeyframeOption = true;
     m_seenSps = false;
 

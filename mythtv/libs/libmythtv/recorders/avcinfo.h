@@ -1,28 +1,35 @@
-#ifndef _AVC_INFO_H_
-#define _AVC_INFO_H_
+#ifndef AVC_INFO_H
+#define AVC_INFO_H
 
 // C++ headers
+#include <array>
 #include <cstdint>
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QString>
 
-QString guid_to_string(uint64_t guid);
-uint64_t string_to_guid(const QString &guid);
+static inline QString guid_to_string(uint64_t guid)
+{
+    return QString("%1").arg(guid, 16, 16, QLatin1Char('0')).toUpper();
+}
+
+static inline uint64_t string_to_guid(const QString &guid)
+{
+    return guid.toULongLong(nullptr, 16);
+}
 
 class AVCInfo
 {
   public:
     AVCInfo();
-    AVCInfo(const AVCInfo &o);
+    AVCInfo(const AVCInfo &o) = default;
     AVCInfo &operator=(const AVCInfo &o);
     virtual ~AVCInfo() = default;
 
     virtual bool SendAVCCommand(
-        const vector<uint8_t> &/*cmd*/,
-        vector<uint8_t>       &/*result*/,
+        const std::vector<uint8_t> &/*cmd*/,
+        std::vector<uint8_t>       &/*result*/,
         int                   /*retry_cnt*/)
     {
         return false;
@@ -43,7 +50,7 @@ class AVCInfo
     uint     m_modelid           {0};
     uint     m_firmware_revision {0};
     QString  m_product_name;
-    uint8_t  m_unit_table[32]    {};
+    std::array<uint8_t,32>  m_unit_table {};
 };
 
-#endif // _AVC_INFO_H_
+#endif // AVC_INFO_H

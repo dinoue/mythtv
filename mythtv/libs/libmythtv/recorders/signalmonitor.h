@@ -7,12 +7,14 @@
 // C++ headers
 #include <vector>
 #include <algorithm>
-using namespace std;
 
 // Qt headers
 #include <QWaitCondition>
 #include <QMutex>
 #include <QCoreApplication>
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+#include <QRecursiveMutex>
+#endif
 
 // MythTV headers
 #include "signalmonitorlistener.h"
@@ -66,9 +68,9 @@ class SignalMonitor : protected MThread
 
     /// \brief Returns whether or not a SIGNAL MythEvent is being sent
     ///        regularly to the frontend.
-    bool GetNotifyFrontend() const { return m_notify_frontend; }
+    bool GetNotifyFrontend() const { return m_notifyFrontend; }
     /// \brief Returns milliseconds between signal monitoring events.
-    int GetUpdateRate() const { return m_update_rate; }
+    std::chrono::milliseconds GetUpdateRate() const { return m_updateRate; }
     virtual QStringList GetStatusList(void) const;
     int GetSignalStrength(void) { return m_signalStrength.GetNormalizedValue(0,100); }
 
@@ -91,7 +93,7 @@ class SignalMonitor : protected MThread
      *  \param notify if true SIGNAL MythEvents are sent to the frontend,
      *         otherwise they are not.
      */
-    void SetNotifyFrontend(bool notify) { m_notify_frontend = notify; }
+    void SetNotifyFrontend(bool notify) { m_notifyFrontend = notify; }
 
     /** \brief Indicate if table monitoring is needed
      *  \param parent The TVRec* that this signal monitor is attached to.
@@ -100,7 +102,7 @@ class SignalMonitor : protected MThread
      *         after the channel is tuned.
      */
     void SetMonitoring(TVRec * parent, bool EITscan, bool monitor)
-        { m_pParent = parent; m_eit_scan = EITscan, m_tablemon = monitor; }
+        { m_pParent = parent; m_eitScan = EITscan, m_tablemon = monitor; }
 
     /** \brief Sets the number of milliseconds between signal monitoring
      *         attempts in the signal monitoring thread.
@@ -108,8 +110,8 @@ class SignalMonitor : protected MThread
      *   Defaults to 25 milliseconds.
      *  \param msec Milliseconds between signal monitoring events.
      */
-    void SetUpdateRate(int msec)
-        { m_update_rate = max(msec, (int)m_minimum_update_rate); }
+    void SetUpdateRate(std::chrono::milliseconds msec)
+        { m_updateRate = std::max(msec, m_minimumUpdateRate); }
 
     // // // // // // // // // // // // // // // // // // // // // // // //
     // Listeners   // // // // // // // // // // // // // // // // // // //
@@ -204,13 +206,13 @@ class SignalMonitor : protected MThread
     TVRec             *m_pParent             {nullptr};
     int                m_inputid;
     volatile uint64_t  m_flags;
-    bool               m_release_stream;
-    int                m_update_rate         {25};
-    uint               m_minimum_update_rate {5};
-    bool               m_update_done         {false};
-    bool               m_notify_frontend     {true};
+    bool               m_releaseStream;
+    std::chrono::milliseconds m_updateRate          {25ms};
+    std::chrono::milliseconds m_minimumUpdateRate   {5ms};
+    bool               m_updateDone          {false};
+    bool               m_notifyFrontend      {true};
     bool               m_tablemon            {false};
-    bool               m_eit_scan            {false};
+    bool               m_eitScan             {false};
 
     // not to be confused with StreamHandler::m_bError.
     QString            m_error;
@@ -219,14 +221,18 @@ class SignalMonitor : protected MThread
     SignalMonitorValue m_signalStrength;
     SignalMonitorValue m_scriptStatus;
 
-    vector<SignalMonitorListener*> m_listeners;
+    std::vector<SignalMonitorListener*> m_listeners;
 
     QMutex             m_startStopLock;
     QWaitCondition     m_startStopWait;       // protected by startStopLock
     volatile bool      m_running      {false}; // protected by startStopLock
     volatile bool      m_exit         {false}; // protected by startStopLock
 
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     mutable QMutex     m_statusLock   {QMutex::Recursive};
+#else
+    mutable QRecursiveMutex m_statusLock;
+#endif
     mutable QMutex     m_listenerLock;
 };
 

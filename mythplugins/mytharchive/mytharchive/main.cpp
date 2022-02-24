@@ -9,8 +9,6 @@
 #include <cstdlib>
 #include <iostream>
 
-using namespace std;
-
 // Qt
 #include <QApplication>
 #include <QDir>
@@ -34,7 +32,7 @@ using namespace std;
 #include "fileselector.h"
 #include "recordingselector.h"
 #include "videoselector.h"
-#include "dbcheck.h"
+#include "archivedbcheck.h"
 #include "archiveutil.h"
 #include "selectdestination.h"
 #include "exportnative.h"
@@ -91,7 +89,7 @@ static bool checkLockFile(const QString &lockFile)
         // Is the process that created the lock still alive?
         if (!checkProcess(lockFile))
         {
-            showWarningDialog(qApp->translate("(MythArchiveMain)",
+            showWarningDialog(QCoreApplication::translate("(MythArchiveMain)",
                 "Found a lock file but the owning process isn't running!\n"
                 "Removing stale lock file."));
             if (!file.remove())
@@ -112,7 +110,6 @@ static bool checkLockFile(const QString &lockFile)
 
 static void runCreateDVD(void)
 {
-    QString commandline;
     QString tempDir = getTempDirectory(true);
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
 
@@ -120,8 +117,6 @@ static void runCreateDVD(void)
         return;
 
     QString logDir = tempDir + "logs";
-    QString configDir = tempDir + "config";
-    QString workDir = tempDir + "work";
 
     checkTempDirectory();
 
@@ -141,7 +136,6 @@ static void runCreateDVD(void)
 
 static void runCreateArchive(void)
 {
-    QString commandline;
     QString tempDir = getTempDirectory(true);
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
 
@@ -149,8 +143,6 @@ static void runCreateArchive(void)
         return;
 
     QString logDir = tempDir + "logs";
-    QString configDir = tempDir + "config";
-    QString workDir = tempDir + "work";
 
     checkTempDirectory();
 
@@ -181,8 +173,6 @@ static void runImportVideo(void)
         return;
 
     QString logDir = tempDir + "logs";
-    QString configDir = tempDir + "config";
-    QString workDir = tempDir + "work";
 
     checkTempDirectory();
 
@@ -192,8 +182,6 @@ static void runImportVideo(void)
         showLogViewer();
         return;
     }
-
-    QString filter = "*.xml";
 
     // show the find archive screen
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
@@ -212,14 +200,14 @@ static void runTestDVD(void)
 {
     if (!gCoreContext->GetSetting("MythArchiveLastRunType").startsWith("DVD"))
     {
-        showWarningDialog(qApp->translate("(MythArchiveMain)",
+        showWarningDialog(QCoreApplication::translate("(MythArchiveMain)",
             "Last run did not create a playable DVD."));
         return;
     }
 
     if (!gCoreContext->GetSetting("MythArchiveLastRunStatus").startsWith("Success"))
     {
-        showWarningDialog(qApp->translate("(MythArchiveMain)", 
+        showWarningDialog(QCoreApplication::translate("(MythArchiveMain)",
                                           "Last run failed to create a DVD."));
         return;
     }
@@ -242,7 +230,7 @@ static void runTestDVD(void)
     }
 
     if (command.contains("%f"))
-        command = command.replace(QRegExp("%f"), filename);
+        command = command.replace("%f", filename);
     myth_system(command);
 }
 
@@ -293,7 +281,7 @@ static int runMenu(const QString& which_menu)
 
     while (parentObject)
     {
-        mainMenu = dynamic_cast<MythThemedMenu *>(parentObject);
+        mainMenu = qobject_cast<MythThemedMenu *>(parentObject);
 
         if (mainMenu && mainMenu->objectName() == "mainmenu")
             break;
@@ -325,7 +313,7 @@ static int runMenu(const QString& which_menu)
     }
 
     LOG(VB_GENERAL, LOG_ERR, QString("Couldn't find menu %1 or theme %2")
-        .arg(which_menu).arg(themedir));
+        .arg(which_menu, themedir));
     delete diag;
     return -1;
 }

@@ -29,23 +29,20 @@
  *
  */
 
-#ifndef _DTVCONFPARSER_H_
-#define _DTVCONFPARSER_H_
+#ifndef DTVCONFPARSER_H
+#define DTVCONFPARSER_H
 
 // C++ headers
 #include <cstdint>
 #include <unistd.h>
 #include <utility>
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QString>
 
 // MythTV headers
 #include "dtvmultiplex.h"
-
-class QStringList;
 
 class DTVChannelInfo
 {
@@ -58,7 +55,7 @@ class DTVChannelInfo
     uint    m_serviceid {0};
     int     m_lcn       {-1};
 };
-using DTVChannelInfoList = vector<DTVChannelInfo>;
+using DTVChannelInfoList = std::vector<DTVChannelInfo>;
 
 class DTVTransport : public DTVMultiplex
 {
@@ -68,7 +65,7 @@ class DTVTransport : public DTVMultiplex
   public:
     DTVChannelInfoList channels;
 };
-using DTVChannelList = vector<DTVTransport>;
+using DTVChannelList = std::vector<DTVTransport>;
 
 /** \class DTVConfParser
  *  \brief Parses dvb-utils channel scanner output files.
@@ -105,4 +102,4 @@ class DTVConfParser
     DTVChannelList m_channels;
 };
 
-#endif // _DTVCONFPARSER_H_
+#endif // DTVCONFPARSER_H

@@ -6,7 +6,6 @@
 #include <QLocale>
 #include <QUrl>
 #include <QFileInfo>
-#include <QRegExp>
 
 #include "rssparse.h"
 #include "mythcontext.h"
@@ -15,7 +14,9 @@
 #include "programinfo.h" // for format_season_and_episode()
 #include "mythsorthelper.h"
 
-using namespace std;
+#if QT_VERSION < QT_VERSION_CHECK(5,15,2)
+#define capturedView capturedRef
+#endif
 
 ResultItem::ResultItem(const QString& title, const QString& sortTitle,
               const QString& subtitle, const QString& sortSubtitle,
@@ -23,13 +24,13 @@ ResultItem::ResultItem(const QString& title, const QString& sortTitle,
               const QString& thumbnail, const QString& mediaURL,
               const QString& author, const QDateTime& date,
               const QString& time, const QString& rating,
-              const off_t& filesize, const QString& player,
+              const off_t filesize, const QString& player,
               const QStringList& playerargs, const QString& download,
-              const QStringList& downloadargs, const uint& width,
-              const uint& height, const QString& language,
-              const bool& downloadable, const QStringList& countries,
-              const uint& season, const uint& episode,
-              const bool& customhtml)
+              const QStringList& downloadargs, const uint width,
+              const uint height, const QString& language,
+              const bool downloadable, const QStringList& countries,
+              const uint season, const uint episode,
+              const bool customhtml)
 {
     m_title = title;
     m_sorttitle = sortTitle;
@@ -160,11 +161,11 @@ void ResultItem::toMap(InfoMap &metadataMap)
         metadataMap["season"] = format_season_and_episode(m_season, 1);
         metadataMap["episode"] = format_season_and_episode(m_episode, 1);
         metadataMap["s##e##"] = metadataMap["s00e00"] = QString("s%1e%2")
-            .arg(format_season_and_episode(m_season, 2))
-            .arg(format_season_and_episode(m_episode, 2));
+            .arg(format_season_and_episode(m_season, 2),
+                 format_season_and_episode(m_episode, 2));
         metadataMap["##x##"] = metadataMap["00x00"] = QString("%1x%2")
-            .arg(format_season_and_episode(m_season, 1))
-            .arg(format_season_and_episode(m_episode, 2));
+            .arg(format_season_and_episode(m_season, 1),
+                 format_season_and_episode(m_episode, 2));
     }
     else
     {
@@ -371,7 +372,7 @@ private:
             parent = parent.parentNode().toElement();
         }
 
-        Q_FOREACH(QDomElement p, parents)
+        for (const auto& p : qAsConst(parents))
             result += CollectArbitraryLocatedData(p);
 
         return result;
@@ -440,7 +441,7 @@ private:
         QList<MRSSThumbnail> result;
         QList<QDomNode> thumbs = GetDirectChildrenNS(element, Parse::kMediaRSS,
             "thumbnail");
-        foreach (const auto & dom, thumbs)
+        for (const auto& dom : qAsConst(thumbs))
         {
             QDomElement thumbNode = dom.toElement();
             int widthOpt = GetInt(thumbNode, "width");
@@ -465,7 +466,7 @@ private:
         QList<QDomNode> credits = GetDirectChildrenNS(element, Parse::kMediaRSS,
            "credit");
 
-        foreach (const auto & dom, credits)
+        for (const auto& dom : qAsConst(credits))
         {
             QDomElement creditNode = dom.toElement();
             if (!creditNode.hasAttribute("role"))
@@ -548,7 +549,7 @@ private:
         QList<QDomNode> links = GetDirectChildrenNS(element, Parse::kMediaRSS,
             "peerLink");
 
-        foreach (const auto & dom, links)
+        for (const auto& dom : qAsConst(links))
         {
             QDomElement linkNode = dom.toElement();
             MRSSPeerLink pl =
@@ -709,6 +710,11 @@ const QString Parse::kGeoRSSW3 = "http://www.w3.org/2003/01/geo/wgs84_pos#";
 const QString Parse::kMediaRSS = "http://search.yahoo.com/mrss/";
 const QString Parse::kMythRSS = "http://www.mythtv.org/wiki/MythNetvision_Grabber_Script_Format";
 
+QMap<QString, int> Parse::m_timezoneOffsets {
+    { "EDT" , -4 },
+    { "EST" , -5 }
+};
+
 ResultItem::resultList Parse::parseRSS(const QDomDocument& domDoc)
 {
     ResultItem::resultList vList;
@@ -732,7 +738,7 @@ ResultItem::resultList Parse::parseRSS(const QDomDocument& domDoc)
     return vList;
 }
 
-ResultItem* Parse::ParseItem(const QDomElement& item) const
+ResultItem* Parse::ParseItem(const QDomElement& item) 
 {
     QString title("");
     QString subtitle("");
@@ -891,8 +897,8 @@ ResultItem* Parse::ParseItem(const QDomElement& item) const
     if (html.size())
     {
         QString htmlstring = html.at(0).toElement().text();
-        if (htmlstring.toLower().contains("true") || htmlstring == "1" ||
-            htmlstring.toLower().contains("yes"))
+        if (htmlstring.contains("true", Qt::CaseInsensitive) || htmlstring == "1" ||
+            htmlstring.contains("yes", Qt::CaseInsensitive))
             customhtml = true;
     }
 
@@ -1020,7 +1026,7 @@ QDateTime Parse::GetDCDateTime(const QDomElement& parent)
     return FromRFC3339(dates.at(0).toElement().text());
 }
 
-QDateTime Parse::RFC822TimeToQDateTime(const QString& t) const
+QDateTime Parse::RFC822TimeToQDateTime(const QString& t)
 {
     if (t.size() < 20)
         return QDateTime();
@@ -1032,7 +1038,7 @@ QDateTime Parse::RFC822TimeToQDateTime(const QString& t) const
     QStringList tmp = time.split(' ');
     if (tmp.isEmpty())
         return QDateTime();
-    if (tmp. at(0).contains(QRegExp("\\D")))
+    if (tmp.at(0).contains(QRegularExpression(R"(\D)")))
         tmp.removeFirst();
     if (tmp.size() != 5)
         return QDateTime();
@@ -1073,11 +1079,12 @@ QDateTime Parse::FromRFC3339(const QString& t)
     if (t.size() < 19)
         return QDateTime();
     QDateTime result = MythDate::fromString(t.left(19).toUpper());
-    QRegExp fractionalSeconds("(\\.)(\\d+)");
-    if (fractionalSeconds.indexIn(t) > -1)
+    static const QRegularExpression fractionalSeconds { R"(\.(\d+))" };
+    auto match = fractionalSeconds.match(t);
+    if (match.hasMatch())
     {
         bool ok = false;
-        int fractional = fractionalSeconds.cap(2).toInt(&ok);
+        int fractional = match.capturedView(1).toInt(&ok);
         if (ok)
         {
             if (fractional < 100)
@@ -1087,14 +1094,15 @@ QDateTime Parse::FromRFC3339(const QString& t)
             result = result.addMSecs(fractional);
         }
     }
-    QRegExp timeZone("(\\+|\\-)(\\d\\d)(:)(\\d\\d)$");
-    if (timeZone.indexIn(t) > -1)
+    static const QRegularExpression timeZone { R"((\+|\-)(\d\d):(\d\d)$)" };
+    match = timeZone.match(t);
+    if (match.hasMatch())
     {
         short int multiplier = -1;
-        if (timeZone.cap(1) == "-")
+        if (match.captured(1) == "-")
             multiplier = 1;
-        int hoursShift = timeZone.cap(2).toInt();
-        int minutesShift = timeZone.cap(4).toInt();
+        int hoursShift =   match.capturedView(2).toInt();
+        int minutesShift = match.capturedView(3).toInt();
         result = result.addSecs(hoursShift * 3600 * multiplier + minutesShift * 60 * multiplier);
     }
     result.setTimeSpec(Qt::UTC);
@@ -1161,8 +1169,7 @@ QString Parse::UnescapeHTML(const QString& escaped)
     result.replace("&#x201D;", QChar(0x201d));
     result.replace("<p>", "\n");
 
-    QRegExp stripHTML(QLatin1String("<.*>"));
-    stripHTML.setMinimal(true);
+    QRegularExpression stripHTML {"<.*?>"};
     result.remove(stripHTML);
 
     return result;

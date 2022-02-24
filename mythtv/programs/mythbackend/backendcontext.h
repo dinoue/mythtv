@@ -1,5 +1,5 @@
-#ifndef _BACKEND_CONTEXT_H_
-#define _BACKEND_CONTEXT_H_
+#ifndef BACKEND_CONTEXT_H
+#define BACKEND_CONTEXT_H
 
 #include <QString>
 #include <QMap>
@@ -15,15 +15,14 @@ class HouseKeeper;
 class MediaServer;
 class BackendContext;
 
-extern QMap<int, EncoderLink *> tvList;
-extern AutoExpire  *expirer;
-extern JobQueue    *jobqueue;
-extern HouseKeeper *housekeeping;
+extern QMap<int, EncoderLink *> gTVList;
+extern AutoExpire  *gExpirer;
+extern JobQueue    *gJobQueue;
+extern HouseKeeper *gHousekeeping;
 extern MediaServer *g_pUPnp;
 extern BackendContext *gBackendContext;
-extern QString      pidfile;
-extern QString      logfile;
-extern MythSystemEventHandler *sysEventHandler;
+extern QString      gPidFile;
+extern MythSystemEventHandler *gSysEventHandler;
 
 class Frontend
 {
@@ -56,4 +55,4 @@ class BackendContext
     QMap<QString, Frontend*> m_knownFrontends;
 };
 
-#endif // _BACKEND_CONTEXT_H_
+#endif // BACKEND_CONTEXT_H

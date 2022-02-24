@@ -3,10 +3,14 @@
 
 // Qt
 #include <QVector>
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
 #include <QOpenGLTimeMonitor>
+#else
+#include <QtOpenGL/QOpenGLTimeMonitor>
+#endif
 
 // QOpenGLTimeMonitor is not available with Qt GLES2 builds
-#if defined(QT_OPENGL_ES_2)
+#if defined(QT_OPENGL_ES_2) || (QT_FEATURE_opengles2 == 1)
 
 #ifndef GLuint64
 using GLuint64 = uint64_t;
@@ -36,7 +40,7 @@ class MUI_PUBLIC MythOpenGLPerf : public QOpenGLTimeMonitor
     MythOpenGLPerf(QString Name, QVector<QString> Names, int SampleCount = 30);
     void RecordSample    (void);
     void LogSamples      (void);
-    int  GetTimersRunning(void);
+    int  GetTimersRunning(void) const;
 
   private:
     QString m_name                 { };

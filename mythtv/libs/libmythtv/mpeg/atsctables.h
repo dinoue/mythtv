@@ -1,10 +1,13 @@
 // -*- Mode: c++ -*-
 // Copyright (c) 2003-2004, Daniel Thor Kristjansson
-#ifndef _ATSC_TABLES_H_
-#define _ATSC_TABLES_H_
+#ifndef ATSC_TABLES_H
+#define ATSC_TABLES_H
+
+#include "mythconfig.h"
 
 #include <cstdint>  // uint32_t
 #include <QString>
+#include <QtEndian>
 
 #include "atscdescriptors.h"
 #include "mythmiscutil.h" // for xml_indent
@@ -177,7 +180,7 @@ class MTV_PUBLIC MasterGuideTable : public PSIPTable
     QString toString(void) const override; // PSIPTable
     QString toStringXML(uint indent_level) const override; // PSIPTable
   private:
-    mutable vector<unsigned char*> m_ptrs; // used to parse
+    mutable std::vector<unsigned char*> m_ptrs; // used to parse
 };
 
 /** \class VirtualChannelTable
@@ -231,7 +234,7 @@ class MTV_PUBLIC VirtualChannelTable : public PSIPTable
         const auto* ustr = reinterpret_cast<const unsigned short*>(m_ptrs[i]);
         for (int j=0; j<7; j++)
         {
-            QChar c((ustr[j]<<8) | (ustr[j]>>8));
+            QChar c(qFromBigEndian(ustr[j]));
             if (c != QChar('\0')) str.append(c);
         }
         return str.simplified();
@@ -334,7 +337,7 @@ class MTV_PUBLIC VirtualChannelTable : public PSIPTable
     virtual QString ChannelStringXML(uint indent_level, uint channel) const;
     virtual QString XMLChannelValues(uint indent_level, uint channel) const;
   protected:
-    mutable vector<unsigned char*> m_ptrs;
+    mutable std::vector<unsigned char*> m_ptrs;
 };
 
 /** \class TerrestrialVirtualChannelTable
@@ -567,11 +570,7 @@ class MTV_PUBLIC EventInformationTable : public PSIPTable
     QDateTime StartTimeGPS(uint i) const
     {
         // Time in GPS seconds since 00:00:00 on January 6th, 1980 UTC
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        return MythDate::fromTime_t(GPS_EPOCH + StartTimeRaw(i));
-#else
         return MythDate::fromSecsSinceEpoch(GPS_EPOCH + StartTimeRaw(i));
-#endif
     }
     //   reserved               2   6.0    3
     //   ETM_location           2   6.2
@@ -613,7 +612,7 @@ class MTV_PUBLIC EventInformationTable : public PSIPTable
     void Parse() const;
     QString toString() const override; // PSIPTable
   private:
-    mutable vector<unsigned char*> m_ptrs;
+    mutable std::vector<unsigned char*> m_ptrs;
 };
 
 /** \class ExtendedTextTable
@@ -713,11 +712,7 @@ class MTV_PUBLIC SystemTimeTable : public PSIPTable
     }
     QDateTime SystemTimeGPS(void) const
     {
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        return MythDate::fromTime_t(GPS_EPOCH + GPSRaw());
-#else
         return MythDate::fromSecsSinceEpoch(GPS_EPOCH + GPSRaw());
-#endif
     }
     time_t GPSUnix(void) const
         { return GPS_EPOCH + GPSRaw(); }
@@ -833,4 +828,4 @@ class MTV_PUBLIC AggregateExtendedTextTable : public PSIPTable
         { return "<AggregateExtendedTextTable />"; }
 };
 
-#endif // _ATSC_TABLES_H_
+#endif // ATSC_TABLES_H

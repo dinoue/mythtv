@@ -4,7 +4,7 @@
 #include <QMap>
 #include <QMutex>
 #include <QMutexLocker>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <utility>
 
 // MythTV headers
@@ -18,11 +18,13 @@
 #include "mythcorecontext.h"
 
 #define LOC QString("Metadata Grabber: ")
-#define kGrabberRefresh 60
+static constexpr std::chrono::seconds kGrabberRefresh { 60s };
 
-static GrabberList     grabberList;
-static QMutex          grabberLock;
-static QDateTime       grabberAge;
+static const QRegularExpression kRetagRef { R"(^([a-zA-Z0-9_\-\.]+\.[a-zA-Z0-9]{1,3})[:_](.*))" };
+
+static GrabberList     s_grabberList;
+static QMutex          s_grabberLock;
+static QDateTime       s_grabberAge;
 
 struct GrabberOpts {
     QString     m_path;
@@ -30,59 +32,27 @@ struct GrabberOpts {
     QString     m_def;
 };
 
-// TODO
-// it would be nice to statically compile these, but I can't manage to get it
-// to compile.  apparently initializer lists are supported in QT5/CPP11 that
-// will make this work.  for now, use a lock and initialize on first access.
-// https://bugreports.qt-project.org/browse/QTBUG-25679
-static QMap<GrabberType, GrabberOpts> grabberTypes;
-static QMap<QString, GrabberType> grabberTypeStrings;
-static bool initialized = false;
-static QMutex typeLock;
+static const QMap<GrabberType, GrabberOpts> grabberTypes {
+    { kGrabberMovie,      { "%1metadata/Movie/",
+                            "MovieGrabber",
+                            "metadata/Movie/tmdb3.py" } },
+    { kGrabberTelevision, { "%1metadata/Television/",
+                            "TelevisionGrabber",
+                            "metadata/Television/ttvdb4.py" } },
+    { kGrabberGame,       { "%1metadata/Game/",
+                            "mythgame.MetadataGrabber",
+                            "metadata/Game/giantbomb.py" } },
+    { kGrabberMusic,      { "%1metadata/Music",
+                            "",
+                            "" } }
+};
 
-static GrabberOpts GrabberOptsMaker(QString thepath, QString thesetting, QString thedefault)
-{
-    GrabberOpts opts;
-
-    opts.m_path = std::move(thepath);
-    opts.m_setting = std::move(thesetting);
-    opts.m_def = std::move(thedefault);
-
-    return opts;
-}
-
-static void InitializeStaticMaps(void)
-{
-    QMutexLocker lock(&typeLock);
-
-    if (!initialized)
-    {
-        grabberTypes[kGrabberMovie] =
-              GrabberOptsMaker ("%1metadata/Movie/",
-                                "MovieGrabber",
-                                "metadata/Movie/tmdb3.py" );
-        grabberTypes[kGrabberTelevision] =
-             GrabberOptsMaker ( "%1metadata/Television/",
-                                "TelevisionGrabber",
-                                "metadata/Television/ttvdb.py" );
-        grabberTypes[kGrabberGame]       =
-             GrabberOptsMaker ( "%1metadata/Game/",
-                                "mythgame.MetadataGrabber",
-                                "metadata/Game/giantbomb.py" );
-        grabberTypes[kGrabberMusic]      =
-             GrabberOptsMaker ( "%1metadata/Music",
-                                "",
-                                "" );
-
-        grabberTypeStrings["movie"]      = kGrabberMovie;
-        grabberTypeStrings["television"] = kGrabberTelevision;
-        grabberTypeStrings["game"]       = kGrabberGame;
-        grabberTypeStrings["music"]      = kGrabberMusic;
-
-
-        initialized = true;
-    }
-}
+static QMap<QString, GrabberType> grabberTypeStrings {
+    { "movie",      kGrabberMovie },
+    { "television", kGrabberTelevision },
+    { "game",       kGrabberGame },
+    { "music",      kGrabberMusic }
+};
 
 GrabberList MetaGrabberScript::GetList(bool refresh)
 {
@@ -102,36 +72,33 @@ GrabberList MetaGrabberScript::GetList(const QString &type, bool refresh)
 GrabberList MetaGrabberScript::GetList(GrabberType type,
                                        bool refresh)
 {
-    InitializeStaticMaps();
-
     GrabberList tmpGrabberList;
     GrabberList retGrabberList;
     {
-        QMutexLocker listLock(&grabberLock);
+        QMutexLocker listLock(&s_grabberLock);
         QDateTime now = MythDate::current();
 
         // refresh grabber scripts every 60 seconds
         // this might have to be revised, or made more intelligent if
         // the delay during refreshes is too great
-        if (refresh || !grabberAge.isValid() ||
-            (grabberAge.secsTo(now) > kGrabberRefresh))
+        if (refresh || !s_grabberAge.isValid() ||
+            (s_grabberAge.secsTo(now) > kGrabberRefresh.count()))
         {
-            grabberList.clear();
+            s_grabberList.clear();
             LOG(VB_GENERAL, LOG_DEBUG, LOC + "Clearing grabber cache");
 
             // loop through different types of grabber scripts and the 
             // directories they are stored in
-            QMap<GrabberType, GrabberOpts>::const_iterator it;
-            for (it = grabberTypes.begin(); it != grabberTypes.end(); ++it)
+            for (const auto& grabberType : qAsConst(grabberTypes))
             {
-                QString path = (it->m_path).arg(GetShareDir());
+                QString path = (grabberType.m_path).arg(GetShareDir());
                 QStringList scripts = QDir(path).entryList(QDir::Executable | QDir::Files);
                 if (scripts.count() == 0)
                     // no scripts found
                     continue;
 
                 // loop through discovered scripts
-                foreach (auto & name, scripts)
+                for (const auto& name : qAsConst(scripts))
                 {
                     QString cmd = QDir(path).filePath(name);
                     MetaGrabberScript script(cmd);
@@ -139,18 +106,18 @@ GrabberList MetaGrabberScript::GetList(GrabberType type,
                     if (script.IsValid())
                     {
                         LOG(VB_GENERAL, LOG_DEBUG, LOC + "Adding " + script.m_command);
-                        grabberList.append(script);
+                        s_grabberList.append(script);
                     }
                  }
             }
 
-            grabberAge = now;
+            s_grabberAge = now;
         }
 
-        tmpGrabberList = grabberList;
+        tmpGrabberList = s_grabberList;
     }
 
-    foreach (auto & item, tmpGrabberList)
+    for (const auto& item : qAsConst(tmpGrabberList))
     {
         if ((type == kGrabberAll) || (item.GetType() == type))
             retGrabberList.append(item);
@@ -196,8 +163,6 @@ MetaGrabberScript MetaGrabberScript::GetType(const QString &type)
 
 MetaGrabberScript MetaGrabberScript::GetType(const GrabberType type)
 {
-    InitializeStaticMaps();
-
     QString cmd = gCoreContext->GetSetting(grabberTypes[type].m_setting,
                                            grabberTypes[type].m_def);
 
@@ -208,18 +173,18 @@ MetaGrabberScript MetaGrabberScript::GetType(const GrabberType type)
         cmd = grabberTypes[type].m_def;
     }
 
-    if (grabberAge.isValid() && grabberAge.secsTo(MythDate::current()) <= kGrabberRefresh)
+    if (s_grabberAge.isValid() && MythDate::secsInPast(s_grabberAge) <= kGrabberRefresh)
     {
         // just pull it from the cache
         GrabberList list = GetList();
-        foreach (auto & item, list)
+        for (const auto& item : qAsConst(list))
             if (item.GetPath().endsWith(cmd))
                 return item;
     }
 
     // polling the cache will cause a refresh, so lets just grab and
     // process the script directly
-    QString fullcmd = QString("%1%2").arg(GetShareDir()).arg(cmd);
+    QString fullcmd = QString("%1%2").arg(GetShareDir(), cmd);
     MetaGrabberScript script(fullcmd);
 
     if (script.IsValid())
@@ -236,7 +201,7 @@ MetaGrabberScript MetaGrabberScript::FromTag(const QString &tag,
     GrabberList list = GetList();
 
     // search for direct match on tag
-    foreach (auto & item, list)
+    for (const auto& item : qAsConst(list))
     {
         if (item.GetCommand() == tag)
         {
@@ -247,7 +212,7 @@ MetaGrabberScript MetaGrabberScript::FromTag(const QString &tag,
     // no direct match. do we require a direct match? search for one that works
     if (!absolute)
     {
-        foreach (auto & item, list)
+        for (const auto& item : qAsConst(list))
         {
             if (item.Accepts(tag))
             {
@@ -263,20 +228,12 @@ MetaGrabberScript MetaGrabberScript::FromTag(const QString &tag,
 MetaGrabberScript MetaGrabberScript::FromInetref(const QString &inetref,
                                                  bool absolute)
 {
-    static QRegExp s_retagref("^([a-zA-Z0-9_\\-\\.]+\\.[a-zA-Z0-9]{1,3})_(.*)");
-    static QRegExp s_retagref2("^([a-zA-Z0-9_\\-\\.]+\\.[a-zA-Z0-9]{1,3}):(.*)");
     static QMutex s_reLock;
     QMutexLocker lock(&s_reLock);
     QString tag;
-
-    if (s_retagref.indexIn(inetref) > -1)
-    {
-        tag = s_retagref.cap(1);
-    }
-    else if (s_retagref2.indexIn(inetref) > -1)
-    {
-        tag = s_retagref2.cap(1);
-    }
+    auto match = kRetagRef.match(inetref);
+    if (match.hasMatch())
+        tag = match.captured(1);
     if (!tag.isEmpty())
     {
         // match found, pull out the grabber
@@ -291,17 +248,13 @@ MetaGrabberScript MetaGrabberScript::FromInetref(const QString &inetref,
 
 QString MetaGrabberScript::CleanedInetref(const QString &inetref)
 {
-    static QRegExp s_retagref("^([a-zA-Z0-9_\\-\\.]+\\.[a-zA-Z0-9]{1,3})_(.*)");
-    static QRegExp s_retagref2("^([a-zA-Z0-9_\\-\\.]+\\.[a-zA-Z0-9]{1,3}):(.*)");
     static QMutex s_reLock;
     QMutexLocker lock(&s_reLock);
 
     // try to strip grabber tag from inetref
-    if (s_retagref.indexIn(inetref) > -1)
-        return s_retagref.cap(2);
-    if (s_retagref2.indexIn(inetref) > -1)
-        return s_retagref2.cap(2);
-
+    auto match = kRetagRef.match(inetref);
+    if (match.hasMatch())
+        return match.captured(2);
     return inetref;
 }
 
@@ -422,10 +375,10 @@ MetadataLookupList MetaGrabberScript::RunGrabber(const QStringList &args,
     MetadataLookupList list;
 
     LOG(VB_GENERAL, LOG_INFO, QString("Running Grabber: %1 %2")
-        .arg(m_fullcommand).arg(args.join(" ")));
+        .arg(m_fullcommand, args.join(" ")));
 
     grabber.Run();
-    if (grabber.Wait(180) != GENERIC_EXIT_OK)
+    if (grabber.Wait(180s) != GENERIC_EXIT_OK)
         return list;
 
     QByteArray result = grabber.ReadAll();
@@ -439,12 +392,11 @@ MetadataLookupList MetaGrabberScript::RunGrabber(const QStringList &args,
         while (!item.isNull())
         {
             MetadataLookup *tmp = ParseMetadataItem(item, lookup, passseas);
-            tmp->SetInetref(QString("%1_%2").arg(m_command)
-                                            .arg(tmp->GetInetref()));
+            tmp->SetInetref(QString("%1_%2").arg(m_command,tmp->GetInetref()));
             if (!tmp->GetCollectionref().isEmpty())
             {
-                tmp->SetCollectionref(QString("%1_%2").arg(m_command)
-                                .arg(tmp->GetCollectionref()));
+                tmp->SetCollectionref(QString("%1_%2")
+                                .arg(m_command, tmp->GetCollectionref()));
             }
             list.append(tmp);
             // MetadataLookup is to be owned by the list

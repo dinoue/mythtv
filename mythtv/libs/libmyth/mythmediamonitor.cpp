@@ -5,9 +5,9 @@
 // C++ headers
 #include <iostream>
 #include <typeinfo>
-using namespace std;
 
 // Qt headers
+#include <QtGlobal>
 #include <QCoreApplication>
 #include <QFile>
 #include <QList>
@@ -27,13 +27,13 @@ using namespace std;
 
 #ifdef USING_DARWIN_DA
 #include "mediamonitor-darwin.h"
-#elif CONFIG_CYGWIN || defined(_WIN32)
+#elif defined(Q_OS_WIN)
 #include "mediamonitor-windows.h"
 #else
 #include "mediamonitor-unix.h"
 #endif
 
-static const QString _Location = QObject::tr("Media Monitor");
+static const QString sLocation = QObject::tr("Media Monitor");
 
 MediaMonitor *MediaMonitor::s_monitor = nullptr;
 
@@ -41,8 +41,8 @@ MediaMonitor *MediaMonitor::s_monitor = nullptr;
 MonitorThread::MonitorThread(MediaMonitor* pMon, unsigned long interval) :
     MThread("Monitor")
 {
-    m_Monitor = pMon;
-    m_Interval = interval;
+    m_monitor = pMon;
+    m_interval = interval;
     m_lastCheckTime = QDateTime::currentDateTimeUtc();
 }
 
@@ -53,10 +53,10 @@ void MonitorThread::run(void)
     RunProlog();
     QMutex mtx;
     mtx.lock();
-    while (m_Monitor && m_Monitor->IsActive())
+    while (m_monitor && m_monitor->IsActive())
     {
-        m_Monitor->CheckDevices();
-        m_Monitor->m_wait.wait(&mtx, m_Interval);
+        m_monitor->CheckDevices();
+        m_monitor->m_wait.wait(&mtx, m_interval);
         QDateTime now(QDateTime::currentDateTimeUtc());
         // if 10 seconds have elapsed instead of 5 seconds
         // assume the system was suspended and reconnect
@@ -67,7 +67,7 @@ void MonitorThread::run(void)
             if (HasMythMainWindow())
             {
                 LOG(VB_GENERAL, LOG_INFO, "Restarting LIRC handler");
-                GetMythMainWindow()->StartLIRC();
+                GetMythMainWindow()->RestartInputHandlers();
             }
         }
         m_lastCheckTime = now;
@@ -88,12 +88,10 @@ MediaMonitor* MediaMonitor::GetMediaMonitor(void)
 
 #ifdef USING_DARWIN_DA
     s_monitor = new MediaMonitorDarwin(nullptr, MONITOR_INTERVAL, true);
-#else
-  #if CONFIG_CYGWIN || defined(_WIN32)
+#elif defined(Q_OS_WIN)
     s_monitor = new MediaMonitorWindows(nullptr, MONITOR_INTERVAL, true);
-  #else
+#else
     s_monitor = new MediaMonitorUnix(nullptr, MONITOR_INTERVAL, true);
-  #endif
 #endif
 
     return s_monitor;
@@ -158,9 +156,9 @@ QList<MythMediaDevice*> MediaMonitor::GetRemovable(bool showMounted,
 {
     QList <MythMediaDevice *>           drives;
     QList <MythMediaDevice *>::iterator it;
-    QMutexLocker                        locker(&m_DevicesLock);
+    QMutexLocker                        locker(&m_devicesLock);
 
-    for (it = m_Devices.begin(); it != m_Devices.end(); ++it)
+    for (it = m_devices.begin(); it != m_devices.end(); ++it)
     {
         // By default, we only list CD/DVD devices.
         // Caller can also request mounted drives to be listed (e.g. USB flash)
@@ -265,7 +263,7 @@ void MediaMonitor::ChooseAndEjectMedia(void)
 
     if (!selected)
     {
-        ShowNotification(tr("No devices to eject"), _Location);
+        ShowNotification(tr("No devices to eject"), sLocation);
         return;
     }
 
@@ -296,7 +294,7 @@ void MediaMonitor::AttemptEject(MythMediaDevice *device)
                 QObject::tr("Unable to open or close the empty drive %1");
             QString extra =
                 QObject::tr("You may have to use the eject button under its tray");
-            ShowNotificationError(msg.arg(dev), _Location, extra);
+            ShowNotificationError(msg.arg(dev), sLocation, extra);
         }
         return;
     }
@@ -307,11 +305,11 @@ void MediaMonitor::AttemptEject(MythMediaDevice *device)
                  QString("Disk %1 is mounted? Unmounting").arg(dev));
         device->unmount();
 
-#if !CONFIG_DARWIN
+#ifndef Q_OS_DARWIN
         if (device->isMounted())
         {
             ShowNotificationError(tr("Failed to unmount %1").arg(dev),
-                                  _Location);
+                                  sLocation);
             return;
         }
 #endif
@@ -327,11 +325,11 @@ void MediaMonitor::AttemptEject(MythMediaDevice *device)
     {
         // Physical ejection isn't possible (there is no tray or slot),
         // but logically the device is now ejected (ignored by the OS).
-        ShowNotification(tr("You may safely remove %1").arg(dev), _Location);
+        ShowNotification(tr("You may safely remove %1").arg(dev), sLocation);
     }
     else if (err == MEDIAERR_FAILED)
     {
-        ShowNotificationError(tr("Failed to eject %1").arg(dev), _Location);
+        ShowNotificationError(tr("Failed to eject %1").arg(dev), sLocation);
     }
 }
 
@@ -341,51 +339,51 @@ void MediaMonitor::AttemptEject(MythMediaDevice *device)
  * \bug    If the user changes the MonitorDrives or IgnoreDevices settings,
  *         it will have no effect until the frontend is restarted.
  */
-MediaMonitor::MediaMonitor(QObject* par, unsigned long interval,
-                           bool allowEject)
-    : QObject(par), m_DevicesLock(QMutex::Recursive),
-      m_MonitorPollingInterval(interval), m_AllowEject(allowEject)
+MediaMonitor::MediaMonitor(QObject* par, unsigned long interval, bool allowEject)
+  : QObject(par),
+    m_monitorPollingInterval(interval),
+    m_allowEject(allowEject)
 {
     // User can specify that some devices are not monitored
     QString ignore = gCoreContext->GetSetting("IgnoreDevices", "");
 
-    if (ignore.length())
-        m_IgnoreList = ignore.split(',', QString::SkipEmptyParts);
-    else
-        m_IgnoreList = QStringList();  // Force empty list
+    if (!ignore.isEmpty())
+    {
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
+        m_ignoreList = ignore.split(',', QString::SkipEmptyParts);
+#else
+        m_ignoreList = ignore.split(',', Qt::SkipEmptyParts);
+#endif
+    }
 
     LOG(VB_MEDIA, LOG_NOTICE, "Creating MediaMonitor");
     LOG(VB_MEDIA, LOG_INFO, "IgnoreDevices=" + ignore);
 
     // If any of IgnoreDevices are symlinks, also add the real device
-    QStringList::Iterator dev;
-    for (dev = m_IgnoreList.begin(); dev != m_IgnoreList.end(); ++dev)
+    QStringList symlinked;
+    for (const auto & ignored : qAsConst(m_ignoreList))
     {
-        auto *fi = new QFileInfo(*dev);
-
-        if (fi && fi->isSymLink())
+        if (auto fi = QFileInfo(ignored); fi.isSymLink())
         {
-            QString target = getSymlinkTarget(*dev);
-
-            if (m_IgnoreList.filter(target).isEmpty())
+            if (auto target = getSymlinkTarget(ignored); m_ignoreList.filter(target).isEmpty())
             {
-                LOG(VB_MEDIA, LOG_INFO,
-                         "Also ignoring " + target + " (symlinked from " +
-                         *dev + ").");
-                m_IgnoreList += target;
+                symlinked += target;
+                LOG(VB_MEDIA, LOG_INFO, QString("Also ignoring %1 (symlinked from %2)")
+                    .arg(target, ignored));
             }
         }
-        delete fi;
     }
+
+    m_ignoreList += symlinked;
 }
 
 void MediaMonitor::deleteLater(void)
 {
-    if (m_Thread)
+    if (m_thread)
     {
         StopMonitoring();
-        delete m_Thread;
-        m_Thread = nullptr;
+        delete m_thread;
+        m_thread = nullptr;
     }
     QObject::deleteLater();
 }
@@ -400,29 +398,29 @@ void MediaMonitor::deleteLater(void)
  */
 bool MediaMonitor::RemoveDevice(const QString &dev)
 {
-    QMutexLocker locker(&m_DevicesLock);
+    QMutexLocker locker(&m_devicesLock);
 
     QList<MythMediaDevice*>::iterator it;
-    for (it = m_Devices.begin(); it != m_Devices.end(); ++it)
+    for (it = m_devices.begin(); it != m_devices.end(); ++it)
     {
         if ((*it)->getDevicePath() == dev)
         {
             // Ensure device gets an unmount
             (*it)->checkMedia();
 
-            if (m_UseCount[*it] == 0)
+            if (m_useCount[*it] == 0)
             {
-                m_UseCount.remove(*it);
+                m_useCount.remove(*it);
                 (*it)->deleteLater();
-                m_Devices.erase(it);
+                m_devices.erase(it);
             }
             else
             {
                 // Other threads are still using this device
                 // postpone actual delete until they finish.
                 disconnect(*it);
-                m_RemovedDevices.append(*it);
-                m_Devices.erase(it);
+                m_removedDevices.append(*it);
+                m_devices.erase(it);
             }
 
             return true;
@@ -439,10 +437,10 @@ void MediaMonitor::CheckDevices(void)
     /* check if new devices have been plugged in */
     CheckDeviceNotifications();
 
-    QMutexLocker locker(&m_DevicesLock);
+    QMutexLocker locker(&m_devicesLock);
 
-    QList<MythMediaDevice*>::iterator itr = m_Devices.begin();
-    while (itr != m_Devices.end())
+    QList<MythMediaDevice*>::iterator itr = m_devices.begin();
+    while (itr != m_devices.end())
     {
         MythMediaDevice* pDev = *itr;
         if (pDev)
@@ -457,21 +455,21 @@ void MediaMonitor::CheckDevices(void)
 void MediaMonitor::StartMonitoring(void)
 {
     // Sanity check
-    if (m_Active)
+    if (m_active)
         return;
     if (!gCoreContext->GetBoolSetting("MonitorDrives", false)) {
         LOG(VB_MEDIA, LOG_NOTICE, "MediaMonitor disabled by user setting.");
         return;
     }
 
-    if (!m_Thread)
-        m_Thread = new MonitorThread(this, m_MonitorPollingInterval);
+    if (!m_thread)
+        m_thread = new MonitorThread(this, m_monitorPollingInterval);
 
     qRegisterMetaType<MythMediaStatus>("MythMediaStatus");
 
     LOG(VB_MEDIA, LOG_NOTICE, "Starting MediaMonitor");
-    m_Active = true;
-    m_Thread->start();
+    m_active = true;
+    m_thread->start();
 }
 
 /** \fn MediaMonitor::StopMonitoring(void)
@@ -480,13 +478,13 @@ void MediaMonitor::StartMonitoring(void)
 void MediaMonitor::StopMonitoring(void)
 {
     // Sanity check
-    if (!m_Active)
+    if (!m_active)
         return;
 
     LOG(VB_MEDIA, LOG_NOTICE, "Stopping MediaMonitor");
-    m_Active = false;
+    m_active = false;
     m_wait.wakeAll();
-    m_Thread->wait();
+    m_thread->wait();
     LOG(VB_MEDIA, LOG_NOTICE, "Stopped MediaMonitor");
 }
 
@@ -502,12 +500,12 @@ void MediaMonitor::StopMonitoring(void)
  */
 bool MediaMonitor::ValidateAndLock(MythMediaDevice *pMedia)
 {
-    QMutexLocker locker(&m_DevicesLock);
+    QMutexLocker locker(&m_devicesLock);
 
-    if (!m_Devices.contains(pMedia))
+    if (!m_devices.contains(pMedia))
         return false;
 
-    m_UseCount[pMedia]++;
+    m_useCount[pMedia]++;
 
     return true;
 }
@@ -519,17 +517,17 @@ bool MediaMonitor::ValidateAndLock(MythMediaDevice *pMedia)
  */
 void MediaMonitor::Unlock(MythMediaDevice *pMedia)
 {
-    QMutexLocker locker(&m_DevicesLock);
+    QMutexLocker locker(&m_devicesLock);
 
-    if (!m_UseCount.contains(pMedia))
+    if (!m_useCount.contains(pMedia))
         return;
 
-    m_UseCount[pMedia]--;
+    m_useCount[pMedia]--;
 
-    if (m_UseCount[pMedia] == 0 && m_RemovedDevices.contains(pMedia))
+    if (m_useCount[pMedia] == 0 && m_removedDevices.contains(pMedia))
     {
-        m_RemovedDevices.removeAll(pMedia);
-        m_UseCount.remove(pMedia);
+        m_removedDevices.removeAll(pMedia);
+        m_useCount.remove(pMedia);
         pMedia->deleteLater();
     }
 }
@@ -542,9 +540,9 @@ void MediaMonitor::Unlock(MythMediaDevice *pMedia)
  */
 MythMediaDevice* MediaMonitor::GetMedia(const QString& path)
 {
-    QMutexLocker locker(&m_DevicesLock);
+    QMutexLocker locker(&m_devicesLock);
 
-    foreach (auto & dev, m_Devices)
+    for (auto *dev : qAsConst(m_devices))
     {
         if (dev->isSameDevice(path) &&
             ((dev->getStatus() == MEDIASTAT_USEABLE) ||
@@ -613,11 +611,11 @@ QString MediaMonitor::GetMountPath(const QString& devPath)
  */
 QList<MythMediaDevice*> MediaMonitor::GetMedias(unsigned mediatypes)
 {
-    QMutexLocker locker(&m_DevicesLock);
+    QMutexLocker locker(&m_devicesLock);
 
     QList<MythMediaDevice*> medias;
 
-    foreach (auto & dev, m_Devices)
+    for (auto *dev : qAsConst(m_devices))
     {
         if ((dev->getMediaType() & mediatypes) &&
             ((dev->getStatus() == MEDIASTAT_USEABLE) ||
@@ -662,8 +660,8 @@ void MediaMonitor::RegisterMediaHandler(const QString  &destination,
         MHData  mhd = { callback, mediaType, destination, description };
         QString msg = MythMediaDevice::MediaTypeString((MythMediaType)mediaType);
 
-        if (extensions.length())
-            msg += QString(", ext(%1)").arg(extensions, 0, 16);
+        if (!extensions.isEmpty())
+            msg += QString(", ext(%1)").arg(extensions);
 
         LOG(VB_MEDIA, LOG_INFO,
                  "Registering '" + destination + "' as a media handler for " +
@@ -671,7 +669,7 @@ void MediaMonitor::RegisterMediaHandler(const QString  &destination,
 
         m_handlerMap[destination] = mhd;
 
-        if (extensions.length())
+        if (!extensions.isEmpty())
             MythMediaDevice::RegisterMediaExtensions(mediaType, extensions);
     }
     else
@@ -690,7 +688,7 @@ void MediaMonitor::RegisterMediaHandler(const QString  &destination,
  */
 void MediaMonitor::JumpToMediaHandler(MythMediaDevice* pMedia)
 {
-    QList<MHData>                    handlers;
+    QVector<MHData>                  handlers;
     QMap<QString, MHData>::Iterator  itr = m_handlerMap.begin();
 
     while (itr != m_handlerMap.end())
@@ -699,7 +697,7 @@ void MediaMonitor::JumpToMediaHandler(MythMediaDevice* pMedia)
         {
             LOG(VB_GENERAL, LOG_NOTICE,
                 QString("Found a handler for %1 - '%2'")
-                .arg(pMedia->MediaTypeString()) .arg(itr.key()));
+                .arg(pMedia->MediaTypeString(), itr.key()));
             handlers.append(*itr);
         }
         itr++;
@@ -724,17 +722,17 @@ void MediaMonitor::JumpToMediaHandler(MythMediaDevice* pMedia)
  *        media event to the mainwindow
  */
 void MediaMonitor::mediaStatusChanged(MythMediaStatus oldStatus,
-                                      MythMediaDevice* pMedia)
+                                      MythMediaDevice* pMedia) const
 {
     // If we're not active then ignore signal.
-    if (!m_Active)
+    if (!m_active)
         return;
 
     MythMediaStatus  stat = pMedia->getStatus();
     QString      msg  = QString(" (%1, %2 -> %3)")
-                        .arg(pMedia->MediaTypeString())
-                        .arg(MythMediaDevice::MediaStatusStrings[oldStatus])
-                        .arg(MythMediaDevice::MediaStatusStrings[stat]);
+                        .arg(pMedia->MediaTypeString(),
+                             MythMediaDevice::kMediaStatusStrings[oldStatus],
+                             MythMediaDevice::kMediaStatusStrings[stat]);
 
     // This gets called from outside the main thread so we need
     // to post an event back to the main thread.
@@ -772,9 +770,9 @@ void MediaMonitor::mediaStatusChanged(MythMediaStatus oldStatus,
  */
 bool MediaMonitor::shouldIgnore(const MythMediaDevice* device)
 {
-    if (m_IgnoreList.contains(device->getMountPath()) ||
-        m_IgnoreList.contains(device->getRealDevice())||
-        m_IgnoreList.contains(device->getDevicePath()) )
+    if (m_ignoreList.contains(device->getMountPath()) ||
+        m_ignoreList.contains(device->getRealDevice())||
+        m_ignoreList.contains(device->getDevicePath()) )
     {
         LOG(VB_MEDIA, LOG_INFO,
                  "Ignoring device: " + device->getDevicePath());
@@ -787,7 +785,7 @@ bool MediaMonitor::shouldIgnore(const MythMediaDevice* device)
                  "Not ignoring: " + device->getDevicePath() + " / " +
                  device->getMountPath());
         LOG(VB_MEDIA, LOG_DEBUG,
-                 "Paths not in: " + m_IgnoreList.join(", "));
+                 "Paths not in: " + m_ignoreList.join(", "));
     }
 #endif
 
@@ -862,7 +860,7 @@ QString MediaMonitor::defaultDevice(const QString &dbSetting,
 
     LOG(VB_MEDIA, LOG_DEBUG,
              QString("MediaMonitor::defaultDevice(%1,..,%2) dbSetting='%3'")
-                 .arg(dbSetting).arg(hardCodedDefault).arg(device));
+                 .arg(dbSetting, hardCodedDefault, device));
 
     // No settings database defaults? Try to choose one:
     if (device.isEmpty() || device == "default")
@@ -952,7 +950,7 @@ QString MediaMonitor::listDevices(void)
 {
     QStringList list;
 
-    foreach (auto & dev, m_Devices)
+    for (const auto *dev : qAsConst(m_devices))
     {
         QString devStr;
         QString model = dev->getDeviceModel();
@@ -963,7 +961,7 @@ QString MediaMonitor::listDevices(void)
             devStr += path + "->";
         devStr += real;
 
-        if (!model.length())
+        if (model.isEmpty())
             model = "unknown";
         devStr += " (" + model + ")";
 
@@ -990,7 +988,7 @@ void MediaMonitor::ejectOpticalDisc()
 #ifdef __linux__
         LOG(VB_MEDIA, LOG_INFO, "Trying Linux 'eject -T' command");
         myth_system("eject -T");
-#elif CONFIG_DARWIN
+#elif defined(Q_OS_DARWIN)
         QString def = DEFAULT_CD;
         LOG(VB_MEDIA, LOG_INFO, "Trying 'diskutil eject " + def);
         myth_system("diskutil eject " + def);

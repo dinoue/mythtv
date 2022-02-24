@@ -6,7 +6,7 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -25,8 +25,10 @@
 #include "mmulticastsocketdevice.h"
 #include "mythlogging.h"
 #include "mythversion.h"
-#include "compat.h"
+#include "mythrandom.h"
 #include "upnp.h"
+#include "mythcorecontext.h"
+#include "configuration.h"
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -45,7 +47,7 @@ UPnpNotifyTask::UPnpNotifyTask( int nServicePort ) :
 {
     m_nServicePort = nServicePort;
 
-    m_nMaxAge      = UPnp::GetConfiguration()->GetValue( "UPnP/SSDP/MaxAge" , 3600 );
+    m_nMaxAge      = MythCoreContext::GetConfiguration()->GetDuration<std::chrono::seconds>( "UPnP/SSDP/MaxAge" , 1h );
 } 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -69,16 +71,16 @@ void UPnpNotifyTask::SendNotifyMsg( MSocketDevice *pSocket,
                               "USN: %5\r\n"
                               "CACHE-CONTROL: max-age=%6\r\n"
                               "Content-Length: 0\r\n\r\n" )
-                            .arg( HttpServer::GetServerVersion() )
-                            .arg( GetNTSString()    )
-                            .arg( sNT          )
-                            .arg( sUSN         )
-                            .arg( m_nMaxAge    );
+                            .arg( HttpServer::GetServerVersion(),
+                                  GetNTSString(),
+                                  sNT,
+                                  sUSN,
+                                  QString::number(m_nMaxAge.count()));
 
     LOG(VB_UPNP, LOG_INFO,
         QString("UPnpNotifyTask::SendNotifyMsg : %1:%2 : %3 : %4")
-            .arg(pSocket->address().toString()) .arg(pSocket->port())
-            .arg(sNT) .arg(sUSN));
+            .arg(pSocket->address().toString(), QString::number(pSocket->port()),
+                 sNT, sUSN));
 
     QMutexLocker qml(&m_mutex); // for addressList
 
@@ -88,7 +90,7 @@ void UPnpNotifyTask::SendNotifyMsg( MSocketDevice *pSocket,
 
     QList<QHostAddress> addressList = UPnp::g_IPAddrList;
 
-    foreach (auto & addr, addressList)
+    for (const auto & addr : qAsConst(addressList))
     {
         if (addr.toString().isEmpty())
         {
@@ -124,9 +126,16 @@ void UPnpNotifyTask::SendNotifyMsg( MSocketDevice *pSocket,
 
         pSocket->writeBlock( scPacket, scPacket.length(),
                              pSocket->address(), pSocket->port() );
-        std::this_thread::sleep_for(std::chrono::milliseconds(random() % 250));
-        pSocket->writeBlock( scPacket, scPacket.length(),
-                             pSocket->address(), pSocket->port() );
+        if (m_eNTS != NTS_byebye)
+        {
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
+            std::this_thread::sleep_for(std::chrono::milliseconds(MythRandom() % 250));
+#else
+            std::this_thread::sleep_for(std::chrono::milliseconds(MythRandom(0, 250)));
+#endif
+            pSocket->writeBlock( scPacket, scPacket.length(),
+                                pSocket->address(), pSocket->port() );
+        }
     }
 }
 
@@ -164,7 +173,7 @@ void UPnpNotifyTask::Execute( TaskQueue *pQueue )
     m_mutex.lock();
 
     if (m_eNTS == NTS_alive) 
-        pQueue->AddTask( (m_nMaxAge / 2) * 1000, (Task *)this  );
+        pQueue->AddTask( (m_nMaxAge / 2), (Task *)this  );
 
     m_mutex.unlock();
 
@@ -198,6 +207,6 @@ void UPnpNotifyTask::ProcessDevice(
     // Process any Embedded Devices
     // ----------------------------------------------------------------------
 
-    foreach (auto & dev, pDevice->m_listDevices)
+    for (const auto & dev : qAsConst(pDevice->m_listDevices))
         ProcessDevice( pSocket, dev);
 }

@@ -8,8 +8,8 @@
 //                                                                            
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __MEDIARENDERER_H__
-#define __MEDIARENDERER_H__
+#ifndef MEDIARENDERER_H
+#define MEDIARENDERER_H
 
 #include <QObject>
 #include <QMutex>
@@ -36,10 +36,6 @@ class MediaRenderer : public UPnp
     public:
                  MediaRenderer();
         ~MediaRenderer() override;
-
-        DeviceLocation *GetDefaultMaster();
-        void            SetDefaultMaster( DeviceLocation *pDeviceLoc,
-                                          const QString  &sPin );
 };
 
-#endif
+#endif // MEDIARENDERER_H

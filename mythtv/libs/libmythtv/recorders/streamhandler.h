@@ -1,17 +1,19 @@
 // -*- Mode: c++ -*-
 
-#ifndef _STREAM_HANDLER_H_
-#define _STREAM_HANDLER_H_
+#ifndef STREAM_HANDLER_H
+#define STREAM_HANDLER_H
 
 #include <utility>
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QWaitCondition>
 #include <QString>
 #include <QMutex>
 #include <QMap>
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+#include <QRecursiveMutex>
+#endif
 
 // MythTV headers
 #include "DeviceReadBuffer.h" // for ReaderPausedCB
@@ -58,7 +60,7 @@ class StreamHandler : protected MThread, public DeviceReaderCB
     virtual void AddListener(MPEGStreamData *data,
                              bool allow_section_reader = false,
                              bool needs_buffering      = false,
-                             QString output_file       = QString());
+                             const QString& output_file= QString());
     virtual void RemoveListener(MPEGStreamData *data);
     bool IsRunning(void) const;
     bool HasError(void) const { return m_bError; }
@@ -100,7 +102,7 @@ class StreamHandler : protected MThread, public DeviceReaderCB
 
   protected:
     /// Write out a copy of the raw MPTS
-    void WriteMPTS(unsigned char * buffer, uint len);
+    void WriteMPTS(const unsigned char * buffer, uint len);
     /// At minimum this sets _running_desired, this may also send
     /// signals to anything that might be blocking the run() loop.
     /// \note: The _start_stop_lock must be held when this is called.
@@ -127,10 +129,15 @@ class StreamHandler : protected MThread, public DeviceReaderCB
     bool                m_usingSectionReader    {false};
     QWaitCondition      m_runningStateChanged;
 
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     mutable QMutex      m_pidLock               {QMutex::Recursive};
-    vector<uint>        m_eitPids;
+#else
+    mutable QRecursiveMutex m_pidLock;
+#endif
+    std::vector<uint>   m_eitPids;
     PIDInfoMap          m_pidInfo;
     uint                m_openPidFilters        {0};
+    bool                m_filtersChanged        {false};
     MythTimer           m_cycleTimer;
 
     ThreadedFileWriter *m_mptsTfw               {nullptr};
@@ -138,9 +145,13 @@ class StreamHandler : protected MThread, public DeviceReaderCB
     QString             m_mptsBaseFile;
     QMutex              m_mptsLock;
 
-    using StreamDataList = QMap<MPEGStreamData*,QString>;
+    using StreamDataList = QHash<MPEGStreamData*,QString>;
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     mutable QMutex      m_listenerLock         {QMutex::Recursive};
+#else
+    mutable QRecursiveMutex m_listenerLock;
+#endif
     StreamDataList      m_streamDataList;
 };
 
-#endif // _STREAM_HANDLER_H_
+#endif // STREAM_HANDLER_H

@@ -12,7 +12,6 @@
 #include <cstdlib>
 
 #include <iostream>
-using namespace std;
 
 #include <QCoreApplication>
 #include <QPainter>
@@ -163,7 +162,7 @@ void BumpScope::generate_phongdat(void)
 
 #define M_PI_F static_cast<float>(M_PI)
 void BumpScope::translate(int x, int y, int *xo, int *yo, int *xd, int *yd,
-                          int *angle)
+                          int *angle) const
 {
     unsigned int HEIGHT = m_height;
     unsigned int WIDTH = m_width;
@@ -183,7 +182,7 @@ void BumpScope::translate(int x, int y, int *xo, int *yo, int *xd, int *yd,
     }
 
     *yo = -*yo;
-    *angle = (int)(asin((float)(y-(HEIGHT/2.0F))/(float)*yo)/(M_PI_F/180.0F));
+    *angle = (int)(asinf((float)(y-(HEIGHT/2.0F))/(float)*yo)/(M_PI_F/180.0F));
     *xo = (int)((x-(WIDTH/2.0F))/cosf(*angle*(M_PI/180.0)));
 
     if (*xo >= -wd2 && *xo <= wd2) {
@@ -213,7 +212,7 @@ void BumpScope::translate(int x, int y, int *xo, int *yo, int *xd, int *yd,
 }
 
 inline void BumpScope::draw_vert_line(unsigned char *buffer, int x, int y1,
-                                      int y2)
+                                      int y2) const
 {
     if (y1 < y2)
     {

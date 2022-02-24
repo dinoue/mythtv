@@ -1,10 +1,9 @@
 /// -*- Mode: c++ -*-
 
-#ifndef _ASI_CHANNEL_H_
-#define _ASI_CHANNEL_H_
+#ifndef ASI_CHANNEL_H
+#define ASI_CHANNEL_H
 
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QString>
@@ -34,15 +33,15 @@ class ASIChannel : public DTVChannel
         { return m_isOpen; }
     QString GetDevice(void) const override // ChannelBase
         { return m_device; }
-    vector<DTVTunerType> GetTunerTypes(void) const override // DTVChannel
+    std::vector<DTVTunerType> GetTunerTypes(void) const override // DTVChannel
         { return m_tunerTypes; }
     bool IsPIDTuningSupported(void) const override // DTVChannel
         { return true; }
 
   private:
-    vector<DTVTunerType>     m_tunerTypes;
+    std::vector<DTVTunerType> m_tunerTypes;
     QString                  m_device;
     bool                     m_isOpen {false};
 };
 
-#endif // _ASI_CHANNEL_H_
+#endif // ASI_CHANNEL_H

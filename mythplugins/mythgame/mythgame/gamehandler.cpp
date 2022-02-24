@@ -5,7 +5,7 @@
 
 #include <QDir>
 #include <QList>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <utility>
 
 #include <mythdb.h>
@@ -70,8 +70,13 @@ void GameHandler::updateSettings(GameHandler *handler)
         handler->m_screenshots = query.value(3).toString();
         handler->m_gameplayerid = query.value(4).toInt();
         handler->m_gametype = query.value(5).toString();
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
         handler->m_validextensions = query.value(6).toString().trimmed()
                                         .remove(" ").split(",", QString::SkipEmptyParts);
+#else
+        handler->m_validextensions = query.value(6).toString().trimmed()
+                                        .remove(" ").split(",", Qt::SkipEmptyParts);
+#endif
         handler->m_spandisks = query.value(7).toBool();
     }
 }
@@ -111,8 +116,8 @@ void GameHandler::InitMetaDataMap(const QString& GameType)
         while (query.next())
         {
             key = QString("%1:%2")
-                  .arg(query.value(0).toString())
-                  .arg(query.value(9).toString());
+                  .arg(query.value(0).toString(),
+                       query.value(9).toString());
             m_romDB[key] = RomData(
                                          query.value(1).toString(),
                                          query.value(2).toString(),
@@ -143,7 +148,6 @@ void GameHandler::GetMetadata(GameHandler *handler, const QString& rom, QString*
                               QString* Fanart, QString* Boxart)
 {
     QString key;
-    QString tmpcrc;
 
     *CRC32 = crcinfo(rom, handler->GameType(), &key, &m_romDB);
 
@@ -167,7 +171,7 @@ void GameHandler::GetMetadata(GameHandler *handler, const QString& rom, QString*
         if (m_romDB.contains(key))
         {
             LOG(VB_GENERAL, LOG_INFO, LOC + QString("ROMDB FOUND for %1 - %2")
-                     .arg(m_romDB[key].GameName()).arg(key));
+                     .arg(m_romDB[key].GameName(), key));
             *Year      = m_romDB[key].Year();
             *Country   = m_romDB[key].Country();
             *Genre     = m_romDB[key].Genre();
@@ -178,7 +182,7 @@ void GameHandler::GetMetadata(GameHandler *handler, const QString& rom, QString*
         else
         {
             LOG(VB_GENERAL, LOG_ERR, LOC + QString("NO ROMDB FOUND for %1 (%2)")
-                    .arg(rom).arg(*CRC32));
+                    .arg(rom, *CRC32));
         }
 
     };
@@ -191,8 +195,8 @@ void GameHandler::GetMetadata(GameHandler *handler, const QString& rom, QString*
 
 static void purgeGameDB(const QString& filename, const QString& RomPath)
 {
-    LOG(VB_GENERAL, LOG_INFO, LOC + QString("Purging %1 - %2").arg(RomPath)
-            .arg(filename));
+    LOG(VB_GENERAL, LOG_INFO, LOC + QString("Purging %1 - %2")
+            .arg(RomPath, filename));
 
     MSqlQuery query(MSqlQuery::InitCon());
 
@@ -216,10 +220,10 @@ void GameHandler::promptForRemoval(const GameScan& scan)
     QString filename = scan.Rom();
     QString RomPath = scan.RomFullPath();
 
-    if (m_RemoveAll)
+    if (m_removeAll)
         purgeGameDB(filename , RomPath);
 
-    if (m_KeepAll || m_RemoveAll)
+    if (m_keepAll || m_removeAll)
         return;
 
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
@@ -235,8 +239,8 @@ void GameHandler::promptForRemoval(const GameScan& scan)
 
         removalPopup->AddButton(tr("No"));
         removalPopup->AddButton(tr("No to all"));
-        removalPopup->AddButton(tr("Yes"), QVariant::fromValue(scan));
-        removalPopup->AddButton(tr("Yes to all"), QVariant::fromValue(scan));
+        removalPopup->AddButtonV(tr("Yes"), QVariant::fromValue(scan));
+        removalPopup->AddButtonV(tr("Yes to all"), QVariant::fromValue(scan));
         popupStack->AddScreen(removalPopup);
 }
     else
@@ -293,14 +297,13 @@ static void UpdateGameCounts(const QStringList& updatelist)
 {
     MSqlQuery query(MSqlQuery::InitCon());
 
-    QRegExp multiDiskRGXP = QRegExp( "[0-4]$", Qt::CaseSensitive, QRegExp::RegExp);
-    int pos = 0;
+    static const QRegularExpression multiDiskRGXP { "[0-4]$" };
 
     QString lastrom;
     QString firstname;
     QString basename;
 
-    foreach (auto GameType, updatelist)
+    for (const auto & GameType : qAsConst(updatelist))
     {
         LOG(VB_GENERAL, LOG_NOTICE,
             LOC + QString("Update gametype %1").arg(GameType));
@@ -327,7 +330,7 @@ static void UpdateGameCounts(const QStringList& updatelist)
                 {
                     int diskcount = 0;
                     int extlength = 0;
-                    pos = RomName.lastIndexOf(".");
+                    int pos = RomName.lastIndexOf(".");
                     if (pos > 1)
                     {
                         extlength = RomName.length() - pos;
@@ -382,15 +385,12 @@ void GameHandler::UpdateGameDB(GameHandler *handler)
 
     //: %1 is the system name, %2 is the game type
     QString message = tr("Updating %1 (%2) ROM database")
-                          .arg(handler->SystemName())
-                          .arg(handler->GameType());
+        .arg(handler->SystemName(), handler->GameType());
 
     CreateProgress(message);
 
     if (m_progressDlg)
-        m_progressDlg->SetTotal(m_GameMap.size());
-
-    GameScanMap::Iterator iter;
+        m_progressDlg->SetTotal(m_gameMap.size());
 
     QString GameName;
     QString Genre;
@@ -403,21 +403,19 @@ void GameHandler::UpdateGameDB(GameHandler *handler)
     QString Fanart;
     QString Boxart;
     QString ScreenShot;
-    QString thequery;
-    QString queryvalues;
 
     int removalprompt = gCoreContext->GetSetting("GameRemovalPrompt").toInt();
     int indepth = gCoreContext->GetSetting("GameDeepScan").toInt();
     QString screenShotPath = gCoreContext->GetSetting("mythgame.screenshotdir");
 
-    for (iter = m_GameMap.begin(); iter != m_GameMap.end(); ++iter)
+    for (const auto & game : qAsConst(m_gameMap))
     {
 
-        if (iter.value().FoundLoc() == inFileSystem)
+        if (game.FoundLoc() == inFileSystem)
         {
             if (indepth)
             {
-                GetMetadata(handler, iter.value().RomFullPath(), &Genre, &Year, &Country, &CRC32, &GameName,
+                GetMetadata(handler, game.RomFullPath(), &Genre, &Year, &Country, &CRC32, &GameName,
                             &Plot, &Publisher, &Version, &Fanart, &Boxart);
             }
             else
@@ -437,13 +435,13 @@ void GameHandler::UpdateGameDB(GameHandler *handler)
             }
 
             if (GameName == tr("Unknown", "Unknown game name"))
-                GameName = iter.value().GameName();
+                GameName = game.GameName();
 
-            int suffixPos = iter.value().Rom().lastIndexOf(QChar('.'));
-            QString baseName = iter.value().Rom();
+            int suffixPos = game.Rom().lastIndexOf(QChar('.'));
+            QString baseName = game.Rom();
 
             if (suffixPos > 0)
-                baseName = iter.value().Rom().left(suffixPos);
+                baseName = game.Rom().left(suffixPos);
 
             baseName = screenShotPath + "/" + baseName;
 
@@ -470,30 +468,30 @@ void GameHandler::UpdateGameDB(GameHandler *handler)
                           ":GAMETYPE, :ROMPATH, :COUNTRY, :CRC32, '1', '1', :PLOT, :PUBLISHER, :VERSION, "
                           ":FANART, :BOXART, :SCREENSHOT)");
 
-            query.bindValue(":SYSTEM",handler->SystemName());
-            query.bindValue(":ROMNAME",iter.value().Rom());
-            query.bindValue(":GAMENAME",GameName);
-            query.bindValue(":GENRE",Genre);
-            query.bindValue(":YEAR",Year);
-            query.bindValue(":GAMETYPE",handler->GameType());
-            query.bindValue(":ROMPATH",iter.value().RomPath());
-            query.bindValue(":COUNTRY",Country);
-            query.bindValue(":CRC32", CRC32);
-            query.bindValue(":PLOT", Plot);
-            query.bindValue(":PUBLISHER", Publisher);
-            query.bindValue(":VERSION", Version);
-            query.bindValue(":FANART", Fanart);
-            query.bindValue(":BOXART", Boxart);
-            query.bindValue(":SCREENSHOT", ScreenShot);
+            query.bindValueNoNull(":SYSTEM",handler->SystemName());
+            query.bindValueNoNull(":ROMNAME",game.Rom());
+            query.bindValueNoNull(":GAMENAME",GameName);
+            query.bindValueNoNull(":GENRE",Genre);
+            query.bindValueNoNull(":YEAR",Year);
+            query.bindValueNoNull(":GAMETYPE",handler->GameType());
+            query.bindValueNoNull(":ROMPATH",game.RomPath());
+            query.bindValueNoNull(":COUNTRY",Country);
+            query.bindValueNoNull(":CRC32", CRC32);
+            query.bindValueNoNull(":PLOT", Plot);
+            query.bindValueNoNull(":PUBLISHER", Publisher);
+            query.bindValueNoNull(":VERSION", Version);
+            query.bindValueNoNull(":FANART", Fanart);
+            query.bindValueNoNull(":BOXART", Boxart);
+            query.bindValueNoNull(":SCREENSHOT", ScreenShot);
 
             if (!query.exec())
                 MythDB::DBError("GameHandler::UpdateGameDB - "
                                 "insert gamemetadata", query);
         }
-        else if ((iter.value().FoundLoc() == inDatabase) && (removalprompt))
+        else if ((game.FoundLoc() == inDatabase) && (removalprompt))
         {
 
-            promptForRemoval( iter.value() );
+            promptForRemoval( game );
         }
 
         if (m_progressDlg)
@@ -510,7 +508,6 @@ void GameHandler::UpdateGameDB(GameHandler *handler)
 void GameHandler::VerifyGameDB(GameHandler *handler)
 {
     int counter = 0;
-    GameScanMap::Iterator iter;
 
     MSqlQuery query(MSqlQuery::InitCon());
     query.prepare("SELECT romname,rompath,gamename FROM gamemetadata "
@@ -538,16 +535,21 @@ void GameHandler::VerifyGameDB(GameHandler *handler)
         QString GameName = query.value(2).toString();
         if (!RomName.isEmpty())
         {
-            if ((iter = m_GameMap.find(RomName)) != m_GameMap.end())
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+            auto iter = m_gameMap.find(RomName);
+#else
+            auto iter = m_gameMap.constFind(RomName);
+#endif
+            if (iter != m_gameMap.end())
             {
                 // If it's both on disk and in the database we're done with it.
-                m_GameMap.erase(iter);
+                m_gameMap.erase(iter);
             }
             else
             {
                 // If it's only in the database add it to our list and mark it for
                 // removal.
-                m_GameMap[RomName] = GameScan(RomName,RomPath + "/" + RomName,inDatabase,
+                m_gameMap[RomName] = GameScan(RomName,RomPath + "/" + RomName,inDatabase,
                                         GameName,RomPath);
             }
         }
@@ -575,12 +577,8 @@ int GameHandler::buildFileCount(const QString& directory, GameHandler *handler)
 
     RomDir.setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
     QFileInfoList List = RomDir.entryInfoList();
-    for (QFileInfoList::const_iterator it = List.begin();
-         it != List.end(); ++it)
+    for (const auto & Info : qAsConst(List))
     {
-        QFileInfo Info = *it;
-        QString RomName = Info.fileName();
-
         if (Info.isDir())
         {
             filecount += buildFileCount(Info.filePath(), handler);
@@ -589,17 +587,13 @@ int GameHandler::buildFileCount(const QString& directory, GameHandler *handler)
 
         if (handler->m_validextensions.count() > 0)
         {
-            QRegExp r;
-
-            r.setPattern("^" + Info.suffix() + "$");
-            r.setCaseSensitivity(Qt::CaseInsensitive);
+            QRegularExpression r {
+                "^" + Info.suffix() + "$",
+                QRegularExpression::CaseInsensitiveOption };
             QStringList result;
-            for (int x = 0; x < handler->m_validextensions.size(); x++)
-            {
-                QString extension = handler->m_validextensions.at(x);
-                if (extension.contains(r))
-                    result.append(extension);
-            }
+            QStringList& exts = handler->m_validextensions;
+            std::copy_if(exts.cbegin(), exts.cend(), std::back_inserter(result),
+                         [&r](const QString& extension){ return extension.contains(r); } );
             if (result.isEmpty())
                 continue;
         }
@@ -640,10 +634,8 @@ void GameHandler::buildFileList(const QString& directory, GameHandler *handler,
     RomDir.setSorting( QDir:: DirsFirst | QDir::Name );
     RomDir.setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
     QFileInfoList List = RomDir.entryInfoList();
-    for (QFileInfoList::const_iterator it = List.begin();
-         it != List.end(); ++it)
+    for (const auto & Info : qAsConst(List))
     {
-        QFileInfo Info = *it;
         QString RomName = Info.fileName();
         QString GameName = Info.completeBaseName();
 
@@ -655,27 +647,22 @@ void GameHandler::buildFileList(const QString& directory, GameHandler *handler,
 
         if (handler->m_validextensions.count() > 0)
         {
-            QRegExp r;
-
-            r.setPattern("^" + Info.suffix() + "$");
-            r.setCaseSensitivity(Qt::CaseInsensitive);
+            QRegularExpression r {
+                "^" + Info.suffix() + "$",
+                QRegularExpression::CaseInsensitiveOption };
             QStringList result;
-            for (int x = 0; x < handler->m_validextensions.size(); x++)
-            {
-                QString extension = handler->m_validextensions.at(x);
-                if (extension.contains(r))
-                    result.append(extension);
-            }
-
+            QStringList& exts = handler->m_validextensions;
+            std::copy_if(exts.cbegin(), exts.cend(), std::back_inserter(result),
+                         [&r](const QString& extension){ return extension.contains(r); } );
             if (result.isEmpty())
                 continue;
         }
 
-        m_GameMap[RomName] = GameScan(RomName,Info.filePath(),inFileSystem,
+        m_gameMap[RomName] = GameScan(RomName,Info.filePath(),inFileSystem,
                                       GameName, Info.absoluteDir().path());
 
         LOG(VB_GENERAL, LOG_INFO, LOC + QString("Found ROM : (%1) - %2")
-            .arg(handler->SystemName()).arg(RomName));
+            .arg(handler->SystemName(), RomName));
 
         *filecount = *filecount + 1;
         if (m_progressDlg)
@@ -685,7 +672,6 @@ void GameHandler::buildFileList(const QString& directory, GameHandler *handler,
 
 void GameHandler::processGames(GameHandler *handler)
 {
-    QString thequery;
     int maxcount = 0;
     MSqlQuery query(MSqlQuery::InitCon());
 
@@ -723,12 +709,12 @@ void GameHandler::processGames(GameHandler *handler)
             busyDialog = nullptr;
         }
 
-        m_GameMap[handler->SystemCmdLine()] =
+        m_gameMap[handler->SystemCmdLine()] =
                 GameScan(handler->SystemCmdLine(),
                     handler->SystemCmdLine(),
                     inFileSystem,
                     handler->SystemName(),
-                    handler->SystemCmdLine().left(handler->SystemCmdLine().lastIndexOf(QRegExp("/"))));
+                    handler->SystemCmdLine().left(handler->SystemCmdLine().lastIndexOf("/")));
 
         if (busyDialog)
             busyDialog->Close();
@@ -758,7 +744,7 @@ void GameHandler::processGames(GameHandler *handler)
     VerifyGameDB(handler);
 
     // If we still have some games in the list then update the database
-    if (!m_GameMap.empty())
+    if (!m_gameMap.empty())
     {
         InitMetaDataMap(handler->GameType());
 
@@ -776,7 +762,7 @@ void GameHandler::processAllGames(void)
     checkHandlers();
     QStringList updatelist;
 
-    foreach (auto handler, *handlers)
+    for (auto *handler : qAsConst(*handlers))
     {
         if (handler)
         {
@@ -797,7 +783,7 @@ GameHandler* GameHandler::GetHandler(RomInfo *rominfo)
     if (!rominfo)
         return nullptr;
 
-    foreach (auto handler, *handlers)
+    for (auto *handler : qAsConst(*handlers))
     {
         if (handler)
         {
@@ -811,10 +797,10 @@ GameHandler* GameHandler::GetHandler(RomInfo *rominfo)
 
 GameHandler* GameHandler::GetHandlerByName(const QString& systemname)
 {
-    if (systemname.isEmpty() || systemname.isNull())
+    if (systemname.isEmpty())
         return nullptr;
 
-    foreach (auto handler, *handlers)
+    for (auto *handler : qAsConst(*handlers))
     {
         if (handler)
         {
@@ -830,7 +816,7 @@ void GameHandler::Launchgame(RomInfo *romdata, const QString& systemname)
 {
     GameHandler *handler = nullptr;
 
-    if (!systemname.isEmpty() && !systemname.isNull())
+    if (!systemname.isEmpty())
     {
         handler = GetHandlerByName(systemname);
     }
@@ -854,11 +840,11 @@ void GameHandler::Launchgame(RomInfo *romdata, const QString& systemname)
         // the command.
         if (exec.contains("%s") || handler->SpanDisks())
         {
-            exec = exec.replace(QRegExp("%s"),arg);
+            exec = exec.replace("%s",arg);
 
             if (handler->SpanDisks())
             {
-                QRegExp rxp = QRegExp( "%d[0-4]", Qt::CaseSensitive, QRegExp::RegExp);
+                QRegularExpression rxp { "%d[0-4]" };
 
                 if (exec.contains(rxp))
                 {
@@ -868,20 +854,18 @@ void GameHandler::Launchgame(RomInfo *romdata, const QString& systemname)
                         QString basename = romdata->Romname().left(romdata->Romname().length() - (romdata->getExtension().length() + 2));
                         QString extension = romdata->getExtension();
                         QString rom;
-                        QString diskid[] = { "%d0", "%d1", "%d2", "%d3", "%d4", "%d5", "%d6" };
+                        std::array<QString,7> diskid { "%d0", "%d1", "%d2", "%d3", "%d4", "%d5", "%d6" };
 
                         for (int disk = 1; disk <= romdata->DiskCount(); disk++)
                         {
                             rom = QString("\"%1/%2%3.%4\"")
-                                          .arg(romdata->Rompath())
-                                          .arg(basename)
-                                          .arg(disk)
-                                          .arg(extension);
-                            exec = exec.replace(QRegExp(diskid[disk]),rom);
+                                .arg(romdata->Rompath(), basename,
+                                     QString::number(disk), extension);
+                            exec = exec.replace(diskid[disk],rom);
                         }
                     } else
                     {   // If there is only one disk make sure we replace %d1 just like %s
-                        exec = exec.replace(QRegExp("%d1"),arg);
+                        exec = exec.replace("%d1",arg);
                     }
                 }
             }
@@ -906,15 +890,15 @@ void GameHandler::Launchgame(RomInfo *romdata, const QString& systemname)
         }
     }
     LOG(VB_GENERAL, LOG_INFO, LOC + QString("Launching Game : %1 : %2")
-           .arg(handler->SystemName())
-           .arg(exec));
+           .arg(handler->SystemName(), exec));
 
-    GetMythUI()->AddCurrentLocation(QString("MythGame %1 ( %2 )").arg(handler->SystemName()).arg(exec));
+    GetMythUI()->AddCurrentLocation(QString("MythGame %1 ( %2 )")
+                                    .arg(handler->SystemName(), exec));
 
     QStringList cmdlist = exec.split(";");
     if (cmdlist.count() > 0)
     {
-        foreach (auto & cmd, cmdlist)
+        for (const auto & cmd : qAsConst(cmdlist))
         {
             LOG(VB_GENERAL, LOG_INFO, LOC +
                 QString("Executing : %1").arg(cmd));
@@ -950,22 +934,22 @@ void GameHandler::customEvent(QEvent *event)
     if (auto *dce = dynamic_cast<DialogCompletionEvent*>(event))
     {
         QString resultid   = dce->GetId();
-        QString resulttext = dce->GetResultText();
+//      QString resulttext = dce->GetResultText();
 
         if (resultid == "removalPopup")
         {
             int buttonNum = dce->GetResult();
-            GameScan scan = dce->GetData().value<GameScan>();
+            auto scan = dce->GetData().value<GameScan>();
             switch (buttonNum)
             {
                 case 1:
-                    m_KeepAll = true;
+                    m_keepAll = true;
                     break;
                 case 2:
                     purgeGameDB(scan.Rom() , scan.RomFullPath());
                     break;
                 case 3:
-                    m_RemoveAll = true;
+                    m_removeAll = true;
                     purgeGameDB(scan.Rom() , scan.RomFullPath());
                     break;
                 default:

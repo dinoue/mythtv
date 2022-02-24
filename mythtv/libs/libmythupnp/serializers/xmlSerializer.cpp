@@ -6,7 +6,7 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -181,27 +181,32 @@ void XmlSerializer::RenderValue( const QString &sName, const QVariant &vValue )
     // Handle QVariant special cases...
     // -----------------------------------------------------------------------
 
-    switch( vValue.type() )
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    auto type = static_cast<QMetaType::Type>(vValue.type());
+#else
+    auto type = vValue.typeId();
+#endif
+    switch( type )
     {
-        case QVariant::List:
+        case QMetaType::QVariantList:
         {
             RenderList( sName, vValue.toList() );
             break;
         }
 
-        case QVariant::StringList:
+        case QMetaType::QStringList:
         {
             RenderStringList( sName, vValue.toStringList() );
             break;
         }
 
-        case QVariant::Map:
+        case QMetaType::QVariantMap:
         {
             RenderMap( sName, vValue.toMap() );
             break;
         }
 
-        case QVariant::DateTime:
+        case QMetaType::QDateTime:
         {
             QDateTime dt( vValue.toDateTime() );
 
@@ -364,11 +369,10 @@ QString XmlSerializer::FindOptionValue( const QStringList &sOptions, const QStri
 {
     QString sKey = sName + "=";
 
-    for (int nIdx = 0; nIdx < sOptions.size(); ++nIdx)
-    {
-        if (sOptions.at( nIdx ).startsWith( sKey ))
-            return sOptions.at( nIdx ).mid( sKey.length() );
-    }
+    auto hasKey = [&sKey](const QString& o) { return o.startsWith( sKey ); };
+    auto it = std::find_if(sOptions.cbegin(), sOptions.cend(), hasKey);
+    if (it != sOptions.cend())
+        return (*it).mid( sKey.length() );
 
     return QString();
 }

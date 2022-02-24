@@ -27,7 +27,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <vector>
 #include <list>
 #include <map>
-using namespace std;
 
 #include "compat.h"
 #include "mythlogging.h"
@@ -40,10 +39,10 @@ using namespace std;
 // our default internal block size, in floats
 static const unsigned default_block_size = SURROUND_BUFSIZE;
 // Gain of center and lfe channels in passive mode (sqrt 0.5)
-static const float center_level = 0.707107;
+//static const float center_level = 0.707107;
 static const float m3db = 0.7071067811865476F;           // 3dB  = SQRT(2)
 static const float m6db = 0.5;                           // 6dB  = SQRT(4)
-static const float m7db = 0.44721359549996;              // 7dB  = SQRT(5)
+//static const float m7db = 0.44721359549996;            // 7dB  = SQRT(5)
 
 unsigned int block_size = default_block_size;
 
@@ -84,12 +83,12 @@ FreeSurround::FreeSurround(uint srate, bool moviemode, SurroundMode smode) :
     {
         m_params.phasemode = 1;
         m_params.center_width = 25;
-        m_params.dimension = 0.5;
+        m_params.dimension = 50;
     }
     else
     {
         m_params.center_width = 65;
-        m_params.dimension = 0.3;
+        m_params.dimension = 30;
     }
     switch (m_surroundMode)
     {
@@ -121,7 +120,7 @@ void FreeSurround::SetParams()
 {
     if (m_decoder)
     {
-        m_decoder->steering_mode(m_params.steering);
+        m_decoder->steering_mode(m_params.steering != 0);
         m_decoder->phase_mode(m_params.phasemode);
         m_decoder->surround_coefficients(m_params.coeff_a, m_params.coeff_b);
         m_decoder->separation(m_params.front_sep/100.0,m_params.rear_sep/100.0);
@@ -147,8 +146,8 @@ FreeSurround::~FreeSurround()
 uint FreeSurround::putFrames(void* buffer, uint numFrames, uint numChannels)
 {
     uint i = 0;
-    int ic = m_inCount;
-    int bs = block_size/2;
+    uint ic = m_inCount;
+    uint bs = block_size/2;
     bool process = true;
     auto *samples = (float *)buffer;
     // demultiplex
@@ -440,17 +439,17 @@ void FreeSurround::close()
     m_decoder = nullptr;
 }
 
-uint FreeSurround::numUnprocessedFrames()
+uint FreeSurround::numUnprocessedFrames() const
 {
     return m_inCount;
 }
 
-uint FreeSurround::numFrames()
+uint FreeSurround::numFrames() const
 {
     return m_outCount;
 }
 
-uint FreeSurround::frameLatency()
+uint FreeSurround::frameLatency() const
 {
     if (m_processed)
         return m_inCount + m_outCount + (block_size/2);

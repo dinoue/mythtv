@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2014 Stuart Morgan <smorgan@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -31,8 +31,8 @@ class SERVICE_PUBLIC Frontend : public QObject
     Q_PROPERTY( int      Port    READ  Port    WRITE  setPort   )
     Q_PROPERTY( int      OnLine  READ  OnLine  WRITE  setOnLine )
 
-    PROPERTYIMP    ( QString    , Name            )
-    PROPERTYIMP    ( QString    , IP              )
+    PROPERTYIMP_REF( QString    , Name            )
+    PROPERTYIMP_REF( QString    , IP              )
     PROPERTYIMP    ( int        , Port            )
     PROPERTYIMP    ( bool       , OnLine          )
 

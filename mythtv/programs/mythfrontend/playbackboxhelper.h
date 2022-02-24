@@ -1,5 +1,5 @@
-#ifndef _FREE_SPACE_H_
-#define _FREE_SPACE_H_
+#ifndef PLAYBACKBOXHELPER_H
+#define PLAYBACKBOXHELPER_H
 
 #include <cstdint>
 
@@ -15,9 +15,6 @@
 class PreviewGenerator;
 class PBHEventHandler;
 class ProgramInfo;
-class QStringList;
-class QObject;
-class QTimer;
 
 enum CheckAvailabilityType {
     kCheckForCache,
@@ -67,4 +64,4 @@ class PlaybackBoxHelper : public MThread
     InfoMap             m_artworkCache;
 };
 
-#endif // _FREE_SPACE_H_
+#endif // PLAYBACKBOXHELPER_H

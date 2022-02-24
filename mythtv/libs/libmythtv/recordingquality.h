@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef _RECORDER_QUALITY_H_
-#define _RECORDER_QUALITY_H_
+#ifndef RECORDING_QUALITY_H
+#define RECORDING_QUALITY_H
 
 #include <QDateTime>
 #include <QList>
@@ -21,8 +21,8 @@ class RecordingGap
     QString toString(void) const
     {
         return QString("<<%1 to %2>>")
-            .arg(m_start.toString(Qt::ISODate))
-            .arg(m_end.toString(Qt::ISODate));
+            .arg(m_start.toString(Qt::ISODate),
+                 m_end.toString(Qt::ISODate));
     }
     bool operator<(const RecordingGap &o) const { return m_start < o.m_start; }
   private:
@@ -52,4 +52,4 @@ class MTV_PUBLIC RecordingQuality
     RecordingGaps m_recordingGaps;
 };
 
-#endif // _RECORDER_QUALITY_H_
+#endif // RECORDING_QUALITY_H

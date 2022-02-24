@@ -1,8 +1,11 @@
 CONFIG += $$CCONFIG
-# enable C++11 support, QT5.7 will be based on C++11 anyway
-CONFIG += c++11
+CONFIG += c++17
 
-LIBVERSION = 31
+# Make sure all the Qt header files are marked as system headers
+QMAKE_DEFAULT_INCDIRS += $$[QT_INSTALL_HEADERS]
+INCLUDEPATH += $$[QT_INSTALL_HEADERS]
+
+LIBVERSION = 32
 
 MY_INSTALL_INCLUDE = $${SYSROOT}$${PREFIX}/include
 !contains(MY_INSTALL_INCLUDE, /usr/include$) {
@@ -33,7 +36,7 @@ macx:CONFIG += console
 QMAKE_CXXFLAGS += $$ARCHFLAGS
 QMAKE_CXXFLAGS += $$CONFIG_DIRECTFB_CXXFLAGS
 QMAKE_CXXFLAGS_SHLIB = -DPIC -fPIC
-QMAKE_CXXFLAGS += $$ECXXFLAGS
+QMAKE_CXXFLAGS += $$CXXFLAGS $$ECXXFLAGS
 
 profile:!win32:!macx:CONFIG += debug
 

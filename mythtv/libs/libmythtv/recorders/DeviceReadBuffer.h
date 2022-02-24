@@ -1,8 +1,8 @@
 // -*- Mode: c++ -*-
 /* Device Buffer written by John Poet */
 
-#ifndef _DEVICEREADBUFFER_H_
-#define _DEVICEREADBUFFER_H_
+#ifndef DEVICEREADBUFFER_H
+#define DEVICEREADBUFFER_H
 
 #include <unistd.h>
 
@@ -10,6 +10,7 @@
 #include <QWaitCondition>
 #include <QString>
 
+#include "mythbaseutil.h"
 #include "mythtimer.h"
 #include "tspacket.h"
 #include "mthread.h"
@@ -71,7 +72,7 @@ class DeviceReadBuffer : protected MThread
     bool Poll(void) const;
     void WakePoll(void) const;
     uint WaitForUnused(uint needed) const;
-    uint WaitForUsed  (uint needed, uint max_wait /*ms*/) const;
+    uint WaitForUsed  (uint needed, std::chrono::milliseconds max_wait) const;
 
     bool IsPauseRequested(void) const;
     bool IsOpen(void) const { return m_streamFd >= 0; }
@@ -84,8 +85,8 @@ class DeviceReadBuffer : protected MThread
 
     QString                 m_videoDevice;
     int                     m_streamFd              {-1};
-    mutable int             m_wakePipe[2]           {-1,-1};
-    mutable long            m_wakePipeFlags[2]      {0,0};
+    mutable pipe_fd_array   m_wakePipe              {-1,-1};
+    mutable pipe_flag_array m_wakePipeFlags         {0,0};
 
     DeviceReaderCB         *m_readerCB              {nullptr};
 
@@ -98,7 +99,7 @@ class DeviceReadBuffer : protected MThread
     bool                    m_paused                {false};
     bool                    m_usingPoll             {true};
     bool                    m_pollTimeoutIsError    {true};
-    uint                    m_maxPollWait           {2500 /*ms*/};
+    std::chrono::milliseconds m_maxPollWait         {2500ms};
 
     size_t                  m_size                  {0};
     size_t                  m_used                  {0};
@@ -125,7 +126,7 @@ class DeviceReadBuffer : protected MThread
     MythTimer               m_lastReport;
 };
 
-#endif // _DEVICEREADBUFFER_H_
+#endif // DEVICEREADBUFFER_H
 
 /*
  * vim:ts=4:sw=4:ai:et:si:sts=4

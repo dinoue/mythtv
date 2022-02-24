@@ -1,5 +1,5 @@
-#ifndef __WEATHER_SOURCE_H__
-#define __WEATHER_SOURCE_H__
+#ifndef WEATHER_SOURCE_H
+#define WEATHER_SOURCE_H
 
 #include <QStringList>
 #include <QObject>
@@ -25,8 +25,8 @@ class ScriptInfo
     QStringList types;
     QString program;
     QString path;
-    unsigned int scriptTimeout {DEFAULT_SCRIPT_TIMEOUT};
-    unsigned int updateTimeout {DEFAULT_UPDATE_TIMEOUT};
+    std::chrono::seconds scriptTimeout {DEFAULT_SCRIPT_TIMEOUT};
+    std::chrono::seconds updateTimeout {DEFAULT_UPDATE_TIMEOUT};
     int id                     {0};
 };
 
@@ -40,19 +40,19 @@ class WeatherSource : public QObject
                                   const QString&    program);
     static bool ProbeTimeouts(const QString&        workingDirectory,
                               const QString&        program,
-                              uint          &updateTimeout,
-                              uint          &scriptTimeout);
+                              std::chrono::seconds &updateTimeout,
+                              std::chrono::seconds &scriptTimeout);
     static bool ProbeInfo(ScriptInfo &scriptInfo);
 
     explicit WeatherSource(ScriptInfo *info);
     ~WeatherSource() override;
 
-    bool isReady() { return m_ready; }
+    bool isReady() const { return m_ready; }
     QString getVersion() { return m_info->version; }
     QString getName() { return m_info->name; }
     QString getAuthor() { return m_info->author; }
     QString getEmail() { return m_info->email; }
-    units_t getUnits() { return m_units; }
+    units_t getUnits() const { return m_units; }
     void setUnits(units_t units) { m_units = units; }
     QStringList getLocationList(const QString &str);
     void setLocale(const QString &locale) { m_locale = locale; }
@@ -60,16 +60,16 @@ class WeatherSource : public QObject
 
     void startUpdate(bool forceUpdate = false);
 
-    int getScriptTimeout() { return m_info->scriptTimeout; }
-    void setScriptTimeout(int timeout) { m_info->scriptTimeout = timeout; }
+    std::chrono::seconds getScriptTimeout() { return m_info->scriptTimeout; }
+    void setScriptTimeout(std::chrono::seconds timeout) { m_info->scriptTimeout = timeout; }
 
-    int getUpdateTimeout() { return m_info->updateTimeout; }
-    void setUpdateTimeout(int timeout) { m_info->updateTimeout = timeout; }
+    std::chrono::seconds getUpdateTimeout() { return m_info->updateTimeout; }
+    void setUpdateTimeout(std::chrono::seconds timeout) { m_info->updateTimeout = timeout; }
 
     void startUpdateTimer() { m_updateTimer->start(m_info->updateTimeout); }
     void stopUpdateTimer() { m_updateTimer->stop(); }
 
-    bool inUse() { return m_inuse; }
+    bool inUse() const { return m_inuse; }
     void setInUse(bool inuse) { m_inuse = inuse; }
 
     int getId() { return m_info->id; }
@@ -81,7 +81,8 @@ class WeatherSource : public QObject
     void newData(QString, units_t,  DataMap);
 
   private slots:
-    void processExit(uint status = 0);
+    void processExit(uint status);
+    void processExit();
     void updateTimeout();
 
   private:
@@ -101,4 +102,4 @@ class WeatherSource : public QObject
     DataMap m_data;
 };
 
-#endif
+#endif /* WEATHER_SOURCE_H */

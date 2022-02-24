@@ -1,5 +1,5 @@
-#ifndef _SCENECHANGEDETECTORBASE_H_
-#define _SCENECHANGEDETECTORBASE_H_
+#ifndef SCENECHANGEDETECTORBASE_H
+#define SCENECHANGEDETECTORBASE_H
 
 #include <QObject>
 #include "mythframe.h"
@@ -12,7 +12,7 @@ class SceneChangeDetectorBase : public QObject
     SceneChangeDetectorBase(unsigned int w, unsigned int h) :
         m_width(w), m_height(h) {}
 
-    virtual void processFrame(VideoFrame* frame) = 0;
+    virtual void processFrame(MythVideoFrame* frame) = 0;
 
   signals:
     void haveNewInformation(unsigned int framenum, bool scenechange,
@@ -25,7 +25,6 @@ class SceneChangeDetectorBase : public QObject
     unsigned int m_width, m_height;
 };
 
-#endif
+#endif // SCENECHANGEDETECTORBASE_H
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
-

@@ -37,6 +37,11 @@ extern "C" {
 #   include "hdhrchannel.h"
 #endif
 
+#ifdef USING_SATIP
+#   include "satipsignalmonitor.h"
+#   include "satipchannel.h"
+#endif
+
 #ifdef USING_IPTV
 #   include "iptvsignalmonitor.h"
 #   include "iptvchannel.h"
@@ -63,7 +68,7 @@ extern "C" {
 #undef DBG_SM
 #define DBG_SM(FUNC, MSG) LOG(VB_CHANNEL, LOG_DEBUG, \
     QString("SigMon[%1](%2)::%3: %4").arg(m_inputid) \
-                              .arg(m_channel->GetDevice()).arg(FUNC).arg(MSG))
+                              .arg(m_channel->GetDevice(), FUNC, MSG))
 
 /** \class SignalMonitor
  *  \brief Signal monitoring base class.
@@ -131,6 +136,15 @@ SignalMonitor *SignalMonitor::Init(const QString& cardtype, int db_cardnum,
         if (hdhrc)
             signalMonitor = new HDHRSignalMonitor(db_cardnum, hdhrc,
                                                   release_stream);
+    }
+#endif
+
+#ifdef USING_SATIP
+    else if (cardtype.toUpper() == "SATIP")
+    {
+        auto *satipchan = dynamic_cast<SatIPChannel*>(channel);
+        if (satipchan)
+            signalMonitor = new SatIPSignalMonitor(db_cardnum, satipchan, release_stream);
     }
 #endif
 
@@ -225,13 +239,13 @@ SignalMonitor::SignalMonitor(int _inputid, ChannelBase *_channel,
     : MThread("SignalMonitor"),
       m_channel(_channel),
       m_inputid(_inputid), m_flags(wait_for_mask),
-      m_release_stream(_release_stream),
+      m_releaseStream(_release_stream),
       m_signalLock    (QCoreApplication::translate("(Common)", "Signal Lock"),
-                     "slock", 1, true, 0,   1, 0),
+                     "slock", 1, true, 0,   1, 0ms),
       m_signalStrength(QCoreApplication::translate("(Common)", "Signal Power"),
-                     "signal", 0, true, 0, 100, 0),
+                     "signal", 0, true, 0, 100, 0ms),
       m_scriptStatus  (QCoreApplication::translate("(Common)", "Script Status"),
-                     "script", 3, true, 0, 3, 0)
+                     "script", 3, true, 0, 3, 0ms)
 {
     if (!m_channel->IsExternalChannelChangeInUse())
     {
@@ -341,7 +355,7 @@ void SignalMonitor::run(void)
 
         UpdateValues();
 
-        if (m_notify_frontend && m_inputid>=0)
+        if (m_notifyFrontend && m_inputid>=0)
         {
             QStringList slist = GetStatusList();
             MythEvent me(QString("SIGNAL %1").arg(m_inputid), slist);
@@ -349,14 +363,14 @@ void SignalMonitor::run(void)
         }
 
         locker.relock();
-        m_startStopWait.wait(locker.mutex(), m_update_rate);
+        m_startStopWait.wait(locker.mutex(), m_updateRate.count());
     }
 
     // We need to send a last informational message because a
     // signal update may have come in while we were sleeping
     // if we are using the multithreaded dtvsignalmonitor.
     locker.unlock();
-    if (m_notify_frontend && m_inputid>=0)
+    if (m_notifyFrontend && m_inputid>=0)
     {
         QStringList slist = GetStatusList();
         MythEvent me(QString("SIGNAL %1").arg(m_inputid), slist);
@@ -385,7 +399,7 @@ void SignalMonitor::RemoveListener(SignalMonitorListener *listener)
 {
     QMutexLocker locker(&m_listenerLock);
 
-    vector<SignalMonitorListener*> new_listeners;
+    std::vector<SignalMonitorListener*> new_listeners;
     for (auto & entry : m_listeners)
     {
         if (entry != listener)

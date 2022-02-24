@@ -4,12 +4,12 @@
 
 #include <QDomDocument>
 
-QRect UIEffects::GetExtent(const QSize &size)
+QRect UIEffects::GetExtent(const QSize size) const
 {
     int x = 0;
     int y = 0;
-    int zoomedWidth = size.width() * m_hzoom;
-    int zoomedHeight = size.height() * m_vzoom;
+    int zoomedWidth = static_cast<int>(static_cast<float>(size.width()) * m_hzoom);
+    int zoomedHeight = static_cast<int>(static_cast<float>(size.height()) * m_vzoom);
 
     switch (m_centre)
     {
@@ -99,13 +99,12 @@ void MythUIAnimation::IncrementCurrentTime(void)
     if (!m_active)
         return;
 
-    int time = currentTime();
-    if (direction() == Forward)
-        time += GetMythMainWindow()->GetDrawInterval();
-    else
-        time -= GetMythMainWindow()->GetDrawInterval();
+    std::chrono::milliseconds current = MythDate::currentMSecsSinceEpochAsDuration();
+    std::chrono::milliseconds interval = std::min(current - m_lastUpdate, 50ms);
+    m_lastUpdate = current;
 
-    setCurrentTime(time);
+    int offset = (direction() == Forward) ? interval.count() : -interval.count();
+    setCurrentTime(currentTime() + offset);
 
     if (endValue() == currentValue())
     {

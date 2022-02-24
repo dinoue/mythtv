@@ -23,8 +23,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef _SERVICEUTIL_H_
-#define _SERVICEUTIL_H_
+#ifndef SERVICEUTIL_H
+#define SERVICEUTIL_H
 
 #include "datacontracts/programAndChannel.h"
 #include "datacontracts/recRule.h"
@@ -38,6 +38,7 @@
 #include "datacontracts/genreList.h"
 
 #include "programinfo.h"
+#include "programdata.h"
 #include "recordingrule.h"
 #include "videometadatalistmanager.h"
 #include "channelgroup.h"
@@ -47,7 +48,7 @@
 #include "musicmetadata.h"
 
 #define ADD_SQL(settings_var, bindvar, col, api_param, val) { \
-    (settings_var) += QString("%1=:%2, ").arg(col).arg(api_param); \
+    (settings_var) += QString("%1=:%2, ").arg(col, api_param); \
     (bindvar)[QString(":").append(api_param)] = val; \
     }
 
@@ -101,5 +102,8 @@ void FillCommBreak( DTC::CutList* pCutList, RecordingInfo* rInfo, int marktype);
 
 void FillSeek(DTC::CutList* pCutList, RecordingInfo* rInfo, MarkTypes marktype);
 
+int CreateRecordingGroup(const QString& groupName);
 
-#endif
+DBCredits * jsonCastToCredits(const QJsonObject &cast);
+
+#endif // SERVICEUTIL_H

@@ -29,7 +29,8 @@ static GlobalTextEditSetting *MasterServerName()
     auto *gc = new GlobalTextEditSetting("MasterServerName");
     gc->setLabel(QObject::tr("Master Backend Name"));
     gc->setValue("");
-    gc->setEnabled(false);
+    gc->setEnabled(true);
+    gc->setReadOnly(true);
     gc->setHelpText(QObject::tr(
                     "Host name of Master Backend. This is set by selecting "
                     "\"This server is the Master Backend\" on that server."));
@@ -143,14 +144,20 @@ class IpAddressSettings : public HostCheckBoxSetting
 };
 
 
+void BackendSettings::LocalServerPortChanged ()
+{
+    MythCoreContext::ClearBackendServerPortCache();
+}
 
-static HostTextEditSetting *LocalServerPort()
+HostTextEditSetting *BackendSettings::LocalServerPort() const
 {
     auto *gc = new HostTextEditSetting("BackendServerPort");
     gc->setLabel(QObject::tr("Port"));
     gc->setValue("6543");
     gc->setHelpText(QObject::tr("Unless you've got good reason, don't "
                     "change this."));
+    connect(gc,   &StandardSetting::ChangeSaved,
+            this, &BackendSettings::LocalServerPortChanged);
     return gc;
 };
 
@@ -217,8 +224,8 @@ static GlobalComboBoxSetting *TVFormat()
     gc->setLabel(QObject::tr("TV format"));
 
     QStringList list = ChannelTVFormat::GetFormats();
-    for (int i = 0; i < list.size(); i++)
-        gc->addSelection(list[i]);
+    for (const QString& item : qAsConst(list))
+        gc->addSelection(item);
 
     gc->setHelpText(QObject::tr("The TV standard to use for viewing TV."));
     return gc;
@@ -242,8 +249,8 @@ static GlobalComboBoxSetting *FreqTable()
     auto *gc = new GlobalComboBoxSetting("FreqTable");
     gc->setLabel(QObject::tr("Channel frequency table"));
 
-    for (uint i = 0; chanlists[i].name; i++)
-        gc->addSelection(chanlists[i].name);
+    for (const auto &list : gChanLists)
+        gc->addSelection(list.name);
 
     gc->setHelpText(QObject::tr("Select the appropriate frequency table for "
                     "your system. If you have an antenna, use a \"-bcast\" "
@@ -288,7 +295,7 @@ static GlobalCheckBoxSetting *DeletesFollowLinks()
 static GlobalSpinBoxSetting *HDRingbufferSize()
 {
     auto *bs = new GlobalSpinBoxSetting(
-        "HDRingbufferSize", 25*188, 512*188, 25*188);
+        "HDRingbufferSize", 25*188, 500*188, 25*188);
     bs->setLabel(QObject::tr("HD ringbuffer size (kB)"));
     bs->setHelpText(QObject::tr("The HD device ringbuffer allows the "
                     "backend to weather moments of stress. "

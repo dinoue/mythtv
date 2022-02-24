@@ -13,6 +13,7 @@
 #include <QMetaType>
 
 #include "mythmetaexp.h"
+#include "mythchrono.h"
 
 // Define this to log/count creation/deletion of ImageItem heap objects.
 // These are created liberally when processing images and are liable to leak.
@@ -94,17 +95,9 @@ public:
     int              m_device      { 0 }; //!< Id of media device. Always 0 (SG) for remotes, 1+ for local devices
     int              m_parentId    { 0 }; //!< Id of parent dir
     int              m_type        { 0 }; //!< Type of node: dir, video etc
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-    uint             m_modTime     { 0 }; //!< Filesystem modified datestamp
-#else
-    qint64           m_modTime     { 0 }; //!< Filesystem modified datestamp
-#endif
+    std::chrono::seconds m_modTime { 0s }; //!< Filesystem modified datestamp
     int              m_size        { 0 }; //!< Filesize (files only)
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-    uint             m_date;        //!< Image creation date, from Exif metadata
-#else
-    qint64           m_date        { 0 }; //!< Image creation date, from Exif metadata
-#endif
+    std::chrono::seconds m_date    { 0s }; //!< Image creation date, from Exif metadata
     int              m_orientation { 0 }; //!< Image orientation
     QString          m_comment;     //!< User comment, from Exif metadata
 
@@ -148,7 +141,7 @@ public:
     {
         QStringList local;
         QStringList remote;
-        foreach(int id, ids)
+        for (int id : qAsConst(ids))
         {
             if (ImageItem::IsLocalId(id))
                 local << QString::number(id);
@@ -164,7 +157,7 @@ private:
 
 // Convenience containers
 using ImagePtr  = QSharedPointer<ImageItem>;
-using ImageList = QList<ImagePtr>;
+using ImageList = QVector<ImagePtr>;
 using ImageHash = QHash<QString, ImagePtr>;
 
 // Read-only images alias

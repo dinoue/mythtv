@@ -1,3 +1,4 @@
+#include <chrono>
 
 #include "mythuibutton.h"
 
@@ -10,11 +11,11 @@
 #include "mythlogging.h"
 
 // MythUI headers
+#include "mythgesture.h"
 #include "mythmainwindow.h"
 #include "mythuigroup.h"
 #include "mythuistatetype.h"
 #include "mythuitext.h"
-#include "mythgesture.h"
 
 MythUIButton::MythUIButton(MythUIType *parent, const QString &name)
     : MythUIType(parent, name)
@@ -22,12 +23,12 @@ MythUIButton::MythUIButton(MythUIType *parent, const QString &name)
     m_clickTimer = new QTimer();
     m_clickTimer->setSingleShot(true);
 
-    connect(m_clickTimer, SIGNAL(timeout()), SLOT(UnPush()));
+    connect(m_clickTimer, &QTimer::timeout, this, &MythUIButton::UnPush);
 
-    connect(this, SIGNAL(TakingFocus()), SLOT(Select()));
-    connect(this, SIGNAL(LosingFocus()), SLOT(Deselect()));
-    connect(this, SIGNAL(Enabling()), SLOT(Enable()));
-    connect(this, SIGNAL(Disabling()), SLOT(Disable()));
+    connect(this, &MythUIType::TakingFocus, this, &MythUIButton::Select);
+    connect(this, &MythUIType::LosingFocus, this, &MythUIButton::Deselect);
+    connect(this, &MythUIType::Enabling, this, &MythUIButton::Enable);
+    connect(this, &MythUIType::Disabling, this, &MythUIButton::Disable);
 
     SetCanTakeFocus(true);
 }
@@ -40,16 +41,16 @@ MythUIButton::~MythUIButton()
 
 void MythUIButton::SetInitialStates()
 {
-    m_BackgroundState = dynamic_cast<MythUIStateType *>(GetChild("buttonstate"));
+    m_backgroundState = dynamic_cast<MythUIStateType *>(GetChild("buttonstate"));
 
-    if (!m_BackgroundState)
+    if (!m_backgroundState)
         LOG(VB_GENERAL, LOG_ERR, QString("Button %1 is missing required "
                                          "elements").arg(objectName()));
 
     SetState("active");
 
-    if (m_Text && m_Message.isEmpty())
-        m_Message = m_Text->GetDefaultText();
+    if (m_text && m_message.isEmpty())
+        m_message = m_text->GetDefaultText();
 }
 
 /*!
@@ -62,7 +63,7 @@ void MythUIButton::Reset()
 
 void MythUIButton::Select()
 {
-    if (!IsEnabled() || m_Pushed)
+    if (!IsEnabled() || m_pushed)
         return;
 
     SetState("selected");
@@ -70,7 +71,7 @@ void MythUIButton::Select()
 
 void MythUIButton::Deselect()
 {
-    if (m_Pushed)
+    if (m_pushed)
         return;
 
     if (IsEnabled())
@@ -94,26 +95,26 @@ void MythUIButton::SetState(const QString& state)
     if (m_state == state)
         return;
 
-    if (m_Pushed && state != "pushed")
+    if (m_pushed && state != "pushed")
         UnPush();
 
     m_state = state;
 
-    if (!m_BackgroundState)
+    if (!m_backgroundState)
         return;
 
-    m_BackgroundState->DisplayState(m_state);
+    m_backgroundState->DisplayState(m_state);
 
     auto *activeState = dynamic_cast<MythUIGroup *>
-                               (m_BackgroundState->GetCurrentState());
+                               (m_backgroundState->GetCurrentState());
 
     if (activeState)
-        m_Text = dynamic_cast<MythUIText *>(activeState->GetChild("text"));
+        m_text = dynamic_cast<MythUIText *>(activeState->GetChild("text"));
 
-    if (m_Text)
+    if (m_text)
     {
-        m_Text->SetFontState(m_state);
-        m_Text->SetText(m_Message);
+        m_text->SetFontState(m_state);
+        m_text->SetText(m_message);
     }
 }
 
@@ -135,7 +136,7 @@ bool MythUIButton::keyPressEvent(QKeyEvent *event)
         {
             if (IsEnabled())
             {
-                if (m_Pushed)
+                if (m_pushed)
                     UnPush();
                 else
                     Push();
@@ -153,11 +154,11 @@ bool MythUIButton::keyPressEvent(QKeyEvent *event)
  */
 bool MythUIButton::gestureEvent(MythGestureEvent *event)
 {
-    if (event->gesture() == MythGestureEvent::Click)
+    if (event->GetGesture() == MythGestureEvent::Click)
     {
         if (IsEnabled())
         {
-            if (m_Pushed)
+            if (m_pushed)
                 UnPush();
             else
                 Push();
@@ -171,52 +172,52 @@ bool MythUIButton::gestureEvent(MythGestureEvent *event)
 
 void MythUIButton::Push(bool lock)
 {
-    m_Pushed = true;
+    m_pushed = true;
     SetState("pushed");
 
-    if (!lock && !m_Lockable)
-        m_clickTimer->start(500);
+    if (!lock && !m_lockable)
+        m_clickTimer->start(500ms);
 
     emit Clicked();
 }
 
 void MythUIButton::UnPush()
 {
-    if (!m_Pushed)
+    if (!m_pushed)
         return;
 
     m_clickTimer->stop();
 
-    m_Pushed = false;
+    m_pushed = false;
 
-    if (m_HasFocus)
+    if (m_hasFocus)
         SetState("selected");
-    else if (m_Enabled)
+    else if (m_enabled)
         SetState("active");
     else
         SetState("disabled");
 
-    if (m_Lockable)
+    if (m_lockable)
         emit Clicked();
 }
 
 void MythUIButton::SetLocked(bool locked)
 {
-    if (!m_Lockable)
+    if (!m_lockable)
         return;
 
     if (locked)
     {
-        m_Pushed = true;
+        m_pushed = true;
         SetState("pushed");
     }
     else
     {
-        m_Pushed = false;
+        m_pushed = false;
 
-        if (m_HasFocus)
+        if (m_hasFocus)
             SetState("selected");
-        else if (m_Enabled)
+        else if (m_enabled)
             SetState("active");
         else
             SetState("disabled");
@@ -225,29 +226,29 @@ void MythUIButton::SetLocked(bool locked)
 
 void MythUIButton::SetText(const QString &msg)
 {
-    if (m_Message == msg)
+    if (m_message == msg)
         return;
 
-    m_Message = msg;
+    m_message = msg;
 
     auto *activeState = dynamic_cast<MythUIGroup *>
-                               (m_BackgroundState->GetCurrentState());
+                               (m_backgroundState->GetCurrentState());
 
     if (activeState)
-        m_Text = dynamic_cast<MythUIText *>(activeState->GetChild("text"));
+        m_text = dynamic_cast<MythUIText *>(activeState->GetChild("text"));
 
-    if (m_Text)
-        m_Text->SetText(msg);
+    if (m_text)
+        m_text->SetText(msg);
 }
 
 QString MythUIButton::GetText() const
 {
-    return m_Message;
+    return m_message;
 }
 
 QString MythUIButton::GetDefaultText() const
 {
-    return m_Text->GetDefaultText();
+    return m_text->GetDefaultText();
 }
 
 /**
@@ -258,7 +259,7 @@ bool MythUIButton::ParseElement(
 {
     if (element.tagName() == "value")
     {
-        m_ValueText = qApp->translate("ThemeUI",
+        m_valueText = QCoreApplication::translate("ThemeUI",
                                       parseText(element).toUtf8());
     }
     else
@@ -290,9 +291,9 @@ void MythUIButton::CopyFrom(MythUIType *base)
         return;
     }
 
-    m_Message = button->m_Message;
-    m_ValueText = button->m_ValueText;
-    m_Lockable = button->m_Lockable;
+    m_message = button->m_message;
+    m_valueText = button->m_valueText;
+    m_lockable = button->m_lockable;
 
     MythUIType::CopyFrom(base);
 
@@ -305,5 +306,5 @@ void MythUIButton::CopyFrom(MythUIType *base)
 void MythUIButton::Finalize()
 {
     SetInitialStates();
-    SetText(m_ValueText);
+    SetText(m_valueText);
 }

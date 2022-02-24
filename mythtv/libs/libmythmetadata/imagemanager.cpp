@@ -92,7 +92,7 @@ public:
 
 
     //! Delete thumbnails associated with device
-    void RemoveThumbs(void)
+    void RemoveThumbs(void) const
     {
         // Remove thumbnails
         QString dir = QString("%1/" TEMP_SUBDIR "/%2").arg(GetConfDir(), m_thumbs);
@@ -166,11 +166,15 @@ int DeviceManager::OpenDevice(const QString &name, const QString &mount,
     if (id == DEVICE_INVALID)
     {
         state = "New";
-        id = m_devices.isEmpty() ? 0 : (m_devices.constEnd() - 1).key() + 1;
+        id = m_devices.isEmpty() ? 0 : m_devices.lastKey() + 1;
         m_devices.insert(id, new Device(name, mount, media, dir));
     }
-    else if (m_devices.value(id))
-        m_devices.value(id)->setPresent(media);
+    else
+    {
+        Device *dev = m_devices.value(id);
+        if (dev)
+            dev->setPresent(media);
+    }
 
     LOG(VB_GENERAL, LOG_INFO, LOC +
         QString("%1 device %2 mounted at '%3' [Id %4]")
@@ -193,19 +197,20 @@ QStringList DeviceManager::CloseDevices(int devId, const QString &action)
     if (action == "DEVICE CLOSE ALL")
     {
         // Close all devices but retain their thumbnails
-        foreach (Device *dev, m_devices)
+        for (auto *dev : qAsConst(m_devices))
             if (dev)
                 dev->Close();
     }
     else if (action == "DEVICE CLEAR ALL")
     {
         // Remove all thumbnails but retain devices
-        foreach (Device *dev, m_devices)
+        for (const auto *dev : qAsConst(m_devices)) {
             if (dev)
             {
                 clear << dev->m_mount;
                 dev->RemoveThumbs();
             }
+        }
     }
     else
     {
@@ -245,12 +250,28 @@ int DeviceManager::LocateMount(const QString &mount) const
 StringMap DeviceManager::GetDeviceDirs() const
 {
     StringMap paths;
-    foreach (int id, m_devices.keys())
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
+    for (int id : m_devices.keys())
     {
         Device *dev = m_devices.value(id);
         if (dev)
             paths.insert(id, dev->m_mount);
     }
+#elif QT_VERSION < QT_VERSION_CHECK(5,15,0)
+    for (auto it = m_devices.constKeyValueBegin();
+         it != m_devices.constKeyValueEnd(); ++it)
+    {
+        if ((*it).second)
+            paths.insert((*it).first, (*it).second->m_mount);
+    }
+#else
+    for (auto it = m_devices.constKeyValueBegin();
+         it != m_devices.constKeyValueEnd(); ++it)
+    {
+        if (it->second)
+            paths.insert(it->first, it->second->m_mount);
+    }
+#endif
     return paths;
 }
 
@@ -259,12 +280,30 @@ StringMap DeviceManager::GetDeviceDirs() const
 QList<int> DeviceManager::GetAbsentees()
 {
     QList<int> absent;
-    foreach (int id, m_devices.keys())
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
+    for (int id : m_devices.keys())
     {
         Device *dev = m_devices.value(id);
         if (dev && !dev->isPresent())
             absent << id;
     }
+#elif QT_VERSION < QT_VERSION_CHECK(5,15,0)
+    for (auto it = m_devices.constKeyValueBegin();
+         it != m_devices.constKeyValueEnd(); it++)
+    {
+        Device *dev = (*it).second;
+        if (dev && !dev->isPresent())
+            absent << (*it).first;
+    }
+#else
+    for (auto it = m_devices.constKeyValueBegin();
+         it != m_devices.constKeyValueEnd(); it++)
+    {
+        Device *dev = it->second;
+        if (dev && !dev->isPresent())
+            absent << it->first;
+    }
+#endif
     return absent;
 }
 
@@ -278,7 +317,8 @@ ImageAdapterBase::ImageAdapterBase() :
 {
     // Generate glob list from supported extensions
     QStringList glob;
-    foreach (const QString &ext, m_imageFileExt + m_videoFileExt)
+    QStringList allExt = m_imageFileExt + m_videoFileExt;
+    for (const auto& ext : qAsConst(allExt))
         glob << "*." + ext;
 
     // Apply filters to only detect image files
@@ -299,7 +339,8 @@ QStringList ImageAdapterBase::SupportedImages()
 {
     // Determine supported picture formats from Qt
     QStringList formats;
-    foreach (const QByteArray &ext, QImageReader::supportedImageFormats())
+    QList<QByteArray> supported = QImageReader::supportedImageFormats();
+    for (const auto& ext : qAsConst(supported))
         formats << QString(ext);
     return formats;
 }
@@ -344,25 +385,16 @@ ImageItem *ImageAdapterLocal::CreateItem(const QFileInfo &fi, int parentId,
     if (parentId == GALLERY_DB_ID)
     {
         // Import devices show time of import, other devices show 'last scan time'
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-        im->m_date    = im->m_filePath.contains(IMPORTDIR)
-                ? fi.lastModified().toTime_t()
-                : QDateTime::currentMSecsSinceEpoch() / 1000;
-#else
-        im->m_date    = im->m_filePath.contains(IMPORTDIR)
+        auto secs     = im->m_filePath.contains(IMPORTDIR)
                 ? fi.lastModified().toSecsSinceEpoch()
                 : QDateTime::currentSecsSinceEpoch();
-#endif
+        im->m_date    = std::chrono::seconds(secs);
         im->m_modTime = im->m_date;
         im->m_type    = kDevice;
         return im;
     }
 
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-    im->m_modTime = fi.lastModified().toTime_t();
-#else
-    im->m_modTime = fi.lastModified().toSecsSinceEpoch();
-#endif
+    im->m_modTime = std::chrono::seconds(fi.lastModified().toSecsSinceEpoch());
 
     if (fi.isDir())
     {
@@ -420,18 +452,14 @@ ImageItem *ImageAdapterSg::CreateItem(const QFileInfo &fi, int parentId,
         // All SG dirs map to a single Db dir
         im->m_filePath = "";
         im->m_type     = kDevice;
-        im->m_date     = QDateTime::currentMSecsSinceEpoch() / 1000;
+        im->m_date     = std::chrono::seconds(QDateTime::currentSecsSinceEpoch());
         im->m_modTime  = im->m_date;
         return im;
     }
 
     // Strip SG path & leading / to leave a relative path
     im->m_filePath = fi.absoluteFilePath().mid(base.size() + 1);
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-    im->m_modTime  = fi.lastModified().toTime_t();
-#else
-    im->m_modTime  = fi.lastModified().toSecsSinceEpoch();
-#endif
+    im->m_modTime  = std::chrono::seconds(fi.lastModified().toSecsSinceEpoch());
 
     if (fi.isDir())
     {
@@ -475,7 +503,8 @@ StringMap ImageAdapterSg::GetScanDirs() const
 {
     StringMap map;
     int i = 0;
-    foreach (const QString &path, m_sg.GetDirList())
+    QStringList paths = m_sg.GetDirList();
+    for (const auto& path : qAsConst(paths))
         map.insert(i++, path);
     return map;
 }
@@ -519,10 +548,10 @@ ImageItem *ImageDb<FS>::CreateImage(const MSqlQuery &query) const
     im->m_baseName      = query.value(2).toString();
     im->m_parentId      = FS::ImageId(query.value(3).toInt());
     im->m_type          = query.value(4).toInt();
-    im->m_modTime       = query.value(5).toInt();
+    im->m_modTime       = std::chrono::seconds(query.value(5).toInt());
     im->m_size          = query.value(6).toInt();
     im->m_extension     = query.value(7).toString();
-    im->m_date          = query.value(8).toUInt();
+    im->m_date          = std::chrono::seconds(query.value(8).toUInt());
     im->m_isHidden      = query.value(9).toBool();
     im->m_orientation   = query.value(10).toInt();
     im->m_userThumbnail = FS::ImageId(query.value(11).toInt());
@@ -573,7 +602,7 @@ int ImageDb<FS>::GetImages(const QString &ids, ImageList &files, ImageList &dirs
  \return int Number of items matching query, -1 on SQL error
 */
 template <class FS>
-int ImageDb<FS>::GetChildren(QString ids, ImageList &files, ImageList &dirs,
+int ImageDb<FS>::GetChildren(const QString &ids, ImageList &files, ImageList &dirs,
                 const QString &refine) const
 {
     QString select = QString("dir_id IN (%1) %2").arg(FS::DbIds(ids), refine);
@@ -650,7 +679,7 @@ bool ImageDb<FS>::GetDescendants(const QString &ids,
                     "FROM %1 WHERE filename LIKE :PREFIX "
                     "ORDER BY depth;").arg(m_table);
 
-    foreach (const ImagePtr &im1, dirs)
+    for (const auto& im1 : qAsConst(dirs))
     {
         query.prepare(sql);
         query.bindValue(":PREFIX", im1->m_filePath + "/%");
@@ -689,7 +718,7 @@ bool ImageDb<FS>::GetImageTree(int id, ImageList &files, const QString &refine) 
     if (GetChildren(QString::number(id), files, dirs, refine) < 0)
         return false;
 
-    foreach (const ImagePtr &im, dirs)
+    for (const auto& im : qAsConst(dirs))
         if (!GetImageTree(im->m_id, files, refine))
             return false;
     return true;
@@ -804,12 +833,12 @@ int ImageDb<FS>::InsertDbImage(ImageItemK &im, bool checkForDuplicate) const
     query.bindValue(":FS",        im.m_device);
     query.bindValue(":PARENT",    FS::DbId(im.m_parentId));
     query.bindValue(":TYPE",      im.m_type);
-    query.bindValue(":MODTIME",   im.m_modTime);
+    query.bindValue(":MODTIME",   static_cast<qint64>(im.m_modTime.count()));
     query.bindValue(":SIZE",      im.m_size);
     query.bindValue(":EXTENSION", im.m_extension);
-    query.bindValue(":DATE",      im.m_date);
+    query.bindValue(":DATE",      static_cast<qint64>(im.m_date.count()));
     query.bindValue(":ORIENT",    im.m_orientation);
-    query.bindValue(":COMMENT",   im.m_comment.isNull() ? "" : im.m_comment);
+    query.bindValueNoNull(":COMMENT", im.m_comment);
     query.bindValue(":HIDDEN",    im.m_isHidden);
     query.bindValue(":COVER",     FS::DbId(im.m_userThumbnail));
 
@@ -845,15 +874,15 @@ bool ImageDb<FS>::UpdateDbImage(ImageItemK &im) const
     query.bindValue(":NAME",      FS::BaseNameOf(im.m_filePath));
     query.bindValue(":PARENT",    FS::DbId(im.m_parentId));
     query.bindValue(":TYPE",      im.m_type);
-    query.bindValue(":MODTIME",   im.m_modTime);
+    query.bindValue(":MODTIME",   static_cast<qint64>(im.m_modTime.count()));
     query.bindValue(":SIZE",      im.m_size);
     query.bindValue(":EXTENSION", im.m_extension);
-    query.bindValue(":DATE",      im.m_date);
+    query.bindValue(":DATE",      static_cast<qint64>(im.m_date.count()));
     query.bindValue(":FS",        im.m_device);
     query.bindValue(":HIDDEN",    im.m_isHidden);
     query.bindValue(":ORIENT",    im.m_orientation);
     query.bindValue(":COVER",     FS::DbId(im.m_userThumbnail));
-    query.bindValue(":COMMENT",   im.m_comment.isNull() ? "" : im.m_comment);
+    query.bindValueNoNull(":COMMENT", im.m_comment);
 
     if (query.exec())
         return true;
@@ -875,7 +904,7 @@ QStringList ImageDb<FS>::RemoveFromDB(const ImageList &imList) const
     QStringList ids;
     if (!imList.isEmpty())
     {
-        foreach (const ImagePtr &im, imList)
+        for (const auto& im : qAsConst(imList))
             ids << QString::number(FS::DbId(im->m_id));
 
         QString idents = ids.join(",");
@@ -900,7 +929,7 @@ QStringList ImageDb<FS>::RemoveFromDB(const ImageList &imList) const
  * \return bool False if db update failed
  */
 template <class FS>
-bool ImageDb<FS>::SetHidden(bool hide, QString ids) const
+bool ImageDb<FS>::SetHidden(bool hide, const QString &ids) const
 {
     if (ids.isEmpty())
         return false;
@@ -1027,7 +1056,7 @@ void ImageDb<FS>::GetDescendantCount(int id, bool all, int &dirs,
                           "       SUM(type =  :PIC)  AS Pics, "
                           "       SUM(type =  :VID)  AS Vids, "
                           "       SUM(size / 1024) "
-                          "FROM %2 %1;").arg(whereClause).arg(m_table));
+                          "FROM %2 %1;").arg(whereClause, m_table));
 
     query.bindValue(":FLDR", kDirectory);
     query.bindValue(":PIC",  kImageFile);
@@ -1078,7 +1107,7 @@ void ImageDbLocal::DropTable()
     MSqlQuery query(MSqlQuery::InitCon());
     query.prepare(QString("DROP TABLE IF EXISTS %1;").arg(m_table));
     if (query.exec())
-        m_DbExists = false;
+        m_dbExists = false;
     else
         MythDB::DBError(DBLOC, query);
 }
@@ -1089,7 +1118,7 @@ void ImageDbLocal::DropTable()
 */
 bool ImageDbLocal::CreateTable()
 {
-    if (m_DbExists)
+    if (m_dbExists)
         return true;
 
     MSqlQuery query(MSqlQuery::InitCon());
@@ -1102,7 +1131,7 @@ bool ImageDbLocal::CreateTable()
         query.prepare(QString("ALTER TABLE %1 ENGINE = MEMORY;").arg(m_table));
         if (query.exec())
         {
-            m_DbExists = true;
+            m_dbExists = true;
             LOG(VB_FILE, LOG_DEBUG, QString("Created Db table %1").arg(m_table));
             return true;
         }
@@ -1342,7 +1371,7 @@ QStringList ImageHandler<DBFS>::HandleDbCreate(QStringList defs) const
     // Create skeleton Db images using copied settings.
     // Scanner will update other attributes
     ImageItem im;
-    foreach (const QString &def, defs)
+    for (const auto& def : qAsConst(defs))
     {
         QStringList aDef = def.split(separator);
 
@@ -1407,7 +1436,7 @@ QStringList ImageHandler<DBFS>::HandleDbMove(const QString &ids,
         destPath.append("/");
 
     // Update path of images only. Scanner will repair parentId
-    foreach (const ImagePtr &im, images)
+    for (const auto& im : qAsConst(images))
     {
         QString old = im->m_filePath;
 
@@ -1440,7 +1469,7 @@ QStringList ImageHandler<DBFS>::HandleDbMove(const QString &ids,
     }
     HandleScanRequest("START");
 
-    RESULT_OK(QString("Moved %1 from %2 -> %3").arg(ids).arg(srcPath, destPath))
+    RESULT_OK(QString("Moved %1 from %2 -> %3").arg(ids, srcPath, destPath))
 }
 
 
@@ -1486,7 +1515,7 @@ QStringList ImageHandler<DBFS>::HandleTransform(int transform,
         RESULT_ERR("Image not found", QString("Images %1 not in Db").arg(ids))
 
     // Update db
-    foreach (ImagePtr im, files)
+    for (const auto& im : qAsConst(files))
     {
         int old           = im->m_orientation;
         im->m_orientation = Orientation(im->m_orientation).Transform(transform);
@@ -1540,7 +1569,7 @@ QStringList ImageHandler<DBFS>::HandleDirs(const QString &destId,
 
     QDir destDir(destPath);
     bool succeeded = false;
-    foreach (const QString &relPath, relPaths)
+    for (const auto& relPath : qAsConst(relPaths))
     {
         // Validate dir name
         if (relPath.isEmpty() || relPath.contains("..") || relPath.startsWith(QChar('/')))
@@ -1680,7 +1709,7 @@ QStringList ImageHandler<DBFS>::HandleCreateThumbnails
     ImageList dirs;
     DBFS::GetImages(message.at(1), files, dirs);
 
-    foreach (const ImagePtrK &im, files)
+    for (const auto& im : qAsConst(files))
         // notify clients when done; highest priority
         m_thumbGen->CreateThumbnail(im, priority, true);
 
@@ -1700,7 +1729,11 @@ QStringList ImageHandler<DBFS>::HandleCreateThumbnails
 template <class DBFS>
 void ImageHandler<DBFS>::RemoveFiles(ImageList &images) const
 {
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    QMutableVectorIterator<ImagePtr> it(images);
+#else
     QMutableListIterator<ImagePtr> it(images);
+#endif
     it.toBack();
     while (it.hasPrevious())
     {
@@ -1803,7 +1836,7 @@ int ImageDbReader::GetDirectory(int id, ImagePtr &parent,
     int count = 0;
     if (!ImageItem::IsLocalId(id))
         count = m_remote->GetDirectory(id, parent, files, dirs, m_refineClause);
-    if (m_DbExists && ImageItem::IsLocalParent(id))
+    if (m_dbExists && ImageItem::IsLocalParent(id))
         count += ImageHandler::GetDirectory(id, parent, files, dirs, m_refineClause);
 
     if (id == GALLERY_DB_ID)
@@ -1834,7 +1867,7 @@ int ImageDbReader::GetImages(const ImageIdList& ids,
 
     if (!lists.second.isEmpty())
         return m_remote->GetImages(lists.second, files, dirs, m_refineClause);
-    if (m_DbExists && !lists.first.isEmpty())
+    if (m_dbExists && !lists.first.isEmpty())
         return ImageHandler::GetImages(lists.first, files, dirs, m_refineClause);
     return 0;
 }
@@ -1853,7 +1886,7 @@ int ImageDbReader::GetChildren(int id, ImageList &files, ImageList &dirs) const
     if (!ImageItem::IsLocalId(id))
         count = m_remote->GetChildren(QString::number(id), files, dirs,
                                       m_refineClause);
-    if (m_DbExists && ImageItem::IsLocalParent(id))
+    if (m_dbExists && ImageItem::IsLocalParent(id))
         count += ImageHandler::GetChildren(QString::number(id), files, dirs,
                                            m_refineClause);
     return count;
@@ -1874,7 +1907,7 @@ void ImageDbReader::GetDescendants(const ImageIdList &ids,
 
     if (!lists.second.isEmpty())
         m_remote->GetDescendants(lists.second, files, dirs);
-    if (m_DbExists && !lists.first.isEmpty())
+    if (m_dbExists && !lists.first.isEmpty())
         ImageHandler::GetDescendants(lists.first, files, dirs);
 }
 
@@ -1889,7 +1922,7 @@ void ImageDbReader::GetImageTree(int id, ImageList &files) const
 {
     if (!ImageItem::IsLocalId(id))
         m_remote->GetImageTree(id, files, m_refineClause);
-    if (m_DbExists && ImageItem::IsLocalParent(id))
+    if (m_dbExists && ImageItem::IsLocalParent(id))
         ImageHandler::GetImageTree(id, files, m_refineClause);
 }
 
@@ -1909,7 +1942,7 @@ void ImageDbReader::GetDescendantCount(int id, int &dirs, int &pics,
     {
         // Sum both unfiltered tables
         m_remote->GetDescendantCount(id, true, dirs, pics, videos, sizeKb);
-        if (m_DbExists)
+        if (m_dbExists)
             ImageHandler::GetDescendantCount(id, true, dirs, pics, videos, sizeKb);
     }
     else if (!ImageItem::IsLocalId(id))
@@ -1918,7 +1951,7 @@ void ImageDbReader::GetDescendantCount(int id, int &dirs, int &pics,
         m_remote->GetDescendantCount(id, id == PHOTO_DB_ID,
                                      dirs, pics, videos, sizeKb);
     }
-    else if (m_DbExists)
+    else if (m_dbExists)
     {
         // Always filter on device/dir
         ImageHandler::GetDescendantCount(id, false, dirs, pics, videos, sizeKb);
@@ -1984,7 +2017,7 @@ void ImageManagerFe::CreateThumbnails(const ImageIdList &ids, bool forFolder)
             .arg(lists.second).arg(forFolder));
 
         QStringList message;
-        message << QString::number(forFolder) << lists.second;
+        message << QString::number(static_cast<int>(forFolder)) << lists.second;
         gCoreContext->SendEvent(MythEvent("CREATE_THUMBNAILS", message));
     }
 
@@ -1995,7 +2028,7 @@ void ImageManagerFe::CreateThumbnails(const ImageIdList &ids, bool forFolder)
             .arg(lists.first).arg(forFolder));
 
         QStringList message;
-        message << QString::number(forFolder) << lists.first;
+        message << QString::number(static_cast<int>(forFolder)) << lists.first;
         HandleCreateThumbnails(message);
     }
 }
@@ -2062,7 +2095,7 @@ QString ImageManagerFe::HideFiles(bool hidden, const ImageIdList &ids)
     if (!lists.second.isEmpty())
     {
         QStringList message;
-        message << "IMAGE_HIDE" << QString::number(hidden) << lists.second;
+        message << "IMAGE_HIDE" << QString::number(static_cast<int>(hidden)) << lists.second;
 
         if (!gCoreContext->SendReceiveStringList(message, true))
             result = message[1];
@@ -2183,7 +2216,7 @@ QString ImageManagerFe::MakeDir(int parent, const QStringList &names, bool resca
     if (!ImageItem::IsLocalId(parent))
     {
         QStringList message("IMAGE_CREATE_DIRS");
-        message << destId << QString::number(rescan) << names;
+        message << destId << QString::number(static_cast<int>(rescan)) << names;
         bool ok = gCoreContext->SendReceiveStringList(message, true);
         return ok ? "" : message[1];
     }
@@ -2227,7 +2260,7 @@ QString ImageManagerFe::CreateImages(int destId, const ImageListK &images)
     const QString seperator("...");
     QStringList imageDefs(seperator);
     ImageIdList ids;
-    foreach (const ImagePtrK &im, images)
+    for (const auto& im : qAsConst(images))
     {
         ids << im->m_id;
 
@@ -2236,7 +2269,7 @@ QString ImageManagerFe::CreateImages(int destId, const ImageListK &images)
         aDef << QString::number(im->m_id)
              << QString::number(im->m_type)
              << im->m_filePath
-             << QString::number(im->m_isHidden)
+             << QString::number(static_cast<int>(im->m_isHidden))
              << QString::number(im->m_orientation)
              << QString::number(im->m_userThumbnail);
 
@@ -2266,7 +2299,7 @@ QString ImageManagerFe::MoveDbImages(const ImagePtrK& destDir, ImageListK &image
                                      const QString &srcPath)
 {
     QStringList idents;
-    foreach (const ImagePtrK &im, images)
+    for (const auto& im : qAsConst(images))
         idents << QString::number(im->m_id);
 
     // Images are either all local or all remote
@@ -2324,14 +2357,10 @@ QString ImageManagerFe::LongDateOf(const ImagePtrK& im)
     if (im->m_id == GALLERY_DB_ID)
         return "";
 
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-    uint secs = 0;
-#else
-    qint64 secs = 0;
-#endif
+    std::chrono::seconds secs = 0s;
     uint format = MythDate::kDateFull | MythDate::kAddYear;
 
-    if (im->m_date > 0)
+    if (im->m_date > 0s)
     {
         secs = im->m_date;
         format |= MythDate::kTime;
@@ -2339,11 +2368,7 @@ QString ImageManagerFe::LongDateOf(const ImagePtrK& im)
     else
         secs = im->m_modTime;
 
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-    return MythDate::toString(QDateTime::fromTime_t(secs), format);
-#else
-    return MythDate::toString(QDateTime::fromSecsSinceEpoch(secs), format);
-#endif
+    return MythDate::toString(QDateTime::fromSecsSinceEpoch(secs.count()), format);
 }
 
 
@@ -2358,13 +2383,8 @@ QString ImageManagerFe::ShortDateOf(const ImagePtrK& im) const
     if (im->m_id == GALLERY_DB_ID)
         return "";
 
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-    uint secs(im->m_date > 0 ? im->m_date : im->m_modTime);
-    return QDateTime::fromTime_t(secs).date().toString(m_dateFormat);
-#else
-    qint64 secs(im->m_date > 0 ? im->m_date : im->m_modTime);
-    return QDateTime::fromSecsSinceEpoch(secs).date().toString(m_dateFormat);
-#endif
+    std::chrono::seconds secs(im->m_date > 0s ? im->m_date : im->m_modTime);
+    return QDateTime::fromSecsSinceEpoch(secs.count()).date().toString(m_dateFormat);
 }
 
 
@@ -2435,7 +2455,7 @@ bool ImageManagerFe::DetectLocalDevices()
     QList<MythMediaDevice*> devices
             = monitor->GetMedias(MEDIATYPE_DATA | MEDIATYPE_MGALLERY);
 
-    foreach (MythMediaDevice* dev, devices)
+    for (auto *dev : qAsConst(devices))
     {
         if (monitor->ValidateAndLock(dev) && dev->isUsable())
             OpenDevice(dev->getDeviceModel(), dev->getMountPath(), dev);
@@ -2446,7 +2466,8 @@ bool ImageManagerFe::DetectLocalDevices()
     if (DeviceCount() > 0)
     {
         // Close devices that are no longer present
-        foreach (int devId, GetAbsentees())
+        QList absentees = GetAbsentees();
+        for (int devId : qAsConst(absentees))
             CloseDevices(devId);
 
         // Start local scan

@@ -58,8 +58,11 @@ void FillProgramInfo( DTC::Program *pProgram,
     pProgram->setCatType   (  pInfo->GetCategoryTypeString());
     pProgram->setRepeat    (  pInfo->IsRepeat()             );
     pProgram->setVideoProps(  pInfo->GetVideoProperties()   );
+    pProgram->setVideoPropNames( pInfo->GetVideoPropertyNames() );
     pProgram->setAudioProps(  pInfo->GetAudioProperties()   );
+    pProgram->setAudioPropNames( pInfo->GetAudioPropertyNames() );
     pProgram->setSubProps  (  pInfo->GetSubtitleType()      );
+    pProgram->setSubPropNames( pInfo->GetSubtitleTypeNames() );
 
     pProgram->setSerializeDetails( bDetails );
 
@@ -70,6 +73,7 @@ void FillProgramInfo( DTC::Program *pProgram,
         pProgram->setStars       ( pInfo->GetStars()            );
         pProgram->setLastModified( pInfo->GetLastModifiedTime() );
         pProgram->setProgramFlags( pInfo->GetProgramFlags()     );
+        pProgram->setProgramFlagNames( pInfo->GetProgramFlagNames() );
 
         // ----
         // DEPRECATED - See RecordingInfo instead
@@ -200,7 +204,9 @@ bool FillChannelInfo( DTC::ChannelInfo *pChannel,
     }
     pChannel->setChannelName(channelInfo.m_name);
     pChannel->setVisible(channelInfo.m_visible > kChannelNotVisible);
-    pChannel->setExtendedVisible(toRawString(channelInfo.m_visible));
+    #ifndef _WIN32 // Needs fixing for Windows
+        pChannel->setExtendedVisible(toRawString(channelInfo.m_visible));
+    #endif
 
     pChannel->setSerializeDetails( bDetails );
 
@@ -331,9 +337,7 @@ void FillArtworkInfoList( DTC::ArtworkInfoList *pArtworkInfoList,
                           uint                  nSeason )
 {
     ArtworkMap map = GetArtwork(sInetref, nSeason);
-
-    for (ArtworkMap::const_iterator i = map.begin();
-         i != map.end(); ++i)
+    for (auto i = map.cbegin(); i != map.cend(); ++i)
     {
         DTC::ArtworkInfo *pArtInfo = pArtworkInfoList->AddNewArtworkInfo();
         pArtInfo->setFileName(i.value().url);
@@ -343,23 +347,29 @@ void FillArtworkInfoList( DTC::ArtworkInfoList *pArtworkInfoList,
                 pArtInfo->setStorageGroup("Fanart");
                 pArtInfo->setType("fanart");
                 pArtInfo->setURL(QString("/Content/GetImageFile?StorageGroup=%1"
-                              "&FileName=%2").arg("Fanart")
-                              .arg(QUrl(i.value().url).path()));
+                    "&FileName=%2")
+                    .arg("Fanart",
+                         QString(QUrl::toPercentEncoding(
+                            QUrl(i.value().url).path()))));
                 break;
             case kArtworkBanner:
                 pArtInfo->setStorageGroup("Banners");
                 pArtInfo->setType("banner");
                 pArtInfo->setURL(QString("/Content/GetImageFile?StorageGroup=%1"
-                              "&FileName=%2").arg("Banners")
-                              .arg(QUrl(i.value().url).path()));
+                    "&FileName=%2")
+                    .arg("Banners",
+                         QString(QUrl::toPercentEncoding(
+                            QUrl(i.value().url).path()))));
                 break;
             case kArtworkCoverart:
             default:
                 pArtInfo->setStorageGroup("Coverart");
                 pArtInfo->setType("coverart");
                 pArtInfo->setURL(QString("/Content/GetImageFile?StorageGroup=%1"
-                              "&FileName=%2").arg("Coverart")
-                              .arg(QUrl(i.value().url).path()));
+                    "&FileName=%2")
+                    .arg("Coverart",
+                         QString(QUrl::toPercentEncoding(
+                            QUrl(i.value().url).path()))));
                 break;
         }
     }
@@ -420,7 +430,7 @@ void FillVideoMetadataInfo (
                   QTime(0,0),Qt::LocalTime).toUTC());
     pVideoMetadataInfo->setUserRating(pMetadata->GetUserRating());
     pVideoMetadataInfo->setChildID(pMetadata->GetChildID());
-    pVideoMetadataInfo->setLength(pMetadata->GetLength());
+    pVideoMetadataInfo->setLength(pMetadata->GetLength().count());
     pVideoMetadataInfo->setPlayCount(pMetadata->GetPlayCount());
     pVideoMetadataInfo->setSeason(pMetadata->GetSeason());
     pVideoMetadataInfo->setEpisode(pMetadata->GetEpisode());
@@ -449,8 +459,10 @@ void FillVideoMetadataInfo (
             pArtInfo->setStorageGroup("Fanart");
             pArtInfo->setType("fanart");
             pArtInfo->setURL(QString("/Content/GetImageFile?StorageGroup=%1"
-                              "&FileName=%2").arg("Fanart")
-                              .arg(pMetadata->GetFanart()));
+                      "&FileName=%2")
+                      .arg("Fanart",
+                           QString(
+                           QUrl::toPercentEncoding(pMetadata->GetFanart()))));
         }
         if (!pMetadata->GetCoverFile().isEmpty())
         {
@@ -459,8 +471,10 @@ void FillVideoMetadataInfo (
             pArtInfo->setStorageGroup("Coverart");
             pArtInfo->setType("coverart");
             pArtInfo->setURL(QString("/Content/GetImageFile?StorageGroup=%1"
-                              "&FileName=%2").arg("Coverart")
-                              .arg(pMetadata->GetCoverFile()));
+                      "&FileName=%2")
+                      .arg("Coverart",
+                           QString(
+                           QUrl::toPercentEncoding(pMetadata->GetCoverFile()))));
         }
         if (!pMetadata->GetBanner().isEmpty())
         {
@@ -469,8 +483,10 @@ void FillVideoMetadataInfo (
             pArtInfo->setStorageGroup("Banners");
             pArtInfo->setType("banner");
             pArtInfo->setURL(QString("/Content/GetImageFile?StorageGroup=%1"
-                              "&FileName=%2").arg("Banners")
-                              .arg(pMetadata->GetBanner()));
+                      "&FileName=%2")
+                      .arg("Banners",
+                           QString(
+                           QUrl::toPercentEncoding(pMetadata->GetBanner()))));
         }
         if (!pMetadata->GetScreenshot().isEmpty())
         {
@@ -479,8 +495,10 @@ void FillVideoMetadataInfo (
             pArtInfo->setStorageGroup("Screenshots");
             pArtInfo->setType("screenshot");
             pArtInfo->setURL(QString("/Content/GetImageFile?StorageGroup=%1"
-                              "&FileName=%2").arg("Screenshots")
-                              .arg(pMetadata->GetScreenshot()));
+                      "&FileName=%2")
+                      .arg("Screenshots",
+                           QString(
+                           QUrl::toPercentEncoding(pMetadata->GetScreenshot()))));
         }
     }
 
@@ -503,7 +521,7 @@ void FillMusicMetadataInfo (DTC::MusicMetadataInfo *pVideoMetadataInfo,
     pVideoMetadataInfo->setGenre(pMetadata->Genre());
     pVideoMetadataInfo->setYear(pMetadata->Year());
     pVideoMetadataInfo->setPlayCount(pMetadata->PlayCount());
-    pVideoMetadataInfo->setLength(pMetadata->Length());
+    pVideoMetadataInfo->setLength(pMetadata->Length().count());
     pVideoMetadataInfo->setRating(pMetadata->Rating());
     pVideoMetadataInfo->setFileName(pMetadata->Filename());
     pVideoMetadataInfo->setHostName(pMetadata->Hostname());
@@ -544,23 +562,23 @@ void FillCastMemberList(DTC::CastMemberList* pCastMemberList,
         return;
 
     MSqlQuery query(MSqlQuery::InitCon());
+
+    QString table;
     if (pInfo->GetFilesize() > 0) // FIXME: This shouldn't be the way to determine what is or isn't a recording!
-    {
-        query.prepare("SELECT role, people.name FROM recordedcredits"
-                        " AS credits"
-                        " LEFT JOIN people ON credits.person = people.person"
-                        " WHERE credits.chanid = :CHANID"
-                        " AND credits.starttime = :STARTTIME"
-                        " ORDER BY role;");
-    }
+        table = "recordedcredits";
     else
-    {
-        query.prepare("SELECT role, people.name FROM credits"
-                        " LEFT JOIN people ON credits.person = people.person"
-                        " WHERE credits.chanid = :CHANID"
-                        " AND credits.starttime = :STARTTIME"
-                        " ORDER BY role;");
-    }
+        table = "credits";
+
+    query.prepare(QString("SELECT role, people.name, roles.name FROM %1"
+                          " AS credits"
+                          " LEFT JOIN people ON"
+                          "  credits.person = people.person"
+                          " LEFT JOIN roles ON"
+                          "  credits.roleid = roles.roleid"
+                          " WHERE credits.chanid = :CHANID"
+                          " AND credits.starttime = :STARTTIME"
+                          " ORDER BY role, priority;").arg(table));
+
     query.bindValue(":CHANID",    pInfo->GetChanID());
     query.bindValue(":STARTTIME", pInfo->GetScheduledStartTime());
 
@@ -602,8 +620,9 @@ void FillCastMemberList(DTC::CastMemberList* pCastMemberList,
                 * reverse.
                 */
             pCastMember->setName(QString::fromUtf8(query.value(1)
-                                        .toByteArray().constData()));
-
+                                                   .toByteArray().constData()));
+            pCastMember->setCharacterName(QString::fromUtf8(query.value(2)
+                                                   .toByteArray().constData()));
         }
     }
 
@@ -624,7 +643,7 @@ void FillCutList(DTC::CutList* pCutList, RecordingInfo* rInfo, int marktype)
     {
         rInfo->QueryCutList(markMap);
 
-        for (it = markMap.begin(); it != markMap.end(); ++it)
+        for (it = markMap.cbegin(); it != markMap.cend(); ++it)
         {
             bool isend = (*it) == MARK_CUT_END || (*it) == MARK_COMM_END;
             if (marktype == 0)
@@ -670,7 +689,7 @@ void FillCommBreak(DTC::CutList* pCutList, RecordingInfo* rInfo, int marktype)
     {
         rInfo->QueryCommBreakList(markMap);
 
-        for (it = markMap.begin(); it != markMap.end(); ++it)
+        for (it = markMap.cbegin(); it != markMap.cend(); ++it)
         {
             bool isend = (*it) == MARK_CUT_END || (*it) == MARK_COMM_END;
             if (marktype == 0)
@@ -716,11 +735,51 @@ void FillSeek(DTC::CutList* pCutList, RecordingInfo* rInfo, MarkTypes marktype)
     {
         rInfo->QueryPositionMap(markMap, marktype);
 
-        for (it = markMap.begin(); it != markMap.end(); ++it)
+        for (it = markMap.cbegin(); it != markMap.cend(); ++it)
         {
             DTC::Cutting *pCutting = pCutList->AddNewCutting();
             pCutting->setMark(it.key());
             pCutting->setOffset(it.value());
         }
     }
+}
+
+int CreateRecordingGroup(const QString& groupName)
+{
+    int groupID = -1;
+    MSqlQuery query(MSqlQuery::InitCon());
+
+    query.prepare("INSERT INTO recgroups SET recgroup = :NAME, "
+                  "displayname = :DISPLAYNAME");
+    query.bindValue(":NAME", groupName);
+    query.bindValue(":DISPLAYNAME", groupName);
+
+    if (query.exec())
+        groupID = query.lastInsertId().toInt();
+
+    if (groupID <= 0)
+        LOG(VB_GENERAL, LOG_ERR, QString("Could not create recording group (%1). "
+                                         "Does it already exist?").arg(groupName));
+
+    return groupID;
+}
+
+DBCredits * jsonCastToCredits(const QJsonObject &cast)
+{
+    int priority = 1;
+    auto* credits = new DBCredits;
+
+    QJsonArray members = cast["CastMembers"].toArray();
+    for (const auto & m : members)
+    {
+        QJsonObject actor     = m.toObject();
+        QString     name      = actor.value("Name").toString("");
+        QString     character = actor.value("CharacterName").toString("");
+        QString     role      = actor.value("Role").toString("");
+
+        credits->push_back(DBPerson(role, name, priority, character));
+        ++priority;
+    }
+
+    return credits;
 }

@@ -11,7 +11,7 @@
 
 DatabaseSettings::DatabaseSettings(const QString &DBhostOverride)
 {
-    m_DBhostOverride = DBhostOverride;
+    m_dbHostOverride = DBhostOverride;
 
     setLabel(DatabaseSettings::tr("Database Configuration"));
 
@@ -153,7 +153,7 @@ void DatabaseSettings::Load(void)
     if (params.m_dbHostName.isEmpty())
     {
         m_dbHostName->setLabel("* " + m_dbHostName->getLabel());
-        m_dbHostName->setValue(m_DBhostOverride);
+        m_dbHostName->setValue(m_dbHostOverride);
     }
     else
         m_dbHostName->setValue(params.m_dbHostName);
@@ -177,7 +177,7 @@ void DatabaseSettings::Load(void)
     m_localHostName->setValue(params.m_localHostName);
 
     m_wolEnabled->setValue(params.m_wolEnabled);
-    m_wolReconnect->setValue(params.m_wolReconnect);
+    m_wolReconnect->setValue(params.m_wolReconnect.count());
     m_wolRetry->setValue(params.m_wolRetry);
     m_wolCommand->setValue(params.m_wolCommand);
     //set all the children's m_haveChanged to false
@@ -199,7 +199,7 @@ void DatabaseSettings::Save(void)
     params.m_localHostName = m_localHostName->getValue();
 
     params.m_wolEnabled = m_wolEnabled->boolValue();
-    params.m_wolReconnect = m_wolReconnect->intValue();
+    params.m_wolReconnect = std::chrono::seconds(m_wolReconnect->intValue());
     params.m_wolRetry = m_wolRetry->intValue();
     params.m_wolCommand = m_wolCommand->getValue();
 

@@ -6,12 +6,12 @@
 //                                                                            
 // Copyright (c) 2007 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __UPNPTASKCACHE_H__
-#define __UPNPTASKCACHE_H__
+#ifndef UPNPTASKCACHE_H
+#define UPNPTASKCACHE_H
 
 #include <QString>
 
@@ -30,8 +30,8 @@ class SSDPCacheTask : public Task
 {
     protected:
 
-        int     m_nInterval;        // Number of ms between executing.
-        int     m_nExecuteCount;    // Used for debugging.
+        std::chrono::milliseconds m_nInterval     {30s}; // Number of ms between executing.
+        int                       m_nExecuteCount {0};   // Used for debugging.
 
         // Destructor protected to force use of Release Method
 
@@ -42,8 +42,9 @@ class SSDPCacheTask : public Task
         SSDPCacheTask() : Task("SSDPCacheTask")
         {
             m_nExecuteCount = 0;
-            m_nInterval     = 1000 *
-              UPnp::GetConfiguration()->GetValue("UPnP/SSDP/CacheInterval", 30);
+            m_nInterval     = 30s;
+// TODO: Rework when separating upnp/ssdp stack
+//                gCoreContext->GetConfiguration()->GetDuration<std::chrono::seconds>("UPnP/SSDP/CacheInterval", 30s);
         }
 
         QString Name() override // Task
@@ -72,4 +73,4 @@ class SSDPCacheTask : public Task
 
 };
 
-#endif
+#endif // UPNPTASKCACHE_H

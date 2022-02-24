@@ -6,12 +6,12 @@
 //
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __UPNPTASKNOTIFY_H__
-#define __UPNPTASKNOTIFY_H__
+#ifndef UPNPTASKNOTIFY_H
+#define UPNPTASKNOTIFY_H
 
 // POSIX headers
 #include <sys/types.h>
@@ -57,7 +57,7 @@ class UPnpNotifyTask : public Task
 
         QString         m_sMasterIP;
         int             m_nServicePort;
-        int             m_nMaxAge       {3600};
+        std::chrono::seconds m_nMaxAge  {1h};
 
         UPnpNotifyNTS   m_eNTS          {NTS_alive};
 
@@ -116,4 +116,4 @@ class UPnpNotifyTask : public Task
 };
 
 
-#endif
+#endif // UPNPTASKNOTIFY_H

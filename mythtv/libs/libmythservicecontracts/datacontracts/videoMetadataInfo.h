@@ -5,7 +5,7 @@
 // Copyright (c) 2010 Robert McNamara <rmcnamara@mythtv.org>
 // Copyright (c) 2013 Stuart Morgan   <smorgan@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -64,23 +64,23 @@ class SERVICE_PUBLIC VideoMetadataInfo : public QObject
     Q_PROPERTY( QString         Screenshot      READ Screenshot       WRITE setScreenshot     )
     Q_PROPERTY( QString         Trailer         READ Trailer          WRITE setTrailer        )
 
-    Q_PROPERTY( QObject*        Artwork         READ Artwork     DESIGNABLE SerializeArtwork  )
-    Q_PROPERTY( QObject*        Cast            READ Cast        DESIGNABLE SerializeCast     )
-    Q_PROPERTY( QObject*        Genres          READ Genres      DESIGNABLE SerializeGenres   )
+    Q_PROPERTY( QObject*        Artwork         READ Artwork     )
+    Q_PROPERTY( QObject*        Cast            READ Cast        )
+    Q_PROPERTY( QObject*        Genres          READ Genres      )
 
     PROPERTYIMP    ( int        , Id             )
-    PROPERTYIMP    ( QString    , Title          )
-    PROPERTYIMP    ( QString    , SubTitle       )
-    PROPERTYIMP    ( QString    , Tagline        )
-    PROPERTYIMP    ( QString    , Director       )
-    PROPERTYIMP    ( QString    , Studio         )
-    PROPERTYIMP    ( QString    , Description    )
-    PROPERTYIMP    ( QString    , Certification  )
-    PROPERTYIMP    ( QString    , Inetref        )
+    PROPERTYIMP_REF( QString    , Title          )
+    PROPERTYIMP_REF( QString    , SubTitle       )
+    PROPERTYIMP_REF( QString    , Tagline        )
+    PROPERTYIMP_REF( QString    , Director       )
+    PROPERTYIMP_REF( QString    , Studio         )
+    PROPERTYIMP_REF( QString    , Description    )
+    PROPERTYIMP_REF( QString    , Certification  )
+    PROPERTYIMP_REF( QString    , Inetref        )
     PROPERTYIMP    ( int        , Collectionref  )
-    PROPERTYIMP    ( QString    , HomePage       )
-    PROPERTYIMP    ( QDateTime  , ReleaseDate    )
-    PROPERTYIMP    ( QDateTime  , AddDate        )
+    PROPERTYIMP_REF( QString    , HomePage       )
+    PROPERTYIMP_REF( QDateTime  , ReleaseDate    )
+    PROPERTYIMP_REF( QDateTime  , AddDate        )
     PROPERTYIMP    ( float      , UserRating     )
     PROPERTYIMP    ( int        , ChildID        )
     PROPERTYIMP    ( int        , Length         )
@@ -91,15 +91,15 @@ class SERVICE_PUBLIC VideoMetadataInfo : public QObject
     PROPERTYIMP    ( bool       , Visible        )
     PROPERTYIMP    ( bool       , Watched        )
     PROPERTYIMP    ( bool       , Processed      )
-    PROPERTYIMP    ( QString    , ContentType    )
-    PROPERTYIMP    ( QString    , FileName       )
-    PROPERTYIMP    ( QString    , Hash           )
-    PROPERTYIMP    ( QString    , HostName       )
-    PROPERTYIMP    ( QString    , Coverart       )
-    PROPERTYIMP    ( QString    , Fanart         )
-    PROPERTYIMP    ( QString    , Banner         )
-    PROPERTYIMP    ( QString    , Screenshot     )
-    PROPERTYIMP    ( QString    , Trailer        )
+    PROPERTYIMP_REF( QString    , ContentType    )
+    PROPERTYIMP_REF( QString    , FileName       )
+    PROPERTYIMP_REF( QString    , Hash           )
+    PROPERTYIMP_REF( QString    , HostName       )
+    PROPERTYIMP_REF( QString    , Coverart       )
+    PROPERTYIMP_REF( QString    , Fanart         )
+    PROPERTYIMP_REF( QString    , Banner         )
+    PROPERTYIMP_REF( QString    , Screenshot     )
+    PROPERTYIMP_REF( QString    , Trailer        )
 
     PROPERTYIMP_PTR( ArtworkInfoList , Artwork   )
     PROPERTYIMP_PTR( CastMemberList  , Cast      )
@@ -162,13 +162,13 @@ inline void VideoMetadataInfo::InitializeCustomTypes()
 {
     qRegisterMetaType< VideoMetadataInfo* >();
 
-    if (QMetaType::type( "DTC::ArtworkInfoList*" ) == 0)
+    if (qMetaTypeId<DTC::ArtworkInfoList*>() == QMetaType::UnknownType)
         ArtworkInfoList::InitializeCustomTypes();
 
-    if (QMetaType::type( "DTC::CastMemberList*" ) == 0)
+    if (qMetaTypeId<DTC::CastMemberList*>() == QMetaType::UnknownType)
         CastMemberList::InitializeCustomTypes();
 
-    if (QMetaType::type( "DTC::GenreMemberList*" ) == 0)
+    if (qMetaTypeId<DTC::GenreList*>() == QMetaType::UnknownType)
         GenreList::InitializeCustomTypes();
 }
 

@@ -6,14 +6,12 @@
 #include <QPainter>
 
 // MythTV
-#include "mythmainwindow_internal.h"
+#include "mythmainwindow.h"
 #include "mythrenderopengl.h"
 #include "mythpainteropengl.h"
 
-using namespace std;
-
-MythOpenGLPainter::MythOpenGLPainter(MythRenderOpenGL *Render, QWidget *Parent)
-  : m_parent(Parent),
+MythOpenGLPainter::MythOpenGLPainter(MythRenderOpenGL* Render, MythMainWindow* Parent)
+  : MythPainterGPU(Parent),
     m_render(Render)
 {
     m_mappedTextures.reserve(MAX_BUFFER_POOL);
@@ -61,6 +59,10 @@ void MythOpenGLPainter::FreeResources(void)
         }
         m_mappedBufferPoolReady = false;
     }
+    for (auto * proc : qAsConst(m_procedurals))
+        delete proc;
+    m_procedurals.clear();
+    MythPainterGPU::FreeResources();
 }
 
 void MythOpenGLPainter::DeleteTextures(void)
@@ -68,7 +70,7 @@ void MythOpenGLPainter::DeleteTextures(void)
     if (!m_render || m_textureDeleteList.empty())
         return;
 
-    QMutexLocker gllocker(&m_textureDeleteLock);
+    QMutexLocker gllocker(&m_imageAndTextureLock);
     OpenGLLocker locker(m_render);
     while (!m_textureDeleteList.empty())
     {
@@ -83,13 +85,13 @@ void MythOpenGLPainter::ClearCache(void)
 {
     LOG(VB_GENERAL, LOG_INFO, "Clearing OpenGL painter cache.");
 
-    QMutexLocker locker(&m_textureDeleteLock);
+    QMutexLocker locker(&m_imageAndTextureLock);
     QMapIterator<MythImage *, MythGLTexture*> it(m_imageToTextureMap);
     while (it.hasNext())
     {
         it.next();
         m_textureDeleteList.push_back(m_imageToTextureMap[it.key()]);
-        m_ImageExpireList.remove(it.key());
+        m_imageExpireList.remove(it.key());
     }
     m_imageToTextureMap.clear();
 }
@@ -103,16 +105,10 @@ void MythOpenGLPainter::CurrentDPIChanged(qreal DPI)
 
 void MythOpenGLPainter::Begin(QPaintDevice *Parent)
 {
-    MythPainter::Begin(Parent);
+    MythPainterGPU::Begin(Parent);
 
-    if (!m_parent)
-    {
-        m_parent = dynamic_cast<QWidget *>(Parent);
-        if (!m_parent)
-            return;
-    }
-
-    if (!m_render)
+    m_frameTime = QTime::currentTime().msecsSinceStartOfDay();
+    if (!(m_render && m_parent))
     {
         LOG(VB_GENERAL, LOG_ERR, "FATAL ERROR: No render device in 'Begin'");
         return;
@@ -122,8 +118,8 @@ void MythOpenGLPainter::Begin(QPaintDevice *Parent)
     {
         m_mappedBufferPoolReady = true;
         // initialise the VBO pool
-        for (auto & buf : m_mappedBufferPool)
-            buf = m_render->CreateVBO(static_cast<int>(MythRenderOpenGL::kVertexSize));
+        std::generate(m_mappedBufferPool.begin(), m_mappedBufferPool.end(),
+            [&]() { return m_render->CreateVBO(static_cast<int>(MythRenderOpenGL::kVertexSize)); });
     }
 
     QSize currentsize = m_parent->size();
@@ -149,14 +145,16 @@ void MythOpenGLPainter::Begin(QPaintDevice *Parent)
     DeleteTextures();
     m_render->makeCurrent();
 
-    if (m_target || m_viewControl.testFlag(Framebuffer))
+    // If master (have complete swap control) then bind default framebuffer and clear
+    if (m_viewControl.testFlag(Framebuffer))
     {
-        m_render->BindFramebuffer(m_target);
-        m_render->SetBackground(0, 0, 0, 0);
+        m_render->BindFramebuffer(nullptr);
+        m_render->SetBackground(0, 0, 0, 255);
         m_render->ClearFramebuffer();
     }
 
-    if (m_target || m_viewControl.testFlag(Viewport))
+    // If we have viewport control, set as needed.
+    if (m_viewControl.testFlag(Viewport))
     {
         // If using high DPI then scale the viewport
         if (m_usingHighDPI)
@@ -175,7 +173,7 @@ void MythOpenGLPainter::End(void)
 
     if (VERBOSE_LEVEL_CHECK(VB_GPU, LOG_INFO))
         m_render->logDebugMarker("PAINTER_FRAME_END");
-    if (m_target == nullptr && m_viewControl.testFlag(Framebuffer))
+    if (m_viewControl.testFlag(Framebuffer))
     {
         m_render->Flush();
         m_render->swapBuffers();
@@ -183,7 +181,7 @@ void MythOpenGLPainter::End(void)
     m_render->doneCurrent();
 
     m_mappedTextures.clear();
-    MythPainter::End();
+    MythPainterGPU::End();
 }
 
 MythGLTexture* MythOpenGLPainter::GetTextureFromCache(MythImage *Image)
@@ -191,28 +189,31 @@ MythGLTexture* MythOpenGLPainter::GetTextureFromCache(MythImage *Image)
     if (!m_render)
         return nullptr;
 
+    QMutexLocker locker(&m_imageAndTextureLock);
     if (m_imageToTextureMap.contains(Image))
     {
         if (!Image->IsChanged())
         {
-            m_ImageExpireList.remove(Image);
-            m_ImageExpireList.push_back(Image);
+            m_imageExpireList.remove(Image);
+            m_imageExpireList.push_back(Image);
             return m_imageToTextureMap[Image];
         }
         DeleteFormatImagePriv(Image);
     }
+    locker.unlock();
 
     Image->SetChanged(false);
 
-    MythGLTexture *texture = nullptr;
-    for (;;)
+    int count = 0;
+    MythGLTexture* texture = nullptr;
+    while (texture == nullptr)
     {
         texture = m_render->CreateTextureFromQImage(Image);
-        if (texture)
+        if (texture != nullptr)
             break;
 
         // This can happen if the cached textures are too big for GPU memory
-        if (m_hardwareCacheSize <= 8 * 1024 * 1024)
+        if ((count++ > 1000) || (m_hardwareCacheSize <= 8 * 1024 * 1024))
         {
             LOG(VB_GENERAL, LOG_ERR, "Failed to create OpenGL texture.");
             return nullptr;
@@ -220,28 +221,30 @@ MythGLTexture* MythOpenGLPainter::GetTextureFromCache(MythImage *Image)
 
         // Shrink the cache size
         m_maxHardwareCacheSize = (3 * m_hardwareCacheSize) / 4;
-        LOG(VB_GENERAL, LOG_NOTICE, QString(
-                "Shrinking UIPainterMaxCacheHW to %1KB")
+        LOG(VB_GENERAL, LOG_NOTICE, QString("Shrinking UIPainterMaxCacheHW to %1KB")
             .arg(m_maxHardwareCacheSize / 1024));
 
+        locker.relock();
         while (m_hardwareCacheSize > m_maxHardwareCacheSize)
         {
-            MythImage *expiredIm = m_ImageExpireList.front();
-            m_ImageExpireList.pop_front();
+            MythImage *expiredIm = m_imageExpireList.front();
+            m_imageExpireList.pop_front();
             DeleteFormatImagePriv(expiredIm);
             DeleteTextures();
         }
+        locker.unlock();
     }
 
     CheckFormatImage(Image);
     m_hardwareCacheSize += MythRenderOpenGL::GetTextureDataSize(texture);
+    locker.relock();
     m_imageToTextureMap[Image] = texture;
-    m_ImageExpireList.push_back(Image);
+    m_imageExpireList.push_back(Image);
 
     while (m_hardwareCacheSize > m_maxHardwareCacheSize)
     {
-        MythImage *expiredIm = m_ImageExpireList.front();
-        m_ImageExpireList.pop_front();
+        MythImage *expiredIm = m_imageExpireList.front();
+        m_imageExpireList.pop_front();
         DeleteFormatImagePriv(expiredIm);
         DeleteTextures();
     }
@@ -255,8 +258,8 @@ MythGLTexture* MythOpenGLPainter::GetTextureFromCache(MythImage *Image)
 #define DEST Dest
 #endif
 
-void MythOpenGLPainter::DrawImage(const QRect &Dest, MythImage *Image,
-                                  const QRect &Source, int Alpha)
+void MythOpenGLPainter::DrawImage(const QRect Dest, MythImage *Image,
+                                  const QRect Source, int Alpha)
 {
     if (m_render)
     {
@@ -278,7 +281,7 @@ void MythOpenGLPainter::DrawImage(const QRect &Dest, MythImage *Image,
             QOpenGLBuffer *vbo = texture->m_vbo;
             texture->m_vbo = m_mappedBufferPool[m_mappedBufferPoolIdx];
             texture->m_destination = QRect();
-            m_render->DrawBitmap(texture, m_target, Source, DEST, nullptr, Alpha, pixelratio);
+            m_render->DrawBitmap(texture, nullptr, Source, DEST, nullptr, Alpha, pixelratio);
             texture->m_destination = QRect();
             texture->m_vbo = vbo;
             if (++m_mappedBufferPoolIdx >= MAX_BUFFER_POOL)
@@ -286,10 +289,30 @@ void MythOpenGLPainter::DrawImage(const QRect &Dest, MythImage *Image,
         }
         else
         {
-            m_render->DrawBitmap(texture, m_target, Source, DEST, nullptr, Alpha, pixelratio);
+            m_render->DrawBitmap(texture, nullptr, Source, DEST, nullptr, Alpha, pixelratio);
             m_mappedTextures.append(texture);
         }
     }
+}
+
+void MythOpenGLPainter::DrawProcedural(QRect Dest, int Alpha, const ProcSource& VertexSource, const ProcSource& FragmentSource, const QString &SourceHash)
+{
+    if (auto * shader = GetProceduralShader(VertexSource, FragmentSource, SourceHash); shader && m_render)
+        m_render->DrawProcedural(Dest, Alpha, nullptr, shader, m_frameTime);
+}
+
+QOpenGLShaderProgram* MythOpenGLPainter::GetProceduralShader(const ProcSource& VertexSource, const ProcSource& FragmentSource, const QString& SourceHash)
+{
+    if (!m_render)
+        return nullptr;
+
+    if (auto program = m_procedurals.find(SourceHash); program != m_procedurals.end())
+        return *program;
+
+    auto * result = m_render->CreateShaderProgram(QString(*VertexSource), QString(*FragmentSource));
+    m_procedurals.insert(SourceHash, result);
+    LOG(VB_GENERAL, LOG_INFO, QString("%1 procedural shaders cached").arg(m_procedurals.size()));
+    return result;
 }
 
 /*! \brief Draw a rectangle
@@ -301,40 +324,40 @@ void MythOpenGLPainter::DrawImage(const QRect &Dest, MythImage *Image,
  * \note If high DPI scaling is in use, just use Qt painting rather than
  * handling all of the adjustments required for pen width etc etc.
 */
-void MythOpenGLPainter::DrawRect(const QRect &Area, const QBrush &FillBrush,
+void MythOpenGLPainter::DrawRect(const QRect Area, const QBrush &FillBrush,
                                  const QPen &LinePen, int Alpha)
 {
     if ((FillBrush.style() == Qt::SolidPattern ||
          FillBrush.style() == Qt::NoBrush) && m_render && !m_usingHighDPI)
     {
-        m_render->DrawRect(m_target, Area, FillBrush, LinePen, Alpha);
+        m_render->DrawRect(nullptr, Area, FillBrush, LinePen, Alpha);
         return;
     }
-    MythPainter::DrawRect(Area, FillBrush, LinePen, Alpha);
+    MythPainterGPU::DrawRect(Area, FillBrush, LinePen, Alpha);
 }
 
-void MythOpenGLPainter::DrawRoundRect(const QRect &Area, int CornerRadius,
+void MythOpenGLPainter::DrawRoundRect(const QRect Area, int CornerRadius,
                                       const QBrush &FillBrush,
                                       const QPen &LinePen, int Alpha)
 {
     if ((FillBrush.style() == Qt::SolidPattern ||
          FillBrush.style() == Qt::NoBrush) && m_render && !m_usingHighDPI)
     {
-        m_render->DrawRoundRect(m_target, Area, CornerRadius, FillBrush,
+        m_render->DrawRoundRect(nullptr, Area, CornerRadius, FillBrush,
                                   LinePen, Alpha);
         return;
     }
-    MythPainter::DrawRoundRect(Area, CornerRadius, FillBrush, LinePen, Alpha);
+    MythPainterGPU::DrawRoundRect(Area, CornerRadius, FillBrush, LinePen, Alpha);
 }
 
 void MythOpenGLPainter::DeleteFormatImagePriv(MythImage *Image)
 {
+    QMutexLocker locker(&m_imageAndTextureLock);
     if (m_imageToTextureMap.contains(Image))
     {
-        QMutexLocker locker(&m_textureDeleteLock);
         m_textureDeleteList.push_back(m_imageToTextureMap[Image]);
         m_imageToTextureMap.remove(Image);
-        m_ImageExpireList.remove(Image);
+        m_imageExpireList.remove(Image);
     }
 }
 

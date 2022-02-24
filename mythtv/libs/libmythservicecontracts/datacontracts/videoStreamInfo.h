@@ -4,7 +4,8 @@
 //
 // Copyright (c) 2020 Peter Bennett <pbennett@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
+
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -38,12 +39,13 @@ class SERVICE_PUBLIC VideoStreamInfo : public QObject
     Q_PROPERTY( int             Channels        READ Channels         WRITE setChannels       )
     Q_PROPERTY( qlonglong       Duration        READ Duration         WRITE setDuration       )
 
-    PROPERTYIMP    ( QString    , CodecType      )
-    PROPERTYIMP    ( QString    , CodecName      )
+    PROPERTYIMP_REF( QString    , CodecType      )
+    PROPERTYIMP_REF( QString    , CodecName      )
     PROPERTYIMP    ( int        , Width          )
     PROPERTYIMP    ( int        , Height         )
     PROPERTYIMP    ( float      , AspectRatio    )
-    PROPERTYIMP    ( QString    , FieldOrder     )
+    PROPERTYIMP_REF( QString    , FieldOrder     )
+
     PROPERTYIMP    ( float      , FrameRate      )
     PROPERTYIMP    ( float      , AvgFrameRate   )
     PROPERTYIMP    ( int        , Channels       )

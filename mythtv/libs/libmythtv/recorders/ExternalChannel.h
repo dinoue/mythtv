@@ -1,12 +1,11 @@
 /// -*- Mode: c++ -*-
 
-#ifndef _EXTERNAL_CHANNEL_H_
-#define _EXTERNAL_CHANNEL_H_
+#ifndef EXTERNAL_CHANNEL_H
+#define EXTERNAL_CHANNEL_H
 
 #include <cstdint>
 #include <utility>
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QString>
@@ -54,7 +53,7 @@ class ExternalChannel : public DTVChannel
         { return true; }
 
   private:
-    int                      m_tuneTimeout { -1 };
+    std::chrono::milliseconds m_tuneTimeout { -1ms };
     bool                     m_backgroundTuning {false};
     QString                  m_device;
     QStringList              m_args;
@@ -62,4 +61,4 @@ class ExternalChannel : public DTVChannel
     QString                  m_loc;
 };
 
-#endif // _EXTERNAL_CHANNEL_H_
+#endif // EXTERNAL_CHANNEL_H

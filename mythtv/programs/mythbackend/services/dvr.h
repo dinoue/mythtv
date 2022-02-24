@@ -50,7 +50,9 @@ class Dvr : public DvrServices
                                                 const QString   &RecGroup,
                                                 const QString   &StorageGroup,
                                                 const QString   &Category,
-                                                const QString   &Sort) override; // DvrServices
+                                                const QString   &Sort,
+                                                bool             IgnoreLiveTV,
+                                                bool             IgnoreDeleted) override; // DvrServices
 
         DTC::ProgramList* GetOldRecordedList  ( bool             Descending,
                                                 int              StartIndex,
@@ -65,6 +67,11 @@ class Dvr : public DvrServices
         DTC::Program*     GetRecorded         ( int              RecordedId,
                                                 int              ChanId,
                                                 const QDateTime &recstarttsRaw  ) override; // DvrServices
+
+        bool              AddRecordedCredits  ( int RecordedId,
+                                                const QJsonObject & json) override;
+
+        int               AddRecordedProgram  ( const QJsonObject & json) override;
 
         bool              RemoveRecorded      ( int              RecordedId,
                                                 int              ChanId,
@@ -89,6 +96,8 @@ class Dvr : public DvrServices
                                                 const QDateTime &recstarttsRaw ) override; // DvrServices
 
         bool              RescheduleRecordings( void ) override; // DvrServices
+
+        bool              AllowReRecord       ( int             RecordedId ) override;
 
         bool              UpdateRecordedWatchedStatus ( int   RecordedId,
                                                         int   ChanId,
@@ -119,6 +128,11 @@ class Dvr : public DvrServices
 
         DTC::CutList*     GetRecordedSeek      ( int              RecordedId,
                                                  const QString   &OffsetType ) override; // DvrServices
+
+        DTC::MarkupList*  GetRecordedMarkup ( int                RecordedId ) override; // DvrServices
+
+        bool              SetRecordedMarkup     ( int            RecordedId,
+                                                  const QJsonObject & json ) override; // DvrServices
 
         DTC::ProgramList* GetConflictList     ( int              StartIndex,
                                                 int              Count,
@@ -154,8 +168,8 @@ class Dvr : public DvrServices
                                                 const QString&   Subtitle,
                                                 const QString&   Description,
                                                 const QString&   Category,
-                                                QDateTime recstarttsRaw,
-                                                QDateTime recendtsRaw,
+                                                const QDateTime& recstarttsRaw,
+                                                const QDateTime& recendtsRaw,
                                                 const QString&   SeriesId,
                                                 const QString&   ProgramId,
                                                 int       ChanId,
@@ -173,7 +187,7 @@ class Dvr : public DvrServices
                                                 uint      PreferredInput,
                                                 int       StartOffset,
                                                 int       EndOffset,
-                                                QDateTime lastrectsRaw,
+                                                const QDateTime& lastrectsRaw,
                                                 QString   DupMethod,
                                                 QString   DupIn,
                                                 bool      NewEpisOnly,
@@ -195,16 +209,16 @@ class Dvr : public DvrServices
                                                 int       Transcoder) override; // DvrServices
 
         bool               UpdateRecordSchedule ( uint    RecordId,
-                                                  QString   Title,
-                                                  QString   Subtitle,
-                                                  QString   Description,
-                                                  QString   Category,
-                                                  QDateTime dStartTimeRaw,
-                                                  QDateTime dEndTimeRaw,
-                                                  QString   SeriesId,
-                                                  QString   ProgramId,
+                                                  const QString&   Title,
+                                                  const QString&   Subtitle,
+                                                  const QString&   Description,
+                                                  const QString&   Category,
+                                                  const QDateTime& dStartTimeRaw,
+                                                  const QDateTime& dEndTimeRaw,
+                                                  const QString&   SeriesId,
+                                                  const QString&   ProgramId,
                                                   int       ChanId,
-                                                  QString   Station,
+                                                  const QString&   Station,
                                                   int       FindDay,
                                                   QTime     FindTime,
                                                   bool      Inactive,
@@ -249,10 +263,10 @@ class Dvr : public DvrServices
                                                  bool             Descending ) override; // DvrServices
 
         DTC::RecRule*     GetRecordSchedule    ( uint             RecordId,
-                                                 QString          Template,
+                                                 const QString&   Template,
                                                  int              nRecordedId,
                                                  int              ChanId,
-                                                 QDateTime        dStartTimeRaw,
+                                                 const QDateTime& dStartTimeRaw,
                                                  bool             MakeOverride ) override; // DvrServices
 
         bool              EnableRecordSchedule ( uint             RecordId   ) override; // DvrServices
@@ -270,17 +284,17 @@ class Dvr : public DvrServices
                                                    int            RecType,
                                                    const QDateTime &StartTime ) override; // DvrServices
 
-        QString           RecTypeToString      ( QString          RecType   ) override; // DvrServices
+        QString           RecTypeToString      ( const QString&   RecType   ) override; // DvrServices
 
-        QString           RecTypeToDescription ( QString          RecType   ) override; // DvrServices
+        QString           RecTypeToDescription ( const QString&   RecType   ) override; // DvrServices
 
-        QString           DupMethodToString    ( QString          DupMethod ) override; // DvrServices
+        QString           DupMethodToString    ( const QString&   DupMethod ) override; // DvrServices
 
-        QString           DupMethodToDescription ( QString        DupMethod ) override; // DvrServices
+        QString           DupMethodToDescription ( const QString& DupMethod ) override; // DvrServices
 
-        QString           DupInToString        ( QString          DupIn     ) override; // DvrServices
+        QString           DupInToString        ( const QString&   DupIn     ) override; // DvrServices
 
-        QString           DupInToDescription   ( QString          DupIn     ) override; // DvrServices
+        QString           DupInToDescription   ( const QString&   DupIn     ) override; // DvrServices
 
         int               ManageJobQueue       ( const QString   &Action,
                                                  const QString   &JobName,
@@ -341,13 +355,16 @@ class ScriptableDvr : public QObject
                                        const QString   &RecGroup,
                                        const QString   &StorageGroup,
                                        const QString   &Category,
-                                       const QString   &Sort
+                                       const QString   &Sort,
+                                       bool             IgnoreLiveTV,
+                                       bool             IgnoreDeleted
                                      )
         {
             SCRIPT_CATCH_EXCEPTION( nullptr,
                 return m_obj.GetRecordedList( Descending, StartIndex, Count,
                                               TitleRegEx, RecGroup,
-                                              StorageGroup, Category, Sort);
+                                              StorageGroup, Category, Sort,
+                                              IgnoreLiveTV, IgnoreDeleted);
             )
         }
 
@@ -569,15 +586,15 @@ class ScriptableDvr : public QObject
             )
         }
 
-        QObject* GetRecordSchedule ( uint      RecordId,
-                                     QString   Template,
-                                     int       RecordedId,
-                                     int       ChanId,
-                                     QDateTime StartTime,
-                                     bool      MakeOverride )
+        QObject* GetRecordSchedule ( uint             RecordId,
+                                     const QString   &Template,
+                                     int              RecordedId,
+                                     int              ChanId,
+                                     const QDateTime &StartTime,
+                                     bool             MakeOverride )
         {
             SCRIPT_CATCH_EXCEPTION( nullptr,
-                return m_obj.GetRecordSchedule( RecordId,  Template, RecordedId,
+                return m_obj.GetRecordSchedule( RecordId, Template, RecordedId,
                                                 ChanId, StartTime, MakeOverride);
             )
         }
@@ -614,42 +631,42 @@ class ScriptableDvr : public QObject
             )
         }
 
-        QString RecTypeToString( QString RecType )
+        QString RecTypeToString( const QString &RecType )
         {
             SCRIPT_CATCH_EXCEPTION( QString(),
                 return m_obj.RecTypeToString( RecType );
             )
         }
 
-        QString RecTypeToDescription( QString RecType )
+        QString RecTypeToDescription( const QString &RecType )
         {
             SCRIPT_CATCH_EXCEPTION( QString(),
                 return m_obj.RecTypeToDescription( RecType );
             )
         }
 
-        QString DupMethodToString( QString DupMethod )
+        QString DupMethodToString( const QString &DupMethod )
         {
             SCRIPT_CATCH_EXCEPTION( QString(),
                 return m_obj.DupMethodToString( DupMethod );
             )
         }
 
-        QString DupMethodToDescription( QString DupMethod )
+        QString DupMethodToDescription( const QString &DupMethod )
         {
             SCRIPT_CATCH_EXCEPTION( QString(),
                 return m_obj.DupMethodToDescription( DupMethod );
             )
         }
 
-        QString DupInToString( QString DupIn )
+        QString DupInToString( const QString &DupIn )
         {
             SCRIPT_CATCH_EXCEPTION( QString(),
                 return m_obj.DupInToString( DupIn );
             )
         }
 
-        QString DupInToDescription( QString DupIn )
+        QString DupInToDescription( const QString &DupIn )
         {
             SCRIPT_CATCH_EXCEPTION( QString(),
                 return m_obj.DupInToDescription( DupIn );
@@ -670,9 +687,9 @@ class ScriptableDvr : public QObject
                                              JobName,
                                              JobId,
                                              RecordedId,
-                                             JobStartTime,
-                                             RemoteHost,
-                                             JobArgs );
+                                             std::move(JobStartTime),
+                                             std::move(RemoteHost),
+                                             std::move(JobArgs) );
             )
         }
 

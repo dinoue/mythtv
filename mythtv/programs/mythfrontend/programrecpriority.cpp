@@ -4,11 +4,9 @@
 
 // C/C++ headers
 #include <vector> // For std::vector
-using namespace std;
 
 // QT headers
 #include <QDateTime>
-#include <QRegExp>
 
 // libmythtv headers
 #include "recordingrule.h"
@@ -44,6 +42,8 @@ void ProgramRecPriorityInfo::clone(
         m_last_record      = other.m_last_record;
         m_avg_delay        = other.m_avg_delay;
         m_profile          = other.m_profile;
+        m_storageGroup     = other.m_storageGroup;
+        m_recordingGroup   = other.m_recordingGroup;
     }
 }
 
@@ -60,6 +60,8 @@ void ProgramRecPriorityInfo::clone(
         m_last_record      = QDateTime();
         m_avg_delay        = 0;
         m_profile.clear();
+        m_storageGroup.clear();
+        m_recordingGroup.clear();
     }
 }
 
@@ -76,6 +78,8 @@ void ProgramRecPriorityInfo::clone(
         m_last_record      = QDateTime();
         m_avg_delay        = 0;
         m_profile.clear();
+        m_storageGroup.clear();
+        m_recordingGroup.clear();
     }
 }
 
@@ -89,16 +93,23 @@ void ProgramRecPriorityInfo::clear(void)
     m_last_record      = QDateTime();
     m_avg_delay        = 0;
     m_profile.clear();
+    m_storageGroup.clear();
+    m_recordingGroup.clear();
 }
 
 void ProgramRecPriorityInfo::ToMap(InfoMap &progMap,
-                                   bool showrerecord, uint star_range) const
+                                   bool showrerecord, uint star_range,
+                                   uint date_format) const
 {
-    RecordingInfo::ToMap(progMap, showrerecord, star_range);
+    RecordingInfo::ToMap(progMap, showrerecord, star_range, date_format);
     progMap["title"] = (m_title == "Default (Template)") ?
         QObject::tr("Default (Template)") : m_title;
     progMap["category"] = (m_category == "Default") ?
         QObject::tr("Default") : m_category;
+    progMap["storagegroup"] = (m_storageGroup == "Default") ?
+        QObject::tr("Default") : m_storageGroup;
+    progMap["recordinggroup"] = (m_recordingGroup == "Default") ?
+        QObject::tr("Default") : m_recordingGroup;
 }
 
 class TitleSort
@@ -418,10 +429,10 @@ bool ProgramRecPriority::Create()
         return false;
     }
 
-    connect(m_programList, SIGNAL(itemSelected(MythUIButtonListItem*)),
-            SLOT(updateInfo(MythUIButtonListItem*)));
-    connect(m_programList, SIGNAL(itemClicked(MythUIButtonListItem*)),
-            SLOT(edit(MythUIButtonListItem*)));
+    connect(m_programList, &MythUIButtonList::itemSelected,
+            this, &ProgramRecPriority::updateInfo);
+    connect(m_programList, &MythUIButtonList::itemClicked,
+            this, &ProgramRecPriority::edit);
 
     m_programList->SetLCDTitles(tr("Schedule Priorities"),
                           "rec_type|titlesubtitle|progpriority");
@@ -822,7 +833,7 @@ void ProgramRecPriority::customEvent(QEvent *event)
     }
 }
 
-void ProgramRecPriority::edit(MythUIButtonListItem *item)
+void ProgramRecPriority::edit(MythUIButtonListItem *item) const
 {
     if (!item)
         return;
@@ -841,8 +852,8 @@ void ProgramRecPriority::edit(MythUIButtonListItem *item)
     if (schededit->Create())
     {
         mainStack->AddScreen(schededit);
-        connect(schededit, SIGNAL(ruleSaved(int)), SLOT(scheduleChanged(int)));
-        connect(schededit, SIGNAL(ruleDeleted(int)), SLOT(scheduleChanged(int)));
+        connect(schededit, &ScheduleEditor::ruleSaved, this, &ProgramRecPriority::scheduleChanged);
+        connect(schededit, &ScheduleEditor::ruleDeleted, this, &ProgramRecPriority::scheduleChanged);
     }
     else
         delete schededit;
@@ -879,8 +890,8 @@ void ProgramRecPriority::newTemplate(QString category)
     if (schededit->Create())
     {
         mainStack->AddScreen(schededit);
-        connect(schededit, SIGNAL(ruleSaved(int)), SLOT(scheduleChanged(int)));
-        connect(schededit, SIGNAL(ruleDeleted(int)), SLOT(scheduleChanged(int)));
+        connect(schededit, &ScheduleEditor::ruleSaved, this, &ProgramRecPriority::scheduleChanged);
+        connect(schededit, &ScheduleEditor::ruleDeleted, this, &ProgramRecPriority::scheduleChanged);
     }
     else
         delete schededit;
@@ -915,6 +926,8 @@ void ProgramRecPriority::scheduleChanged(int recid)
             RecStatus::Inactive : RecStatus::Unknown;
         progInfo.m_profile = record.m_recProfile;
         progInfo.m_last_record = record.m_lastRecorded;
+        progInfo.m_storageGroup = record.m_storageGroup;
+        progInfo.m_recordingGroup = RecordingInfo::GetRecgroupString(record.m_recGroupID);
 
         m_programData[recid] = progInfo;
         m_origRecPriorityData[record.m_recordID] =
@@ -985,8 +998,8 @@ void ProgramRecPriority::remove(void)
         return;
     }
 
-    QString message = tr("Delete '%1' %2 rule?").arg(record->m_title)
-        .arg(toString(pgRecInfo->GetRecordingRuleType()));
+    QString message = tr("Delete '%1' %2 rule?")
+        .arg(record->m_title, toString(pgRecInfo->GetRecordingRuleType()));
 
     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
 
@@ -1112,7 +1125,7 @@ void ProgramRecPriority::saveRecPriority(void)
 
 void ProgramRecPriority::FillList(void)
 {
-    vector<ProgramInfo *> recordinglist;
+    std::vector<ProgramInfo *> recordinglist;
 
     m_programData.clear();
 
@@ -1138,7 +1151,8 @@ void ProgramRecPriority::FillList(void)
 
     MSqlQuery result(MSqlQuery::InitCon());
     result.prepare("SELECT recordid, title, chanid, starttime, startdate, "
-                   "type, inactive, last_record, avg_delay, profile "
+                   "type, inactive, last_record, avg_delay, profile, "
+                   "recgroup, storagegroup "
                    "FROM record;");
 
     if (!result.exec())
@@ -1150,15 +1164,17 @@ void ProgramRecPriority::FillList(void)
         countMatches();
         do {
             uint recordid = result.value(0).toUInt();
-            QString title = result.value(1).toString();
-            QString chanid = result.value(2).toString();
-            QString tempTime = result.value(3).toString();
-            QString tempDate = result.value(4).toString();
+//          QString title = result.value(1).toString();
+//          QString chanid = result.value(2).toString();
+//          QString tempTime = result.value(3).toString();
+//          QString tempDate = result.value(4).toString();
             RecordingType recType = (RecordingType)result.value(5).toInt();
             int inactive = result.value(6).toInt();
             QDateTime lastrec = MythDate::as_utc(result.value(7).toDateTime());
             int avgd = result.value(8).toInt();
             QString profile = result.value(9).toString();
+            QString recordingGroup = result.value(10).toString();
+            QString storageGroup = result.value(11).toString();
 
             // find matching program in m_programData and set
             // recType
@@ -1176,6 +1192,8 @@ void ProgramRecPriority::FillList(void)
                 progInfo->m_last_record = lastrec;
                 progInfo->m_avg_delay = avgd;
                 progInfo->m_profile = profile;
+                progInfo->m_recordingGroup  = recordingGroup;
+                progInfo->m_storageGroup = storageGroup;
 
                 if (inactive)
                     progInfo->m_recStatus = RecStatus::Inactive;
@@ -1288,7 +1306,7 @@ void ProgramRecPriority::UpdateList()
 
     m_programList->Reset();
 
-    vector<ProgramRecPriorityInfo*>::iterator it;
+    std::vector<ProgramRecPriorityInfo*>::iterator it;
     for (it = m_sortedProgram.begin(); it != m_sortedProgram.end(); ++it)
     {
         ProgramRecPriorityInfo *progInfo = *it;
@@ -1353,7 +1371,7 @@ void ProgramRecPriority::UpdateList()
                         .arg(m_listMatch[progInfo->GetRecordingRuleID()]);
         }
 
-        subtitle = QString("(%1) %2").arg(matchInfo).arg(subtitle);
+        subtitle = QString("(%1) %2").arg(matchInfo, subtitle);
         item->SetText(subtitle, "scheduleinfo", state);
 
         item->SetText(QString::number(progRecPriority), "progpriority", state);
@@ -1396,6 +1414,8 @@ void ProgramRecPriority::UpdateList()
             (profile == "High Quality") || (profile == "Low Quality"))
             profile = tr(profile.toUtf8().constData());
         item->SetText(profile, "recordingprofile", state);
+        item->SetText(progInfo->m_recordingGroup, "recordinggroup", state);
+        item->SetText(progInfo->m_storageGroup, "storagegroup", state);
         item->DisplayState(state, "status");
 
         if (m_currentItem == progInfo)
@@ -1411,6 +1431,9 @@ void ProgramRecPriority::UpdateList()
         norecordingText->SetVisible(m_programData.isEmpty());
 }
 
+// Called whenever a new recording is selected from the list of
+// recordings. This function updates the screen with the information
+// on the newly selected recording.
 void ProgramRecPriority::updateInfo(MythUIButtonListItem *item)
 {
     if (!item)
@@ -1447,7 +1470,7 @@ void ProgramRecPriority::updateInfo(MythUIButtonListItem *item)
             .arg(m_listMatch[pgRecInfo->GetRecordingRuleID()]);
     }
 
-    subtitle = QString("(%1) %2").arg(matchInfo).arg(subtitle);
+    subtitle = QString("(%1) %2").arg(matchInfo, subtitle);
 
     InfoMap infoMap;
     pgRecInfo->ToMap(infoMap);
@@ -1519,7 +1542,6 @@ void ProgramRecPriority::updateInfo(MythUIButtonListItem *item)
             profile = tr(profile.toUtf8().constData());
         m_recProfileText->SetText(profile);
     }
-
 }
 
 void ProgramRecPriority::RemoveItemFromList(MythUIButtonListItem *item)

@@ -14,7 +14,6 @@
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
-using namespace std;
 
 // Qt
 #include <QCoreApplication>
@@ -222,7 +221,7 @@ void Synaesthesia::coreInit(void)
 #define lastOutput ((unsigned char*)m_lastOutputBmp.data)
 #define lastLastOutput ((unsigned char*)m_lastLastOutputBmp.data)
 
-void Synaesthesia::addPixel(int x, int y, int br1, int br2)
+void Synaesthesia::addPixel(int x, int y, int br1, int br2) const
 {
     if (x < 0 || x > m_outWidth || y < 0 || y >= m_outHeight)
         return;
@@ -250,7 +249,7 @@ void Synaesthesia::addPixelFast(unsigned char *p, int br1, int br2)
         p[1] = 255;
 }
 
-unsigned char Synaesthesia::getPixel(int x, int y, int where)
+unsigned char Synaesthesia::getPixel(int x, int y, int where) const
 {
     if (x < 0 || y < 0 || x >= m_outWidth || y >= m_outHeight)
         return 0;
@@ -258,7 +257,7 @@ unsigned char Synaesthesia::getPixel(int x, int y, int where)
     return lastOutput[where];
 }
 
-void Synaesthesia::fadeFade(void)
+void Synaesthesia::fadeFade(void) const
 {
     auto *ptr = (uint32_t *)output;
     int i = m_outWidth * m_outHeight * 2 / sizeof(uint32_t);
@@ -446,20 +445,17 @@ bool Synaesthesia::process(VisualNode *node)
     if (!node)
         return false;
 
-    double x[NumSamples];
-    double y[NumSamples];
-    double a[NumSamples];
-    double b[NumSamples];
-    int clarity[NumSamples];
+    samp_dbl_array x {};
+    samp_dbl_array y {};
+    samp_dbl_array a {};
+    samp_dbl_array b {};
+    samp_int_array clarity {};
 
     int brightFactor = int(Brightness * m_brightnessTwiddler / (m_starSize + 0.01));
 
     int numSamps = NumSamples;
     if (node->m_length < NumSamples)
         numSamps = node->m_length;
-
-    memset(x, 0, sizeof(x));
-    memset(y, 0, sizeof(y));
 
     for (int i = 0; i < numSamps; i++)
     {
@@ -470,7 +466,7 @@ bool Synaesthesia::process(VisualNode *node)
             y[i] = x[i];
     }
 
-    fft(x, y);
+    fft(x.data(), y.data());
 
     double energy = 0.0;
 

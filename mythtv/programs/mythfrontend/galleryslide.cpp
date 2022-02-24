@@ -6,7 +6,6 @@
 
 #include "imagemetadata.h"
 
-
 #define LOC QString("Slide: ")
 #define SBLOC QString("SlideBuffer: ")
 
@@ -42,13 +41,14 @@ void AbstractAnimation::Start(bool forwards, float speed)
  \param curve Easing curve governing animation
  \param centre Zoom centre
 */
-void Animation::Set(const QVariant& from, const QVariant& to, int duration,
+void Animation::Set(const QVariant& from, const QVariant& to,
+                    std::chrono::milliseconds duration,
                     const QEasingCurve& curve, UIEffects::Centre centre)
 {
     setStartValue(from);
     setEndValue(to);
     m_centre = centre;
-    setDuration(duration);
+    setDuration(duration.count());
     setEasingCurve(curve);
 }
 
@@ -60,32 +60,32 @@ void Animation::Set(const QVariant& from, const QVariant& to, int duration,
 */
 void Animation::Start(bool forwards, float speed)
 {
-    if (duration() == 0)
+    auto duration_ms = std::chrono::milliseconds(duration());
+    if (duration_ms == 0ms)
         return;
 
-    m_elapsed = forwards ? 0 : duration();
-    setCurrentTime(m_elapsed);
+    m_elapsed = forwards ? 0ms : duration_ms;
+    setCurrentTime(m_elapsed.count());
 
     AbstractAnimation::Start(forwards, speed);
 }
 
 
-/*!
- \brief Progress single animation
- \param interval Millisecs since last update
+/*! \brief Progress single animation
 */
-void Animation::Pulse(int interval)
+void Animation::Pulse()
 {
     if (!m_running)
         return;
 
-    m_elapsed += (m_forwards ? interval : -interval) * m_speed;
-
-    setCurrentTime(m_elapsed);
+    std::chrono::milliseconds current = MythDate::currentMSecsSinceEpochAsDuration();
+    std::chrono::milliseconds interval = std::min(current - m_lastUpdate, 50ms);
+    m_lastUpdate = current;
+    m_elapsed += (m_forwards ? interval : -interval) * static_cast<int>(m_speed);
+    setCurrentTime(m_elapsed.count());
 
     // Detect completion
-    if ((m_forwards && m_elapsed >= duration())
-            || (!m_forwards && m_elapsed <= 0))
+    if ((m_forwards && m_elapsed.count() >= duration()) || (!m_forwards && m_elapsed <= 0ms))
         Finished();
 }
 
@@ -122,7 +122,7 @@ void GroupAnimation::Add(AbstractAnimation *child)
 {
     // Signal group when child completes
     m_group.append(child);
-    connect(child, SIGNAL(finished()), this, SLOT(Finished()));
+    connect(child, &AbstractAnimation::finished, this, &GroupAnimation::Finished);
 }
 
 
@@ -136,17 +136,15 @@ void GroupAnimation::Clear()
 }
 
 
-/*!
- \brief Progress sequential animation
- \param interval Millisecs since last update
+/*! \brief Progress sequential animation
 */
-void SequentialAnimation::Pulse(int interval)
+void SequentialAnimation::Pulse()
 {
     if (!m_running || m_current < 0 || m_current >= m_group.size())
         return;
 
     // Pulse current running child
-    m_group.at(m_current)->Pulse(interval);
+    m_group.at(m_current)->Pulse();
 }
 
 
@@ -200,17 +198,15 @@ void SequentialAnimation::Finished()
 }
 
 
-/*!
- \brief Progress parallel animations
- \param interval Millisecs since last update
+/*! \brief Progress parallel animations
 */
-void ParallelAnimation::Pulse(int interval)
+void ParallelAnimation::Pulse()
 {
     if (m_running)
     {
         // Pulse all children
-        foreach(AbstractAnimation *animation, m_group)
-            animation->Pulse(interval);
+        for (AbstractAnimation *animation : qAsConst(m_group))
+            animation->Pulse();
     }
 }
 
@@ -229,7 +225,7 @@ void ParallelAnimation::Start(bool forwards, float speed)
 
     // Start group, then all children
     GroupAnimation::Start(forwards, speed);
-    foreach(AbstractAnimation *animation, m_group)
+    for (AbstractAnimation *animation : qAsConst(m_group))
         animation->Start(m_forwards, m_speed);
 }
 
@@ -242,7 +238,7 @@ void ParallelAnimation::SetSpeed(float speed)
 {
     // Set group speed, then all children
     GroupAnimation::SetSpeed(speed);
-    foreach(AbstractAnimation *animation, m_group)
+    for (AbstractAnimation *animation : qAsConst(m_group))
         animation->SetSpeed(m_speed);
 }
 
@@ -290,9 +286,9 @@ Slide::Slide(MythUIType *parent, const QString& name, MythUIImage *image)
     {
         // Slides sit on top of parent image area
         SetArea(MythRect(image->GetArea().toQRect()));
-        m_Area.moveTo(0, 0);
+        m_area.moveTo(0, 0);
         setParent(image);
-        m_Parent = image;
+        m_parent = image;
         image->AddChild(this);
     }
 
@@ -303,7 +299,7 @@ Slide::Slide(MythUIType *parent, const QString& name, MythUIImage *image)
         m_panAnimation  = new PanAnimation(this);
     }
 
-    connect(this, SIGNAL(LoadComplete()), this, SLOT(SlideLoaded()));
+    connect(this, &MythUIImage::LoadComplete, this, &Slide::SlideLoaded);
 }
 
 
@@ -421,7 +417,7 @@ bool Slide::LoadSlide(const ImagePtrK& im, int direction, bool notifyCompletion)
 */
 void Slide::SlideLoaded()
 {
-    m_state = m_Images[0] ? kLoaded : kFailed;
+    m_state = m_images[0] ? kLoaded : kFailed;
     if (m_state == kFailed)
         LOG(VB_GENERAL, LOG_ERR, LOC +
             QString("Failed to load %1").arg(m_data->m_filePath));
@@ -459,7 +455,7 @@ void Slide::Zoom(int percentage)
     {
         if (m_zoomAnimation)
         {
-            m_zoomAnimation->Set(m_zoom, newZoom, 250, QEasingCurve::OutQuad);
+            m_zoomAnimation->Set(m_zoom, newZoom, 250ms, QEasingCurve::OutQuad);
             m_zoomAnimation->Start();
         }
         else
@@ -477,12 +473,12 @@ void Slide::Zoom(int percentage)
 void Slide::SetZoom(float zoom)
 {
     m_zoom          = zoom;
-    m_Effects.m_hzoom = m_Effects.m_vzoom = zoom;
+    m_effects.m_hzoom = m_effects.m_vzoom = zoom;
 
     // TODO
     // MythUIImage displaces widget or doesn't centre for some combinations of
     // zoom centre/cropping so frig centre for now.
-    m_Effects.m_centre = zoom < 1.0F ? UIEffects::Middle : UIEffects::TopLeft;
+    m_effects.m_centre = zoom < 1.0F ? UIEffects::Middle : UIEffects::TopLeft;
 
     SetPan(m_pan);
 }
@@ -507,7 +503,7 @@ void Slide::Pan(QPoint offset)
 
         if (m_panAnimation)
         {
-            m_panAnimation->Set(start, dest, 250, QEasingCurve::Linear);
+            m_panAnimation->Set(start, dest, 250ms, QEasingCurve::Linear);
             m_panAnimation->Start();
         }
         else
@@ -531,17 +527,17 @@ void Slide::SetPan(QPoint pos)
     }
 
     // Determine zoom of largest dimension
-    QRect imageArea = m_Images[m_CurPos]->rect();
-    float hRatio    = float(imageArea.height()) / m_Area.height();
-    float wRatio    = float(imageArea.width()) / m_Area.width();
+    QRect imageArea = m_images[m_curPos]->rect();
+    float hRatio    = float(imageArea.height()) / m_area.height();
+    float wRatio    = float(imageArea.width()) / m_area.width();
     float ratio     = qMax(hRatio, wRatio);
 
     if (m_zoom != 0.0F)
         ratio /= m_zoom;
 
     // Determine crop area
-    int h = qMin(int(roundf(m_Area.height() * ratio)), imageArea.height());
-    int w = qMin(int(roundf(m_Area.width() * ratio)), imageArea.width());
+    int h = qMin(int(roundf(m_area.height() * ratio)), imageArea.height());
+    int w = qMin(int(roundf(m_area.width() * ratio)), imageArea.width());
     int x = imageArea.center().x() - w / 2;
     int y = imageArea.center().y() - h / 2;
 
@@ -563,10 +559,10 @@ void Slide::Pulse()
 {
     // Update zoom/pan animations
     if (m_zoomAnimation)
-        m_zoomAnimation->Pulse(GetMythMainWindow()->GetDrawInterval());
+        m_zoomAnimation->Pulse();
 
     if (m_panAnimation)
-        m_panAnimation->Pulse(GetMythMainWindow()->GetDrawInterval());
+        m_panAnimation->Pulse();
 }
 
 
@@ -579,7 +575,7 @@ SlideBuffer::~SlideBuffer()
 void SlideBuffer::Teardown()
 {
     QMutexLocker lock(&m_mutexQ);
-    foreach (Slide *s, m_queue)
+    for (Slide *s : qAsConst(m_queue))
         s->Clear();
     LOG(VB_GUI, LOG_DEBUG, "Aborted Slidebuffer");
 }
@@ -602,8 +598,8 @@ void SlideBuffer::Initialise(MythUIImage &image)
     auto *slide = new Slide(nullptr, "slide0", &image);
 
     // Buffer is notified when it has loaded image
-    connect(slide, SIGNAL(ImageLoaded(Slide *)),
-            this, SLOT(Flush(Slide *)));
+    connect(slide, &Slide::ImageLoaded,
+            this, qOverload<Slide*>(&SlideBuffer::Flush));
 
     m_queue.enqueue(slide);
 
@@ -616,8 +612,8 @@ void SlideBuffer::Initialise(MythUIImage &image)
         slide->SetVisible(false);
 
         // Buffer is notified when it has loaded image
-        connect(slide, SIGNAL(ImageLoaded(Slide *)),
-                this, SLOT(Flush(Slide *)));
+        connect(slide, &Slide::ImageLoaded,
+                this, qOverload<Slide*>(&SlideBuffer::Flush));
 
         m_queue.enqueue(slide);
     }
@@ -666,7 +662,7 @@ bool SlideBuffer::Load(const ImagePtrK& im, int direction)
         ++m_nextLoad;
 
     LOG(VB_FILE, LOG_DEBUG, SBLOC + QString("Loading %1 in %2, %3")
-        .arg(im->m_filePath, slide->objectName()).arg(BufferState()));
+        .arg(im->m_filePath, slide->objectName(), BufferState()));
 
     return slide->LoadSlide(im, direction, true);
 }
@@ -687,7 +683,7 @@ void SlideBuffer::Preload(const ImagePtrK& im)
     Slide *slide = m_queue.at(m_nextLoad);
 
     LOG(VB_FILE, LOG_DEBUG, SBLOC + QString("Preloading %1 in %2, %3")
-        .arg(im->m_filePath, slide->objectName()).arg(BufferState()));
+        .arg(im->m_filePath, slide->objectName(), BufferState()));
 
     // Load silently
     slide->LoadSlide(im);
@@ -745,7 +741,12 @@ void SlideBuffer::Flush(Slide *slide, const QString& reason)
     QString   path = im ? im->m_filePath : "Unknown";
 
     LOG(VB_FILE, LOG_DEBUG, SBLOC + QString("%1 %2 in %3, %4")
-        .arg(reason, path, slide->objectName()).arg(BufferState()));
+        .arg(reason, path, slide->objectName(), BufferState()));
 
     emit SlideReady(--available);
 }
+
+void SlideBuffer::Flush(Slide *slide)
+{
+    Flush(slide, "Loaded");
+};

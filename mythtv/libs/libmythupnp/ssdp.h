@@ -6,12 +6,14 @@
 //
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __SSDP_H__
-#define __SSDP_H__
+#ifndef SSDP_H
+#define SSDP_H
+
+#include <array>
 
 #include <QFile>
 
@@ -60,9 +62,9 @@ class UPNP_PUBLIC SSDP : public MThread
         // Singleton instance used by all.
         static SSDP*        g_pSSDP;  
 
-        QRegExp             m_procReqLineExp        {"[ \r\n][ \r\n]*"};
+        QRegularExpression  m_procReqLineExp        {"\\s+"};
         constexpr static int kNumberOfSockets = 3;
-        MSocketDevice      *m_sockets[kNumberOfSockets] {nullptr,nullptr,nullptr};
+        std::array<MSocketDevice*,kNumberOfSockets> m_sockets {nullptr,nullptr,nullptr};
 
         int                 m_nPort                 {SSDP_PORT};
         int                 m_nSearchPort           {SSDP_SEARCHPORT};
@@ -72,12 +74,12 @@ class UPNP_PUBLIC SSDP : public MThread
         bool                m_bAnnouncementsEnabled {false};
 
         bool                m_bTermRequested        {false};
-        QMutex              m_lock                  {QMutex::NonRecursive};
+        QMutex              m_lock;
 
     private:
 
         // ------------------------------------------------------------------
-        // Private so the singleton pattern can be inforced.
+        // Private so the singleton pattern can be enforced.
         // ------------------------------------------------------------------
 
         SSDP   ();
@@ -86,7 +88,7 @@ class UPNP_PUBLIC SSDP : public MThread
 
         bool    ProcessSearchRequest ( const QStringMap &sHeaders,
                                        const QHostAddress&  peerAddress,
-                                       quint16       peerPort );
+                                       quint16       peerPort ) const;
         static bool    ProcessSearchResponse( const QStringMap &sHeaders );
         static bool    ProcessNotify        ( const QStringMap &sHeaders );
 
@@ -111,7 +113,7 @@ class UPNP_PUBLIC SSDP : public MThread
 
         void RequestTerminate(void);
 
-        void PerformSearch(const QString &sST, uint timeout_secs = 2);
+        void PerformSearch(const QString &sST, std::chrono::seconds timeout = 2s);
 
         void EnableNotifications ( int nServicePort );
         void DisableNotifications();
@@ -149,7 +151,7 @@ class SSDPExtension : public HttpServerExtension
 
         static SSDPMethod GetMethod( const QString &sURI );
 
-        void       GetDeviceDesc( HTTPRequest *pRequest );
+        void       GetDeviceDesc( HTTPRequest *pRequest ) const;
         void       GetFile      ( HTTPRequest *pRequest, const QString& sFileName );
         static void       GetDeviceList( HTTPRequest *pRequest );
 
@@ -162,4 +164,4 @@ class SSDPExtension : public HttpServerExtension
         bool     ProcessRequest( HTTPRequest *pRequest ) override; // HttpServerExtension
 };
 
-#endif
+#endif // SSDP_H

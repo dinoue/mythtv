@@ -3,11 +3,10 @@
  * Distributed as part of MythTV under GPL v2 and later.
  */
 
-#ifndef _RTP_TS_DATA_PACKET_H_
-#define _RTP_TS_DATA_PACKET_H_
+#ifndef RTP_TS_DATA_PACKET_H
+#define RTP_TS_DATA_PACKET_H
 
 #include <algorithm>
-using namespace std;
 
 #include "rtpdatapacket.h"
 
@@ -29,11 +28,11 @@ class RTPTSDataPacket : public RTPDataPacket
 
     unsigned int GetTSDataSize(void) const
     {
-        return max(m_data.size() - (int)GetTSOffset() - (int)GetPaddingSize(), 0);
+        return std::max(static_cast<int>(m_data.size() - (int)GetTSOffset() - (int)GetPaddingSize()), 0);
     }
 
   private:
     uint GetTSOffset(void) const { return m_off; }
 };
 
-#endif // _RTP_TS_DATA_PACKET_H_
+#endif // RTP_TS_DATA_PACKET_H

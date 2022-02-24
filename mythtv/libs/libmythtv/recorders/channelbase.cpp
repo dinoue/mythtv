@@ -11,7 +11,6 @@
 // C++ headers
 #include <iostream>
 #include <algorithm>
-using namespace std;
 
 // Qt headers
 #include <QCoreApplication>
@@ -44,12 +43,13 @@ using namespace std;
 #include "cardutil.h"
 #include "compat.h"
 #include "inputinfo.h"
+#include "satipchannel.h"
 
 #define LOC QString("ChannelBase[%1]: ").arg(m_inputId)
 
 ChannelBase::~ChannelBase(void)
 {
-    QMutexLocker locker(&m_system_lock);
+    QMutexLocker locker(&m_systemLock);
     if (m_system)
         KillScript();
 }
@@ -66,10 +66,9 @@ bool ChannelBase::Init(QString &startchannel, bool setchan)
     if (ok)
         return true;
 
-    // try to find a valid channel if given start channel fails.
-    QString msg1 = QString("Setting start channel '%1' failed, ")
-        .arg(startchannel);
-    QString msg2 = "and we failed to find any suitable channels on any input.";
+    // Try to find a valid channel if given start channel fails.
+    QString msg1 = QString("Setting start channel '%1' failed ").arg(startchannel);
+    QString msg2 = "and no suitable channel found.";
     bool msg_error = true;
 
     // Attempt to find the requested startchannel
@@ -94,10 +93,9 @@ bool ChannelBase::Init(QString &startchannel, bool setchan)
             m_channels, m_channels[0].m_chanId,
             mplexid_restriction, chanid_restriction, CHANNEL_DIRECTION_UP);
 
-        ChannelInfoList::const_iterator cit =
-            find(m_channels.begin(), m_channels.end(), chanid);
+        auto cit = find(m_channels.begin(), m_channels.end(), chanid);
 
-        if (chanid && cit != m_channels.end())
+        if ((chanid != 0U) && (cit != m_channels.end()))
         {
             if (!setchan)
             {
@@ -109,17 +107,14 @@ bool ChannelBase::Init(QString &startchannel, bool setchan)
 
             if (ok)
             {
-                if (mplexid_restriction || chanid_restriction)
-                    startchannel = (*cit).m_chanNum;
-                msg2 = QString("selected to '%1' instead.")
-                    .arg(startchannel);
+                startchannel = (*cit).m_chanNum;
+                msg2 = QString("selected '%1' instead.").arg(startchannel);
                 msg_error = false;
             }
         }
     }
 
-    LOG(VB_GENERAL, ((msg_error) ? LOG_ERR : LOG_WARNING), LOC +
-        msg1 + "\n\t\t\t" + msg2);
+    LOG(VB_GENERAL, ((msg_error) ? LOG_ERR : LOG_WARNING), LOC + msg1 + msg2);
 
     return ok;
 }
@@ -236,7 +231,7 @@ bool ChannelBase::IsInputAvailable(
     mplexid_restriction = 0;
     chanid_restriction = 0;
 
-    vector<uint> inputids = CardUtil::GetConflictingInputs(m_inputId);
+    std::vector<uint> inputids = CardUtil::GetConflictingInputs(m_inputId);
     for (uint inputid : inputids)
     {
         if (RemoteIsBusy(inputid, info))
@@ -260,7 +255,7 @@ bool ChannelBase::IsInputAvailable(
     return true;
 }
 
-/// \note m_system_lock must be held when this is called
+/// \note m_systemLock must be held when this is called
 bool ChannelBase::KillScript(void)
 {
     if (!m_system)
@@ -273,10 +268,10 @@ bool ChannelBase::KillScript(void)
     return true;
 }
 
-/// \note m_system_lock must NOT be held when this is called
+/// \note m_systemLock must NOT be held when this is called
 void ChannelBase::HandleScript(const QString &freqid)
 {
-    QMutexLocker locker(&m_system_lock);
+    QMutexLocker locker(&m_systemLock);
 
     bool ok = true;
     m_systemStatus = 0; // unknown
@@ -310,7 +305,8 @@ void ChannelBase::HandleScript(const QString &freqid)
     if (m_system)
         GetScriptStatus(true);
 
-    // If it's still running, try killing it
+    // If it's still running, try killing it. GetScriptStatus() may
+    // update m_system. (cppcheck-suppress duplicateCondition)
     if (m_system)
         ok = KillScript();
 
@@ -357,7 +353,7 @@ void ChannelBase::HandleScript(const QString &freqid)
 }
 
 bool ChannelBase::ChangeInternalChannel(const QString &freqid,
-                                        uint inputid)
+                                        uint inputid) const
 {
 #ifdef USING_FIREWIRE
     FirewireDevice *device = nullptr;
@@ -367,16 +363,14 @@ bool ChannelBase::ChangeInternalChannel(const QString &freqid,
 
     LOG(VB_GENERAL, LOG_ERR, LOC + QString("Internal channel change to %1 "
             "on inputid %2, GUID %3 (%4)").arg(freqid).arg(inputid)
-            .arg(fwnode).arg(fwmodel));
+            .arg(fwnode, fwmodel));
 
 #ifdef USING_LINUX_FIREWIRE
-    // cppcheck-suppress redundantAssignment
     device = new LinuxFirewireDevice(
         guid, 0, 100, true);
 #endif // USING_LINUX_FIREWIRE
 
 #ifdef USING_OSX_FIREWIRE
-    // cppcheck-suppress redundantAssignment
     device = new DarwinFirewireDevice(guid, 0, 100);
 #endif // USING_OSX_FIREWIRE
 
@@ -405,7 +399,7 @@ bool ChannelBase::ChangeInternalChannel(const QString &freqid,
 #endif
 }
 
-/// \note m_system_lock must be held when this is called
+/// \note m_systemLock must be held when this is called
 bool ChannelBase::ChangeExternalChannel(const QString &changer,
                                         const QString &freqid)
 {
@@ -415,7 +409,7 @@ bool ChannelBase::ChangeExternalChannel(const QString &changer,
     if (changer.isEmpty() || freqid.isEmpty())
         return false;
 
-    QString command = QString("%1 %2").arg(changer).arg(freqid);
+    QString command = QString("%1 %2").arg(changer, freqid);
     LOG(VB_CHANNEL, LOG_INFO, LOC +
         QString("Running command: %1").arg(command));
 
@@ -431,7 +425,7 @@ uint ChannelBase::GetScriptStatus(bool holding_lock)
         return m_systemStatus;
 
     if (!holding_lock)
-        m_system_lock.lock();
+        m_systemLock.lock();
 
     m_systemStatus = m_system->Wait();
     if (m_systemStatus != GENERIC_EXIT_RUNNING &&
@@ -467,12 +461,12 @@ uint ChannelBase::GetScriptStatus(bool holding_lock)
     m_systemStatus = ret;
 
     if (!holding_lock)
-        m_system_lock.unlock();
+        m_systemLock.unlock();
 
     return ret;
 }
 
-/// \note m_system_lock must be held when this is called
+/// \note m_systemLock must be held when this is called
 void ChannelBase::HandleScriptEnd(bool ok)
 {
     if (ok)
@@ -614,7 +608,7 @@ bool ChannelBase::InitializeInput(void)
     // print it
     LOG(VB_CHANNEL, LOG_INFO, LOC +
         QString("Input #%1: '%2' schan(%3) sourceid(%4)")
-        .arg(m_inputId).arg(m_name).arg(m_startChanNum)
+        .arg(m_inputId).arg(m_name, m_startChanNum)
         .arg(m_sourceId));
 
     return true;
@@ -722,16 +716,22 @@ ChannelBase *ChannelBase::CreateChannel(
         Q_UNUSED(fwOpt);
 #endif
     }
+#ifdef USING_HDHOMERUN
     else if (genOpt.m_inputType == "HDHOMERUN")
     {
-#ifdef USING_HDHOMERUN
         channel = new HDHRChannel(tvrec, genOpt.m_videoDev);
-#endif
     }
+#endif
+#ifdef USING_SATIP
+    else if (genOpt.m_inputType == "SATIP")
+    {
+        channel = new SatIPChannel(tvrec, genOpt.m_videoDev);
+    }
+#endif
     else if ((genOpt.m_inputType == "IMPORT") ||
              (genOpt.m_inputType == "DEMO") ||
              (genOpt.m_inputType == "MPEG" &&
-              genOpt.m_videoDev.toLower().startsWith("file:")))
+              genOpt.m_videoDev.startsWith("file:", Qt::CaseInsensitive)))
     {
         channel = new DummyChannel(tvrec);
         rbFileExt = "mpg";
@@ -794,8 +794,8 @@ ChannelBase *ChannelBase::CreateChannel(
             "\n"
             "Recompile MythTV with %4 support or remove the card \n"
             "from the configuration and restart MythTV.")
-            .arg(genOpt.m_inputType).arg(genOpt.m_videoDev)
-            .arg(genOpt.m_inputType).arg(genOpt.m_inputType);
+            .arg(genOpt.m_inputType, genOpt.m_videoDev,
+                 genOpt.m_inputType, genOpt.m_inputType);
         LOG(VB_GENERAL, LOG_ERR, "ChannelBase: CreateChannel() Error: \n" +
             msg + "\n");
         return nullptr;
@@ -817,6 +817,7 @@ ChannelBase *ChannelBase::CreateChannel(
         if (channel &&
             ((genOpt.m_inputType == "DVB" && dvbOpt.m_dvbOnDemand) ||
              genOpt.m_inputType == "HDHOMERUN" ||
+             genOpt.m_inputType == "EXTERNAL" ||
              CardUtil::IsV4L(genOpt.m_inputType)))
         {
             channel->Close();

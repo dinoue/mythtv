@@ -55,12 +55,16 @@ MythMediaType FindMediaType(io_service_t service)
                                                &iter);
 
     if (KERN_SUCCESS != kernResult)
+    {
         LOG(VB_GENERAL, LOG_CRIT, msg +
             QString("IORegistryEntryCreateIterator returned %1")
                 .arg(kernResult));
+    }
     else if (!iter)
+    {
         LOG(VB_GENERAL, LOG_CRIT, msg +
             "IORegistryEntryCreateIterator returned NULL iterator");
+    }
     else
     {
         // A reference on the initial service object is released in
@@ -79,8 +83,10 @@ MythMediaType FindMediaType(io_service_t service)
                               kCFAllocatorDefault, 0);
 
                 if (!wholeMedia)
+		{
                     LOG(VB_GENERAL, LOG_ALERT, msg +
                         "Could not retrieve Whole property");
+                }
                 else
                 {
                     isWholeMedia = CFBooleanGetValue((CFBooleanRef)wholeMedia);
@@ -207,7 +213,7 @@ static char * getVolName(CFDictionaryRef diskDetails)
 /*
  * Given a DA description, return a compound description to help identify it.
  */
-static const QString getModel(CFDictionaryRef diskDetails)
+static QString getModel(CFDictionaryRef diskDetails)
 {
     QString     desc;
     const void  *strRef;
@@ -386,12 +392,12 @@ void MonitorThreadDarwin::run(void)
 
     // Nice and simple, as long as our monitor is valid and active,
     // loop and let daSession check the devices.
-    while (m_Monitor && m_Monitor->IsActive())
+    while (m_monitor && m_monitor->IsActive())
     {
         // Run the run loop for interval (milliseconds) - this will
         // handle any disk arbitration appeared/dissappeared events
         CFRunLoopRunInMode(kCFRunLoopDefaultMode,
-                           (float) m_Interval / 1000.0F, false );
+                           (float) m_interval / 1000.0F, false );
     }
 
     DAUnregisterCallback(daSession, (void(*))diskChangedCallback,     this);
@@ -418,7 +424,7 @@ void MonitorThreadDarwin::diskInsert(const char *devName,
                       .arg(devName).arg(volName).arg(model).arg(isCDorDVD));
 
     if (isCDorDVD)
-        media = MythCDROM::get(nullptr, devName, true, m_Monitor->m_AllowEject);
+        media = MythCDROM::get(nullptr, devName, true, m_monitor->m_allowEject);
     else
         media = MythHDD::Get(nullptr, devName, true, false);
 
@@ -442,9 +448,9 @@ void MonitorThreadDarwin::diskInsert(const char *devName,
     {
         LOG(VB_MEDIA, LOG_WARNING,
             (msg + "() - Waiting for mount '%1' to become stable.").arg(mnt));
-        usleep(120000);
+        usleep(std::chrono::microseconds(120000));
         if ( ++attempts > 4 )
-            usleep(200000);
+            usleep(std::chrono::microseconds(200000));
         if ( attempts > 8 )
         {
             delete media;
@@ -457,7 +463,7 @@ void MonitorThreadDarwin::diskInsert(const char *devName,
 
     // This is checked in AddDevice(), but checking earlier means
     // we can avoid scanning all the files to determine its type
-    if (m_Monitor->shouldIgnore(media))
+    if (m_monitor->shouldIgnore(media))
         return;
 
     // We want to use MythMedia's code to work out the mediaType.
@@ -465,7 +471,7 @@ void MonitorThreadDarwin::diskInsert(const char *devName,
     // so to call it indirectly, we pretend to mount it here.
     media->mount();
 
-    m_Monitor->AddDevice(media);
+    m_monitor->AddDevice(media);
 }
 
 void MonitorThreadDarwin::diskRemove(QString devName)
@@ -473,14 +479,14 @@ void MonitorThreadDarwin::diskRemove(QString devName)
     LOG(VB_MEDIA, LOG_DEBUG,
             QString("MonitorThreadDarwin::diskRemove(%1)").arg(devName));
 
-    MythMediaDevice *pDevice = m_Monitor->GetMedia(devName);
+    MythMediaDevice *pDevice = m_monitor->GetMedia(devName);
 
     if (pDevice)  // Probably should ValidateAndLock() here?
         pDevice->setStatus(MEDIASTAT_NODISK);
     else
         LOG(VB_MEDIA, LOG_INFO, "Couldn't find MythMediaDevice: " + devName);
 
-    m_Monitor->RemoveDevice(devName);
+    m_monitor->RemoveDevice(devName);
 }
 
 /**
@@ -495,9 +501,9 @@ void MonitorThreadDarwin::diskRename(const char *devName, const char *volName)
              QString("MonitorThreadDarwin::diskRename(%1,%2)")
                       .arg(devName).arg(volName));
 
-    MythMediaDevice *pDevice = m_Monitor->GetMedia(devName);
+    MythMediaDevice *pDevice = m_monitor->GetMedia(devName);
 
-    if (m_Monitor->ValidateAndLock(pDevice))
+    if (m_monitor->ValidateAndLock(pDevice))
     {
         // Send message to plugins to ignore this drive:
         pDevice->setStatus(MEDIASTAT_NODISK);
@@ -508,7 +514,7 @@ void MonitorThreadDarwin::diskRename(const char *devName, const char *volName)
         // Plugins can now use it again:
         pDevice->setStatus(MEDIASTAT_USEABLE);
 
-        m_Monitor->Unlock(pDevice);
+        m_monitor->Unlock(pDevice);
     }
     else
         LOG(VB_MEDIA, LOG_INFO,
@@ -524,23 +530,23 @@ void MonitorThreadDarwin::diskRename(const char *devName, const char *volName)
 void MediaMonitorDarwin::StartMonitoring(void)
 {
     // Sanity check
-    if (m_Active)
+    if (m_active)
         return;
 
     // If something (like the MythMusic plugin) stops and starts monitoring,
     // DiskArbitration would re-add the same drives several times over.
     // So, we make sure the device list is deleted.
-    m_Devices.clear();
+    m_devices.clear();
 
 
-    if (!m_Thread)
-        m_Thread = new MonitorThreadDarwin(this, m_MonitorPollingInterval);
+    if (!m_thread)
+        m_thread = new MonitorThreadDarwin(this, m_monitorPollingInterval);
 
     qRegisterMetaType<MythMediaStatus>("MythMediaStatus");
 
     LOG(VB_MEDIA, LOG_NOTICE, "Starting MediaMonitor");
-    m_Active = true;
-    m_Thread->start();
+    m_active = true;
+    m_thread->start();
 }
 
 /**
@@ -560,15 +566,15 @@ bool MediaMonitorDarwin::AddDevice(MythMediaDevice* pDevice)
     if (shouldIgnore(pDevice))
         return false;
 
-    m_Devices.push_back( pDevice );
-    m_UseCount[pDevice] = 0;
+    m_devices.push_back( pDevice );
+    m_useCount[pDevice] = 0;
 
 
     // Devices on Mac OS X don't change status the way Linux ones do,
     // so we force a status change for mediaStatusChanged() to send an event
     pDevice->setStatus(MEDIASTAT_NODISK);
-    connect(pDevice, SIGNAL(statusChanged(MythMediaStatus, MythMediaDevice*)),
-            this, SLOT(mediaStatusChanged(MythMediaStatus, MythMediaDevice*)));
+    connect(pDevice, &MythMediaDevice::statusChanged,
+            this, &MediaMonitorDarwin::mediaStatusChanged);
     pDevice->setStatus(MEDIASTAT_USEABLE);
 
 
@@ -579,7 +585,7 @@ bool MediaMonitorDarwin::AddDevice(MythMediaDevice* pDevice)
  * Given a device, return a compound description to help identify it.
  * We try to find out if it is internal, its manufacturer, and model.
  */
-static const QString getModel(io_object_t drive)
+static QString getModel(io_object_t drive)
 {
     QString                 desc;
     CFMutableDictionaryRef  props = nullptr;

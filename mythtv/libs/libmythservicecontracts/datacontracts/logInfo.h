@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2015 Bill Meek, from: 2010 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +28,7 @@ class SERVICE_PUBLIC LogInfo : public QObject
 
     Q_PROPERTY( QString  LogArgs      READ LogArgs   WRITE setLogArgs   )
 
-    PROPERTYIMP( QString,  LogArgs   );
+    PROPERTYIMP_REF( QString,  LogArgs   );
 
     public:
 

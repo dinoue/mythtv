@@ -8,7 +8,7 @@
 
 #define TR GallerySettings::tr
 
-StandardSetting *GallerySettings::ImageOrder()
+StandardSetting *GallerySettings::ImageOrder() const
 {
     auto *gc = new HostComboBoxSetting("GalleryImageOrder");
 
@@ -43,7 +43,7 @@ StandardSetting *GallerySettings::ImageOrder()
     return gc;
 }
 
-StandardSetting *GallerySettings::DirOrder()
+StandardSetting *GallerySettings::DirOrder() const
 {
     auto *gc = new HostComboBoxSetting("GalleryDirOrder");
 
@@ -65,7 +65,7 @@ StandardSetting *GallerySettings::DirOrder()
 static void AddFormat(HostComboBoxSetting* gc, const QDateTime& date, const QString& format)
 { gc->addSelection(gCoreContext->GetQLocale().toString(date, format), format); }
 
-StandardSetting *GallerySettings::DateFormat()
+StandardSetting *GallerySettings::DateFormat() const
 {
     auto *gc = new HostComboBoxSetting("GalleryDateFormat");
 
@@ -148,6 +148,31 @@ static StandardSetting *StatusDelay()
     return gc;
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+StandardSetting *GallerySettings::ImageMaximumSize() const
+{
+    auto *gc = new HostSpinBoxSetting("ImageMaximumSize", -1, 1024*1024, 1, 10);
+
+    gc->setLabel(TR("Maximum Image Size (MB)"));
+    gc->setHelpText(TR("The maximum image size that will be loaded, "
+                       "in megabytes. (-1 means system default, 0 "
+                       "means unlimited.)"));
+
+    connect(gc,   &StandardSetting::ChangeSaved,
+            this, &GallerySettings::ImageSizeChanged);
+
+    return gc;
+}
+
+void GallerySettings::ImageSizeChanged ()
+{
+    int maxImageSize = gCoreContext->GetNumSetting("ImageMaximumSize", -1);
+    if (maxImageSize < 0)
+        maxImageSize = 128; // Restore Qt6 default
+    QImageReader::setAllocationLimit(maxImageSize);
+}
+#endif
+
 static StandardSetting *UseTransitions()
 {
     auto *gc = new HostCheckBoxSetting("GalleryBrowseTransition");
@@ -179,7 +204,7 @@ static StandardSetting *Import(bool enabled)
  \brief Setting for excluding image files by pattern
  \param enabled True if password has been entered
 */
-StandardSetting *GallerySettings::Exclusions(bool enabled)
+StandardSetting *GallerySettings::Exclusions(bool enabled) const
 {
     auto *gc = new GlobalTextEditSetting("GalleryIgnoreFilter");
 
@@ -233,7 +258,7 @@ static StandardSetting *Password(bool enabled)
  \brief Setting for clearing image database
  \param enabled True if password has been entered
 */
-StandardSetting *GallerySettings::ClearDb(bool enabled)
+StandardSetting *GallerySettings::ClearDb(bool enabled) const
 {
     auto *gc = new ButtonStandardSetting(TR("Reset Image Database"));
 
@@ -276,6 +301,9 @@ GallerySettings::GallerySettings(bool enable)
     addChild(SlideDuration());
     addChild(TransitionDuration());
     addChild(StatusDelay());
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    addChild(ImageMaximumSize());
+#endif
     addChild(UseTransitions());
 
     // These modify the database

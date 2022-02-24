@@ -61,14 +61,26 @@ LIBS += -L../../external/FFmpeg/libavformat -lmythavformat
 LIBS += -L../libmyth              -lmyth-$${LIBVERSION}
 LIBS += -L../libmythtv              -lmythtv-$${LIBVERSION}
 LIBS += -L../../external/FFmpeg/libswscale -lmythswscale
-LIBS += -L../../external/libudfread -lmythudfread-$${LIBVERSION}
 
-!using_libbluray_external {
+!using_system_libexiv2 {
+    darwin {
+        QMAKE_CXXFLAGS = "-I../../external/libexiv2/include" $${QMAKE_CXXFLAGS}
+    } else {
+        INCLUDEPATH += ../../external/libexiv2/include
+    }
+    DEPENDPATH += ../../external/libexiv2
+    LIBS += -L../../external/libexiv2 -lmythexiv2-0.28
+}
+
+!using_system_libbluray {
     INCLUDEPATH += ../../external/libmythbluray/src
     DEPENDPATH += ../../external/libmythbluray
     LIBS += -L../../external/libmythbluray     -lmythbluray-$${LIBVERSION}
+} else {
+    DEFINES += HAVE_LIBBLURAY
 }
-using_libbluray_external:android {
+
+using_system_libbluray:android {
     LIBS += -lbluray -lxml2
 }
 
@@ -78,9 +90,9 @@ LIBS += $${CONFIG_TAGLIB_LIBS}
 win32-msvc*:LIBS += -ltag
 
 using_mheg:LIBS += -L../libmythfreemheg        -lmythfreemheg-$${LIBVERSION}
-using_live:LIBS += -L../libmythlivemedia        -lmythlivemedia-$${LIBVERSION}
 
 mingw:LIBS += -lws2_32
+mingw:LIBS += libbluray
 
 win32-msvc* {
 
@@ -132,7 +144,10 @@ INCLUDEPATH += $$POSTINC
 
 include ( ../libs-targetfix.pro )
 
-LIBS += $$EXTRA_LIBS $$LATE_LIBS -lexiv2
+LIBS += $$EXTRA_LIBS $$LATE_LIBS
+using_system_libexiv2 {
+    LIBS += -lexiv2
+}
 
 test_clean.commands = -cd test/ && $(MAKE) -f Makefile clean
 clean.depends = test_clean

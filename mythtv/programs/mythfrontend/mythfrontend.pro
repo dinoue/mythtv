@@ -2,7 +2,8 @@ include ( ../../settings.pro )
 include ( ../../version.pro )
 include ( ../programs-libs.pro )
 
-QT += network xml sql script widgets
+QT += network xml sql widgets
+contains(QT_MAJOR_VERSION, 5): QT += script
 mingw | win32-msvc* {
    # script debugger currently only enabled for WIN32 builds
    QT += scripttools
@@ -83,6 +84,9 @@ HEADERS += serviceHosts/frontendServiceHost.h
 HEADERS += services/frontend.h
 SOURCES += services/frontend.cpp
 
+HEADERS += services/mythfrontendservice.h
+SOURCES += services/mythfrontendservice.cpp
+
 HEADERS += progdetails.h proginfolist.h
 SOURCES += progdetails.cpp proginfolist.cpp
 
@@ -110,7 +114,6 @@ win32 : !debug {
 }
 
 using_x11:DEFINES += USING_X11
-using_xrandr:DEFINES += USING_XRANDR
 using_opengl:DEFINES += USING_OPENGL
 using_vdpau:DEFINES += USING_VDPAU
 using_vaapi:using_opengl:DEFINES += USING_VAAPI

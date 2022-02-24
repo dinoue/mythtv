@@ -67,7 +67,12 @@ class PMapDBReplacement;
 class MPUBLIC ProgramInfo
 {
     friend int pginfo_init_statics(void);
+    friend class TestRecordingExtender;
+  private:
+    // Must match the number of items in CategoryType below
+    static const std::array<const QString,5> kCatName;
   public:
+    static constexpr int kNumCatTypes = 5;
     enum CategoryType { kCategoryNone, kCategoryMovie, kCategorySeries,
                         kCategorySports, kCategoryTVShow };
 
@@ -126,7 +131,7 @@ class MPUBLIC ProgramInfo
                 uint partnumber,
                 uint parttotal,
 
-                const QDate &originalAirDate,
+                QDate originalAirDate,
                 QDateTime lastmodified,
 
                 RecStatus::Type recstatus,
@@ -207,7 +212,7 @@ class MPUBLIC ProgramInfo
                 uint year,
                 uint partnumber,
                 uint parttotal,
-                const QDate &originalAirDate,
+                QDate originalAirDate,
                 RecStatus::Type recstatus,
                 uint recordid,
                 RecordingType rectype,
@@ -266,7 +271,7 @@ class MPUBLIC ProgramInfo
                 const QString &director,
                 int season, int episode,
                 const QString &inetref,
-                uint length_in_minutes,
+                std::chrono::minutes length_in_minutes,
                 uint year,
                 const QString &programid);
     /// Constructs a manual record ProgramInfo.
@@ -306,7 +311,8 @@ class MPUBLIC ProgramInfo
     void ToStringList(QStringList &list) const;
     virtual void ToMap(InfoMap &progMap,
                        bool showrerecord = false,
-                       uint star_range = 10) const;
+                       uint star_range = 10,
+                       uint date_format = 0) const;
     virtual void SubstituteMatches(QString &str);
 
     // Used for scheduling recordings
@@ -332,7 +338,7 @@ class MPUBLIC ProgramInfo
     /// existing recording.
     QString MakeUniqueKey(void) const
         { return MakeUniqueKey(m_chanId, m_recStartTs); }
-    uint GetSecondsInRecording(void) const;
+    std::chrono::seconds GetSecondsInRecording(void) const;
     QString ChannelText(const QString& format) const;
     QString GetPathname(void) const { return m_pathname; }
     QString GetBasename(void) const { return m_pathname.section('/', -1); }
@@ -464,31 +470,40 @@ class MPUBLIC ProgramInfo
     uint    GetFindID(void)               const { return m_findId;       }
 
     uint32_t GetProgramFlags(void)        const { return m_programFlags; }
+    QString GetProgramFlagNames(void)     const;
     ProgramInfoType GetProgramInfoType(void) const
         { return (ProgramInfoType)((m_programFlags & FL_TYPEMASK) >> 20); }
     QDateTime GetBookmarkUpdate(void) const { return m_bookmarkUpdate; }
     bool IsGeneric(void) const;
-    bool IsInUsePlaying(void)   const { return m_programFlags & FL_INUSEPLAYING;}
-    bool IsCommercialFree(void) const { return m_programFlags & FL_CHANCOMMFREE;}
-    bool HasCutlist(void)       const { return m_programFlags & FL_CUTLIST;     }
-    bool IsBookmarkSet(void)    const { return m_programFlags & FL_BOOKMARK;    }
-    bool IsWatched(void)        const { return m_programFlags & FL_WATCHED;     }
-    bool IsAutoExpirable(void)  const { return m_programFlags & FL_AUTOEXP;     }
-    bool IsPreserved(void)      const { return m_programFlags & FL_PRESERVED;   }
-    bool IsVideo(void)          const { return m_programFlags & FL_TYPEMASK;    }
+    bool IsInUsePlaying(void)   const { return (m_programFlags & FL_INUSEPLAYING) != 0U;}
+    bool IsCommercialFree(void) const { return (m_programFlags & FL_CHANCOMMFREE) != 0U;}
+    bool IsCommercialFlagged(void) const { return (m_programFlags & FL_COMMFLAG) != 0U;}
+    bool HasCutlist(void)       const { return (m_programFlags & FL_CUTLIST) != 0U;     }
+    bool IsBookmarkSet(void)    const { return (m_programFlags & FL_BOOKMARK) != 0U;    }
+    bool IsLastPlaySet(void)    const { return (m_programFlags & FL_LASTPLAYPOS) != 0U; }
+    bool IsWatched(void)        const { return (m_programFlags & FL_WATCHED) != 0U;     }
+    bool IsAutoExpirable(void)  const { return (m_programFlags & FL_AUTOEXP) != 0U;     }
+    bool IsPreserved(void)      const { return (m_programFlags & FL_PRESERVED) != 0U;   }
+    bool IsVideo(void)          const { return (m_programFlags & FL_TYPEMASK) != 0U;    }
     bool IsRecording(void)      const { return !IsVideo();                    }
-    bool IsRepeat(void)         const { return m_programFlags & FL_REPEAT;      }
-    bool IsDuplicate(void)      const { return m_programFlags & FL_DUPLICATE;   }
-    bool IsReactivated(void)    const { return m_programFlags & FL_REACTIVATE;  }
+    bool IsRepeat(void)         const { return (m_programFlags & FL_REPEAT) != 0U;      }
+    bool IsDuplicate(void)      const { return (m_programFlags & FL_DUPLICATE) != 0U;   }
+    bool IsReactivated(void)    const { return (m_programFlags & FL_REACTIVATE) != 0U;  }
     bool IsDeletePending(void)  const
-        { return m_programFlags & FL_DELETEPENDING; }
+        { return (m_programFlags & FL_DELETEPENDING) != 0U; }
 
-    uint GetSubtitleType(void)    const
-        { return (m_properties&kSubtitlePropertyMask)>>kSubtitlePropertyOffset; }
-    uint GetVideoProperties(void) const
-        { return (m_properties & kVideoPropertyMask) >> kVideoPropertyOffset; }
-    uint GetAudioProperties(void) const
-        { return (m_properties & kAudioPropertyMask) >> kAudioPropertyOffset; }
+    uint GetSubtitleType(void)    const { return m_subtitleProperties; }
+    QString GetSubtitleTypeNames(void) const;
+    uint GetVideoProperties(void) const { return m_videoProperties; }
+    QString GetVideoPropertyNames(void) const;
+    uint GetAudioProperties(void) const { return m_audioProperties; }
+    QString GetAudioPropertyNames(void) const;
+
+    static uint SubtitleTypesFromNames(const QString & names);
+    static uint VideoPropertiesFromNames(const QString & names);
+    static uint AudioPropertiesFromNames(const QString & names);
+
+    void ProgramFlagsFromNames(const QString & names);
 
     enum Verbosity
     {
@@ -557,10 +572,10 @@ class MPUBLIC ProgramInfo
     /// \brief If "ignore" is true QueryLastPlayPos() will return 0, otherwise
     ///        QueryLastPlayPos() will return the last playback position
     ///        if it exists.
-    void SetAllowLastPlayPos(bool allow)
+    void SetIgnoreLastPlayPos(bool ignore)
     {
-        m_programFlags &= ~FL_ALLOWLASTPLAYPOS;
-        m_programFlags |= (allow) ? FL_ALLOWLASTPLAYPOS : 0;
+        m_programFlags &= ~FL_IGNORELASTPLAYPOS;
+        m_programFlags |= (ignore) ? FL_IGNORELASTPLAYPOS : 0;
     }
     virtual void SetRecordingID(uint _recordedid)
         { m_recordedId = _recordedid; }
@@ -568,6 +583,13 @@ class MPUBLIC ProgramInfo
     void SetRecordingRuleType(RecordingType type)   { m_recType   = type;   }
     void SetPositionMapDBReplacement(PMapDBReplacement *pmap)
         { m_positionMapDBReplacement = pmap; }
+
+    void CalculateRecordedProgress();
+    uint GetRecordedPercent() const       { return m_recordedPercent; }
+    void CalculateWatchedProgress(uint64_t pos);
+    uint GetWatchedPercent() const        { return m_watchedPercent; }
+    void SetWatchedPercent(uint progress) { m_watchedPercent = progress; }
+    void CalculateProgress(uint64_t pos);
 
     // Slow DB gets
     QString     QueryBasename(void) const;
@@ -577,6 +599,7 @@ class MPUBLIC ProgramInfo
     uint64_t    QueryBookmark(void) const;
     uint64_t    QueryProgStart(void) const;
     uint64_t    QueryLastPlayPos(void) const;
+    uint64_t    QueryStartMark(void) const;
     CategoryType QueryCategoryType(void) const;
     QStringList QueryDVDBookmark(const QString &serialid) const;
     QStringList QueryBDBookmark(const QString &serialid) const;
@@ -592,7 +615,8 @@ class MPUBLIC ProgramInfo
     uint        QueryAverageHeight(void) const;
     uint        QueryAverageFrameRate(void) const;
     MarkTypes   QueryAverageAspectRatio(void) const;
-    uint32_t    QueryTotalDuration(void) const;
+    bool        QueryAverageScanProgressive(void) const;
+    std::chrono::milliseconds  QueryTotalDuration(void) const;
     int64_t     QueryTotalFrames(void) const;
     QString     QueryRecordingGroup(void) const;
     bool        QueryMarkupFlag(MarkTypes type) const;
@@ -602,6 +626,7 @@ class MPUBLIC ProgramInfo
 
     // Slow DB sets
     virtual void SaveFilesize(uint64_t fsize); /// TODO Move to RecordingInfo
+    void SaveLastPlayPos(uint64_t frame);
     void SaveBookmark(uint64_t frame);
     static void SaveDVDBookmark(const QStringList &fields) ;
     static void SaveBDBookmark(const QStringList &fields) ;
@@ -616,7 +641,8 @@ class MPUBLIC ProgramInfo
     void SaveAspect(uint64_t frame, MarkTypes type, uint customAspect);
     void SaveResolution(uint64_t frame, uint width, uint height);
     void SaveFrameRate(uint64_t frame, uint framerate);
-    void SaveTotalDuration(int64_t duration);
+    void SaveVideoScanType(uint64_t frame, bool progressive);
+    void SaveTotalDuration(std::chrono::milliseconds duration);
     void SaveTotalFrames(int64_t frames);
     void SaveVideoProperties(uint mask, uint video_property_flags);
     void SaveMarkupFlag(MarkTypes type) const;
@@ -681,7 +707,7 @@ class MPUBLIC ProgramInfo
                     const QVector<MarkupEntry> &mapSeek) const;
 
     /// Sends event out that the ProgramInfo should be reloaded.
-    void SendUpdateEvent(void);
+    void SendUpdateEvent(void) const;
     /// Sends event out that the ProgramInfo should be added to lists.
     void SendAddedEvent(void) const;
     /// Sends event out that the ProgramInfo should be delete from lists.
@@ -707,6 +733,8 @@ class MPUBLIC ProgramInfo
     static QStringList LoadFromScheduler(const QString &tmptable, int recordid);
 
     // Flagging map support methods
+    void UpdateMarkTimeStamp(bool bookmarked) const;
+    void UpdateLastPlayTimeStamp(bool lastplay) const;
     void QueryMarkupMap(frm_dir_map_t&marks, MarkTypes type,
                         bool merge = false) const;
     void SaveMarkupMap(const frm_dir_map_t &marks, MarkTypes type = MARK_ALL,
@@ -789,8 +817,9 @@ class MPUBLIC ProgramInfo
     uint32_t        m_findId            {0};
 
     uint32_t        m_programFlags      {FL_NONE}; ///< ProgramFlag
-                    /// SubtitleType,VideoProperty,AudioProperty
-    uint16_t        m_properties        {0};
+    VideoPropsType    m_videoProperties   {VID_UNKNOWN};
+    AudioPropsType    m_audioProperties   {AUD_UNKNOWN};
+    SubtitlePropsType m_subtitleProperties {SUB_UNKNOWN};
     uint16_t        m_year              {0};
     uint16_t        m_partNumber        {0};
     uint16_t        m_partTotal         {0};
@@ -806,6 +835,8 @@ class MPUBLIC ProgramInfo
 
 // everything below this line is not serialized
     uint8_t         m_availableStatus {asAvailable}; // only used for playbackbox.cpp
+    int8_t          m_recordedPercent {-1};          // only used by UI
+    int8_t          m_watchedPercent  {-1};          // only used by UI
   public:
     void SetAvailableStatus(AvailableStatusType status, const QString &where);
     AvailableStatusType GetAvailableStatus(void) const
@@ -843,8 +874,8 @@ MPUBLIC bool LoadFromProgram(
     const QString      &sql,
     const MSqlBindings &bindings,
     const ProgramList  &schedList,
-    const uint         &start,
-    const uint         &limit,
+    uint               start,
+    uint               limit,
     uint               &count);
 
 MPUBLIC ProgramInfo*  LoadProgramFromProgram(
@@ -856,11 +887,11 @@ MPUBLIC bool LoadFromOldRecorded(
     const MSqlBindings &bindings);
 
 MPUBLIC bool LoadFromOldRecorded(
-    ProgramList        &destination, 
-    const QString      &sql, 
+    ProgramList        &destination,
+    const QString      &sql,
     const MSqlBindings &bindings,
-    const uint         &start, 
-    const uint         &limit,
+    uint               start,
+    uint               limit,
     uint               &count);
 
 MPUBLIC bool LoadFromRecorded(
@@ -870,8 +901,9 @@ MPUBLIC bool LoadFromRecorded(
     const QMap<QString,bool> &isJobRunning,
     const QMap<QString, ProgramInfo*> &recMap,
     int                 sort = 0,
-    const QString      &sortBy = "");
-
+    const QString      &sortBy = "",
+    bool                ignoreLiveTV = false,
+    bool                ignoreDeleted = false);
 
 template<typename TYPE>
 bool LoadFromScheduler(
@@ -889,10 +921,10 @@ bool LoadFromScheduler(
 
     hasConflicts = slist[0].toInt();
 
-    QStringList::const_iterator sit = slist.begin()+2;
-    while (sit != slist.end())
+    QStringList::const_iterator sit = slist.cbegin()+2;
+    while (sit != slist.cend())
     {
-        TYPE *p = new TYPE(sit, slist.end());
+        TYPE *p = new TYPE(sit, slist.cend());
         destination.push_back(p);
 
         if (!p->HasPathname() && !p->GetChanID())
@@ -941,6 +973,7 @@ MPUBLIC QString myth_category_type_to_string(ProgramInfo::CategoryType category_
 MPUBLIC ProgramInfo::CategoryType string_to_myth_category_type(const QString &type);
 
 Q_DECLARE_METATYPE(ProgramInfo*)
+Q_DECLARE_METATYPE(ProgramInfo::CategoryType)
 
 #endif // MYTHPROGRAM_H_
 

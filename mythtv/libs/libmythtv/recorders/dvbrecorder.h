@@ -1,6 +1,6 @@
 // -*- Mode: c++ -*-
-#ifndef _DVB_RECORDER_H_
-#define _DVB_RECORDER_H_
+#ifndef DVB_RECORDER_H
+#define DVB_RECORDER_H
 
 // Qt includes
 #include <QString>
@@ -31,7 +31,7 @@ class DVBRecorder : public DTVRecorder
     void StartNewFile(void) override; // RecorderBase
 
   private:
-    bool PauseAndWait(int timeout = 100) override; // RecorderBase
+    bool PauseAndWait(std::chrono::milliseconds timeout = 100ms) override; // RecorderBase
 
     QString GetSIStandard(void) const override; // DTVRecorder
     void SetCAMPMT(const ProgramMapTable *pmt) override; // DTVRecorder
@@ -42,4 +42,4 @@ class DVBRecorder : public DTVRecorder
     DVBStreamHandler *m_streamHandler  {nullptr};
 };
 
-#endif // _DVB_RECORDER_H_
+#endif // DVB_RECORDER_H

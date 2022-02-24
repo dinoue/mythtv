@@ -53,26 +53,6 @@ MBASE_PUBLIC QDateTime fromString(const QString &str, const QString &format)
     return dt;
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-/**
- *  This function takes the number of seconds since the start of the
- *  epoch and returns a QDateTime with the equivalent value.
- *
- *  Note: This function returns a QDateTime set to UTC, whereas the
- *  QDateTime::fromTime_t function returns a value set to localtime.
- *
- *  \param seconds  The number of seconds since the start of the epoch
- *                  at Jan 1 1970 at 00:00:00.
- *  \return A QDateTime.
- */
-MBASE_PUBLIC QDateTime fromTime_t(uint seconds)
-{
-    QDateTime dt = QDateTime::fromTime_t(seconds);
-    return dt.toUTC();
-}
-
-#else
-
 /**
  *  This function takes the number of seconds since the start of the
  *  epoch and returns a QDateTime with the equivalent value.
@@ -90,7 +70,6 @@ MBASE_PUBLIC QDateTime fromSecsSinceEpoch(uint seconds)
     QDateTime dt = QDateTime::fromSecsSinceEpoch(seconds);
     return dt.toUTC();
 }
-#endif
 
 /** \fn toString(const QDateTime&,uint)
  *  \brief Returns a formatted QString based on the supplied QDateTime
@@ -150,7 +129,7 @@ QString toString(const QDateTime &raw_dt, uint format)
  *  \param date     The QDate object to use
  *  \param format   The format of the string to return
  */
-QString toString(const QDate &date, uint format)
+QString toString(const QDate date, uint format)
 {
     QString result;
 
@@ -200,16 +179,31 @@ QString toString(const QDate &date, uint format)
  *
  *  \param time     The QTime object to use
  */
-int toSeconds( const QTime &time )
+std::chrono::seconds toSeconds(QTime time)
 {
     if (!time.isValid())
-        return 0;
+        return 0s;
 
-    int nSecs = time.hour() * 3600;
-    nSecs += (time.minute() * 60 );
-    nSecs += time.second();
+    std::chrono::seconds nSecs = std::chrono::hours(time.hour());
+    nSecs += std::chrono::minutes(time.minute());
+    nSecs += std::chrono::seconds(time.second());
 
     return nSecs;
+}
+
+std::chrono::milliseconds currentMSecsSinceEpochAsDuration(void)
+{
+    return std::chrono::milliseconds(QDateTime::currentMSecsSinceEpoch());
+};
+
+std::chrono::seconds secsInPast (const QDateTime& past)
+{
+    return std::chrono::seconds(past.secsTo(MythDate::current()));
+}
+
+std::chrono::seconds secsInFuture (const QDateTime& future)
+{
+    return std::chrono::seconds(MythDate::current().secsTo(future));
 }
 
 }; // namespace MythDate

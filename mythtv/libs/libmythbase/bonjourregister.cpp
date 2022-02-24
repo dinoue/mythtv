@@ -1,10 +1,12 @@
+#include "bonjourregister.h"
+
 #include <cstdlib>
 
 #include <QSocketNotifier>
 #include <QtEndian>
 
+#include "mythrandom.h"
 #include "mythlogging.h"
-#include "bonjourregister.h"
 
 #define LOC QString("Bonjour: ")
 
@@ -28,7 +30,7 @@ BonjourRegister::~BonjourRegister()
     {
         LOG(VB_GENERAL, LOG_INFO, LOC +
             QString("De-registering service '%1' on '%2'")
-            .arg(m_type.data()).arg(m_name.data()));
+            .arg(m_type.data(), m_name.data()));
         DNSServiceRefDeallocate(m_dnssref);
     }
     m_dnssref = nullptr;
@@ -66,8 +68,8 @@ bool BonjourRegister::Register(uint16_t port, const QByteArray &type,
         {
             m_socket = new QSocketNotifier(fd, QSocketNotifier::Read, this);
             m_socket->setEnabled(true);
-            connect(m_socket, SIGNAL(activated(int)),
-                    this, SLOT(socketReadyRead()));
+            connect(m_socket, &QSocketNotifier::activated,
+                    this, &BonjourRegister::socketReadyRead);
             delete m_lock; // would already have been deleted, but just in case
             m_lock = nullptr;
             return true;
@@ -114,8 +116,8 @@ void BonjourRegister::BonjourCallback(DNSServiceRef ref, DNSServiceFlags flags,
     {
         LOG(VB_GENERAL, LOG_INFO, LOC +
             QString("Service registration complete: name '%1' type '%2' domain: '%3'")
-            .arg(QString::fromUtf8(name)).arg(QString::fromUtf8(type))
-            .arg(QString::fromUtf8(domain)));
+            .arg(QString::fromUtf8(name), QString::fromUtf8(type),
+                 QString::fromUtf8(domain)));
         bonjour->m_name = name;
         bonjour->m_type = type;
     }
@@ -133,7 +135,11 @@ QByteArray BonjourRegister::RandomizeData(void)
 
     data.append(7);
     data.append("_rnd=");
-    rnd.append((random() % 80) + 33);
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
+    rnd.append((MythRandom() % 80) + 33);
+#else
+    rnd.append(MythRandom(33, 33 + 80 - 1));
+#endif
     data.append(rnd.toHex());
 
     return data;

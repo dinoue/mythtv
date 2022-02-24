@@ -13,10 +13,6 @@
 #include "mythscreentype.h"
 #include "mythuitextedit.h"
 
-class QString;
-class QStringList;
-class QTimer;
-
 class MythUIButtonListItem;
 class MythUIButtonList;
 class MythUIButton;
@@ -31,6 +27,7 @@ class MUI_PUBLIC MFileInfo : public QFileInfo
               qint64 size = 0);
    ~MFileInfo() = default;
 
+    MFileInfo(const MFileInfo &other);
     MFileInfo &operator=(const MFileInfo &other);
 
     void init(const QString& fileName = "", QString sgDir = "", bool isDir = false,
@@ -38,7 +35,7 @@ class MUI_PUBLIC MFileInfo : public QFileInfo
 
     QString fileName(void) const;
     QString filePath(void) const;
-    bool isRemote(void) { return m_isRemote; }
+    bool isRemote(void) const { return m_isRemote; }
     bool isDir(void) const;
     bool isFile(void) const;
     bool isParentDir(void) const;

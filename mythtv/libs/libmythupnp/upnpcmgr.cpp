@@ -6,13 +6,15 @@
 //                                                                            
 // Copyright (c) 2006 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
 #include "upnp.h"
 #include "upnpcmgr.h"
 #include "mythlogging.h"
+#include "mythcorecontext.h"
+#include "configuration.h"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -34,7 +36,7 @@ UPnpCMGR::UPnpCMGR ( UPnpDevice *pDevice,
     SetValue< QString >( "SinkProtocolInfo"    , sSinkProtocols   );
     SetValue< QString >( "FeatureList"         , "" );
 
-    QString sUPnpDescPath = UPnp::GetConfiguration()->GetValue( "UPnP/DescXmlPath",
+    QString sUPnpDescPath = MythCoreContext::GetConfiguration()->GetValue( "UPnP/DescXmlPath",
                                                                 m_sSharePath );
     m_sServiceDescFileName = sUPnpDescPath + "CMGR_scpd.xml";
     m_sControlUrl          = "/CMGR_Control";
@@ -60,7 +62,7 @@ UPnpCMGR::UPnpCMGR ( UPnpDevice *pDevice,
 
 void UPnpCMGR::AddSourceProtocol( const QString &sProtocol )
 {
-    QString sValue = GetValue< QString >( "SourceProtocolInfo" );
+    auto sValue = GetValue< QString >( "SourceProtocolInfo" );
     
     if (sValue.length() > 0 )
         sValue += ',';
@@ -76,7 +78,7 @@ void UPnpCMGR::AddSourceProtocol( const QString &sProtocol )
 
 void UPnpCMGR::AddSinkProtocol( const QString &sProtocol )
 {
-    QString sValue = GetValue< QString >( "SinkProtocolInfo" );
+    auto sValue = GetValue< QString >( "SinkProtocolInfo" );
     
     if (sValue.length() > 0 )
         sValue += ',';

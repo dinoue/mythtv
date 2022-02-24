@@ -6,7 +6,7 @@
 //
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -16,6 +16,7 @@
 #include "mythlogging.h"
 #include "mythversion.h"  // for MYTH_BINARY_VERSION
 #include "mythcorecontext.h"
+#include "configuration.h"
 
 // MythDB
 #include "mythdb.h"
@@ -25,6 +26,13 @@
 #include <QFile>
 #include <QTextStream>
 #include <QHostAddress>
+#include <QHostInfo>
+
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
+  #define QT_FLUSH flush
+#else
+  #define QT_FLUSH Qt::flush
+#endif
 
 int DeviceLocation::g_nAllocated   = 0;       // Debugging only
 
@@ -224,8 +232,8 @@ void UPnpDeviceDesc::ProcessServiceList( const QDomNode& oListNode, UPnpDevice *
 
             LOG(VB_UPNP, LOG_INFO,
                 QString("ProcessServiceList adding service : %1 : %2 :")
-                    .arg(pService->m_sServiceType)
-                    .arg(pService->m_sServiceId));
+                    .arg(pService->m_sServiceType,
+                         pService->m_sServiceId));
         }
     }
 }
@@ -305,7 +313,7 @@ QString  UPnpDeviceDesc::GetValidXML( const QString &sBaseAddress, int nPort )
     QTextStream os( &sXML, QIODevice::WriteOnly );
 
     GetValidXML( sBaseAddress, nPort, os );
-    os << flush;
+    os << QT_FLUSH;
     return( sXML );
 }
 
@@ -331,7 +339,7 @@ void UPnpDeviceDesc::GetValidXML(
     OutputDevice( os, &m_rootDevice, sUserAgent );
 
     os << "</root>\n";
-    os << flush;
+    os << QT_FLUSH;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -346,15 +354,15 @@ void UPnpDeviceDesc::OutputDevice( QTextStream &os,
         return;
 
     QString sFriendlyName = QString( "%1: %2" )
-                               .arg( GetHostName() )
-                               .arg( pDevice->m_sFriendlyName );
+                               .arg( GetHostName(),
+                                     pDevice->m_sFriendlyName );
 
     // ----------------------------------------------------------------------
     // Only override the root device
     // ----------------------------------------------------------------------
 
     if (pDevice == &m_rootDevice)
-        sFriendlyName = UPnp::GetConfiguration()->GetValue( "UPnP/FriendlyName",
+        sFriendlyName = MythCoreContext::GetConfiguration()->GetValue( "UPnP/FriendlyName",
                                                             sFriendlyName  );
 
     os << "<device>\n";
@@ -398,7 +406,7 @@ void UPnpDeviceDesc::OutputDevice( QTextStream &os,
                        pDevice->m_securityPin ? "true" : "false");
     os << FormatValue( "mythtv:X_protocol", pDevice->m_protocolVersion );
 
-    foreach (const auto & nit, pDevice->m_lstExtra)
+    for (const auto & nit : qAsConst(pDevice->m_lstExtra))
     {
         os << FormatValue( nit );
     }
@@ -411,7 +419,7 @@ void UPnpDeviceDesc::OutputDevice( QTextStream &os,
     {
         os << "<iconList>\n";
 
-        foreach (auto icon, pDevice->m_listIcons)
+        for (auto *icon : qAsConst(pDevice->m_listIcons))
         {
             os << "<icon>\n";
             os << FormatValue( "mimetype", icon->m_sMimeType );
@@ -451,7 +459,7 @@ void UPnpDeviceDesc::OutputDevice( QTextStream &os,
 
         os << "<serviceList>\n";
 
-        foreach (auto service, pDevice->m_listServices)
+        for (auto *service : qAsConst(pDevice->m_listServices))
         {
             if (!bIsXbox360 && service->m_sServiceType.startsWith(
                     "urn:microsoft.com:service:X_MS_MediaReceiverRegistrar",
@@ -490,7 +498,7 @@ void UPnpDeviceDesc::OutputDevice( QTextStream &os,
         os << "</deviceList>";
     }
     os << "</device>\n";
-    os << flush;
+    os << QT_FLUSH;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -505,9 +513,9 @@ QString UPnpDeviceDesc::FormatValue(const NameValue& node)
     NameValues::iterator it;
     for (it = node.m_pAttributes->begin(); it != node.m_pAttributes->end(); ++it)
     {
-        sAttributes += QString(" %1='%2'").arg((*it).m_sName).arg((*it).m_sValue);
+        sAttributes += QString(" %1='%2'").arg((*it).m_sName, (*it).m_sValue);
     }
-    sStr = QString("<%1%2>%3</%1>\n").arg(node.m_sName).arg(sAttributes).arg(node.m_sValue);
+    sStr = QString("<%1%2>%3</%1>\n").arg(node.m_sName, sAttributes, node.m_sValue);
 
     return( sStr );
 }
@@ -522,7 +530,7 @@ QString UPnpDeviceDesc::FormatValue( const QString &sName,
     QString sStr;
 
     if (sValue.length() > 0)
-        sStr = QString("<%1>%2</%1>\n") .arg(sName) .arg(sValue);
+        sStr = QString("<%1>%2</%1>\n") .arg(sName, sValue);
 
     return( sStr );
 }
@@ -563,7 +571,7 @@ QString UPnpDeviceDesc::FindDeviceUDN( UPnpDevice *pDevice, QString sST )
     // Check Embedded Devices for a Match
     // ----------------------------------------------------------------------
 
-    foreach (auto device, pDevice->m_listDevices)
+    for (auto *device : qAsConst(pDevice->m_listDevices))
     {
         QString sUDN = FindDeviceUDN( device, sST );
         if (sUDN.length() > 0)
@@ -597,7 +605,7 @@ UPnpDevice *UPnpDeviceDesc::FindDevice( UPnpDevice    *pDevice,
     // Check Embedded Devices for a Match
     // ----------------------------------------------------------------------
 
-    foreach (auto & dev, pDevice->m_listDevices)
+    for (const auto & dev : qAsConst(pDevice->m_listDevices))
     {
         UPnpDevice *pFound = FindDevice(dev, sURI);
 
@@ -657,20 +665,19 @@ UPnpDeviceDesc *UPnpDeviceDesc::Retrieve( QString &sURL )
 //
 /////////////////////////////////////////////////////////////////////////////
 
-QString UPnpDeviceDesc::GetHostName()
+QString UPnpDeviceDesc::GetHostName() const
 {
     if (m_sHostName.length() == 0)
     {
         // Get HostName
 
-        char localHostName[1024];
-
-        if (gethostname(localHostName, 1024))
+        QString localHostName = QHostInfo::localHostName();
+        if (localHostName.isEmpty())
             LOG(VB_GENERAL, LOG_ERR,
                 "UPnpDeviceDesc: Error, could not determine host name." + ENO);
 
-        return UPnp::GetConfiguration()->GetValue("Settings/HostName",
-                                                  QString(localHostName));
+        return MythCoreContext::GetConfiguration()->GetValue("Settings/HostName",
+                                                  localHostName);
     }
 
     return m_sHostName;
@@ -686,7 +693,7 @@ QString UPnpDeviceDesc::GetHostName()
 
 UPnpDevice::UPnpDevice() :
     m_sModelNumber(MYTH_BINARY_VERSION),
-    m_sSerialNumber(MYTH_SOURCE_VERSION),
+    m_sSerialNumber(GetMythSourceVersion()),
     m_protocolVersion(MYTH_PROTO_VERSION)
 {
 
@@ -765,7 +772,7 @@ QString UPnpDevice::GetUDN(void) const
     return m_sUDN;
 }
 
-void UPnpDevice::toMap(InfoMap &map)
+void UPnpDevice::toMap(InfoMap &map) const
 {
     map["name"] = m_sFriendlyName;
     map["modelname"] = m_sModelName;
@@ -787,7 +794,7 @@ UPnpService UPnpDevice::GetService(const QString &urn, bool *found) const
 
     bool done = false;
 
-    foreach (auto service, m_listServices)
+    for (auto *service : qAsConst(m_listServices))
     {
         // Ignore the service version
         if (service->m_sServiceType.section(':', 0, -2) == urn.section(':', 0, -2))
@@ -824,27 +831,27 @@ QString UPnpDevice::toString(uint padding) const
                 "modelName:        %6\n"
                 "modelNumber:      %7\n"
                 "modelURL:         %8\n")
-        .arg(m_sDeviceType      )
-        .arg(m_sFriendlyName    )
-        .arg(m_sManufacturer    )
-        .arg(m_sManufacturerURL )
-        .arg(m_sModelDescription)
-        .arg(m_sModelName       )
-        .arg(m_sModelNumber     )
-        .arg(m_sModelURL        ) +
+        .arg(m_sDeviceType,
+             m_sFriendlyName,
+             m_sManufacturer,
+             m_sManufacturerURL,
+             m_sModelDescription,
+             m_sModelName,
+             m_sModelNumber,
+             m_sModelURL) +
         QString("serialNumber:     %1\n"
                 "UPC:              %2\n"
                 "presentationURL:  %3\n"
                 "UDN:              %4\n")
-        .arg(m_sSerialNumber    )
-        .arg(m_sUPC             )
-        .arg(m_sPresentationURL )
-        .arg(m_sUDN             );
+        .arg(m_sSerialNumber,
+             m_sUPC,
+             m_sPresentationURL,
+             m_sUDN);
 
     if (!m_lstExtra.empty())
     {
         ret += "Extra key value pairs\n";
-        foreach (const auto & extra, m_lstExtra)
+        for (const auto & extra : qAsConst(m_lstExtra))
         {
             ret += extra.m_sName;
             ret += ":";
@@ -858,21 +865,21 @@ QString UPnpDevice::toString(uint padding) const
     if (!m_listIcons.empty())
     {
         ret += "Icon List:\n";
-        foreach (auto icon, m_listIcons)
+        for (auto *icon : qAsConst(m_listIcons))
             ret += icon->toString(padding+2) + "\n";
     }
 
     if (!m_listServices.empty())
     {
         ret += "Service List:\n";
-        foreach (auto service, m_listServices)
+        for (auto *service : qAsConst(m_listServices))
             ret += service->toString(padding+2) + "\n";
     }
 
     if (!m_listDevices.empty())
     {
         ret += "Device List:\n";
-        foreach (auto device, m_listDevices)
+        for (auto *device : qAsConst(m_listDevices))
             ret += device->toString(padding+2) + "\n";
         ret += "\n";
     }

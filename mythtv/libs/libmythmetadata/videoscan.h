@@ -70,7 +70,7 @@ class META_PUBLIC VideoScannerThread : public MThread
     void SetHosts(const QStringList &hosts);
     void SetProgressDialog(MythUIProgressDialog *dialog) { m_dialog = dialog; };
     QStringList GetOfflineSGHosts(void) { return m_offlineSGHosts; };
-    bool getDataChanged() { return m_dbDataChanged; };
+    bool getDataChanged() const { return m_dbDataChanged; };
 
     void ResetCounts() { m_addList.clear(); m_movList.clear(); m_delList.clear(); };
 
@@ -82,7 +82,7 @@ class META_PUBLIC VideoScannerThread : public MThread
         QString host;
     };
 
-    using PurgeList = std::vector<std::pair<unsigned int, QString> >;
+    using PurgeList = std::vector<std::pair<int, QString> >;
     using FileCheckList = std::map<QString, CheckStruct>;
 
     void removeOrphans(unsigned int id, const QString &filename);
@@ -91,7 +91,7 @@ class META_PUBLIC VideoScannerThread : public MThread
     bool updateDB(const FileCheckList &add, const PurgeList &remove);
     bool buildFileList(const QString &directory,
                                         const QStringList &imageExtensions,
-                                        FileCheckList &filelist);
+                                        FileCheckList &filelist) const;
 
     void SendProgressEvent(uint progress, uint total = 0,
             QString messsage = QString());

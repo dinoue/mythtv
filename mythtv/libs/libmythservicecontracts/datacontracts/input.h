@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2013 Stuart Morgan <smorgan@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -40,9 +40,9 @@ class SERVICE_PUBLIC Input : public QObject
     PROPERTYIMP    ( uint       , Id             )
     PROPERTYIMP    ( uint       , CardId         )
     PROPERTYIMP    ( uint       , SourceId       )
-    PROPERTYIMP    ( QString    , InputName      )
-    PROPERTYIMP    ( QString    , DisplayName    )
-//    PROPERTYIMP    ( QString       , StartChan      )
+    PROPERTYIMP_REF( QString    , InputName      )
+    PROPERTYIMP_REF( QString    , DisplayName    )
+//  PROPERTYIMP_REF( QString    , StartChan      )
     PROPERTYIMP    ( bool       , QuickTune      )
     PROPERTYIMP    ( uint       , RecPriority    )
     PROPERTYIMP    ( uint       , ScheduleOrder  )

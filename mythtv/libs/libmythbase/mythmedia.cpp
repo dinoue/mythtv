@@ -1,27 +1,28 @@
 // C header
 #include <fcntl.h>
 #include <unistd.h>
+#include <utility>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/param.h>
 
 // Qt Headers
+#include <QtGlobal>
 #include <QDir>
 #include <QFileInfo>
 #include <QFileInfoList>
+#include <QRegularExpression>
 #include <QTextStream>
 
 // MythTV headers
 #include "mythmedia.h"
-#include "mythconfig.h"
 #include "mythlogging.h"
 #include "mythmiscutil.h"
 #include "mythsystemlegacy.h"
 #include "exitcodes.h"
 
-using namespace std;
-
 #ifdef _WIN32
+#   undef O_NONBLOCK
 #   define O_NONBLOCK 0
 #endif
 
@@ -29,7 +30,7 @@ using namespace std;
 
 static const QString PATHTO_PMOUNT("/usr/bin/pmount");
 static const QString PATHTO_PUMOUNT("/usr/bin/pumount");
-#if CONFIG_DARWIN
+#ifdef Q_OS_DARWIN
     static const QString PATHTO_MOUNT("/sbin/mount");
 #else
     static const QString PATHTO_MOUNT("/bin/mount");
@@ -37,11 +38,11 @@ static const QString PATHTO_PUMOUNT("/usr/bin/pumount");
 static const QString PATHTO_UNMOUNT("/bin/umount");
 static const QString PATHTO_MOUNTS("/proc/mounts");
 
-#if CONFIG_DARWIN
+#ifdef Q_OS_DARWIN
 #   define USE_MOUNT_COMMAND
 #endif
 
-const char* MythMediaDevice::MediaStatusStrings[] =
+const std::array<const QString,9> MythMediaDevice::kMediaStatusStrings
 {
     "MEDIASTAT_ERROR",
     "MEDIASTAT_UNKNOWN",
@@ -54,7 +55,7 @@ const char* MythMediaDevice::MediaStatusStrings[] =
     "MEDIASTAT_MOUNTED"
 };
 
-const char* MythMediaDevice::MediaErrorStrings[] =
+const std::array<const QString,3> MythMediaDevice::kMediaErrorStrings
 {
     "MEDIAERR_OK",
     "MEDIAERR_FAILED",
@@ -64,18 +65,20 @@ const char* MythMediaDevice::MediaErrorStrings[] =
 QEvent::Type MythMediaEvent::kEventType =
     (QEvent::Type) QEvent::registerEventType();
 
+// Force this class to have a vtable so that dynamic_cast works.
+// NOLINTNEXTLINE(modernize-use-equals-default)
 MythMediaEvent::~MythMediaEvent()
 {
 }
 
 ext_to_media_t MythMediaDevice::s_ext_to_media;
 
-MythMediaDevice::MythMediaDevice(QObject* par, const char* DevicePath,
+MythMediaDevice::MythMediaDevice(QObject* par, QString DevicePath,
                                  bool SuperMount,  bool AllowEject)
-    : QObject(par), m_DevicePath(DevicePath),
-      m_AllowEject(AllowEject), m_SuperMount(SuperMount)
+    : QObject(par), m_devicePath(std::move(DevicePath)),
+      m_allowEject(AllowEject), m_superMount(SuperMount)
 {
-    m_RealDevice = getSymlinkTarget(m_DevicePath);
+    m_realDevice = getSymlinkTarget(m_devicePath);
 }
 
 bool MythMediaDevice::openDevice()
@@ -84,8 +87,8 @@ bool MythMediaDevice::openDevice()
     if (isDeviceOpen())
         return true;
 
-    QByteArray dev = m_DevicePath.toLocal8Bit();
-    m_DeviceHandle = open(dev.constData(), O_RDONLY | O_NONBLOCK);
+    QByteArray dev = m_devicePath.toLocal8Bit();
+    m_deviceHandle = open(dev.constData(), O_RDONLY | O_NONBLOCK);
 
     return isDeviceOpen();
 }
@@ -96,22 +99,22 @@ bool MythMediaDevice::closeDevice()
     if (!isDeviceOpen())
         return true;
 
-    int ret = close(m_DeviceHandle);
-    m_DeviceHandle = -1;
+    int ret = close(m_deviceHandle);
+    m_deviceHandle = -1;
 
     return ret != -1;
 }
 
 bool MythMediaDevice::isDeviceOpen() const
 {
-    return m_DeviceHandle >= 0;
+    return m_deviceHandle >= 0;
 }
 
 bool MythMediaDevice::performMountCmd(bool DoMount)
 {
     if (DoMount && isMounted())
     {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
         // Not an error - DiskArbitration has already mounted the device.
         // AddDevice calls mount() so onDeviceMounted() can get mediaType.
         onDeviceMounted();
@@ -125,7 +128,7 @@ bool MythMediaDevice::performMountCmd(bool DoMount)
     if (isDeviceOpen())
         closeDevice();
 
-    if (!m_SuperMount)
+    if (!m_superMount)
     {
         QString MountCommand;
 
@@ -134,14 +137,12 @@ bool MythMediaDevice::performMountCmd(bool DoMount)
         if (QFile(PATHTO_PMOUNT).exists() && QFile(PATHTO_PUMOUNT).exists())
         {
             MountCommand = QString("%1 %2")
-                .arg((DoMount) ? PATHTO_PMOUNT : PATHTO_PUMOUNT)
-                .arg(m_DevicePath);
+                .arg((DoMount) ? PATHTO_PMOUNT : PATHTO_PUMOUNT, m_devicePath);
         }
         else
         {
             MountCommand = QString("%1 %2")
-                .arg((DoMount) ? PATHTO_MOUNT : PATHTO_UNMOUNT)
-                .arg(m_DevicePath);
+                .arg((DoMount) ? PATHTO_MOUNT : PATHTO_UNMOUNT, m_devicePath);
         }
 
         LOG(VB_MEDIA, LOG_INFO, QString("Executing '%1'").arg(MountCommand));
@@ -158,7 +159,7 @@ bool MythMediaDevice::performMountCmd(bool DoMount)
             {
                 // we cannot tell beforehand what the pmount mount point is
                 // so verify the mount status of the device
-                // In the case that m_DevicePath is a symlink to a device
+                // In the case that m_devicePath is a symlink to a device
                 // in /etc/fstab then pmount delegates to mount which
                 // performs the mount asynchronously so we must wait a bit
                 usleep(1000000-1);
@@ -185,7 +186,7 @@ bool MythMediaDevice::performMountCmd(bool DoMount)
             return true;
         }
         LOG(VB_GENERAL, LOG_ERR, QString("Failed to %1 %2.")
-            .arg(DoMount ? "mount" : "unmount").arg(m_DevicePath));
+            .arg(DoMount ? "mount" : "unmount", m_devicePath));
     }
     else
     {
@@ -214,25 +215,24 @@ MythMediaType MythMediaDevice::DetectMediaType(void)
 {
     ext_cnt_t ext_cnt;
 
-    if (!ScanMediaType(m_MountPath, ext_cnt))
+    if (!ScanMediaType(m_mountPath, ext_cnt))
     {
         LOG(VB_MEDIA, LOG_NOTICE,
             QString("No files with extensions found in '%1'")
-                .arg(m_MountPath));
+                .arg(m_mountPath));
         return MEDIATYPE_UNKNOWN;
     }
 
     QMap<uint, uint> media_cnts;
 
     // convert raw counts to composite mediatype counts
-    ext_cnt_t::const_iterator it = ext_cnt.begin();
-    for (; it != ext_cnt.end(); ++it)
+    for (auto it = ext_cnt.cbegin(); it != ext_cnt.cend(); ++it)
     {
-        ext_to_media_t::const_iterator found = s_ext_to_media.find(it.key());
-        if (found != s_ext_to_media.end())
+        ext_to_media_t::const_iterator found = s_ext_to_media.constFind(it.key());
+        if (found != s_ext_to_media.constEnd())
         {
             LOG(VB_MEDIA, LOG_INFO, QString("DetectMediaType %1 (%2)")
-                .arg(MediaTypeString(found.value())).arg(it.key()));
+                .arg(MediaTypeString(found.value()), it.key()));
             media_cnts[*found] += *it;
         }
         else
@@ -246,8 +246,7 @@ MythMediaType MythMediaDevice::DetectMediaType(void)
     // break composite mediatypes into constituent components
     uint mediatype = 0;
 
-    QMap<uint, uint>::const_iterator cit = media_cnts.begin();
-    for (; cit != media_cnts.end(); ++cit)
+    for (auto cit = media_cnts.cbegin(); cit != media_cnts.cend(); ++cit)
     {
         for (uint key = 1; key != MEDIATYPE_END; key <<= 1)
         {
@@ -270,7 +269,8 @@ bool MythMediaDevice::ScanMediaType(const QString &directory, ext_cnt_t &cnt)
         return false;
 
     d.setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
-    foreach (auto & fi, d.entryInfoList())
+    QFileInfoList entries = d.entryInfoList();
+    for (const auto& fi : qAsConst(entries))
     {
         if (fi.isSymLink())
             continue;
@@ -299,7 +299,8 @@ bool MythMediaDevice::ScanMediaType(const QString &directory, ext_cnt_t &cnt)
 void MythMediaDevice::RegisterMediaExtensions(uint mediatype,
                                               const QString &extensions)
 {
-    foreach (const auto & ext, extensions.split(","))
+    QStringList exts = extensions.split(",");
+    for (const auto& ext : qAsConst(exts))
         s_ext_to_media[ext] |= mediatype;
 }
 
@@ -307,8 +308,8 @@ MythMediaError MythMediaDevice::eject(bool open_close)
 {
     (void) open_close;
 
-#if CONFIG_DARWIN
-    QString  command = "diskutil eject " + m_DevicePath;
+#ifdef Q_OS_DARWIN
+    QString  command = "diskutil eject " + m_devicePath;
 
     myth_system(command, kMSRunBackground);
     return MEDIAERR_OK;
@@ -319,18 +320,18 @@ MythMediaError MythMediaDevice::eject(bool open_close)
 
 bool MythMediaDevice::isSameDevice(const QString &path)
 {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
     // The caller may be using a raw device instead of the BSD 'leaf' name
-    if (path == "/dev/r" + m_DevicePath)
+    if (path == "/dev/r" + m_devicePath)
         return true;
 #endif
 
-    return (path == m_DevicePath);
+    return (path == m_devicePath);
 }
 
 void MythMediaDevice::setSpeed(int speed)
 {
-    setDeviceSpeed(m_DevicePath.toLocal8Bit().constData(), speed);
+    setDeviceSpeed(m_devicePath.toLocal8Bit().constData(), speed);
 }
 
 MythMediaError MythMediaDevice::lock()
@@ -339,32 +340,32 @@ MythMediaError MythMediaDevice::lock()
     // derived classes can do more...
     if (openDevice())
     {
-        m_Locked = true;
+        m_locked = true;
         return MEDIAERR_OK;
     }
-    m_Locked = false;
+    m_locked = false;
     return MEDIAERR_FAILED;
 }
 
 MythMediaError MythMediaDevice::unlock()
 {
-    m_Locked = false;
+    m_locked = false;
 
     return MEDIAERR_OK;
 }
 
-/// \brief Tells us if m_DevicePath is a mounted device.
+/// \brief Tells us if m_devicePath is a mounted device.
 bool MythMediaDevice::isMounted(bool Verify)
 {
     if (Verify)
         return findMountPath();
-    return (m_Status == MEDIASTAT_MOUNTED);
+    return (m_status == MEDIASTAT_MOUNTED);
 }
 
-/// \brief Try to find a mount of m_DevicePath in the mounts file.
+/// \brief Try to find a mount of m_devicePath in the mounts file.
 bool MythMediaDevice::findMountPath()
 {
-    if (m_DevicePath.isEmpty())
+    if (m_devicePath.isEmpty())
     {
         LOG(VB_MEDIA, LOG_ERR, "findMountPath() - logic error, no device path");
         return false;
@@ -399,8 +400,8 @@ bool MythMediaDevice::findMountPath()
         stream >> deviceName;
         mountPoint = stream.readLine();
         mountPoint.remove(" on ");
-        mountPoint.remove(QRegExp(" type \\w.*"));   // Linux
-        mountPoint.remove(QRegExp(" \\(\\w.*"));     // Mac OS X
+        mountPoint.remove(QRegularExpression(" type \\w.*"));   // Linux
+        mountPoint.remove(QRegularExpression(" \\(\\w.*"));     // Mac OS X
 #else
         // Extract the mount point and device name.
         stream >> deviceName >> mountPoint;
@@ -419,9 +420,9 @@ bool MythMediaDevice::findMountPath()
         QStringList deviceNames;
         getSymlinkTarget(deviceName, &deviceNames);
 
-#if CONFIG_DARWIN
+#ifdef Q_OS_DARWIN
         // match short-style BSD node names:
-        if (m_DevicePath.startsWith("disk"))
+        if (m_devicePath.startsWith("disk"))
             deviceNames << deviceName.mid(5);   // remove 5 chars - /dev/
 #endif
 
@@ -430,10 +431,10 @@ bool MythMediaDevice::findMountPath()
             mountPoint.replace("\\040", " ");
 
 
-        if (deviceNames.contains(m_DevicePath) ||
-            deviceNames.contains(m_RealDevice)  )
+        if (deviceNames.contains(m_devicePath) ||
+            deviceNames.contains(m_realDevice)  )
         {
-            m_MountPath = mountPoint;
+            m_mountPath = mountPoint;
             mountFile.close();
             return true;
         }
@@ -448,7 +449,7 @@ bool MythMediaDevice::findMountPath()
     if (VERBOSE_LEVEL_CHECK(VB_MEDIA, LOG_DEBUG))
     {
         debug = LOC + ":findMountPath() - mount of '"
-                + m_DevicePath + "' not found.\n"
+                + m_devicePath + "' not found.\n"
                 + "                 Device name/type | Current mountpoint\n"
                 + "                 -----------------+-------------------\n"
                 + debug
@@ -462,9 +463,9 @@ bool MythMediaDevice::findMountPath()
 MythMediaStatus MythMediaDevice::setStatus( MythMediaStatus NewStatus,
                                             bool CloseIt )
 {
-    MythMediaStatus OldStatus = m_Status;
+    MythMediaStatus OldStatus = m_status;
 
-    m_Status = NewStatus;
+    m_status = NewStatus;
 
     // If the status is changed we need to take some actions
     // depending on the old and new status.
@@ -472,8 +473,8 @@ MythMediaStatus MythMediaDevice::setStatus( MythMediaStatus NewStatus,
     {
         LOG(VB_MEDIA, LOG_DEBUG,
             QString("MythMediaDevice::setStatus %1 %2->%3")
-            .arg(getDevicePath()).arg(MediaStatusStrings[OldStatus])
-            .arg(MediaStatusStrings[NewStatus]));
+            .arg(getDevicePath(), kMediaStatusStrings[OldStatus],
+                 kMediaStatusStrings[NewStatus]));
         switch (NewStatus)
         {
             // the disk is not / should not be mounted.
@@ -494,7 +495,7 @@ MythMediaStatus MythMediaDevice::setStatus( MythMediaStatus NewStatus,
         }
 
         // Don't fire off transitions to / from unknown states
-        if (m_Status != MEDIASTAT_UNKNOWN && OldStatus != MEDIASTAT_UNKNOWN)
+        if (m_status != MEDIASTAT_UNKNOWN && OldStatus != MEDIASTAT_UNKNOWN)
             emit statusChanged(OldStatus, this);
     }
 
@@ -502,19 +503,19 @@ MythMediaStatus MythMediaDevice::setStatus( MythMediaStatus NewStatus,
     if (CloseIt)
         closeDevice();
 
-    return m_Status;
+    return m_status;
 }
 
 void MythMediaDevice::clearData()
 {
-    m_VolumeID.clear();
-    m_KeyID.clear();
-    m_MediaType = MEDIATYPE_UNKNOWN;
+    m_volumeID.clear();
+    m_keyID.clear();
+    m_mediaType = MEDIATYPE_UNKNOWN;
 }
 
 QString MythMediaDevice::MediaTypeString()
 {
-    return MediaTypeString(m_MediaType);
+    return MediaTypeString(m_mediaType);
 }
 
 QString MythMediaDevice::MediaTypeString(uint type)

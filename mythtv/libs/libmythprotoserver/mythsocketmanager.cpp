@@ -24,7 +24,7 @@
 
 #define LOC      QString("MythSocketManager: ")
 
-#define PRT_TIMEOUT 10
+static constexpr std::chrono::milliseconds PRT_TIMEOUT { 10ms };
 
 class ProcessRequestRunnable : public QRunnable
 {
@@ -50,7 +50,7 @@ MythServer::MythServer(QObject *parent) : ServerPool(parent)
 {
 }
 
-void MythServer::newTcpConnection(qt_socket_fd_t socket)
+void MythServer::newTcpConnection(qintptr socket)
 {
     emit newConnection(socket);
 }
@@ -102,7 +102,7 @@ bool MythSocketManager::Listen(int port)
     return true;
 }
 
-void MythSocketManager::newConnection(qt_socket_fd_t sd)
+void MythSocketManager::newConnection(qintptr sd)
 {
     QMutexLocker locker(&m_socketListLock);
     auto *ms = new MythSocket(sd, this);
@@ -201,7 +201,11 @@ void MythSocketManager::ProcessRequestWork(MythSocket *sock)
         return;
 
     QString line = listline[0].simplified();
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QStringList tokens = line.split(' ', QString::SkipEmptyParts);
+#else
+    QStringList tokens = line.split(' ', Qt::SkipEmptyParts);
+#endif
     QString command = tokens[0];
 
     bool handled = false;

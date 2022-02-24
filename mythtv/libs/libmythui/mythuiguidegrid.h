@@ -1,6 +1,7 @@
 #ifndef MYTHUIGUIDEGRID_H_
 #define MYTHUIGUIDEGRID_H_
 
+#include <array>
 #include <utility>
 
 // QT
@@ -40,6 +41,7 @@ class MythFontProperties;
  */
 class MUI_PUBLIC MythUIGuideGrid : public MythUIType
 {
+    Q_OBJECT
   public:
     MythUIGuideGrid(MythUIType *parent, const QString &name);
     ~MythUIGuideGrid() override;
@@ -49,16 +51,16 @@ class MUI_PUBLIC MythUIGuideGrid : public MythUIType
 
     enum FillType { Alpha = 10, Dense, Eco, Solid };
 
-    bool isVerticalLayout(void) { return m_verticalLayout; }
-    int  getChannelCount(void) { return m_channelCount; }
-    int  getTimeCount(void) { return m_timeCount; }
+    bool isVerticalLayout(void) const { return m_verticalLayout; }
+    int  getChannelCount(void) const { return m_channelCount; }
+    int  getTimeCount(void) const { return m_timeCount; }
 
     void SetCategoryColors(const QMap<QString, QString> &catColors);
 
-    void SetTextOffset(const QPoint &to) { m_textOffset = to; }
+    void SetTextOffset(const QPoint to) { m_textOffset = to; }
     void SetArrow(int direction, const QString &file);
     void LoadImage(int recType, const QString &file);
-    void SetProgramInfo(int row, int col, const QRect &area,
+    void SetProgramInfo(int row, int col, QRect area,
                         const QString &title, const QString &genre,
                         int arrow, int recType, int recStat, bool selected);
     void ResetData();
@@ -83,7 +85,7 @@ class MUI_PUBLIC MythUIGuideGrid : public MythUIType
     {
       public:
         UIGTCon() { m_arrow = GridTimeNormal; m_recType = m_recStat = 0; };
-        UIGTCon(const QRect &drawArea, QString title,
+        UIGTCon(const QRect drawArea, QString title,
                 const QString &category, int arrow, int recType, int recStat) :
                 m_drawArea(drawArea),               m_title(std::move(title)),
                 m_category(category.trimmed()),     m_arrow(arrow),
@@ -118,8 +120,8 @@ class MUI_PUBLIC MythUIGuideGrid : public MythUIType
     QList<UIGTCon*> *m_allData  {nullptr};
     UIGTCon m_selectedItem;
 
-    MythUIImage *m_recImages[RECSTATUSSIZE]    {};
-    MythUIImage *m_arrowImages[ARROWIMAGESIZE] {};
+    std::array<MythUIImage*,RECSTATUSSIZE> m_recImages    {};
+    std::array<MythUIImage*,ARROWIMAGESIZE> m_arrowImages {};
 
     // themeable settings
     int    m_channelCount       {5};

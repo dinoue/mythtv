@@ -1,19 +1,20 @@
-
 #include "mythcoreutil.h"
 
 // POSIX
+#include <array>
 #include <unistd.h>
 #include <fcntl.h>
 
 // System specific C headers
 #include "compat.h"
+#include <QtGlobal>
 
-#ifdef linux
+#ifdef __linux__
 #include <sys/vfs.h>
 #include <sys/sysinfo.h>
 #endif
 
-#if CONFIG_DARWIN
+#ifdef Q_OS_DARWIN
 #include <mach/mach.h>
 #endif
 
@@ -30,7 +31,7 @@
 // libmythbase headers
 #include "mythcorecontext.h"
 #include "mythlogging.h"
-#include "unzip.h"
+#include "unzip2.h"
 
 /** \fn getDiskSpace(const QString&,long long&,long long&)
  *  \brief Returns free space on disk containing file in KiB,
@@ -68,32 +69,10 @@ int64_t getDiskSpace(const QString &file_on_disk,
     return freespace;
 }
 
-bool extractZIP(const QString &zipFile, const QString &outDir)
+bool extractZIP(QString &zipFile, const QString &outDir)
 {
-    UnZip uz;
-    UnZip::ErrorCode ec = uz.openArchive(zipFile);
-
-    if (ec != UnZip::Ok)
-    {
-        LOG(VB_GENERAL, LOG_ERR,
-                QString("extractZIP(): Unable to open ZIP file %1")
-                        .arg(zipFile));
-        return false;
-    }
-
-    ec = uz.extractAll(outDir);
-
-    if (ec != UnZip::Ok)
-    {
-        LOG(VB_GENERAL, LOG_ERR,
-                QString("extractZIP(): Error extracting ZIP file %1")
-                        .arg(zipFile));
-        return false;
-    }
-
-    uz.closeArchive();
-
-    return true;
+    UnZip unzip(zipFile);
+    return unzip.extractFile(outDir);
 }
 
 bool gzipFile(const QString &inFilename, const QString &gzipFilename)
@@ -171,11 +150,10 @@ QByteArray gzipCompress(const QByteArray& data)
     if (data.length() == 0)
         return QByteArray();
 
-    static constexpr int kChunkSize = 1024;
-    char out[kChunkSize];
+    std::array <char,1024> out {};
 
     // allocate inflate state
-    z_stream strm;
+    z_stream strm {};
 
     strm.zalloc   = Z_NULL;
     strm.zfree    = Z_NULL;
@@ -197,8 +175,8 @@ QByteArray gzipCompress(const QByteArray& data)
     // run deflate()
     do
     {
-        strm.avail_out = kChunkSize;
-        strm.next_out  = (Bytef*)(out);
+        strm.avail_out = out.size();
+        strm.next_out  = (Bytef*)(out.data());
 
         ret = deflate(&strm, Z_FINISH);
 
@@ -213,7 +191,7 @@ QByteArray gzipCompress(const QByteArray& data)
                 return QByteArray();
         }
 
-        result.append(out, kChunkSize - strm.avail_out);
+        result.append(out.data(), out.size() - strm.avail_out);
     }
     while (strm.avail_out == 0);
 
@@ -229,12 +207,12 @@ QByteArray gzipUncompress(const QByteArray &data)
     if (data.length() == 0)
         return QByteArray();
 
-    static constexpr int kChunkSize = 1024;
-    char out[kChunkSize];
+    std::array<char,1024> out {};
 
     // allocate inflate state
     z_stream strm;
-
+    strm.total_in = 0;
+    strm.total_out = 0;
     strm.zalloc   = Z_NULL;
     strm.zfree    = Z_NULL;
     strm.opaque   = Z_NULL;
@@ -250,8 +228,8 @@ QByteArray gzipUncompress(const QByteArray &data)
 
     do
     {
-        strm.avail_out = kChunkSize;
-        strm.next_out = (Bytef*)out;
+        strm.avail_out = out.size();
+        strm.next_out = (Bytef*)out.data();
         ret = inflate(&strm, Z_NO_FLUSH);
 
         Q_ASSERT(ret != Z_STREAM_ERROR);  // state not clobbered
@@ -265,7 +243,7 @@ QByteArray gzipUncompress(const QByteArray &data)
                 return QByteArray();
         }
 
-        result.append(out, kChunkSize - strm.avail_out);
+        result.append(out.data(), out.size() - strm.avail_out);
     }
     while (strm.avail_out == 0);
 
@@ -310,3 +288,4 @@ QString RemoteDownloadFileNow(const QString &url,
 }
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
+

@@ -7,6 +7,7 @@
 #include "opengl/mythrenderopengl.h"
 #include "videobuffers.h"
 #include "mythvtbinterop.h"
+#include "mythplayerui.h"
 #include "mythvtbcontext.h"
 
 // FFmpeg
@@ -41,13 +42,13 @@ void MythVTBContext::InitVideoCodec(AVCodecContext *Context, bool SelectedStream
     MythCodecContext::InitVideoCodec(Context, SelectedStream, DirectRendering);
 }
 
-bool MythVTBContext::RetrieveFrame(AVCodecContext* Context, VideoFrame* Frame, AVFrame* AvFrame)
+bool MythVTBContext::RetrieveFrame(AVCodecContext* Context, MythVideoFrame* Frame, AVFrame* AvFrame)
 {
     if (AvFrame->format != AV_PIX_FMT_VIDEOTOOLBOX)
         return false;
     if (codec_is_vtb_dec(m_codecID))
         return RetrieveHWFrame(Frame, AvFrame);
-    else if (codec_is_vtb(m_codecID))
+    if (codec_is_vtb(m_codecID))
         return GetBuffer2(Context, Frame, AvFrame, 0);
     return false;
 }
@@ -77,11 +78,14 @@ MythCodecID MythVTBContext::GetSupportedCodec(AVCodecContext **Context,
                                               uint StreamType)
 {
     bool decodeonly = Decoder == "vtb-dec"; 
-    MythCodecID success = static_cast<MythCodecID>((decodeonly ? kCodec_MPEG1_VTB_DEC : kCodec_MPEG1_VTB) + (StreamType - 1));
-    MythCodecID failure = static_cast<MythCodecID>(kCodec_MPEG1 + (StreamType - 1));
-
+    auto success = static_cast<MythCodecID>((decodeonly ? kCodec_MPEG1_VTB_DEC : kCodec_MPEG1_VTB) + (StreamType - 1));
+    auto failure = static_cast<MythCodecID>(kCodec_MPEG1 + (StreamType - 1));
     if (!Decoder.startsWith("vtb") || IsUnsupportedProfile(*Context))
         return failure;
+
+    if (!decodeonly)
+        if (!FrameTypeIsSupported(*Context, FMT_VTB))
+            return failure;
 
     // Check decoder support
     MythCodecContext::CodecProfile mythprofile = MythCodecContext::NoProfile;
@@ -127,35 +131,25 @@ int MythVTBContext::InitialiseDecoder(AVCodecContext *Context)
     if (!gCoreContext->IsUIThread())
         return -1;
 
+    // The interop must have a reference to the ui player so it can be deleted
+    // from the main thread.
+    auto * player = GetPlayerUI(Context);
+    if (!player)
+        return -1;
+
     // Retrieve OpenGL render context
-    MythRenderOpenGL* render = MythRenderOpenGL::GetOpenGLRender();
+    auto * render = dynamic_cast<MythRenderOpenGL*>(player->GetRender());
     if (!render)
         return -1;
     OpenGLLocker locker(render);
 
-    // We need a player to release the interop
-    MythPlayer *player = nullptr;
-    auto *decoder = reinterpret_cast<AvFormatDecoder*>(Context->opaque);
-    if (decoder)
-        player = decoder->GetPlayer();
-    if (!player)
-        return -1;
-
-    // Check interop support
-    MythVTBInterop::Type type = MythOpenGLInterop::GetInteropType(FMT_VTB, player);
-    if (type == MythOpenGLInterop::Unsupported)
-        return -1;
-
     // Create interop
-    MythVTBInterop* interop = MythVTBInterop::Create(render, type);
+    auto * interop = MythVTBInterop::CreateVTB(player, render);
     if (!interop)
         return -1;
 
-    // Set player
-    interop->SetPlayer(player);
-
     // Allocate the device context
-    AVBufferRef* deviceref = av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VIDEOTOOLBOX);
+    auto * deviceref = av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VIDEOTOOLBOX);
     if (!deviceref)
     {
         LOG(VB_GENERAL, LOG_ERR, LOC + "Failed to create device context");
@@ -164,7 +158,7 @@ int MythVTBContext::InitialiseDecoder(AVCodecContext *Context)
     }
 
     // Add our interop class and set the callback for its release
-    AVHWDeviceContext* devicectx = reinterpret_cast<AVHWDeviceContext*>(deviceref->data);
+    auto * devicectx = reinterpret_cast<AVHWDeviceContext*>(deviceref->data);
     devicectx->user_opaque = interop;
     devicectx->free        = MythCodecContext::DeviceContextFinished;
 
@@ -189,10 +183,10 @@ enum AVPixelFormat MythVTBContext::GetFormat(struct AVCodecContext* Context, con
     {
         if (*PixFmt == AV_PIX_FMT_VIDEOTOOLBOX)
         {
-            AvFormatDecoder* decoder = reinterpret_cast<AvFormatDecoder*>(Context->opaque);
+            auto* decoder = reinterpret_cast<AvFormatDecoder*>(Context->opaque);
             if (decoder)
             {
-                MythVTBContext* me = dynamic_cast<MythVTBContext*>(decoder->GetMythCodecContext());
+                auto* me = dynamic_cast<MythVTBContext*>(decoder->GetMythCodecContext());
                 if (me)
                     me->InitFramesContext(Context);
             }
@@ -205,7 +199,11 @@ enum AVPixelFormat MythVTBContext::GetFormat(struct AVCodecContext* Context, con
 
 const VTBProfiles& MythVTBContext::GetProfiles(void)
 {
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     static QMutex lock(QMutex::Recursive);
+#else
+    static QRecursiveMutex lock;
+#endif
     static bool s_initialised = false;
     static VTBProfiles s_profiles;
 
@@ -237,13 +235,17 @@ const VTBProfiles& MythVTBContext::GetProfiles(void)
     return s_profiles;
 }
 
-bool MythVTBContext::HaveVTB(void)
+bool MythVTBContext::HaveVTB(bool Reinit /*=false*/)
 {
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     static QMutex lock(QMutex::Recursive);
+#else
+    static QRecursiveMutex lock;
+#endif
     QMutexLocker locker(&lock);
     static bool s_checked = false;
     static bool s_available = false;
-    if (!s_checked)
+    if (!s_checked || Reinit)
     {
         const VTBProfiles& profiles = MythVTBContext::GetProfiles();
         if (profiles.empty())
@@ -306,12 +308,12 @@ void MythVTBContext::InitFramesContext(AVCodecContext *Context)
         return;
 
     AVPixelFormat format = AV_PIX_FMT_NV12;
-    if (ColorDepth(PixelFormatToFrameType(Context->sw_pix_fmt)) > 8)
+    if (MythVideoFrame::ColorDepth(MythAVUtil::PixelFormatToFrameType(Context->sw_pix_fmt)) > 8)
         format = AV_PIX_FMT_P010;
 
     if (m_framesContext)
     {
-        AVHWFramesContext *frames = reinterpret_cast<AVHWFramesContext*>(m_framesContext->data);
+        auto *frames = reinterpret_cast<AVHWFramesContext*>(m_framesContext->data);
         if ((frames->sw_format == format) && (frames->width == Context->coded_width) &&
             (frames->height == Context->coded_height))
         {
@@ -329,7 +331,7 @@ void MythVTBContext::InitFramesContext(AVCodecContext *Context)
     av_buffer_unref(&m_framesContext);
 
     AVBufferRef* framesref = av_hwframe_ctx_alloc(Context->hw_device_ctx);
-    AVHWFramesContext *frames = reinterpret_cast<AVHWFramesContext*>(framesref->data);
+    auto *frames = reinterpret_cast<AVHWFramesContext*>(framesref->data);
     frames->free = MythCodecContext::FramesContextFinished;
     frames->user_opaque = nullptr;
     frames->sw_format = format;

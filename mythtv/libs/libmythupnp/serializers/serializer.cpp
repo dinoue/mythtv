@@ -6,7 +6,7 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -112,7 +112,7 @@ void Serializer::SerializeObjectProperties( const QObject *pObject )
         {
             QMetaProperty metaProperty = pMetaObject->property( nIdx );
 
-            if (metaProperty.isDesignable( pObject ))
+            if (metaProperty.isDesignable())
             {
                 const char *pszPropName = metaProperty.name();
                 QString     sPropName( pszPropName );

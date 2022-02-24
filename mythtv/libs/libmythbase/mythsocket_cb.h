@@ -1,11 +1,13 @@
 /** -*- Mode: c++ -*- */
-#ifndef _MYTHSOCKET_CB_H_
-#define _MYTHSOCKET_CB_H_
+#ifndef MYTHSOCKET_CB_H
+#define MYTHSOCKET_CB_H
 
 #include "mythbaseexp.h"
 
-#define kMythSocketShortTimeout  7000
-#define kMythSocketLongTimeout  30000
+using namespace std::chrono_literals;
+
+static constexpr std::chrono::milliseconds kMythSocketShortTimeout {  7s };
+static constexpr std::chrono::milliseconds kMythSocketLongTimeout  { 30s };
 
 class MythSocket;
 class MBASE_PUBLIC MythSocketCBs
@@ -19,4 +21,4 @@ class MBASE_PUBLIC MythSocketCBs
     virtual void connectionClosed(MythSocket*) = 0;
 };
 
-#endif // _MYTHSOCKET_CB_H_
+#endif // MYTHSOCKET_CB_H

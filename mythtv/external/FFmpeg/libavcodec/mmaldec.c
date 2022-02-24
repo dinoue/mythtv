@@ -1,6 +1,6 @@
 /*
  * MMAL Video Decoder
- * Copyright (c) 2015 Rodger Combs
+ * Copyright (c) 2015 rcombs
  *
  * This file is part of FFmpeg.
  *
@@ -34,7 +34,8 @@
 #include <stdatomic.h>
 
 #include "avcodec.h"
-#include "hwaccel.h"
+#include "decode.h"
+#include "hwconfig.h"
 #include "internal.h"
 #include "libavutil/avassert.h"
 #include "libavutil/buffer.h"
@@ -296,8 +297,6 @@ static int ffmal_update_format(AVCodecContext *avctx)
         goto fail;
 
     if (avctx->pix_fmt == AV_PIX_FMT_MMAL) {
-        if ((status = mmal_port_parameter_set_boolean(decoder->output[0], MMAL_PARAMETER_ZERO_COPY, 1)))
-            goto fail;
         format_out->encoding = MMAL_ENCODING_OPAQUE;
     } else {
         format_out->encoding_variant = format_out->encoding = MMAL_ENCODING_I420;
@@ -335,8 +334,7 @@ static int ffmal_update_format(AVCodecContext *avctx)
         FFMAX(decoder->output[0]->buffer_size_min, decoder->output[0]->buffer_size_recommended);
     decoder->output[0]->buffer_num =
         FFMAX(decoder->output[0]->buffer_num_min, decoder->output[0]->buffer_num_recommended) + ctx->extra_buffers;
-    ctx->pool_out->pool = mmal_port_pool_create(decoder->output[0],
-                                           decoder->output[0]->buffer_num,
+    ctx->pool_out->pool = mmal_pool_create(decoder->output[0]->buffer_num,
                                            decoder->output[0]->buffer_size);
     if (!ctx->pool_out->pool) {
         ret = AVERROR(ENOMEM);
@@ -811,7 +809,7 @@ static int ffmmal_decode(AVCodecContext *avctx, void *data, int *got_frame,
     return ret;
 }
 
-static const AVCodecHWConfigInternal *mmal_hw_configs[] = {
+static const AVCodecHWConfigInternal *const mmal_hw_configs[] = {
     HW_CONFIG_INTERNAL(MMAL),
     NULL
 };

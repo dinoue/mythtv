@@ -25,7 +25,7 @@ class MUI_PUBLIC MythUISimpleText : public MythUIType
     MythUISimpleText(MythUIType *parent, const QString &name)
         : MythUIType(parent, name) {}
     MythUISimpleText(const QString &text, const MythFontProperties &font,
-                     const QRect &rect, Qt::Alignment align,
+                     QRect rect, Qt::Alignment align,
                      MythUIType *parent, const QString &name);
     ~MythUISimpleText() override = default;
 
@@ -36,9 +36,9 @@ class MUI_PUBLIC MythUISimpleText : public MythUIType
     void CopyFrom(MythUIType *base) override; // MythUIType
     void CreateCopy(MythUIType *parent) override; // MythUIType
 
-    Qt::Alignment m_Justification {Qt::AlignLeft | Qt::AlignTop};
-    MythFontProperties m_Font;
-    QString m_Message;
+    Qt::Alignment m_justification {Qt::AlignLeft | Qt::AlignTop};
+    MythFontProperties m_font;
+    QString m_message;
 };
 
 #endif

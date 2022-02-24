@@ -3,7 +3,6 @@
 
 #include <utility>
 #include <vector>
-using namespace std;
 
 // MythTV headers
 #include "mthread.h"
@@ -102,14 +101,14 @@ protected:
 class TransFreqTableSelector : public TransMythUIComboBoxSetting
 {
   public:
-    explicit TransFreqTableSelector(uint _sourceid);
+    explicit TransFreqTableSelector(uint sourceid);
 
     void Load(void) override; // StandardSetting
 
     void Save(void) override; // StandardSetting
     virtual void Save(const QString& /*destination*/) { Save(); }
 
-    void SetSourceID(uint _sourceid);
+    void SetSourceID(uint sourceid);
 
   private:
     uint    m_sourceId;
@@ -379,8 +378,104 @@ class HDHomeRunDeviceID : public MythUITextEditSetting
   private:
     HDHomeRunConfigurationGroup &m_group;
 };
+#endif  // USING_HDHOMERUN
 
-#endif
+#ifdef USING_SATIP
+
+class SatIPDevice
+{
+  public:
+    QString m_mythDeviceId;
+    QString m_deviceId;
+    QString m_friendlyName;
+    QString m_cardIP;
+    QString m_tunerNo;
+    QString m_tunerType;
+    bool    m_inUse      {false};
+    bool    m_discovered {false};
+};
+
+using SatIPDeviceList = QMap<QString, SatIPDevice>;
+
+class SatIPDeviceIDList;
+class SatIPDeviceID;
+class SatIPDeviceAttribute;
+class SatIPConfigurationGroup : public GroupSetting
+{
+    Q_OBJECT
+
+  public:
+    SatIPConfigurationGroup(CaptureCard &parent, CardType &cardtype);
+
+  private:
+    void FillDeviceList(void);
+
+  private:
+    CaptureCard           &m_parent;
+    SatIPDeviceIDList     *m_deviceIdList  {nullptr};
+    SatIPDeviceID         *m_deviceId      {nullptr};
+    SatIPDeviceAttribute  *m_friendlyName  {nullptr};
+    SatIPDeviceAttribute  *m_tunerType     {nullptr};
+    SatIPDeviceAttribute  *m_tunerIndex    {nullptr};
+    SatIPDeviceList        m_deviceList;
+};
+
+class SatIPDeviceIDList : public TransMythUIComboBoxSetting
+{
+    Q_OBJECT
+
+  public:
+    SatIPDeviceIDList(SatIPDeviceID *deviceId,
+                      SatIPDeviceAttribute *friendlyName,
+                      SatIPDeviceAttribute *tunerType,
+                      SatIPDeviceAttribute *tunerIndex,
+                      SatIPDeviceList *deviceList,
+                      const CaptureCard &parent);
+
+    void fillSelections(const QString &current);
+
+    void Load(void) override; // StandardSetting
+
+  public slots:
+    void UpdateDevices(const QString& /*v*/);
+
+  signals:
+    void NewTuner(const QString&);
+
+  private:
+    SatIPDeviceID        *m_deviceId;
+    SatIPDeviceAttribute *m_friendlyName;
+    SatIPDeviceAttribute *m_tunerType;
+    SatIPDeviceAttribute *m_tunerIndex;
+    SatIPDeviceList      *m_deviceList;
+    const CaptureCard    &m_parent;
+};
+
+class SatIPDeviceID : public MythUITextEditSetting
+{
+    Q_OBJECT
+
+  public:
+    explicit SatIPDeviceID(const CaptureCard &parent);
+
+    void Load(void) override; // StandardSetting
+
+  public slots:
+    void SetTuner(const QString& /*tuner*/);
+
+  private:
+    const CaptureCard &m_parent;
+};
+
+class SatIPDeviceAttribute : public GroupSetting
+{
+    Q_OBJECT
+
+  public:
+    SatIPDeviceAttribute(const QString& label,
+                         const QString& helpText);
+};
+#endif // USING_SATIP
 
 class VBoxDevice
 {
@@ -426,14 +521,14 @@ class V4LConfigurationGroup : public GroupSetting
     Q_OBJECT
 
   public:
-    V4LConfigurationGroup(CaptureCard &parent, CardType &cardtype);
+    V4LConfigurationGroup(CaptureCard &parent, CardType &cardtype, const QString &inputtype);
 
   public slots:
     void probeCard(const QString &device);
 
   private:
     CaptureCard          &m_parent;
-    TransTextEditSetting *m_cardInfo {nullptr};
+    GroupSetting         *m_cardInfo {nullptr};
     VBIDevice            *m_vbiDev   {nullptr};
 };
 
@@ -454,7 +549,7 @@ class MPEGConfigurationGroup: public GroupSetting
     CaptureCard          &m_parent;
     VideoDevice          *m_device    {nullptr};
     VBIDevice            *m_vbiDevice {nullptr};
-    TransTextEditSetting *m_cardInfo  {nullptr};
+    GroupSetting         *m_cardInfo  {nullptr};
 };
 
 class HDPVRConfigurationGroup: public GroupSetting
@@ -485,7 +580,7 @@ class V4L2encGroup: public GroupSetting
 
   private:
     CaptureCard          &m_parent;
-    TransTextEditSetting *m_cardInfo {nullptr};
+    GroupSetting         *m_cardInfo {nullptr};
     VideoDevice          *m_device   {nullptr};
 
     QString               m_driverName;
@@ -590,9 +685,6 @@ class DVBConfigurationGroup : public GroupSetting
     DVBCardType                  *m_cardType       {nullptr};
     SignalTimeout                *m_signalTimeout  {nullptr};
     ChannelTimeout               *m_channelTimeout {nullptr};
-#if 0
-    TransButtonSetting           *m_buttonAnalog   {nullptr};
-#endif
     DVBTuningDelay               *m_tuningDelay    {nullptr};
     DiSEqCDevTree                *m_diseqcTree     {nullptr};
     DeviceTree                   *m_diseqcBtn      {nullptr};
@@ -724,6 +816,7 @@ class CaptureCardButton : public ButtonStandardSetting
     QString m_value;
 };
 
+
 class MTV_PUBLIC CaptureCardEditor : public GroupSetting
 {
     Q_OBJECT
@@ -733,11 +826,14 @@ class MTV_PUBLIC CaptureCardEditor : public GroupSetting
 
     void Load(void) override; // StandardSetting
 
-    void AddSelection(const QString &label, const char *slot);
+    using CCESlot = void (CaptureCardEditor::*)(void);
+    using CCESlotConst = void (CaptureCardEditor::*)(void) const;
+    void AddSelection(const QString &label, CCESlot slot);
+    void AddSelection(const QString &label, CCESlotConst slot);
 
   public slots:
-    void ShowDeleteAllCaptureCardsDialog(void);
-    void ShowDeleteAllCaptureCardsDialogOnHost(void);
+    void ShowDeleteAllCaptureCardsDialog(void) const;
+    void ShowDeleteAllCaptureCardsDialogOnHost(void) const;
     void DeleteAllCaptureCards(bool doDelete);
     void DeleteAllCaptureCardsOnHost(bool doDelete);
     void AddNewCard(void);
@@ -750,15 +846,18 @@ class MTV_PUBLIC VideoSourceEditor : public GroupSetting
   public:
     VideoSourceEditor();
 
-    static bool cardTypesInclude(const int& SourceID,
+    static bool cardTypesInclude(int SourceID,
                                  const QString& thecardtype);
 
     void Load(void) override; // StandardSetting
-    void AddSelection(const QString &label, const char *slot);
+    using VSESlot = void (VideoSourceEditor::*)(void);
+    using VSESlotConst = void (VideoSourceEditor::*)(void) const;
+    void AddSelection(const QString &label, VSESlot slot);
+    void AddSelection(const QString &label, VSESlotConst slot);
 
   public slots:
     void NewSource(void);
-    void ShowDeleteAllSourcesDialog(void);
+    void ShowDeleteAllSourcesDialog(void) const;
     void DeleteAllSources(bool doDelete);
 };
 
@@ -772,7 +871,7 @@ class MTV_PUBLIC CardInputEditor : public GroupSetting
     void Load(void) override; // StandardSetting
 
   private:
-    vector<CardInput*>  m_cardInputs;
+    std::vector<CardInput*>  m_cardInputs;
 };
 
 class StartingChannel : public MythUIComboBoxSetting
@@ -784,9 +883,9 @@ class StartingChannel : public MythUIComboBoxSetting
                               false)
     {
         setLabel(QObject::tr("Starting channel"));
-        setHelpText(QObject::tr("Starting Live TV channel.") + " " +
-                    QObject::tr("This is updated on every successful "
-                                "channel change."));
+        setHelpText(QObject::tr("This channel is shown when 'Watch TV' is selected on the main menu. "
+                                "It is updated on every Live TV channel change. "
+                                "When the value is not valid a suitable default will be chosen."));
     }
     static void fillSelections(void) {;}
   public slots:
@@ -934,12 +1033,14 @@ class VBoxDeviceID : public MythUITextEditSetting
     QString m_overrideDeviceId;
 };
 
+#ifdef USING_CETON
 class CetonSetting : public TransTextEditSetting
 {
     Q_OBJECT
 
   public:
-    CetonSetting(const char* label, const char* helptext);
+    CetonSetting(QString label, const QString& helptext);
+    static void CetonConfigurationGroup(CaptureCard& parent, CardType& cardtype);
 
   signals:
     void NewValue(const QString&);
@@ -974,5 +1075,6 @@ class CetonDeviceID : public MythUITextEditSetting
     QString m_tuner;
     const CaptureCard &m_parent;
 };
+#endif // USING_CETON
 
 #endif

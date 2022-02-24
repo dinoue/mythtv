@@ -91,13 +91,17 @@ void ThumbThread<DBFS>::AbortDevice(int devId, const QString &action)
 }
 
 
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+#define QMutableMultiMapIterator QMutableMapIterator
+#endif
+
 /*!
   /brief Removes all tasks for a device from a task queue
  */
 template <class DBFS>
 void ThumbThread<DBFS>::RemoveTasks(ThumbQueue &queue, int devId)
 {
-    QMutableMapIterator<int, TaskPtr> it(queue);
+    QMutableMultiMapIterator<int, TaskPtr> it(queue);
     while (it.hasNext())
     {
         it.next();
@@ -167,7 +171,7 @@ void ThumbThread<DBFS>::run()
         }
         else if (task->m_action == "DELETE")
         {
-            foreach(ImagePtrK im, task->m_images)
+            for (const auto& im : qAsConst(task->m_images))
             {
                 QString thumbnail = im->m_thumbPath;
                 if (!QDir::root().remove(thumbnail))
@@ -188,7 +192,7 @@ void ThumbThread<DBFS>::run()
         }
         else if (task->m_action == "MOVE")
         {
-            foreach(ImagePtrK im, task->m_images)
+            for (const auto& im : qAsConst(task->m_images))
             {
                 // Build new thumb path
                 QString newThumbPath =
@@ -278,7 +282,7 @@ QString ThumbThread<DBFS>::CreateThumbnail(ImagePtrK im, int thumbPriority)
                             kMSPropagateLogs);
         ms.SetNice(10);
         ms.SetIOPrio(7);
-        ms.Run(30);
+        ms.Run(30s);
         if (ms.Wait() != GENERIC_EXIT_OK)
         {
             LOG(VB_GENERAL, LOG_ERR,  QString("Failed to run %2 %3")
@@ -372,7 +376,7 @@ void ImageThumb<DBFS>::ClearThumbs(int devId, const QString &action)
 
     // Generate file & thumbnail urls (as per image cache) of mountpoints
     QStringList mesg;
-    foreach (const QString &mount, mountPaths)
+    for (const auto& mount : qAsConst(mountPaths))
         mesg << m_dbfs.MakeFileUrl(mount)
              << m_dbfs.MakeThumbUrl(mount);
 
@@ -395,7 +399,7 @@ QString ImageThumb<DBFS>::DeleteThumbs(const ImageList &images)
     // Pictures & videos are deleted by their own threads
     ImageListK pics;
     ImageListK videos;
-    foreach (ImagePtrK im, images)
+    for (const auto& im : qAsConst(images))
     {
         if (im->m_type == kVideoFile)
             videos.append(im);

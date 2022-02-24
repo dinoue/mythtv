@@ -5,13 +5,18 @@
 #ifdef USING_DBUS
 #include "platforms/mythpowerdbus.h"
 #endif
-#if defined(Q_OS_MAC)
+
+#ifdef Q_OS_DARWIN
 #include "platforms/mythpowerosx.h"
 #endif
 
 #define LOC QString("Power: ")
 
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
 QMutex MythPower::s_lock(QMutex::Recursive);
+#else
+QRecursiveMutex MythPower::s_lock;
+#endif
 
 /*! \class MythPower
  *
@@ -67,10 +72,10 @@ QMutex MythPower::s_lock(QMutex::Recursive);
  * \todo Add Android subclass
  * \todo Add sending Myth events as well as emitting signals.
 */
-MythPower* MythPower::AcquireRelease(void *Reference, bool Acquire, uint MinimumDelay)
+MythPower* MythPower::AcquireRelease(void *Reference, bool Acquire, std::chrono::seconds MinimumDelay)
 {
     static MythPower* s_instance = nullptr;
-    static QHash<void*,uint> s_delays;
+    static QHash<void*,std::chrono::seconds> s_delays;
 
     QMutexLocker locker(&s_lock);
     if (Acquire)
@@ -82,7 +87,7 @@ MythPower* MythPower::AcquireRelease(void *Reference, bool Acquire, uint Minimum
         }
         else
         {
-#if defined(Q_OS_MAC)
+#ifdef Q_OS_DARWIN
             // NB OSX may have DBUS but it won't help here
             s_instance = new MythPowerOSX();
 #elif USING_DBUS
@@ -110,7 +115,7 @@ MythPower* MythPower::AcquireRelease(void *Reference, bool Acquire, uint Minimum
     if (s_instance)
     {
         // Update the maximum requested delay
-        uint max = std::max_element(s_delays.cbegin(), s_delays.cend()).value();
+        std::chrono::seconds max = std::max_element(s_delays.cbegin(), s_delays.cend()).value();
         s_instance->SetRequestedDelay(max);
     }
     return s_instance;
@@ -131,7 +136,7 @@ void MythPower::Init(void)
     LOG(VB_GENERAL, LOG_INFO, LOC + QString("Supported actions: %1").arg(supported.join(",")));
 }
 
-void MythPower::SetRequestedDelay(uint Delay)
+void MythPower::SetRequestedDelay(std::chrono::seconds Delay)
 {
     m_maxRequestedDelay = Delay;
 }
@@ -161,12 +166,12 @@ bool MythPower::IsFeatureSupported(Feature Supported)
 {
     bool result = false;
     s_lock.lock();
-    result = m_features & Supported;
+    result = ((m_features & Supported) != 0U);
     s_lock.unlock();
     return result;
 }
 
-int MythPower::GetPowerLevel(void)
+int MythPower::GetPowerLevel(void) const
 {
     int result = UnknownPower;
     s_lock.lock();
@@ -185,13 +190,14 @@ bool MythPower::RequestFeature(Feature Request, bool Delay)
     // N.B Always check for a new user delay value as this class is persistent.
     // Default is user preference, limited by the maximum supported system value
     // and possibly overriden by the maximum delay requested by other Myth classes.
-    int user = gCoreContext->GetNumSetting("EXIT_SHUTDOWN_DELAY", 3);
-    uint delay = qMin(qMax(static_cast<uint>(user), m_maxRequestedDelay), m_maxSupportedDelay);
+    auto user = gCoreContext->GetDurSetting<std::chrono::seconds>("EXIT_SHUTDOWN_DELAY", 3s);
+    auto delay = std::clamp(user, m_maxRequestedDelay, m_maxSupportedDelay);
 
     LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Delay: %1 User: %2 Requested: %3 Supported: %4")
-        .arg(Delay).arg(user).arg(m_maxRequestedDelay).arg(m_maxSupportedDelay));
+        .arg(Delay).arg(user.count()).arg(m_maxRequestedDelay.count())
+        .arg(m_maxSupportedDelay.count()));
 
-    if (!Delay || delay < 1)
+    if (!Delay || delay < 1s)
     {
         m_scheduledFeature = Request;
         DoFeature();
@@ -200,7 +206,7 @@ bool MythPower::RequestFeature(Feature Request, bool Delay)
     if (!ScheduleFeature(Request, delay))
         return false;
 
-    uint remaining = static_cast<uint>(m_featureTimer.remainingTime());
+    auto remaining = m_featureTimer.remainingTimeAsDuration();
     switch (Request)
     {
         case FeatureSuspend:     emit WillSuspend(remaining);     break;
@@ -266,7 +272,7 @@ bool MythPower::FeatureIsEquivalent(Feature First, Feature Second)
     return false;
 }
 
-bool MythPower::ScheduleFeature(enum Feature Type, uint Delay)
+bool MythPower::ScheduleFeature(enum Feature Type, std::chrono::seconds Delay)
 {
     if (Type == FeatureNone || Delay > MAXIMUM_SHUTDOWN_WAIT)
         return false;
@@ -275,15 +281,15 @@ bool MythPower::ScheduleFeature(enum Feature Type, uint Delay)
     {
         LOG(VB_GENERAL, LOG_ERR, LOC +
             QString("Ignoring %1 request: %2 pending in %3 seconds")
-            .arg(FeatureToString(Type)).arg(FeatureToString(m_scheduledFeature))
+            .arg(FeatureToString(Type), FeatureToString(m_scheduledFeature))
             .arg(m_featureTimer.remainingTime() / 1000));
         return false;
     }
 
     m_scheduledFeature = Type;
-    m_featureTimer.start(static_cast<int>(Delay) * 1000);
+    m_featureTimer.start(Delay);
     LOG(VB_GENERAL, LOG_INFO, LOC + QString("Will %1 in %2 seconds")
-        .arg(FeatureToString(Type)).arg(Delay));
+        .arg(FeatureToString(Type)).arg(Delay.count()));
     return true;
 }
 
@@ -306,8 +312,8 @@ void MythPower::FeatureHappening(Feature Spontaneous)
 
     m_sleepTime = QDateTime::currentDateTime();
     LOG(VB_GENERAL, LOG_INFO, LOC + QString("About to: %1 %2")
-        .arg(FeatureToString(m_scheduledFeature))
-        .arg(m_isSpontaneous ? QString("(System notification)") : ""));
+        .arg(FeatureToString(m_scheduledFeature),
+             m_isSpontaneous ? QString("(System notification)") : ""));
 
     switch (m_scheduledFeature)
     {
@@ -334,7 +340,7 @@ void MythPower::DidWakeUp(void)
     QTime time = QTime(0, 0).addSecs(secs % kSecsInDay);
     LOG(VB_GENERAL, LOG_INFO, LOC + QString("Woke up after %1days %2hours %3minutes and %4seconds")
         .arg(days).arg(time.hour()).arg(time.minute()).arg(time.second()));
-    emit WokeUp(m_sleepTime.secsTo(now));
+    emit WokeUp(std::chrono::seconds(m_sleepTime.secsTo(now)));
 }
 
 void MythPower::PowerLevelChanged(int Level)

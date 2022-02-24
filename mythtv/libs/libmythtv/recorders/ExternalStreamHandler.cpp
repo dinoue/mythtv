@@ -10,7 +10,9 @@
 #include <poll.h>
 #include <sys/ioctl.h>
 #endif
-#ifdef ANDROID
+
+#include <QtGlobal>
+#ifdef Q_OS_ANDROID
 #include <sys/wait.h>
 #endif
 
@@ -34,7 +36,7 @@ ExternIO::ExternIO(const QString & app,
                    const QStringList & args)
     : m_status(&m_statusBuf, QIODevice::ReadWrite)
 {
-    m_app  = (app);
+    m_app  = QFileInfo(app);
 
     if (!m_app.exists())
     {
@@ -70,15 +72,14 @@ ExternIO::~ExternIO(void)
     delete[] m_buffer;
 }
 
-bool ExternIO::Ready(int fd, int timeout, const QString & what)
+bool ExternIO::Ready(int fd, std::chrono::milliseconds timeout, const QString & what)
 {
 #if !defined( USING_MINGW ) && !defined( _MSC_VER )
-    struct pollfd m_poll[2];
-    memset(m_poll, 0, sizeof(m_poll));
+    std::array<struct pollfd,2> m_poll {};
 
     m_poll[0].fd = fd;
     m_poll[0].events = POLLIN | POLLPRI;
-    int ret = poll(m_poll, 1, timeout);
+    int ret = poll(m_poll.data(), 1, timeout.count());
 
     if (m_poll[0].revents & POLLHUP)
     {
@@ -99,11 +100,15 @@ bool ExternIO::Ready(int fd, int timeout, const QString & what)
             m_error = "poll overflow";
         return false;
     }
+#else
+    Q_UNUSED(fd);
+    Q_UNUSED(timeout);
+    Q_UNUSED(what);
 #endif // !defined( USING_MINGW ) && !defined( _MSC_VER )
     return false;
 }
 
-int ExternIO::Read(QByteArray & buffer, int maxlen, int timeout)
+int ExternIO::Read(QByteArray & buffer, int maxlen, std::chrono::milliseconds timeout)
 {
     if (Error())
     {
@@ -140,7 +145,7 @@ int ExternIO::Read(QByteArray & buffer, int maxlen, int timeout)
                 LOG(VB_RECORD, LOG_WARNING,
                     QString("External Recorder not ready. Will retry (%1/%2).")
                     .arg(m_errCnt).arg(kMaxErrorCnt));
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                std::this_thread::sleep_for(100ms);
             }
         }
         else
@@ -164,7 +169,7 @@ int ExternIO::Read(QByteArray & buffer, int maxlen, int timeout)
     return len;
 }
 
-QString ExternIO::GetStatus(int timeout)
+QString ExternIO::GetStatus(std::chrono::milliseconds timeout)
 {
     if (Error())
     {
@@ -174,12 +179,12 @@ QString ExternIO::GetStatus(int timeout)
         return QByteArray();
     }
 
-    int waitfor = m_status.atEnd() ? timeout : 0;
+    std::chrono::milliseconds waitfor = m_status.atEnd() ? timeout : 0ms;
     if (Ready(m_appErr, waitfor, "status"))
     {
-        char buffer[2048];
-        int len = read(m_appErr, buffer, 2048);
-        m_status << QString::fromLatin1(buffer, len);
+        std::array<char,2048> buffer {};
+        int len = read(m_appErr, buffer.data(), buffer.size());
+        m_status << QString::fromLatin1(buffer.data(), len);
     }
 
     if (m_status.atEnd())
@@ -231,7 +236,7 @@ bool ExternIO::Run(void)
     LOG(VB_RECORD, LOG_INFO, QString("ExternIO::Run()"));
 
     Fork();
-    GetStatus(10);
+    GetStatus(10ms);
 
     return true;
 }
@@ -239,7 +244,7 @@ bool ExternIO::Run(void)
 /* Return true if the process is not, or is no longer running */
 bool ExternIO::KillIfRunning(const QString & cmd)
 {
-#if CONFIG_DARWIN || (__FreeBSD__) || defined(__OpenBSD__)
+#if defined(Q_OS_DARWIN) || defined(__FreeBSD__) || defined(__OpenBSD__)
     Q_UNUSED(cmd);
     return false;
 #elif defined USING_MINGW
@@ -265,7 +270,7 @@ bool ExternIO::KillIfRunning(const QString & cmd)
     int res_kil = system(kil.toUtf8().constData());
     if (WEXITSTATUS(res_kil) == 1)
         LOG(VB_GENERAL, LOG_WARNING, QString("'%1' failed: %2")
-            .arg(kil).arg(ENO));
+            .arg(kil, ENO));
 
     res_grp = system(grp.toUtf8().constData());
     if (WEXITSTATUS(res_grp) == 1)
@@ -275,18 +280,18 @@ bool ExternIO::KillIfRunning(const QString & cmd)
         return true;
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    std::this_thread::sleep_for(50ms);
 
     kil = QString("pkill --signal 9 -x -f \"%1\" 2>&1 > /dev/null").arg(cmd);
     res_kil = system(kil.toUtf8().constData());
     if (WEXITSTATUS(res_kil) > 0)
         LOG(VB_GENERAL, LOG_WARNING, QString("'%1' failed: %2")
-            .arg(kil).arg(ENO));
+            .arg(kil, ENO));
 
     res_grp = system(grp.toUtf8().constData());
     LOG(WEXITSTATUS(res_kil) == 0 ? VB_RECORD : VB_GENERAL, LOG_WARNING,
-        QString("'%1' %2.").arg(cmd)
-        .arg(WEXITSTATUS(res_grp) == 0 ? "sill running" : "terminated"));
+        QString("'%1' %2.")
+        .arg(cmd, WEXITSTATUS(res_grp) == 0 ? "sill running" : "terminated"));
 
     return (WEXITSTATUS(res_grp) != 0);
 #endif
@@ -307,7 +312,7 @@ void ExternIO::Fork(void)
     if (!KillIfRunning(full_command))
     {
         // Give it one more chance.
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        std::this_thread::sleep_for(50ms);
         if (!KillIfRunning(full_command))
         {
             m_error = QString("Unable to kill existing '%1'.")
@@ -320,23 +325,23 @@ void ExternIO::Fork(void)
 
     LOG(VB_RECORD, LOG_INFO, QString("ExternIO::Fork '%1'").arg(full_command));
 
-    int in[2]  = {-1, -1};
-    int out[2] = {-1, -1};
-    int err[2] = {-1, -1};
+    std::array<int,2> in  = {-1, -1};
+    std::array<int,2> out = {-1, -1};
+    std::array<int,2> err = {-1, -1};
 
-    if (pipe(in) < 0)
+    if (pipe(in.data()) < 0)
     {
         m_error = "pipe(in) failed: " + ENO;
         return;
     }
-    if (pipe(out) < 0)
+    if (pipe(out.data()) < 0)
     {
         m_error = "pipe(out) failed: " + ENO;
         close(in[0]);
         close(in[1]);
         return;
     }
-    if (pipe(err) < 0)
+    if (pipe(err.data()) < 0)
     {
         m_error = "pipe(err) failed: " + ENO;
         close(in[0]);
@@ -372,7 +377,7 @@ void ExternIO::Fork(void)
         {
             LOG(VB_GENERAL, LOG_WARNING,
                 "ExternIO::Fork(): Failed to set O_NONBLOCK for FD: " + ENO);
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            std::this_thread::sleep_for(2s);
             _exit(GENERIC_EXIT_PIPE_FAILURE);
         }
 
@@ -411,7 +416,7 @@ void ExternIO::Fork(void)
     {
         std::cerr << "ExternIO: "
              << "setpgid() failed: "
-             << strerror(errno) << endl;
+             << strerror(errno) << std::endl;
     }
 
     /* run command */
@@ -432,13 +437,13 @@ void ExternIO::Fork(void)
         // Can't use LOG due to locking fun.
         std::cerr << "ExternIO: "
              << "execv() failed: "
-             << strerror(errno) << endl;
+             << strerror(errno) << std::endl;
     }
     else
     {
         std::cerr << "ExternIO: "
                   << "execv() should not be here?: "
-                  << strerror(errno) << endl;
+                  << strerror(errno) << std::endl;
     }
 
 #endif // !defined( USING_MINGW ) && !defined( _MSC_VER )
@@ -466,16 +471,18 @@ ExternalStreamHandler *ExternalStreamHandler::Get(const QString &devname,
         s_handlersRefCnt[majorid] = 1;
 
         LOG(VB_RECORD, LOG_INFO,
-            QString("ExternSH[%1]: Creating new stream handler %2 for %3")
+            QString("ExternSH[%1:%2]: Creating new stream handler for %3 "
+                    "(1 in use)")
             .arg(inputid).arg(majorid).arg(devname));
     }
     else
     {
-        s_handlersRefCnt[majorid]++;
+        ++s_handlersRefCnt[majorid];
         uint rcount = s_handlersRefCnt[majorid];
         LOG(VB_RECORD, LOG_INFO,
-            QString("ExternSH[%1]: Using existing stream handler for %2")
-            .arg(inputid).arg(majorid) + QString(" (%1 in use)").arg(rcount));
+            QString("ExternSH[%1:%2]: Using existing stream handler for %3")
+            .arg(inputid).arg(majorid).arg(devname) +
+            QString(" (%1 in use)").arg(rcount));
     }
 
     return s_handlers[majorid];
@@ -495,19 +502,22 @@ void ExternalStreamHandler::Return(ExternalStreamHandler * & ref,
     QMap<int, ExternalStreamHandler*>::iterator it =
         s_handlers.find(majorid);
 
-    LOG(VB_RECORD, LOG_INFO, QString("ExternSH[%1]: Return %2 in use %3")
-        .arg(inputid).arg(majorid).arg(*rit));
-
     if (*rit > 1)
     {
         ref = nullptr;
         --(*rit);
+
+        LOG(VB_RECORD, LOG_INFO,
+            QString("ExternSH[%1:%2]: Return handler (%3 still in use)")
+            .arg(inputid).arg(majorid).arg(*rit));
+
         return;
     }
 
     if ((it != s_handlers.end()) && (*it == ref))
     {
-        LOG(VB_RECORD, LOG_INFO, QString("ExternSH[%1]: Closing handler for %2")
+        LOG(VB_RECORD, LOG_INFO,
+            QString("ExternSH[%1:%2]: Closing handler (0 in use)")
             .arg(inputid).arg(majorid));
         delete *it;
         s_handlers.erase(it);
@@ -515,7 +525,7 @@ void ExternalStreamHandler::Return(ExternalStreamHandler * & ref,
     else
     {
         LOG(VB_GENERAL, LOG_ERR,
-            QString("ExternSH[%1]: Error: Couldn't find handler for %2")
+            QString("ExternSH[%1:%2]: Error: No handler to return!")
             .arg(inputid).arg(majorid));
     }
 
@@ -536,8 +546,13 @@ ExternalStreamHandler::ExternalStreamHandler(const QString & path,
 {
     setObjectName("ExternSH");
 
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     m_args = path.split(' ',QString::SkipEmptyParts) +
              logPropagateArgs.split(' ', QString::SkipEmptyParts);
+#else
+    m_args = path.split(' ',Qt::SkipEmptyParts) +
+             logPropagateArgs.split(' ', Qt::SkipEmptyParts);
+#endif
     m_app = m_args.first();
     m_args.removeFirst();
 
@@ -563,7 +578,6 @@ int ExternalStreamHandler::StreamingCount(void) const
 
 void ExternalStreamHandler::run(void)
 {
-    QString    cmd;
     QString    result;
     QString    ready_cmd;
     QByteArray buffer;
@@ -603,13 +617,13 @@ void ExternalStreamHandler::run(void)
         if (!IsTSOpen())
         {
             LOG(VB_RECORD, LOG_WARNING, LOC + "TS not open yet.");
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(10ms);
             continue;
         }
 
         if (StreamingCount() == 0)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(10ms);
             continue;
         }
 
@@ -631,13 +645,13 @@ void ExternalStreamHandler::run(void)
                     {
                         LOG(VB_GENERAL, LOG_ERR, LOC +
                             QString("Aborting: %1 -> %2")
-                            .arg(ready_cmd).arg(result));
+                            .arg(ready_cmd, result));
                         m_bError = true;
                         continue;
                     }
 
                     if (restart_cnt++)
-                        std::this_thread::sleep_for(std::chrono::seconds(20));
+                        std::this_thread::sleep_for(20s);
                     if (!RestartStream())
                     {
                         LOG(VB_RECORD, LOG_ERR, LOC +
@@ -652,7 +666,7 @@ void ExternalStreamHandler::run(void)
 
         if (m_xon)
         {
-            if (status_timer.elapsed() >= 2000)
+            if (status_timer.elapsed() >= 2s)
             {
                 // Since we may never need to send the XOFF
                 // command, occationally check to see if the
@@ -660,7 +674,7 @@ void ExternalStreamHandler::run(void)
                 if (CheckForError())
                 {
                     if (restart_cnt++)
-                        std::this_thread::sleep_for(std::chrono::seconds(20));
+                        std::this_thread::sleep_for(20s);
                     if (!RestartStream())
                     {
                         LOG(VB_RECORD, LOG_ERR, LOC + "Failed to restart stream.");
@@ -693,7 +707,7 @@ void ExternalStreamHandler::run(void)
             }
 
             if (m_io && (sz = PACKET_SIZE - remainder) > 0)
-                read_len = m_io->Read(buffer, sz, 100);
+                read_len = m_io->Read(buffer, sz, 100ms);
             else
                 read_len = 0;
         }
@@ -706,7 +720,7 @@ void ExternalStreamHandler::run(void)
                 nodata_timer.start();
             else
             {
-                if (nodata_timer.elapsed() >= 50000)
+                if (nodata_timer.elapsed() >= 50s)
                 {
                     LOG(VB_GENERAL, LOG_WARNING, LOC +
                         "No data for 50 seconds, Restarting stream.");
@@ -721,10 +735,10 @@ void ExternalStreamHandler::run(void)
                 }
             }
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            std::this_thread::sleep_for(50ms);
 
             // HLS type streams may only produce data every ~10 seconds
-            if (nodata_timer.elapsed() < 12000 && buffer.size() < TS_PACKET_SIZE)
+            if (nodata_timer.elapsed() < 12s && buffer.size() < TS_PACKET_SIZE)
                 continue;
         }
         else
@@ -758,7 +772,7 @@ void ExternalStreamHandler::run(void)
         {
             if (m_xon && data_short_err++ == 0)
                 LOG(VB_RECORD, LOG_INFO, LOC + "Waiting for a full TS packet.");
-            std::this_thread::sleep_for(std::chrono::microseconds(50));
+            std::this_thread::sleep_for(50us);
             continue;
         }
         if (data_short_err)
@@ -805,12 +819,12 @@ void ExternalStreamHandler::run(void)
         if (remainder == 0)
         {
             buffer.clear();
-            good_data = len;
+            good_data = (len != 0U);
         }
         else if (len > remainder) // leftover bytes
         {
             buffer.remove(0, len - remainder);
-            good_data = len;
+            good_data = (len != 0U);
         }
         else if (len == remainder)
             good_data = false;
@@ -853,13 +867,17 @@ bool ExternalStreamHandler::SetAPIVersion(void)
 {
     QString result;
 
-    if (ProcessCommand("APIVersion?", result, 10000))
+    if (ProcessCommand("APIVersion?", result, 10s))
     {
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
         QStringList tokens = result.split(':', QString::SkipEmptyParts);
+#else
+        QStringList tokens = result.split(':', Qt::SkipEmptyParts);
+#endif
 
         if (tokens.size() > 1)
             m_apiVersion = tokens[1].toUInt();
-        m_apiVersion = min(m_apiVersion, static_cast<int>(MAX_API_VERSION));
+        m_apiVersion = std::min(m_apiVersion, static_cast<int>(MAX_API_VERSION));
         if (m_apiVersion < 1)
         {
             LOG(VB_RECORD, LOG_ERR, LOC +
@@ -972,9 +990,9 @@ bool ExternalStreamHandler::OpenApp(void)
         QString("Capabilities: tuner(%1) "
                 "Picture attributes(%2) "
                 "Flow control(%3)")
-        .arg(m_hasTuner ? "yes" : "no")
-        .arg(m_hasPictureAttributes ? "yes" : "no")
-        .arg(m_pollMode ? "Polling" : "XON/XOFF")
+        .arg(m_hasTuner ? "yes" : "no",
+             m_hasPictureAttributes ? "yes" : "no",
+             m_pollMode ? "Polling" : "XON/XOFF")
         );
 
     /* Let the external app know how many bytes will read without blocking */
@@ -993,7 +1011,7 @@ bool ExternalStreamHandler::IsAppOpen(void)
     }
 
     QString result;
-    return ProcessCommand("Version?", result, 10000);
+    return ProcessCommand("Version?", result, 10s);
 }
 
 bool ExternalStreamHandler::IsTSOpen(void)
@@ -1019,7 +1037,7 @@ void ExternalStreamHandler::CloseApp(void)
 
         LOG(VB_RECORD, LOG_INFO, LOC + "CloseRecorder");
         m_ioLock.unlock();
-        ProcessCommand("CloseRecorder", result, 10000);
+        ProcessCommand("CloseRecorder", result, 10s);
         m_ioLock.lock();
 
         if (!result.startsWith("OK"))
@@ -1032,7 +1050,7 @@ void ExternalStreamHandler::CloseApp(void)
             if (!m_io->KillIfRunning(full_command))
             {
                 // Give it one more chance.
-                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                std::this_thread::sleep_for(50ms);
                 if (!m_io->KillIfRunning(full_command))
                 {
                     LOG(VB_GENERAL, LOG_ERR,
@@ -1057,7 +1075,7 @@ bool ExternalStreamHandler::RestartStream(void)
     if (streaming)
         StopStreaming();
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(1s);
 
     if (streaming)
         return StartStreaming();
@@ -1128,10 +1146,10 @@ bool ExternalStreamHandler::StartStreaming(void)
 
     if (StreamingCount() == 0)
     {
-        if (!ProcessCommand("StartStreaming", result, 15000))
+        if (!ProcessCommand("StartStreaming", result, 15s))
         {
             LogLevel_t level = LOG_ERR;
-            if (result.toLower().startsWith("warn"))
+            if (result.startsWith("warn", Qt::CaseInsensitive))
                 level = LOG_WARNING;
             else
                 m_bError = true;
@@ -1195,10 +1213,10 @@ bool ExternalStreamHandler::StopStreaming(void)
     }
 
     QString result;
-    if (!ProcessCommand("StopStreaming", result, 10000))
+    if (!ProcessCommand("StopStreaming", result, 10s))
     {
         LogLevel_t level = LOG_ERR;
-        if (result.toLower().startsWith("warn"))
+        if (result.startsWith("warn", Qt::CaseInsensitive))
             level = LOG_WARNING;
         else
             m_bError = true;
@@ -1216,7 +1234,8 @@ bool ExternalStreamHandler::StopStreaming(void)
 }
 
 bool ExternalStreamHandler::ProcessCommand(const QString & cmd,
-                                           QString & result, int timeout,
+                                           QString & result,
+                                           std::chrono::milliseconds timeout,
                                            uint retry_cnt)
 {
     QMutexLocker locker(&m_processLock);
@@ -1232,7 +1251,8 @@ bool ExternalStreamHandler::ProcessCommand(const QString & cmd,
 }
 
 bool ExternalStreamHandler::ProcessVer1(const QString & cmd,
-                                        QString & result, int timeout,
+                                        QString & result,
+                                        std::chrono::milliseconds timeout,
                                         uint retry_cnt)
 {
     LOG(VB_RECORD, LOG_DEBUG, LOC + QString("ProcessVer1('%1')")
@@ -1260,7 +1280,7 @@ bool ExternalStreamHandler::ProcessVer1(const QString & cmd,
 
         /* Try to keep in sync, if External app was too slow in responding
          * to previous query, consume the response before sending new query */
-        m_io->GetStatus(0);
+        m_io->GetStatus(0ms);
 
         /* Send new query */
         m_io->Write(buf);
@@ -1314,15 +1334,15 @@ bool ExternalStreamHandler::ProcessVer1(const QString & cmd,
 
                 LOG(VB_RECORD, level,
                     LOC + QString("ProcessCommand('%1') = '%2' took %3ms %4")
-                    .arg(cmd).arg(result)
-                    .arg(timer.elapsed())
-                    .arg(okay ? "" : "<-- NOTE"));
+                    .arg(cmd, result,
+                         QString::number(timer.elapsed().count()),
+                         okay ? "" : "<-- NOTE"));
 
                 return okay;
             }
             LOG(VB_GENERAL, LOG_WARNING, LOC +
                 QString("External Recorder invalid response to '%1': '%2'")
-                .arg(cmd).arg(result));
+                .arg(cmd, result));
         }
 
         if (++m_ioErrCnt > 10)
@@ -1337,7 +1357,8 @@ bool ExternalStreamHandler::ProcessVer1(const QString & cmd,
 }
 
 bool ExternalStreamHandler::ProcessVer2(const QString & command,
-                                        QString & result, int timeout,
+                                        QString & result,
+                                        std::chrono::milliseconds timeout,
                                         uint retry_cnt)
 {
     QString status;
@@ -1389,7 +1410,11 @@ bool ExternalStreamHandler::ProcessVer2(const QString & command,
             if (!result.isEmpty())
             {
                 raw = result;
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
                 tokens = result.split(':', QString::SkipEmptyParts);
+#else
+                tokens = result.split(':', Qt::SkipEmptyParts);
+#endif
 
                 // Look for result with the serial number of this query
                 if (tokens.size() > 1 && tokens[0].toUInt() >= m_serialNo)
@@ -1426,14 +1451,14 @@ bool ExternalStreamHandler::ProcessVer2(const QString & command,
         {
             LOG(VB_RECORD, LOG_ERR, LOC +
                 QString("Did not receive a valid response "
-                        "for command '%1', received '%2'").arg(cmd).arg(result));
+                        "for command '%1', received '%2'").arg(cmd, result));
         }
         else if (tokens[0].toUInt() > m_serialNo)
         {
             LOG(VB_RECORD, LOG_ERR, LOC +
                 QString("ProcessVer2: Looking for serial no %1, "
                         "but received %2 for command '%2'")
-                .arg(m_serialNo).arg(tokens[0]).arg(cmd));
+                .arg(QString::number(m_serialNo), tokens[0], cmd));
         }
         else
         {
@@ -1456,14 +1481,14 @@ bool ExternalStreamHandler::ProcessVer2(const QString & command,
 
                 LOG(VB_RECORD, level,
                     LOC + QString("ProcessV2('%1') = '%2' took %3ms %4")
-                    .arg(cmd).arg(result).arg(timer.elapsed())
-                    .arg(okay ? "" : "<-- NOTE"));
+                    .arg(cmd, result, QString::number(timer.elapsed().count()),
+                         okay ? "" : "<-- NOTE"));
 
                 return okay;
             }
             LOG(VB_GENERAL, LOG_WARNING, LOC +
                 QString("External Recorder invalid response to '%1': '%2'")
-                .arg(cmd).arg(result));
+                .arg(cmd, result));
         }
 
         if (++m_ioErrCnt > 10)
@@ -1499,12 +1524,16 @@ bool ExternalStreamHandler::CheckForError(void)
 
     do
     {
-        result = m_io->GetStatus(0);
+        result = m_io->GetStatus(0ms);
         if (!result.isEmpty())
         {
             if (m_apiVersion > 1)
             {
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
                 QStringList tokens = result.split(':', QString::SkipEmptyParts);
+#else
+                QStringList tokens = result.split(':', Qt::SkipEmptyParts);
+#endif
 
                 tokens.removeFirst();
                 result = tokens.join(':');
@@ -1527,8 +1556,8 @@ void ExternalStreamHandler::PurgeBuffer(void)
     if (m_io)
     {
         QByteArray buffer;
-        m_io->Read(buffer, PACKET_SIZE, 1);
-        m_io->GetStatus(1);
+        m_io->Read(buffer, PACKET_SIZE, 1ms);
+        m_io->GetStatus(1ms);
     }
 }
 

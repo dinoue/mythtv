@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef _AUDIOINPUTALSA_H_
-#define _AUDIOINPUTALSA_H_
+#ifndef AUDIOINPUTALSA_H
+#define AUDIOINPUTALSA_H
 
 #include "audioinput.h"
 
@@ -36,7 +36,7 @@ class AudioInputALSA : public AudioInput
     explicit AudioInputALSA(const QString &device)
         : AudioInput(device)
         , m_alsaDevice(device.right(device.size()-5).toLatin1()) {}
-    ~AudioInputALSA() override { Close(); };
+    ~AudioInputALSA() override { AudioInputALSA::Close(); }
 
     bool Open(uint sample_bits, uint sample_rate, uint channels) override; // AudioInput
     inline bool IsOpen(void) override // AudioInput
@@ -48,7 +48,7 @@ class AudioInputALSA : public AudioInput
     bool Stop(void) override; // AudioInput
 
     inline int GetBlockSize(void) override // AudioInput
-        { return m_mythBlockBytes; };
+        { return m_mythBlockBytes; }
     int GetSamples(void* buf, uint nbytes) override; // AudioInput
     int GetNumReadyBytes(void) override; // AudioInput
 
@@ -64,6 +64,6 @@ class AudioInputALSA : public AudioInput
     snd_pcm_uframes_t   m_periodSize     {0};
     int                 m_mythBlockBytes {0};
 };
-#endif /* _AUDIOINPUTALSA_H_ */
+#endif /* AUDIOINPUTALSA_H */
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 

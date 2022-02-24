@@ -3,12 +3,13 @@
 
 // C++ headers
 #include <iostream>
-using namespace std;
+#include <memory>
 
 // Qt headers
+#include <QtGlobal>
 #include <QCoreApplication>
 #include <QEventLoop>
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
 #include <QProcessEnvironment>
 #endif
 
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QCoreApplication::setApplicationName(MYTH_APPNAME_MYTHMETADATALOOKUP);
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
     QString path = QCoreApplication::applicationDirPath();
     setenv("PYTHONPATH",
            QString("%1/../Resources/lib/%2/site-packages:%3")
@@ -89,7 +90,7 @@ int main(int argc, char *argv[])
     QList<int> signallist;
     signallist << SIGINT << SIGTERM << SIGSEGV << SIGABRT << SIGBUS << SIGFPE
                << SIGILL;
-#if ! CONFIG_DARWIN
+#ifndef Q_OS_DARWIN
     signallist << SIGRTMIN;
 #endif
     SignalHandler::Init(signallist);
@@ -107,15 +108,12 @@ int main(int argc, char *argv[])
 
     MythTranslation::load("mythfrontend");
 
-    auto *lookup = new LookerUpper();
+    std::unique_ptr<LookerUpper> lookup {new LookerUpper};
 
     LOG(VB_GENERAL, LOG_INFO,
             "Testing grabbers and metadata sites for functionality...");
     if (!LookerUpper::AllOK())
-    {
-        delete lookup;
         return GENERIC_EXIT_NOT_OK;
-    }
     LOG(VB_GENERAL, LOG_INFO,
             "All grabbers tested and working.  Continuing...");
 
@@ -164,8 +162,6 @@ int main(int argc, char *argv[])
         sleep(1);
         qApp->processEvents();
     }
-
-    delete lookup;
 
     LOG(VB_GENERAL, LOG_NOTICE, "MythMetadataLookup run complete.");
 

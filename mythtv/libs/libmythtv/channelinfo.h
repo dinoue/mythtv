@@ -6,8 +6,6 @@
 #include <utility>
 #include <vector>
 
-using namespace std;
-
 // Qt headers
 #include <QString>
 #include <QImage>
@@ -26,19 +24,19 @@ enum ChannelVisibleType
     kChannelNotVisible    = 0,
     kChannelNeverVisible  = -1
 };
-MPUBLIC QString toString(ChannelVisibleType);
-MPUBLIC QString toRawString(ChannelVisibleType);
-MPUBLIC ChannelVisibleType channelVisibleTypeFromString(const QString&);
+MTV_PUBLIC QString toString(ChannelVisibleType /*type*/);
+MTV_PUBLIC QString toRawString(ChannelVisibleType /*type*/);
+MTV_PUBLIC ChannelVisibleType channelVisibleTypeFromString(const QString& /*type*/);
 
 class MTV_PUBLIC ChannelInfo
 {
  public:
     ChannelInfo() = default;
     ChannelInfo(const ChannelInfo &other);
-    ChannelInfo(const QString &_channum, const QString &_callsign,
+    ChannelInfo(QString _channum, QString _callsign,
               uint _chanid, uint _major_chan, uint _minor_chan,
               uint _mplexid, ChannelVisibleType _visible,
-              const QString &_name, const QString &_icon,
+              QString _name, QString _icon,
               uint _sourceid);
     
     ChannelInfo& operator=(const ChannelInfo &other);
@@ -49,7 +47,7 @@ class MTV_PUBLIC ChannelInfo
     bool Load(uint lchanid = -1);
 
     enum ChannelFormat { kChannelShort, kChannelLong };
-    QString GetFormatted(const ChannelFormat &format) const;
+    QString GetFormatted(ChannelFormat format) const;
     void ToMap(InfoMap &infoMap);
 
     QString GetSourceName();
@@ -130,7 +128,7 @@ class MTV_PUBLIC ChannelInfo
     QList<uint>  m_groupIdList;
     QList<uint>  m_inputIdList;
 };
-using ChannelInfoList = vector<ChannelInfo>;
+using ChannelInfoList = std::vector<ChannelInfo>;
 
 class MTV_PUBLIC ChannelInsertInfo
 {
@@ -252,8 +250,13 @@ class MTV_PUBLIC ChannelInsertInfo
     bool    m_isOpencable        {false};
     bool    m_couldBeOpencable   {false};
     int     m_decryptionStatus   {0};
+
+    // Service relocated descriptor
+    uint    m_oldOrigNetId       {0};
+    uint    m_oldTsId            {0};
+    uint    m_oldServiceId       {0};
 };
-using ChannelInsertInfoList = vector<ChannelInsertInfo>;
+using ChannelInsertInfoList = std::vector<ChannelInsertInfo>;
 
 Q_DECLARE_METATYPE(ChannelInfo*)
 

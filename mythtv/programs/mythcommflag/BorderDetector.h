@@ -9,8 +9,8 @@
  * different filler color.
  */
 
-#ifndef __BORDERDETECTOR_H__
-#define __BORDERDETECTOR_H__
+#ifndef BORDERDETECTOR_H
+#define BORDERDETECTOR_H
 
 using AVFrame = struct AVFrame;
 class MythPlayer;
@@ -48,10 +48,10 @@ private:
 
     /* Debugging. */
     int                     m_debugLevel      {0};
-    struct timeval          m_analyzeTime     {0,0};
+    std::chrono::microseconds m_analyzeTime   {0us};
     bool                    m_timeReported    {false};
 };
 
-#endif  /* !__BORDERDETECTOR_H__ */
+#endif  /* !BORDERDETECTOR_H */
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */

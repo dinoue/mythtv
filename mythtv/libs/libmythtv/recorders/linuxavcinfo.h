@@ -1,5 +1,5 @@
-#ifndef _LINUX_AVC_INFO_H_
-#define _LINUX_AVC_INFO_H_
+#ifndef LINUX_AVC_INFO_H
+#define LINUX_AVC_INFO_H
 
 #ifdef USING_LINUX_FIREWIRE
 
@@ -12,7 +12,6 @@
 
 // C++ headers
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QMap>
@@ -32,8 +31,8 @@ class LinuxAVCInfo : public AVCInfo
     bool ClosePort(void);
 
     bool SendAVCCommand(
-        const vector<uint8_t> &cmd,
-        vector<uint8_t>       &result,
+        const std::vector<uint8_t> &cmd,
+        std::vector<uint8_t>       &result,
         int                    retry_cnt)  override; // AVCInfo
 
     bool IsPortOpen(void) const { return m_fwHandle; }
@@ -48,4 +47,4 @@ using avcinfo_list_t = QMap<uint64_t,LinuxAVCInfo*>;
 
 #endif // USING_LINUX_FIREWIRE
 
-#endif // _LINUX_AVC_INFO_H_
+#endif // LINUX_AVC_INFO_H

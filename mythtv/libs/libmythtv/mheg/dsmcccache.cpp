@@ -54,14 +54,7 @@ QString DSMCCCacheKey::toString() const
 {
     QString result;
     for (int i = 0; i < 4 && i < size(); i++)
-    {
-        int x = at(i);
-        if (x < 16)
-            result += QString("0%1").arg(x, 1, 16);
-        else
-            result += QString("%1").arg(x, 2, 16);
-    }
-
+        result += QString("%1").arg(at(i), 2, 16, QChar('0'));
     return result;
 }
 
@@ -216,7 +209,7 @@ void DSMCCCache::AddFileInfo(DSMCCCacheDir *pDir, const BiopBinding *pBB)
 
     LOG(VB_DSMCC, LOG_INFO,
         QString("[DSMCCCache] Added file name %1 reference %2 parent %3")
-        .arg(name).arg(entry->toString()).arg(pDir->m_reference.toString()));
+        .arg(name, entry->toString(), pDir->m_reference.toString()));
 }
 
 // Add a sub-directory to the directory.
@@ -233,7 +226,7 @@ void DSMCCCache::AddDirInfo(DSMCCCacheDir *pDir, const BiopBinding *pBB)
 
     LOG(VB_DSMCC, LOG_INFO,
         QString("[DSMCCCache] added subdirectory name %1 reference %2 parent %3")
-        .arg(name).arg(entry->toString()).arg(pDir->m_reference.toString()));
+        .arg(name, entry->toString(), pDir->m_reference.toString()));
 }
 
 // Find File, Directory or Gateway by reference.
@@ -280,7 +273,7 @@ DSMCCCacheDir *DSMCCCache::FindGateway(const DSMCCCacheReference &ref)
 // the object or one of the parent files.
 int DSMCCCache::GetDSMObject(QStringList &objectPath, QByteArray &result)
 {
-    DSMCCCacheDir *dir = FindGateway(m_GatewayRef);
+    DSMCCCacheDir *dir = FindGateway(m_gatewayRef);
     if (dir == nullptr)
         return 1; // No gateway yet.
 
@@ -326,10 +319,10 @@ int DSMCCCache::GetDSMObject(QStringList &objectPath, QByteArray &result)
 // Set the gateway reference from a DSI message.
 void DSMCCCache::SetGateway(const DSMCCCacheReference &ref)
 {
-    if (!m_GatewayRef.Equal(ref))
+    if (!m_gatewayRef.Equal(ref))
     {
         LOG(VB_DSMCC, LOG_INFO, QString("[DSMCCCache] Setting gateway to reference %1")
             .arg(ref.toString()));
-        m_GatewayRef = ref;
+        m_gatewayRef = ref;
     }
 }

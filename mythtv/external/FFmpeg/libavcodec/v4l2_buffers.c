@@ -21,7 +21,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include "config.h"
+#if CONFIG_LIBDRM
 #include <drm_fourcc.h>
+#endif
 #include <linux/videodev2.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
@@ -231,6 +234,7 @@ static enum AVColorTransferCharacteristic v4l2_get_color_trc(V4L2Buffer *buf)
     return AVCOL_TRC_UNSPECIFIED;
 }
 
+#if CONFIG_LIBDRM
 static uint8_t * v4l2_get_drm_frame(V4L2Buffer *avbuf)
 {
     AVDRMFrameDescriptor *drm_desc = &avbuf->drm_frame;
@@ -302,6 +306,7 @@ static uint8_t * v4l2_get_drm_frame(V4L2Buffer *avbuf)
 
     return (uint8_t *) drm_desc;
 }
+#endif
 
 static void v4l2_free_buffer(void *opaque, uint8_t *data)
 {
@@ -315,7 +320,7 @@ static void v4l2_free_buffer(void *opaque, uint8_t *data)
             if (!atomic_load(&s->refcount))
                 sem_post(&s->refsync);
         } else {
-            if (s->draining) {
+            if (s->draining && V4L2_TYPE_IS_OUTPUT(avbuf->context->type)) {
                 /* no need to queue more buffers to the driver */
                 avbuf->status = V4L2BUF_AVAILABLE;
             }
@@ -327,6 +332,7 @@ static void v4l2_free_buffer(void *opaque, uint8_t *data)
     }
 }
 
+#if CONFIG_LIBDRM
 static int v4l2_buffer_export_drm(V4L2Buffer* avbuf)
 {
     struct v4l2_exportbuffer expbuf;
@@ -358,6 +364,7 @@ static int v4l2_buffer_export_drm(V4L2Buffer* avbuf)
 
     return 0;
 }
+#endif
 
 static int v4l2_buf_increase_ref(V4L2Buffer *in)
 {
@@ -379,6 +386,7 @@ static int v4l2_buf_increase_ref(V4L2Buffer *in)
     return 0;
 }
 
+#if CONFIG_LIBDRM
 static int v4l2_buf_to_bufref_drm(V4L2Buffer *in, AVBufferRef **buf)
 {
     int ret;
@@ -396,6 +404,7 @@ static int v4l2_buf_to_bufref_drm(V4L2Buffer *in, AVBufferRef **buf)
 
     return ret;
 }
+#endif
 
 static int v4l2_buf_to_bufref(V4L2Buffer *in, int plane, AVBufferRef **buf)
 {
@@ -417,7 +426,7 @@ static int v4l2_buf_to_bufref(V4L2Buffer *in, int plane, AVBufferRef **buf)
     return ret;
 }
 
-static int v4l2_bufref_to_buf(V4L2Buffer *out, int plane, const uint8_t* data, int size, int offset, AVBufferRef* bref)
+static int v4l2_bufref_to_buf(V4L2Buffer *out, int plane, const uint8_t* data, int size, int offset)
 {
     unsigned int bytesused, length;
 
@@ -529,7 +538,7 @@ static int v4l2_buffer_swframe_to_buf(const AVFrame *frame, V4L2Buffer *out)
                 h = AV_CEIL_RSHIFT(h, desc->log2_chroma_h);
             }
             size = frame->linesize[i] * h;
-            ret = v4l2_bufref_to_buf(out, 0, frame->data[i], size, offset, frame->buf[i]);
+            ret = v4l2_bufref_to_buf(out, 0, frame->data[i], size, offset);
             if (ret)
                 return ret;
             offset += size;
@@ -538,7 +547,7 @@ static int v4l2_buffer_swframe_to_buf(const AVFrame *frame, V4L2Buffer *out)
     }
 
     for (i = 0; i < out->num_planes; i++) {
-        ret = v4l2_bufref_to_buf(out, i, frame->buf[i]->data, frame->buf[i]->size, 0, frame->buf[i]);
+        ret = v4l2_bufref_to_buf(out, i, frame->buf[i]->data, frame->buf[i]->size, 0);
         if (ret)
             return ret;
     }
@@ -567,6 +576,7 @@ int ff_v4l2_buffer_buf_to_avframe(AVFrame *frame, V4L2Buffer *avbuf)
 
     /* 1. get references to the actual data */
     if (buf_to_m2mctx(avbuf)->output_drm) {
+#if CONFIG_LIBDRM
         /* 1. get references to the actual data */
         ret = v4l2_buf_to_bufref_drm(avbuf, &frame->buf[0]);
         if (ret)
@@ -575,10 +585,11 @@ int ff_v4l2_buffer_buf_to_avframe(AVFrame *frame, V4L2Buffer *avbuf)
         frame->data[0] = (uint8_t *) v4l2_get_drm_frame(avbuf);
         frame->format = AV_PIX_FMT_DRM_PRIME;
         frame->hw_frames_ctx = av_buffer_ref(avbuf->context->frames_ref);
+#endif
     } else {
         ret = v4l2_buffer_buf_to_swframe(frame, avbuf);
-            if (ret)
-                return ret;
+        if (ret)
+            return ret;
     }
 
     /* 2. get frame information */
@@ -634,7 +645,7 @@ int ff_v4l2_buffer_avpkt_to_buf(const AVPacket *pkt, V4L2Buffer *out)
 {
     int ret;
 
-    ret = v4l2_bufref_to_buf(out, 0, pkt->data, pkt->size, 0, pkt->buf);
+    ret = v4l2_bufref_to_buf(out, 0, pkt->data, pkt->size, 0);
     if (ret)
         return ret;
 
@@ -738,12 +749,13 @@ int ff_v4l2_buffer_initialize(V4L2Buffer* avbuf, int index)
     if (V4L2_TYPE_IS_OUTPUT(ctx->type))
         return 0;
 
+#if CONFIG_LIBDRM
     if (buf_to_m2mctx(avbuf)->output_drm) {
         ret = v4l2_buffer_export_drm(avbuf);
         if (ret)
-                return ret;
+            return ret;
     }
-
+#endif
     return ff_v4l2_buffer_enqueue(avbuf);
 }
 

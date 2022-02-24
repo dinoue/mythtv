@@ -5,7 +5,11 @@
 
 // Qt headers
 #include <QList>
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
 #include <QMutex>
+#else
+#include <QRecursiveMutex>
+#endif
 #include <QObject>
 #include <QStringList>
 
@@ -73,7 +77,7 @@ class MBASE_PUBLIC LCDTextItem
     QString getText() const { return m_itemText; }
     QString getScreen() const { return m_itemScreen; }
     QString getWidget() const { return m_itemWidget; }
-    int getScroll() const { return m_itemScrollable; }
+    bool getScroll() const { return m_itemScrollable; }
 
     void setRow(unsigned int value) { m_itemRow = value; }
     void setAlignment(TEXT_ALIGNMENT value) { m_itemAlignment = value; }
@@ -169,6 +173,7 @@ enum LCDFunctionSet {
 class MBASE_PUBLIC LCD : public QObject
 {
     Q_OBJECT
+    friend class TestLcdDevice;
 
   protected:
     LCD();
@@ -288,8 +293,8 @@ class MBASE_PUBLIC LCD : public QObject
 
     void stopAll(void);
 
-    uint getLCDHeight(void) { return m_lcdHeight; }
-    uint getLCDWidth(void) { return m_lcdWidth; }
+    int getLCDHeight(void) const { return m_lcdHeight; }
+    int getLCDWidth(void) const { return m_lcdWidth; }
 
     void resetServer(void); // tell the mythlcdserver to reload its settings
 
@@ -315,7 +320,11 @@ signals:
 
   private:
     QTcpSocket *m_socket        {nullptr};
+#if QT_VERSION < QT_VERSION_CHECK(5,14,0)
     QMutex   m_socketLock       {QMutex::Recursive};
+#else
+    QRecursiveMutex m_socketLock;
+#endif
     QString  m_hostname         {"localhost"};
     uint     m_port             {6545};
     bool     m_connected        {false};

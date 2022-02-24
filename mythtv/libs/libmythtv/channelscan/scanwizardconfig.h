@@ -27,8 +27,8 @@
  *
  */
 
-#ifndef _SCAN_WIZARD_CONFIG_H_
-#define _SCAN_WIZARD_CONFIG_H_
+#ifndef SCAN_WIZARD_CONFIG_H
+#define SCAN_WIZARD_CONFIG_H
 
 // MythTV headers
 #include "standardsettings.h"
@@ -65,6 +65,7 @@ class PaneExistingScanImport;
 
 class ScanTypeSetting : public TransMythUIComboBoxSetting
 {
+    friend class ScanWizard;
     Q_OBJECT
   public:
     enum Type
@@ -104,13 +105,16 @@ class ScanTypeSetting : public TransMythUIComboBoxSetting
         ExternRecImport
     };
 
-    ScanTypeSetting() { setLabel(QObject::tr("Scan Type")); }
+    ScanTypeSetting()
+    {
+        setLabel(QObject::tr("Scan Type"));
+    }
 
   protected slots:
     void SetInput(const QString &cardids_inputname);
 
   protected:
-    uint    m_hw_cardid {0};
+    uint    m_hwCardId {0};
 };
 
 class ScanOptionalConfig : public GroupSetting
@@ -154,4 +158,4 @@ class ScanOptionalConfig : public GroupSetting
     PaneExistingScanImport *m_paneExistingScanImport   {nullptr};
 };
 
-#endif // _SCAN_WIZARD_CONFIG_H_
+#endif // SCAN_WIZARD_CONFIG_H

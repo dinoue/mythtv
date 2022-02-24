@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2013 Stuart Morgan <smorgan@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -33,8 +33,8 @@ class SERVICE_PUBLIC ChannelGroup : public QObject
     Q_PROPERTY( QString   Password   READ Password  WRITE setPassword  )
 
     PROPERTYIMP       ( uint        , GroupId        )
-    PROPERTYIMP       ( QString     , Name           )
-    PROPERTYIMP       ( QString     , Password       );
+    PROPERTYIMP_REF   ( QString     , Name           )
+    PROPERTYIMP_REF   ( QString     , Password       );
 
     public:
 

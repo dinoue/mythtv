@@ -1,7 +1,7 @@
 // -*- Mode: c++ -*-
 // Copyright (c) 2003-2004, Daniel Thor Kristjansson
-#ifndef _PES_PACKET_H_
-#define _PES_PACKET_H_
+#ifndef PES_PACKET_H
+#define PES_PACKET_H
 
 /*
   max length of PSI table = 1024 bytes
@@ -9,7 +9,8 @@
 */
 
 #include <vector>
-using namespace std;
+
+using AspectArray = std::array<float,16>;
 
 #include "tspacket.h"
 #include "mythlogging.h"
@@ -35,7 +36,14 @@ class MTV_PUBLIC PESPacket
           m_fullBuffer(const_cast<unsigned char*>(pesdata))
     {
         m_badPacket = !VerifyCRC();
-        m_pesDataSize = max(((int)Length())-1 + (PESPacket::HasCRC() ? 4 : 0), 0);
+        m_pesDataSize = std::max(((int)Length())-1 + (PESPacket::HasCRC() ? 4 : 0), 0);
+    }
+    explicit PESPacket(const std::vector<uint8_t> &pesdata)
+      : m_pesData(const_cast<unsigned char*>(pesdata.data())),
+        m_fullBuffer(const_cast<unsigned char*>(pesdata.data()))
+    {
+        m_badPacket = !VerifyCRC();
+        m_pesDataSize = std::max(((int)Length())-1 + (PESPacket::HasCRC() ? 4 : 0), 0);
     }
 
     // Deleted functions should be public.
@@ -44,8 +52,7 @@ class MTV_PUBLIC PESPacket
 
     // may be modified
     PESPacket(const PESPacket& pkt)
-        : m_pesData(nullptr),
-          m_psiOffset(pkt.m_psiOffset),
+        : m_psiOffset(pkt.m_psiOffset),
           m_ccLast(pkt.m_ccLast),
           m_pesDataSize(pkt.m_pesDataSize),
           m_allocSize(pkt.m_allocSize),
@@ -77,7 +84,7 @@ class MTV_PUBLIC PESPacket
     bool IsClone() const { return bool(m_allocSize); }
 
     // return true if complete or broken
-    bool AddTSPacket(const TSPacket* tspacket, bool &broken);
+    bool AddTSPacket(const TSPacket* tspacket, int cardid, bool &broken);
 
     bool IsGood() const { return !m_badPacket; }
 
@@ -86,7 +93,7 @@ class MTV_PUBLIC PESPacket
     TSHeader* tsheader()
         { return reinterpret_cast<TSHeader*>(m_fullBuffer); }
 
-    void GetAsTSPackets(vector<TSPacket> &output, uint cc) const;
+    void GetAsTSPackets(std::vector<TSPacket> &output, uint cc) const;
 
     // m_pesData[-3] == 0, m_pesData[-2] == 0, m_pesData[-1] == 1
     uint StreamID()   const { return m_pesData[0]; }
@@ -97,33 +104,33 @@ class MTV_PUBLIC PESPacket
     uint ScramblingControl() const
         { return (m_pesData[3] & 0x30) >> 4; }
     /// 1 bit  Indicates if this is a high priority packet
-    bool HighPriority()       const { return (m_pesData[3] & 0x8) >> 3; }
+    bool HighPriority()       const { return ((m_pesData[3] & 0x8) >> 3) != 0; }
     /// 1 bit  Data alignment indicator (must be 0 for video)
-    bool DataAligned()        const { return (m_pesData[3] & 0x4) >> 2; }
+    bool DataAligned()        const { return ((m_pesData[3] & 0x4) >> 2) != 0; }
     /// 1 bit  If true packet may contain copy righted material and is
     ///        known to have once contained materiale with copy rights.
     ///        If false packet may contain copy righted material but is
     ///        not known to have ever contained materiale with copy rights.
-    bool CopyRight()          const { return (m_pesData[3] & 0x2) >> 1; }
+    bool CopyRight()          const { return ((m_pesData[3] & 0x2) >> 1) != 0; }
     /// 1 bit  Original Recording
-    bool OriginalRecording()  const { return m_pesData[3] & 0x1; }
+    bool OriginalRecording()  const { return (m_pesData[3] & 0x1) != 0; }
 
     /// 1 bit  Presentation Time Stamp field is present
-    bool HasPTS()             const { return (m_pesData[4] & 0x80) >> 7; }
+    bool HasPTS()             const { return ((m_pesData[4] & 0x80) >> 7) != 0; }
     /// 1 bit  Decoding Time Stamp field is present
-    bool HasDTS()             const { return (m_pesData[4] & 0x40) >> 6; }
+    bool HasDTS()             const { return ((m_pesData[4] & 0x40) >> 6) != 0; }
     /// 1 bit  Elementary Stream Clock Reference field is present
-    bool HasESCR()            const { return (m_pesData[4] & 0x20) >> 5; }
+    bool HasESCR()            const { return ((m_pesData[4] & 0x20) >> 5) != 0; }
     /// 1 bit  Elementary Stream Rate field is present
-    bool HasESR()             const { return (m_pesData[4] & 0x10) >> 4; }
+    bool HasESR()             const { return ((m_pesData[4] & 0x10) >> 4) != 0; }
     /// 1 bit  DSM field present (should always be false for broadcasts)
-    bool HasDSM()             const { return (m_pesData[4] & 0x8) >> 3; }
+    bool HasDSM()             const { return ((m_pesData[4] & 0x8) >> 3) != 0; }
     /// 1 bit  Additional Copy Info field is present
-    bool HasACI()             const { return (m_pesData[4] & 0x4) >> 2; }
+    bool HasACI()             const { return ((m_pesData[4] & 0x4) >> 2) != 0; }
     /// 1 bit  Cyclic Redundancy Check present
-    virtual bool HasCRC()     const { return (m_pesData[4] & 0x2) >> 1; }
+    virtual bool HasCRC()     const { return ((m_pesData[4] & 0x2) >> 1) != 0; }
     /// 1 bit  Extension flags are present
-    bool HasExtensionFlags()  const { return m_pesData[4] & 0x1; }
+    bool HasExtensionFlags()  const { return (m_pesData[4] & 0x1) != 0; }
 
     /// Presentation Time Stamp, present if HasPTS() is true
     uint64_t PTS(void) const
@@ -205,6 +212,7 @@ class MTV_PUBLIC PESPacket
 
     uint CalcCRC(void) const;
     bool VerifyCRC(void) const;
+    bool VerifyCRC(int cardid, int pid) const;
 
   protected:
     void Finalize() { SetCRC(CalcCRC()); }
@@ -237,10 +245,10 @@ class SequenceHeader
     SequenceHeader() {;} // only used via reinterpret cast
     ~SequenceHeader() {;}
 
-    unsigned char m_data[11] {};
-    static const float kMpeg1Aspect[16];
-    static const float kMpeg2Aspect[16];
-    static const float kMpeg2Fps[16];
+    std::array<unsigned char,11> m_data {};
+    static const AspectArray kMpeg1Aspect;
+    static const AspectArray kMpeg2Aspect;
+    static const AspectArray kMpeg2Fps;
 };
 
-#endif // _PES_PACKET_H_
+#endif // PES_PACKET_H

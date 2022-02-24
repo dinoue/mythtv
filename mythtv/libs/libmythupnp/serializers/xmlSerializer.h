@@ -6,12 +6,12 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __XMLSERIALIZER_H__
-#define __XMLSERIALIZER_H__
+#ifndef XMLSERIALIZER_H
+#define XMLSERIALIZER_H
 
 #include <QXmlStreamWriter>
 #include <QVariant>
@@ -83,4 +83,4 @@ class UPNP_PUBLIC XmlSerializer : public Serializer
         XmlSerializer &operator=(const XmlSerializer &) = delete; // not copyable
 };
 
-#endif
+#endif // XMLSERIALIZER_H

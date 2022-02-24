@@ -4,8 +4,8 @@
  * Detect blank frames based on histogram analysis.
  */
 
-#ifndef __BLANKFRAMEDETECTOR_H__
-#define __BLANKFRAMEDETECTOR_H__
+#ifndef BLANKFRAMEDETECTOR_H
+#define BLANKFRAMEDETECTOR_H
 
 #include "FrameAnalyzer.h"
 
@@ -16,14 +16,14 @@ class BlankFrameDetector : public FrameAnalyzer
 {
 public:
     /* Ctor/dtor. */
-    BlankFrameDetector(HistogramAnalyzer *ha, const QString& debugdir);
+    BlankFrameDetector(std::shared_ptr<HistogramAnalyzer> ha, const QString& debugdir);
 
     /* FrameAnalyzer interface. */
     const char *name(void) const override // FrameAnalyzer
         { return "BlankFrameDetector"; }
     enum analyzeFrameResult MythPlayerInited(MythPlayer *player,
             long long nframes) override; // FrameAnalyzer
-    enum analyzeFrameResult analyzeFrame(const VideoFrame *frame,
+    enum analyzeFrameResult analyzeFrame(const MythVideoFrame *frame,
             long long frameno, long long *pNextFrame) override; // FrameAnalyzer
     int finished(long long nframes, bool final) override; // FrameAnalyzer
     int reportTime(void) const override; // FrameAnalyzer
@@ -37,7 +37,7 @@ public:
     int computeBreaks(FrameMap *breaks);
 
 private:
-    HistogramAnalyzer      *m_histogramAnalyzer;
+    std::shared_ptr<HistogramAnalyzer> m_histogramAnalyzer;
     float                   m_fps        {0.0F};
 
     FrameAnalyzer::FrameMap m_blankMap;
@@ -47,6 +47,6 @@ private:
     int                     m_debugLevel {0};
 };
 
-#endif  /* !__BLANKFRAMEDETECTOR_H__ */
+#endif  /* !BLANKFRAMEDETECTOR_H */
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */

@@ -318,6 +318,11 @@ class Testvideometadata: public QObject
                       QString ("Episode Title"),
                       2,
                       3);
+        TestMetadata (QString ("Series.Title/Season.1/Season%20Title_-_02x03_-_Episode%20Title.mp4"),
+                      QString ("Season Title"),
+                      QString ("Episode Title"),
+                      2,
+                      3);
     }
 
     static void TestMetadata(const QString &filename,
@@ -340,19 +345,19 @@ class Testvideometadata: public QObject
     {
         QSKIP ("Might connect to the database or call the installed metadata grabbers.");
         ProgramInfo proginfo = ProgramInfo ("", "", "Test Movie", "", "", "",
-                                            "", 0, 0, "tmdb3.py_1234", 0, 0, "");
+                                            "", 0, 0, "tmdb3.py_1234", 0min, 0, "");
         RecordingInfo recinfo(proginfo);
         QCOMPARE (recinfo.GetInetRef(), QString("tmdb3.py_1234"));
         QCOMPARE (GuessLookupType (&recinfo), kProbableMovie);
 
         proginfo = ProgramInfo ("", "", "Test Series", "", "Test Episode", "",
-                                "", 1, 15, "ttvdb.py_1234", 0, 0, "");
+                                "", 1, 15, "ttvdb4.py_1234", 0min, 0, "");
         recinfo = proginfo;
-        QCOMPARE (recinfo.GetInetRef(), QString("ttvdb.py_1234"));
+        QCOMPARE (recinfo.GetInetRef(), QString("ttvdb4.py_1234"));
         QCOMPARE (GuessLookupType (&recinfo), kProbableTelevision);
 
         //QCOMPARE (GuessLookupType (QString ("tmdb3.py_1234")), kProbableMovie);
-        //QCOMPARE (GuessLookupType (QString ("ttvdb.py_1234")), kProbableTelevision);
+        //QCOMPARE (GuessLookupType (QString ("ttvdb4.py_1234")), kProbableTelevision);
     }
 
     static void testEmbeddedFilnameToMetadata ()

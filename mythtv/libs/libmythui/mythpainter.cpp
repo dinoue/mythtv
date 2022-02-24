@@ -38,12 +38,12 @@ void MythPainter::Teardown(void)
             .arg(m_allocatedImages.size()));
     }
 
-    foreach (auto image, m_allocatedImages)
+    for (auto *image : qAsConst(m_allocatedImages))
         image->SetParent(nullptr);
     m_allocatedImages.clear();
 }
 
-void MythPainter::SetClipRect(const QRect & /*clipRect*/)
+void MythPainter::SetClipRect(const QRect /*clipRect*/)
 {
 }
 
@@ -68,14 +68,14 @@ void MythPainter::DrawImage(int x, int y, MythImage *im, int alpha)
     DrawImage(dest, im, src, alpha);
 }
 
-void MythPainter::DrawImage(const QPoint &topLeft, MythImage *im, int alpha)
+void MythPainter::DrawImage(const QPoint topLeft, MythImage *im, int alpha)
 {
     DrawImage(topLeft.x(), topLeft.y(), im, alpha);
 }
 
-void MythPainter::DrawText(const QRect &r, const QString &msg,
+void MythPainter::DrawText(const QRect r, const QString &msg,
                            int flags, const MythFontProperties &font,
-                           int alpha, const QRect &boundRect)
+                           int alpha, const QRect boundRect)
 {
     MythImage *im = GetImageFromString(msg, flags, r, font);
     if (!im)
@@ -120,11 +120,11 @@ void MythPainter::DrawText(const QRect &r, const QString &msg,
     im->DecrRef();
 }
 
-void MythPainter::DrawTextLayout(const QRect & canvasRect,
+void MythPainter::DrawTextLayout(const QRect canvasRect,
                                  const LayoutVector & layouts,
                                  const FormatVector & formats,
                                  const MythFontProperties & font, int alpha,
-                                 const QRect & destRect)
+                                 const QRect destRect)
 {
     if (canvasRect.isNull())
         return;
@@ -154,7 +154,7 @@ void MythPainter::DrawTextLayout(const QRect & canvasRect,
     im->DecrRef();
 }
 
-void MythPainter::DrawRect(const QRect &area, const QBrush &fillBrush,
+void MythPainter::DrawRect(const QRect area, const QBrush &fillBrush,
                            const QPen &linePen, int alpha)
 {
     MythImage *im = GetImageFromRect(area, 0, 0, fillBrush, linePen);
@@ -165,7 +165,7 @@ void MythPainter::DrawRect(const QRect &area, const QBrush &fillBrush,
     }
 }
 
-void MythPainter::DrawRoundRect(const QRect &area, int cornerRadius,
+void MythPainter::DrawRoundRect(const QRect area, int cornerRadius,
                                 const QBrush &fillBrush, const QPen &linePen,
                                 int alpha)
 {
@@ -177,7 +177,7 @@ void MythPainter::DrawRoundRect(const QRect &area, int cornerRadius,
     }
 }
 
-void MythPainter::DrawEllipse(const QRect &area, const QBrush &fillBrush,
+void MythPainter::DrawEllipse(const QRect area, const QBrush &fillBrush,
                               const QPen &linePen, int alpha)
 {
     MythImage *im = GetImageFromRect(area, 0, 1, fillBrush, linePen);
@@ -195,7 +195,7 @@ void MythPainter::PushTransformation(const UIEffects &zoom, QPointF center)
 }
 
 void MythPainter::DrawTextPriv(MythImage *im, const QString &msg, int flags,
-                               const QRect &r, const MythFontProperties &font)
+                               const QRect r, const MythFontProperties &font)
 {
     if (!im)
         return;
@@ -257,7 +257,9 @@ void MythPainter::DrawTextPriv(MythImage *im, const QString &msg, int flags,
 
     QPainter tmp(&pm);
     QFont tmpfont = font.face();
+#if QT_VERSION < QT_VERSION_CHECK(5,15,0)
     tmpfont.setStyleStrategy(QFont::OpenGLCompatible);
+#endif
     tmp.setFont(tmpfont);
 
     QPainterPath path;
@@ -307,7 +309,7 @@ void MythPainter::DrawTextPriv(MythImage *im, const QString &msg, int flags,
     im->Assign(pm);
 }
 
-void MythPainter::DrawRectPriv(MythImage *im, const QRect &area, int radius,
+void MythPainter::DrawRectPriv(MythImage *im, const QRect area, int radius,
                                int ellipse,
                                const QBrush &fillBrush, const QPen &linePen)
 {
@@ -343,7 +345,7 @@ void MythPainter::DrawRectPriv(MythImage *im, const QRect &area, int radius,
 }
 
 MythImage *MythPainter::GetImageFromString(const QString &msg,
-                                           int flags, const QRect &r,
+                                           int flags, const QRect r,
                                            const MythFontProperties &font)
 {
     QString incoming = font.GetHash() + QString::number(r.width()) +
@@ -388,7 +390,7 @@ MythImage *MythPainter::GetImageFromTextLayout(const LayoutVector &layouts,
                        QString::number(dest.height()) +
                        font.GetHash();
 
-    foreach (auto layout, layouts)
+    for (auto *layout : qAsConst(layouts))
         incoming += layout->text();
 
     MythImage *im = nullptr;
@@ -420,7 +422,9 @@ MythImage *MythPainter::GetImageFromTextLayout(const LayoutVector &layouts,
         clip.setSize(canvas.size());
 
         QFont tmpfont = font.face();
+#if QT_VERSION < QT_VERSION_CHECK(5,15,0)
         tmpfont.setStyleStrategy(QFont::OpenGLCompatible);
+#endif
         painter.setFont(tmpfont);
         painter.setRenderHint(QPainter::Antialiasing);
 
@@ -441,19 +445,15 @@ MythImage *MythPainter::GetImageFromTextLayout(const LayoutVector &layouts,
             shadowRect.translate(shadow.x(), shadow.y());
 
             painter.setPen(shadowColor);
-            foreach (auto layout, layouts)
+            for (auto *layout : qAsConst(layouts))
                 layout->draw(&painter, shadowRect.topLeft(), formats, clip);
         }
 
         painter.setPen(QPen(font.GetBrush(), 0));
-        foreach (auto layout, layouts)
+        for (auto *layout : qAsConst(layouts))
         {
-#if QT_VERSION >= QT_VERSION_CHECK(5,6,0)
             layout->draw(&painter, canvas.topLeft(),
                            layout->formats(), clip);
-#else
-            layout->draw(&painter, canvas.topLeft(), formats, clip);
-#endif
         }
         painter.end();
 
@@ -469,7 +469,7 @@ MythImage *MythPainter::GetImageFromTextLayout(const LayoutVector &layouts,
     return im;
 }
 
-MythImage* MythPainter::GetImageFromRect(const QRect &area, int radius,
+MythImage* MythPainter::GetImageFromRect(const QRect area, int radius,
                                          int ellipse,
                                          const QBrush &fillBrush,
                                          const QPen &linePen)
@@ -490,6 +490,9 @@ MythImage* MythPainter::GetImageFromRect(const QRect &area, int radius,
     QString incoming("R");
     if (fillBrush.style() == Qt::LinearGradientPattern && fillBrush.gradient())
     {
+        // The Q*Gradient classes are not polymorohic, and therefore
+        // dynamic_cast can't be used here.
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
         const auto *gradient = static_cast<const QLinearGradient*>(fillBrush.gradient());
         if (gradient)
         {
@@ -499,7 +502,7 @@ MythImage* MythPainter::GetImageFromRect(const QRect &area, int radius,
                              ((0xfff & (uint64_t)gradient->finalStop().x()) << 24) +
                              ((0xfff & (uint64_t)gradient->finalStop().y()) << 36));
             QGradientStops stops = gradient->stops();
-            foreach (auto & stop, stops)
+            for (const auto & stop : qAsConst(stops))
             {
                 incoming += QString::number(
                              ((0xfff * (uint64_t)(stop.first * 100))) +
@@ -595,7 +598,7 @@ void MythPainter::ExpireImages(int64_t max)
     if (recompute)
     {
         m_softwareCacheSize = 0;
-        foreach (auto & img, m_stringToImageMap)
+        for (auto *img : qAsConst(m_stringToImageMap))
             m_softwareCacheSize += img->bytesPerLine() * img->height();
     }
 }
@@ -603,7 +606,7 @@ void MythPainter::ExpireImages(int64_t max)
 // the following assume graphics hardware operates natively at 32bpp
 void MythPainter::SetMaximumCacheSizes(int hardware, int software)
 {
-    const int64_t kOneMeg = 1024 * 1024;
+    static constexpr int64_t kOneMeg = 1LL * 1024 * 1024;
     m_maxHardwareCacheSize = kOneMeg * hardware;
     m_maxSoftwareCacheSize = kOneMeg * software;
 

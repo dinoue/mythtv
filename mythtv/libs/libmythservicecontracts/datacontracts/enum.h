@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2014 David Blain <dblain@mythtv.org>
 //
-// Licensed under the GPL v2 or later, see COPYING for details
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -32,10 +32,10 @@ class SERVICE_PUBLIC Enum : public QObject
     Q_CLASSINFO( "EnumItems", "type=DTC::Enum");
 
     Q_PROPERTY( QString      Type      READ Type       WRITE setType   )
-    Q_PROPERTY( QVariantList EnumItems READ EnumItems  DESIGNABLE true )
+    Q_PROPERTY( QVariantList EnumItems READ EnumItems )
 
 
-    PROPERTYIMP       ( QString     , Type      )
+    PROPERTYIMP_REF   ( QString     , Type      )
     PROPERTYIMP_RO_REF( QVariantList, EnumItems )
 
     public:
@@ -59,7 +59,7 @@ class SERVICE_PUBLIC Enum : public QObject
             // We must make sure the object added to the QVariantList has
             // a parent of 'this'
 
-            EnumItem *pObject = new EnumItem( this );
+            auto *pObject = new EnumItem( this );
             m_EnumItems.append( QVariant::fromValue<QObject *>( pObject ));
 
             return pObject;

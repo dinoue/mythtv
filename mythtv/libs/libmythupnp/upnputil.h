@@ -6,12 +6,12 @@
 //                                                                            
 // Copyright (c) 2007 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __UPNPUTIL_H__
-#define __UPNPUTIL_H__
+#ifndef UPNPUTIL_H
+#define UPNPUTIL_H
 
 #include <utility>
 
@@ -21,7 +21,7 @@
 
 // MythTV headers
 #include "upnpexp.h"
-#include "compat.h"     // for suseconds_t
+#include "mythchrono.h"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -40,8 +40,9 @@ template <class T> inline const T& Max( const T &x, const T &y )
 // Typedefs
 //////////////////////////////////////////////////////////////////////////////
 
-using TaskTime   = struct timeval;
+using TaskTime   = std::chrono::microseconds;
 using QStringMap = QMap< QString, QString >;
+using QStringMultiMap = QMultiMap< QString, QString >;
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -83,7 +84,7 @@ class NameValue
     inline ~NameValue();
 
     inline void AddAttribute(const QString &name, const QString &value, bool required);
-    inline QString toXML();
+    inline QString toXML() const;
 };
 class NameValues : public QList<NameValue> {};
 
@@ -135,7 +136,7 @@ inline void NameValue::AddAttribute(const QString &name, const QString &value,
 }
 
 
-inline QString NameValue::toXML()
+inline QString NameValue::toXML() const
 {
     QString sAttributes;
     QString attributeTemplate = " %1=\"%2\"";
@@ -144,10 +145,10 @@ inline QString NameValue::toXML()
     NameValues::const_iterator it;
     for (it = m_pAttributes->constBegin(); it != m_pAttributes->constEnd(); ++it)
     {
-        sAttributes += attributeTemplate.arg((*it).m_sName).arg((*it).m_sValue);
+        sAttributes += attributeTemplate.arg((*it).m_sName, (*it).m_sValue);
     }
 
-    return xml.arg(m_sName).arg(sAttributes).arg(m_sValue);
+    return xml.arg(m_sName, sAttributes, m_sValue);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -156,13 +157,7 @@ inline QString NameValue::toXML()
 
 QString LookupUDN         ( const QString     &sDeviceType );
 
-bool operator<            ( TaskTime t1, TaskTime t2 );
-bool operator==           ( TaskTime t1, TaskTime t2 );
-
-void AddMicroSecToTaskTime( TaskTime &t, suseconds_t uSecs );
-void AddSecondsToTaskTime ( TaskTime &t, long nSecs );
-
 UPNP_PUBLIC QStringList GetSourceProtocolInfos ();
 UPNP_PUBLIC QStringList GetSinkProtocolInfos ();
 
-#endif
+#endif // UPNPUTIL_H

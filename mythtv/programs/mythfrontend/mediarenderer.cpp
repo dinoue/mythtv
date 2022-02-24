@@ -20,6 +20,8 @@
 #include "compat.h"
 #include "mythdate.h"
 #include "htmlserver.h"
+#include "mythcorecontext.h"
+#include "configuration.h"
 
 #include "serviceHosts/frontendServiceHost.h"
 #include "services/frontend.h"
@@ -44,13 +46,13 @@ MediaRenderer::MediaRenderer()
     // Initialize Configuration class (XML file for frontend)
     // ----------------------------------------------------------------------
 
-    SetConfiguration( new XmlConfiguration( "config.xml" ));
+    MythCoreContext::SetConfiguration( new XmlConfiguration( "config.xml" ));
 
     // ----------------------------------------------------------------------
     // Create mini HTTP Server
     // ----------------------------------------------------------------------
 
-    int nPort = g_pConfig->GetValue( "UPnP/MythFrontend/ServicePort", 6547 );
+    int nPort = MythCoreContext::GetConfiguration()->GetValue( "UPnP/MythFrontend/ServicePort", 6547 );
 
     auto *pHttpServer = new HttpServer();
 
@@ -143,13 +145,10 @@ MediaRenderer::MediaRenderer()
 #endif
 
         UPNPSubscription *subscription = nullptr;
-        if (getenv("MYTHTV_UPNPSCANNER"))
+        if (qEnvironmentVariableIsSet("MYTHTV_UPNPSCANNER"))
         {
-            LOG(VB_UPNP, LOG_INFO,
-                "MediaRenderer: Registering UPnP Subscription Extension.");
-
-            subscription = new UPNPSubscription(
-                m_pHttpServer->GetSharePath(), nPort);
+            LOG(VB_UPNP, LOG_INFO, "MediaRenderer: Registering UPnP Subscription Extension.");
+            subscription = new UPNPSubscription(m_pHttpServer->GetSharePath(), nPort);
             m_pHttpServer->RegisterExtension(subscription);
         }
 

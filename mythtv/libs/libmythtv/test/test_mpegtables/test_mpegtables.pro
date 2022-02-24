@@ -1,16 +1,14 @@
 include ( ../../../../settings.pro )
+include ( ../../../../test.pro )
 
 QT += xml sql network testlib
+using_opengl: QT += opengl
 
 TEMPLATE = app
 TARGET = test_mpegtables
 DEPENDPATH += . ../..
 INCLUDEPATH += . ../.. ../../mpeg ../../../libmythui ../../../libmyth ../../../libmythbase
 INCLUDEPATH += ../../../libmythservicecontracts
-
-LIBS += ../../$(OBJECTS_DIR)/dvbdescriptors.o
-LIBS += ../../$(OBJECTS_DIR)/iso6937tables.o
-LIBS += ../../$(OBJECTS_DIR)/freesat_huffman.o
 
 LIBS += -L../../../libmythbase -lmythbase-$$LIBVERSION
 LIBS += -L../../../libmythui -lmythui-$$LIBVERSION
@@ -27,11 +25,6 @@ LIBS += -L../../../../external/FFmpeg/libpostproc -lmythpostproc
 using_mheg:LIBS += -L../../../libmythfreemheg -lmythfreemheg-$$LIBVERSION
 LIBS += -L../.. -lmythtv-$$LIBVERSION
 
-contains(QMAKE_CXX, "g++") {
-  QMAKE_CXXFLAGS += -O0 -fprofile-arcs -ftest-coverage
-  QMAKE_LFLAGS += -fprofile-arcs
-}
-
 QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../../external/FFmpeg/libswresample
 QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../../external/FFmpeg/libavutil
 QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../../external/FFmpeg/libswscale
@@ -45,7 +38,6 @@ QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../libmythui
 QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../libmythupnp
 QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../libmythservicecontracts
 QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../libmythfreemheg
-QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../..
 
 # Input
 HEADERS += test_mpegtables.h

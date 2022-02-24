@@ -24,35 +24,34 @@
  *
  */
 
-#ifndef _RINGBUFFER_H_
-#define _RINGBUFFER_H_
+#ifndef RINGBUFFER_H
+#define RINGBUFFER_H
 
-#include <stdio.h>
-#include <stdint.h>
+#include <cstdio>
+#include <cstdint>
 #include <unistd.h>
+#include <vector>
 
-#ifdef __cplusplus
-extern "C" {
-#endif				/* __cplusplus */
+using peek_poke_vec = std::vector<uint8_t>;
 
 #define FULL_BUFFER  (-1000)
 #define EMPTY_BUFFER  (-1000)
-	typedef struct ringbuffer {
+	struct ringbuffer {
 		int read_pos;
 		int write_pos;
 		uint32_t size;
 		uint8_t *buffer;
-	} ringbuffer;
+	};
 
 
 #define DBUF_INDEX 10000
 
-	typedef struct dummy_buffer_s {
+	struct dummy_buffer {
 		uint32_t size;
 		uint32_t fill;
 		ringbuffer time_index;
 		ringbuffer data_index;
-	} dummy_buffer;
+	};
 
 
 	int  ring_init (ringbuffer *rbuf, int size);
@@ -65,8 +64,14 @@ extern "C" {
 	int ring_read_file(ringbuffer *rbuf, int fd, int count);
 	int ring_peek(ringbuffer *rbuf, uint8_t *data, unsigned int count,
                       uint32_t off);
+	int ring_peek(ringbuffer *rbuf, peek_poke_vec data, unsigned int count,
+                      uint32_t off);
+	int ring_peek(ringbuffer *rbuf, peek_poke_vec data, uint32_t off);
 	int ring_poke(ringbuffer *rbuf, uint8_t *data, unsigned int count,
                       uint32_t off);
+	int ring_poke(ringbuffer *rbuf, peek_poke_vec data, unsigned int count,
+                      uint32_t off);
+	int ring_poke(ringbuffer *rbuf, peek_poke_vec data, uint32_t off);
 	int ring_skip(ringbuffer *rbuf, int count);
 
 	static inline int ring_wpos(ringbuffer *rbuf)
@@ -120,7 +125,4 @@ extern "C" {
         void dummy_destroy(dummy_buffer *dbuf);
 	void ring_show(ringbuffer *rbuf, unsigned int count, uint32_t off);
 
-#ifdef __cplusplus
-}
-#endif				/* __cplusplus */
-#endif /* _RINGBUFFER_H_ */
+#endif /* RINGBUFFER_H */

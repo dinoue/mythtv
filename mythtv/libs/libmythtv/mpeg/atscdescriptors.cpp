@@ -2,15 +2,11 @@
 // Copyright (c) 2003-2004, Daniel Thor Kristjansson
 
 #include <algorithm>
-using namespace std;
 
 #include "atscdescriptors.h"
 #include "mythlogging.h"
 #include "iso639.h"
 #include "atsc_huffman.h"
-
-using namespace std;
-
 
 QString MultipleStringStructure::CompressionTypeString(uint i, uint j) const
 {
@@ -60,8 +56,8 @@ QString MultipleStringStructure::toString() const
 static uint maxPriority(const QMap<uint,uint> &langPrefs)
 {
     uint max_pri = 0;
-    foreach (uint pref, langPrefs)
-        max_pri = max(max_pri, pref);
+    for (uint pref : qAsConst(langPrefs))
+        max_pri = std::max(max_pri, pref);
     return max_pri;
 }
 
@@ -74,8 +70,8 @@ uint MultipleStringStructure::GetIndexOfBestMatch(
     for (uint i = 0; i < StringCount(); i++)
     {
         QMap<uint,uint>::const_iterator it =
-            langPrefs.find(CanonicalLanguageKey(i));
-        if ((it != langPrefs.end()) && (*it > match_pri))
+            langPrefs.constFind(CanonicalLanguageKey(i));
+        if ((it != langPrefs.constEnd()) && (*it > match_pri))
         {
             match_idx = i;
             match_pri = *it;
@@ -193,9 +189,9 @@ QString CaptionServiceDescriptor::toString(void) const
     for (uint i = 0; i < ServicesCount(); i++)
     {
         str.append(QString("\n     lang(%1) type(%2) ")
-                   .arg(LanguageString(i)).arg(Type(i)));
+                   .arg(LanguageString(i)).arg(static_cast<int>(Type(i))));
         str.append(QString("easy_reader(%1) wide(%2) ")
-                   .arg(EasyReader(i)).arg(WideAspectRatio(i)));
+                   .arg(static_cast<int>(EasyReader(i))).arg(static_cast<int>(WideAspectRatio(i))));
         if (Type(i))
         {
             str.append(QString("service_num(%1)")
@@ -203,7 +199,7 @@ QString CaptionServiceDescriptor::toString(void) const
         }
         else
         {
-            str.append(QString("line_21_field(%1)").arg(Line21Field(i)));
+            str.append(QString("line_21_field(%1)").arg(static_cast<int>(Line21Field(i))));
         }
     }
 
@@ -234,28 +230,27 @@ QString ContentAdvisoryDescriptor::toString() const
     return "ContentAdvisoryDescriptor::toString(): Not implemented";
 }
 
-QString AudioStreamDescriptor::SampleRateCodeString(void) const
+QString AC3AudioStreamDescriptor::SampleRateCodeString(void) const
 {
-    static const char* s_asd[] =
+    static const std::array<const std::string,8> s_asd
     {
         "48kbps", "44.1kbps", "32kbps", "Reserved",
         "48kbps or 44.1kbps", "48kbps or 32kbps",
         "44.1kbps or 32kbps", "48kbps or 44.1kbps or 32kbps"
     };
-    return QString(s_asd[SampleRateCode()]);
+    return QString::fromStdString(s_asd[SampleRateCode()]);
 }
 
-QString AudioStreamDescriptor::BitRateCodeString(void) const
+QString AC3AudioStreamDescriptor::BitRateCodeString(void) const
 {
-    // cppcheck-suppress variableScope
-    static const char* s_ebr[19] =
+    static const std::array<const std::string,19> s_ebr
     {
         "=32kbps",  "=40kbps",  "=48kbps",  "=56kbps",  "=64kbps",
         "=80kbps",  "=96kbps",  "=112kbps", "=128kbps", "=160kbps",
         "=192kbps", "=224kbps", "=256kbps", "=320kbps", "=384kbps",
         "=448kbps", "=512kbps", "=576kbps", "=640kbps"
     };
-    static const char* s_ubr[19] =
+    static const std::array<const std::string,19> s_ubr
     {
         "<=32kbps",  "<=40kbps", "<=48kbps",  "<=56kbps",  "<=64kbps",
         "<=80kbps",  "<=96kbps", "<=112kbps", "<=128kbps", "<=160kbps",
@@ -264,46 +259,48 @@ QString AudioStreamDescriptor::BitRateCodeString(void) const
     };
 
     if (BitRateCode() <= 18)
-        return QString(s_ebr[BitRateCode()]);
+        return QString::fromStdString(s_ebr[BitRateCode()]);
     if ((BitRateCode() >= 32) && (BitRateCode() <= 50))
-        return QString(s_ubr[BitRateCode()-32]);
+        return QString::fromStdString(s_ubr[BitRateCode()-32]);
     return QString("Unknown Bit Rate Code");
 }
 
-QString AudioStreamDescriptor::SurroundModeString(void) const
+QString AC3AudioStreamDescriptor::SurroundModeString(void) const
 {
-    static const char* s_sms[] =
+    static const std::array<const std::string,4> s_sms
     {
         "Not indicated",
         "Not Dolby surround encoded",
         "Dolby surround encoded",
         "Reserved",
     };
-    return QString(s_sms[SurroundMode()]);
+    return QString::fromStdString(s_sms[SurroundMode()]);
 }
 
-QString AudioStreamDescriptor::ChannelsString(void) const
+QString AC3AudioStreamDescriptor::ChannelsString(void) const
 {
-    static const char* s_cs[] =
+    static const std::array<const std::string,16> s_cs
     {
         "1 + 1",    "1/0",      "2/0",      "3/0",
         "2/1",      "3/1",      "2/2 ",     "3/2",
         "1",        "<= 2",     "<= 3",     "<= 4",
         "<= 5",     "<= 6",     "Reserved", "Reserved"
     };
-    return s_cs[Channels()];
+    return QString::fromStdString(s_cs[Channels()]);
 }
 
-QString AudioStreamDescriptor::toString() const
+QString AC3AudioStreamDescriptor::toString() const
 {
     QString str;
-    str.append(QString("Audio Stream Descriptor "));
+    str.append(QString("AC-3 Audio Stream Descriptor "));
     str.append(QString(" full_srv(%1) sample_rate(%2) bit_rate(%3, %4)\n")
-               .arg(FullService()).arg(SampleRateCodeString())
-               .arg(BitRateCodeString()).arg(BitRateCode()));
+               .arg(static_cast<int>(FullService()))
+               .arg(SampleRateCodeString(),
+                    BitRateCodeString())
+               .arg(BitRateCode()));
     str.append(QString("      bsid(%1) bs_mode(%2) channels(%3) Dolby(%4)\n")
                .arg(bsid()).arg(BasicServiceMode())
-               .arg(ChannelsString()).arg(SurroundModeString()));
+               .arg(ChannelsString(), SurroundModeString()));
 
     /*
     str.append(QString("   language code: %1").arg(languageCode()));

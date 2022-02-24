@@ -111,7 +111,7 @@ template <class DBFS>
 QStringList ImageScanThread<DBFS>::GetProgress()
 {
     QMutexLocker locker(&m_mutexProgress);
-    return QStringList() << QString::number(gCoreContext->IsBackend())
+    return QStringList() << QString::number(static_cast<int>(gCoreContext->IsBackend()))
                          << QString::number(m_progressCount)
                          << QString::number(m_progressTotalCount);
 }
@@ -189,11 +189,11 @@ void ImageScanThread<DBFS>::run()
             // Adding or updating directories has been completed.
             // The maps now only contain old directories & files that are not
             // in the filesystem anymore. Remove them from the database
-            m_dbfs.RemoveFromDB(m_dbDirMap.values());
-            m_dbfs.RemoveFromDB(m_dbFileMap.values());
+            m_dbfs.RemoveFromDB(QVector<ImagePtr>::fromList(m_dbDirMap.values()));
+            m_dbfs.RemoveFromDB(QVector<ImagePtr>::fromList(m_dbFileMap.values()));
 
             // Cleanup thumbnails
-            QStringList mesg(m_thumb.DeleteThumbs(m_dbFileMap.values()));
+            QStringList mesg(m_thumb.DeleteThumbs(QVector<ImagePtr>::fromList(m_dbFileMap.values())));
             mesg << m_changedImages.join(",");
 
             // Cleanup dirs
@@ -213,7 +213,7 @@ void ImageScanThread<DBFS>::run()
             // For initial scans pause briefly to give thumb generator a headstart
             // before being deluged by client requests
             if (firstScan)
-                msleep(1000);
+                usleep(1s);
 
             // Notify clients of completion with removed & changed images
             m_dbfs.Notify("IMAGE_DB_CHANGED", mesg);
@@ -259,10 +259,16 @@ void ImageScanThread<DBFS>::SyncSubTree(const QFileInfo &dirInfo, int parentId,
 
     // Create directory node
     int id = SyncDirectory(dirInfo, devId, base, parentId);
+    if (id == -1)
+    {
+        LOG(VB_FILE, LOG_INFO,
+            QString("Failed to sync dir %1").arg(dirInfo.absoluteFilePath()));
+        return;
+    }
 
     // Sync its contents
-    QFileInfoList list = dir.entryInfoList();
-    foreach(const QFileInfo &fileInfo, list)
+    QFileInfoList entries = dir.entryInfoList();
+    for (const auto & fileInfo : qAsConst(entries))
     {
         if (!IsScanning())
         {
@@ -318,6 +324,8 @@ template <class DBFS>
     if (m_dbDirMap.contains(dir->m_filePath))
     {
         ImagePtr dbDir = m_dbDirMap.value(dir->m_filePath);
+        if (dbDir == nullptr)
+            return -1;
 
         // The directory already exists in the db. Retain its id
         dir->m_id = dbDir->m_id;
@@ -345,6 +353,8 @@ template <class DBFS>
     else if (m_seenDir.contains(dir->m_filePath))
     {
         ImagePtr cloneDir = m_seenDir.value(dir->m_filePath);
+        if (cloneDir == nullptr)
+            return -1;
 
         // All clones point to same Db dir. Use latest
         if (cloneDir->m_modTime >= dir->m_modTime )
@@ -400,11 +410,7 @@ template <class DBFS>
 template <class DBFS>
 void ImageScanThread<DBFS>::PopulateMetadata(
     const QString &path, int type, QString &comment,
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-    uint &time,
-#else
-    qint64 &time,
-#endif
+    std::chrono::seconds &time,
     int &orientation)
 {
     // Set orientation, date, comment from file meta data
@@ -415,11 +421,7 @@ void ImageScanThread<DBFS>::PopulateMetadata(
     orientation  = metadata->GetOrientation();
     comment      = metadata->GetComment().simplified();
     QDateTime dt = metadata->GetOriginalDateTime();
-#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
-    time         = (dt.isValid()) ? dt.toTime_t() : 0;
-#else
-    time         = (dt.isValid()) ? dt.toSecsSinceEpoch() : 0;
-#endif
+    time         = (dt.isValid()) ? std::chrono::seconds(dt.toSecsSinceEpoch()) : 0s;
 
     delete metadata;
 }
@@ -538,9 +540,8 @@ void ImageScanThread<DBFS>::SyncFile(const QFileInfo &fileInfo, int devId,
 template <class DBFS>
 void ImageScanThread<DBFS>::CountTree(QDir &dir)
 {
-    QFileInfoList files = dir.entryInfoList();
-
-    foreach(const QFileInfo &fileInfo, files)
+    QFileInfoList entries = dir.entryInfoList();
+    for (const auto & fileInfo : qAsConst(entries))
     {
         // Ignore excluded dirs/files
         if (MATCHES(m_exclusions, fileInfo.fileName()))
@@ -588,7 +589,7 @@ void ImageScanThread<DBFS>::CountFiles(const QStringList &paths)
 
     // Use global image filters
     QDir dir = m_dir;
-    foreach(const QString &sgDir, paths)
+    for (const auto& sgDir : qAsConst(paths))
     {
         // Ignore missing dirs
         if (dir.cd(sgDir))
@@ -610,7 +611,7 @@ void ImageScanThread<DBFS>::Broadcast(int progress)
 {
     // Only 2 scanners are ever visible (FE & BE) so use bool as scanner id
     QStringList status;
-    status << QString::number(gCoreContext->IsBackend())
+    status << QString::number(static_cast<int>(gCoreContext->IsBackend()))
            << QString::number(progress)
            << QString::number(m_progressTotalCount);
 

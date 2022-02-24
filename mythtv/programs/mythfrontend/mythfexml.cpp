@@ -10,7 +10,7 @@
 #include "mythcorecontext.h"
 #include "mythdate.h"
 #include "mythdbcon.h"
-
+#include "configuration.h"
 #include "mythmainwindow.h"
 
 #include <QTextStream>
@@ -18,7 +18,6 @@
 #include <QTextStream>
 #include <QDir>
 #include <QFile>
-#include <QRegExp>
 #include <QBuffer>
 #include <QKeyEvent>
 
@@ -37,7 +36,7 @@ MythFEXML::MythFEXML( UPnpDevice *pDevice , const QString &sSharePath)
 {
 
     QString sUPnpDescPath =
-        UPnp::GetConfiguration()->GetValue( "UPnP/DescXmlPath", m_sSharePath );
+        MythCoreContext::GetConfiguration()->GetValue( "UPnP/DescXmlPath", m_sSharePath );
 
     m_sServiceDescFileName = sUPnpDescPath + "MFEXML_scpd.xml";
     m_sControlUrl          = "/MythFE";
@@ -83,7 +82,7 @@ bool MythFEXML::ProcessRequest( HTTPRequest *pRequest )
         return false;
 
     LOG(VB_UPNP, LOG_INFO, QString("MythFEXML::ProcessRequest: %1 : %2")
-            .arg(pRequest->m_sMethod).arg(pRequest->m_sRawRequest));
+            .arg(pRequest->m_sMethod, pRequest->m_sRawRequest));
 
     switch(GetMethod(pRequest->m_sMethod))
     {
@@ -97,7 +96,7 @@ bool MythFEXML::ProcessRequest( HTTPRequest *pRequest )
             GetActionListTest(pRequest);
             break;
         case MFEXML_GetRemote:
-            GetRemote(pRequest);
+            pRequest->FormatFileResponse(m_sSharePath + "html/frontend_index.qsp");
             break;
         default:
             UPnp::FormatErrorResponse(pRequest, UPnPResult_InvalidAction);
@@ -136,8 +135,7 @@ void MythFEXML::GetScreenShot(HTTPRequest *pRequest)
             .arg(nWidth).arg(nHeight).arg(sFormat));
 
     QString sFileName = QString("/%1/myth-screenshot-XML.%2")
-        .arg(gCoreContext->GetSetting("ScreenShotPath","/tmp"))
-        .arg(sFormat);
+        .arg(gCoreContext->GetSetting("ScreenShotPath","/tmp"), sFormat);
 
     MythMainWindow *window = GetMythMainWindow();
     window->RemoteScreenShot(sFileName, nWidth, nHeight);
@@ -184,14 +182,14 @@ void MythFEXML::GetActionListTest(HTTPRequest *pRequest)
     {
         contexts.next();
         QStringList actions = contexts.value();
-        foreach (QString action, actions)
+        for (const QString & action : qAsConst(actions))
         {
             QStringList split = action.split(",");
             if (split.size() == 2)
             {
                 stream <<
                     QString("    <div>%1&nbsp;<input type=\"button\" value=\"%2\" onClick=\"postaction('%2');\"></input>&nbsp;%3</div>\n")
-                        .arg(contexts.key()).arg(split[0]).arg(split[1]);
+                        .arg(contexts.key(), split[0], split[1]);
             }
         }
     }
@@ -203,7 +201,7 @@ void MythFEXML::GetActionListTest(HTTPRequest *pRequest)
 }
 
 #define BUTTON(action,desc) \
-  QString("      <input class=\"bigb\" type=\"button\" value=\"%1\" onClick=\"postaction('%2');\"></input>\r\n").arg(action).arg(desc)
+  QString("      <input class=\"bigb\" type=\"button\" value=\"%1\" onClick=\"postaction('%2');\"></input>\r\n").arg(action, desc)
 
 void MythFEXML::GetRemote(HTTPRequest *pRequest)
 {

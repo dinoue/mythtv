@@ -6,12 +6,12 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TASKQUEUE_H__
-#define __TASKQUEUE_H__
+#ifndef TASKQUEUE_H
+#define TASKQUEUE_H
 
 // POSIX headers
 #include <sys/types.h>
@@ -115,12 +115,13 @@ class UPNP_PUBLIC TaskQueue : public MThread
         void  RequestTerminate   ( );
 
         void  Clear              ( );
-        void  AddTask            ( long msec  , Task *pTask );
-        void  AddTask            ( TaskTime tt, Task *pTask );
+        void  AddTask            ( std::chrono::milliseconds msec , Task *pTask );
         void  AddTask            ( Task *pTask );
                                                           
-        Task *GetNextExpiredTask ( TaskTime tt, long nWithinMilliSecs = 50 );
+        Task *GetNextExpiredTask ( TaskTime tt, std::chrono::milliseconds nWithinMilliSecs = 50ms );
                                                                 
+    private:
+        void  AddTaskAbsolute    ( TaskTime tt, Task *pTask );
 };
 
-#endif
+#endif // TASKQUEUE_H

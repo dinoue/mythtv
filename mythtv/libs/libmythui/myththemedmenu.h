@@ -30,6 +30,7 @@ struct ThemedButton
  */
 class MUI_PUBLIC MythThemedMenuState : public MythScreenType
 {
+    Q_OBJECT
   public:
     MythThemedMenuState(MythScreenStack *parent, const QString &name)
         : MythScreenType(parent, name) {}
@@ -62,7 +63,7 @@ class MUI_PUBLIC MythThemedMenu : public MythThemedMenuState
                     bool allowreorder = false, MythThemedMenuState *state = nullptr);
    ~MythThemedMenu() override;
 
-    bool foundTheme(void);
+    bool foundTheme(void) const;
 
     void getCallback(void (**lcallback)(void *, QString &), void **data);
     void setCallback(void (*lcallback)(void *, QString &), void *data);
@@ -82,7 +83,8 @@ class MUI_PUBLIC MythThemedMenu : public MythThemedMenuState
 
   private slots:
     void setButtonActive(MythUIButtonListItem* item);
-    void buttonAction(MythUIButtonListItem* item, bool skipPass = false);
+    void buttonAction(MythUIButtonListItem* item, bool skipPass);
+    void buttonAction(MythUIButtonListItem* item);
 
   private:
     void SetMenuTheme(const QString &menufile);

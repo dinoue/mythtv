@@ -38,7 +38,6 @@
 
 // c++
 #include <iostream>
-using namespace std;
 
 static int write_buffer(char *buf, int bufsize, FILE *fp)
 {
@@ -59,7 +58,7 @@ void LameEncoder::init_id3tags(lame_global_flags *gf)
     id3tag_v2_only(gf);
 }
 
-int LameEncoder::init_encoder(lame_global_flags *gf, int quality, bool vbr)
+int LameEncoder::init_encoder(lame_global_flags *gf, int quality, bool vbr) const
 {
     int lameret = 0;
     int meanbitrate = 128;

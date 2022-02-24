@@ -1,0 +1,18 @@
+<div class="statusBox">
+    <h2>Schedule</h2>
+    <div *ngIf="scheduled?.length != 0; else noSchedule">
+        <p>The next {{scheduled?.length}} show(s) that are scheduled for recording.</p>
+        <ul>
+            <li *ngFor="let schedule of scheduled"
+                pTooltip="{{schedule.Description}}"
+                pTooltipPosition="below">
+                    <!-- StartTime needs converting to a "pretty" display time -->
+                    {{schedule.StartTime}} - {{schedule.Recording.EncoderId}} - {{schedule.Channel.CallSign}} - {{schedule.Title}}
+            </li>
+        </ul>
+    </div>
+</div>
+
+<ng-template #noSchedule>
+    <p>Nothing scheduled to record</p>
+</ng-template>

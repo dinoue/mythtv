@@ -15,7 +15,7 @@
 #include "weather.h"
 #include "weatherSetup.h"
 #include "sourceManager.h"
-#include "dbcheck.h"
+#include "weatherdbcheck.h"
 
 SourceManager *srcMan = nullptr;
 
@@ -140,7 +140,7 @@ int mythplugin_config()
         return 0;
     }
     LOG(VB_GENERAL, LOG_ERR, QString("Couldn't find menu %1 or theme %2")
-        .arg(menuname).arg(themedir));
+        .arg(menuname, themedir));
     delete menu;
     return -1;
 }

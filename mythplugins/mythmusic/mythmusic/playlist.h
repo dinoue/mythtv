@@ -95,23 +95,24 @@ class Playlist : public QObject
 
     void copyTracks(Playlist *to_ptr, bool update_display);
 
-    bool hasChanged(void) { return m_changed; }
+    bool hasChanged(void) const { return m_changed; }
     void changed(void);
 
     /// whether any changes should be saved to the DB
     void disableSaves(void) { m_doSave = false; }
     void enableSaves(void) { m_doSave = true; }
-    bool doSaves(void) { return m_doSave; }
+    bool doSaves(void) const { return m_doSave; }
 
     QString getName(void) { return m_name; } 
     void    setName(QString a_name) { m_name = std::move(a_name); }
 
     bool isActivePlaylist(void) { return m_name == DEFAULT_PLAYLIST_NAME; }
 
-    int  getID(void) { return m_playlistid; }
+    int  getID(void) const { return m_playlistid; }
     void setID(int x) { m_playlistid = x; }
 
-    void getStats(uint *trackCount, uint *totalLength, uint currentTrack = 0, uint *playedLength = nullptr) const;
+    void getStats(uint *trackCount, std::chrono::seconds *totalLength,
+                  uint currentTrack = 0, std::chrono::seconds *playedLength = nullptr) const;
 
     void resync(void);
 
@@ -123,7 +124,8 @@ class Playlist : public QObject
   private slots:
     void mkisofsData(int fd);
     void cdrecordData(int fd);
-    void processExit(uint retval = 0);
+    void processExit(uint retval);
+    void processExit();
 #endif
 
   private:

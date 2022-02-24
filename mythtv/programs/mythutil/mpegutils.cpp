@@ -27,7 +27,7 @@
 #include "mythlogging.h"
 #include "atsctables.h"
 #include "sctetables.h"
-#include "ringbuffer.h"
+#include "io/mythmediabuffer.h"
 #include "dvbtables.h"
 #include "exitcodes.h"
 
@@ -45,10 +45,10 @@ static QHash<uint,bool> extract_pids(const QString &pidsStr, bool required)
     else
     {
         QStringList pidsList = pidsStr.split(",");
-        for (uint i = 0; i < (uint) pidsList.size(); i++)
+        for (const QString &pidStr : qAsConst(pidsList))
         {
             bool ok = false;
-            uint tmp = pidsList[i].toUInt(&ok, 0);
+            uint tmp = pidStr.toUInt(&ok, 0);
             if (ok && (tmp < 0x2000))
                 use_pid[tmp] = true;
         }
@@ -90,8 +90,8 @@ static int pid_counter(const MythUtilCommandLineParser &cmdline)
     }
     QString src = cmdline.toString("infile");
 
-    RingBuffer *srcRB = RingBuffer::Create(src, false);
-    if (!srcRB)
+    MythMediaBuffer *srcbuffer = MythMediaBuffer::Create(src, false);
+    if (!srcbuffer)
     {
         LOG(VB_STDIO|VB_FLUSH, LOG_ERR, "Couldn't open input URL\n");
         return GENERIC_EXIT_NOT_OK;
@@ -113,15 +113,14 @@ static int pid_counter(const MythUtilCommandLineParser &cmdline)
     }
 
     const int kBufSize = 2 * 1024 * 1024;
-    long long pid_count[0x2000];
-    memset(pid_count, 0, sizeof(pid_count));
+    std::array<uint64_t,0x2000> pid_count {};
     char *buffer = new char[kBufSize];
     int offset = 0;
     long long total_count = 0;
 
     while (true)
     {
-        int r = srcRB->Read(&buffer[offset], kBufSize - offset);
+        int r = srcbuffer->Read(&buffer[offset], kBufSize - offset);
         if (r <= 0)
             break;
         int pos = 0;
@@ -159,7 +158,7 @@ static int pid_counter(const MythUtilCommandLineParser &cmdline)
     LOG(VB_STDIO|VB_FLUSH, logLevel, "\n");
 
     delete[] buffer;
-    delete srcRB;
+    delete srcbuffer;
 
     for (uint i = 0; i < 0x2000; i++)
     {
@@ -210,18 +209,18 @@ static int pid_filter(const MythUtilCommandLineParser &cmdline)
     if (use_pid.empty())
         return GENERIC_EXIT_INVALID_CMDLINE;
 
-    RingBuffer *srcRB = RingBuffer::Create(src, false);
-    if (!srcRB)
+    MythMediaBuffer *srcbuffer = MythMediaBuffer::Create(src, false);
+    if (!srcbuffer)
     {
         LOG(VB_STDIO|VB_FLUSH, LOG_ERR, "Couldn't open input URL\n");
         return GENERIC_EXIT_NOT_OK;
     }
 
-    RingBuffer *destRB = RingBuffer::Create(dest, true);
+    MythMediaBuffer *destRB = MythMediaBuffer::Create(dest, true);
     if (!destRB)
     {
         LOG(VB_STDIO|VB_FLUSH, LOG_ERR, "Couldn't open output URL\n");
-        delete srcRB;
+        delete srcbuffer;
         return GENERIC_EXIT_NOT_OK;
     }
 
@@ -233,7 +232,7 @@ static int pid_filter(const MythUtilCommandLineParser &cmdline)
 
     while (true)
     {
-        int r = srcRB->Read(&buffer[offset], kBufSize - offset);
+        int r = srcbuffer->Read(&buffer[offset], kBufSize - offset);
         if (r <= 0)
             break;
         int pos = 0;
@@ -275,7 +274,7 @@ static int pid_filter(const MythUtilCommandLineParser &cmdline)
     LOG(VB_STDIO|VB_FLUSH, logLevel, "\n");
 
     delete[] buffer;
-    delete srcRB;
+    delete srcbuffer;
     delete destRB;
 
     LOG(VB_STDIO|VB_FLUSH, logLevel, QString("Wrote %1 of %2 packets\n")
@@ -291,12 +290,9 @@ class PTSListener :
   public:
     PTSListener()
     {
-        for (uint & i : m_ptsCount)
-            i = 0;
-        for (int64_t & i : m_ptsFirst)
-            i = -1LL;
-        for (int64_t & i : m_ptsLast)
-            i = -1LL;
+        m_ptsCount.fill(0);
+        m_ptsFirst.fill(-1LL);
+        m_ptsLast.fill(-1LL);
 
     }
     bool ProcessTSPacket(const TSPacket &tspacket) override; // TSPacketListener
@@ -308,7 +304,7 @@ class PTSListener :
     {
         int64_t pts = -1LL;
         uint32_t pts_count = 0;
-        foreach (uint stream, m_ptsStreams)
+        for (uint stream : qAsConst(m_ptsStreams))
         {
             if(m_ptsCount[stream] > pts_count){
                 pts = m_ptsFirst[stream];
@@ -321,7 +317,7 @@ class PTSListener :
     {
         int64_t pts = -1LL;
         uint32_t pts_count = 0;
-        foreach (uint stream, m_ptsStreams)
+        for (uint stream : qAsConst(m_ptsStreams))
         {
             if(m_ptsCount[stream] > pts_count){
                 pts = m_ptsLast[stream];
@@ -339,9 +335,9 @@ class PTSListener :
   public:
     uint32_t        m_startCode     {0xFFFFFFFF};
     QMap<uint,uint> m_ptsStreams;
-    uint32_t        m_ptsCount[256] {};
-    int64_t         m_ptsFirst[256] {};
-    int64_t         m_ptsLast[256]  {};
+    std::array<uint32_t,256> m_ptsCount {};
+    std::array<int64_t,256>  m_ptsFirst {};
+    std::array<int64_t,256>  m_ptsLast  {};
 };
 
 
@@ -404,7 +400,7 @@ bool PTSListener::ProcessTSPacket(const TSPacket &tspacket)
 class PrintOutput
 {
   public:
-    PrintOutput(RingBuffer *out, bool use_xml) :
+    PrintOutput(MythMediaBuffer *out, bool use_xml) :
         m_out(out), m_useXml(use_xml)
     {
     }
@@ -430,7 +426,7 @@ class PrintOutput
     }
 
   protected:
-    RingBuffer *m_out;
+    MythMediaBuffer *m_out;
     bool m_useXml;
 };
 
@@ -438,18 +434,18 @@ class PrintMPEGStreamListener : public MPEGStreamListener, public PrintOutput
 {
   public:
     PrintMPEGStreamListener(
-        RingBuffer *out, PTSListener &ptsl, bool autopts,
+        MythMediaBuffer *out, PTSListener &ptsl, bool autopts,
         MPEGStreamData *sd, const QHash<uint,bool> &use_pid, bool use_xml) :
         PrintOutput(out, use_xml), m_ptsl(ptsl),
         m_autopts(autopts), m_sd(sd), m_usePid(use_pid)
     {
         if (m_autopts)
-            m_sd->AddListeningPID(MPEG_PAT_PID);
+            m_sd->AddListeningPID(PID::MPEG_PAT_PID);
     }
 
     void HandlePAT(const ProgramAssociationTable *pat) override // MPEGStreamListener
     {
-        if (pat && (!m_autopts || m_usePid[MPEG_PAT_PID]))
+        if (pat && (!m_autopts || m_usePid[PID::MPEG_PAT_PID]))
             Output(pat);
         if (pat && m_autopts)
         {
@@ -523,7 +519,7 @@ class PrintATSCMainStreamListener :
     public ATSCMainStreamListener, public PrintOutput
 {
   public:
-    PrintATSCMainStreamListener(RingBuffer *out, bool use_xml) :
+    PrintATSCMainStreamListener(MythMediaBuffer *out, bool use_xml) :
         PrintOutput(out, use_xml) { }
 
     void HandleSTT(const SystemTimeTable *stt) override // ATSCMainStreamListener
@@ -546,7 +542,7 @@ class PrintSCTEMainStreamListener :
     public SCTEMainStreamListener, public PrintOutput
 {
   public:
-    PrintSCTEMainStreamListener(RingBuffer *out, bool use_xml) :
+    PrintSCTEMainStreamListener(MythMediaBuffer *out, bool use_xml) :
         PrintOutput(out, use_xml) { }
 
     void HandleNIT(const SCTENetworkInformationTable *nit) override // SCTEMainStreamListener
@@ -589,7 +585,7 @@ class PrintATSCAuxStreamListener :
     public ATSCAuxStreamListener, public PrintOutput
 {
   public:
-    PrintATSCAuxStreamListener(RingBuffer *out, bool use_xml) :
+    PrintATSCAuxStreamListener(MythMediaBuffer *out, bool use_xml) :
         PrintOutput(out, use_xml) { }
 
     void HandleTVCT( uint /*pid*/,
@@ -625,7 +621,7 @@ class PrintATSCEITStreamListener :
     public ATSCEITStreamListener, public PrintOutput
 {
   public:
-    PrintATSCEITStreamListener(RingBuffer *out, bool use_xml) :
+    PrintATSCEITStreamListener(MythMediaBuffer *out, bool use_xml) :
         PrintOutput(out, use_xml) { }
 
     void HandleEIT(uint pid, const EventInformationTable *eit) override // ATSCEITStreamListener
@@ -645,7 +641,7 @@ class PrintDVBMainStreamListener :
     public DVBMainStreamListener, public PrintOutput
 {
   public:
-    PrintDVBMainStreamListener(RingBuffer *out, bool use_xml) :
+    PrintDVBMainStreamListener(MythMediaBuffer *out, bool use_xml) :
         PrintOutput(out, use_xml) { }
 
     void HandleTDT(const TimeDateTable *tdt) override // DVBMainStreamListener
@@ -669,7 +665,7 @@ class PrintDVBOtherStreamListener :
     public DVBOtherStreamListener, public PrintOutput
 {
   public:
-    PrintDVBOtherStreamListener(RingBuffer *out, bool use_xml) :
+    PrintDVBOtherStreamListener(MythMediaBuffer *out, bool use_xml) :
         PrintOutput(out, use_xml) { }
 
     void HandleNITo(const NetworkInformationTable *nit) override // DVBOtherStreamListener
@@ -693,7 +689,7 @@ class PrintDVBEITStreamListener :
     public DVBEITStreamListener, public PrintOutput
 {
   public:
-    PrintDVBEITStreamListener(RingBuffer *out, bool use_xml) :
+    PrintDVBEITStreamListener(MythMediaBuffer *out, bool use_xml) :
         PrintOutput(out, use_xml) { }
 
     void HandleEIT(const DVBEventInformationTable *eit) override // DVBEITStreamListener
@@ -716,7 +712,7 @@ static int pid_printer(const MythUtilCommandLineParser &cmdline)
     }
     QString src = cmdline.toString("infile");
 
-    RingBuffer *srcRB = RingBuffer::Create(src, false);
+    MythMediaBuffer *srcRB = MythMediaBuffer::Create(src, false);
     if (!srcRB)
     {
         LOG(VB_STDIO|VB_FLUSH, LOG_ERR, "Couldn't open input URL\n");
@@ -731,10 +727,10 @@ static int pid_printer(const MythUtilCommandLineParser &cmdline)
         extract_pids(cmdline.toString("ptspids"), false);
 
     QString dest = cmdline.toString("outfile");
-    RingBuffer *out = nullptr;
+    MythMediaBuffer *out = nullptr;
     if (!dest.isEmpty())
     {
-        out = RingBuffer::Create(dest, true);
+        out = MythMediaBuffer::Create(dest, true);
         if (!out)
         {
             LOG(VB_STDIO|VB_FLUSH, LOG_ERR, "Couldn't open output URL\n");
@@ -793,7 +789,7 @@ static int pid_printer(const MythUtilCommandLineParser &cmdline)
 
     if (use_xml) {
         /* using a random instance of a sub class of PrintOutput */
-        pmsl->Output(QString("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"));
+        pmsl->Output(QString(R"(<?xml version="1.0" encoding="UTF-8" ?>)"));
         pmsl->Output(QString("<MPEGSections>"));
     }
 

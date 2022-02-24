@@ -6,11 +6,12 @@
 //                                                                            
 // Copyright (c) 2005 David Blain <dblain@mythtv.org>
 //                                          
-// Licensed under the GPL v2 or later, see COPYING for details                    
+// Licensed under the GPL v2 or later, see LICENSE for details
 //
 //////////////////////////////////////////////////////////////////////////////
 
 #include <algorithm>
+#include <array>
 #include <chrono> // for milliseconds
 #include <thread> // for sleep_for
 #include <utility>
@@ -134,7 +135,7 @@ void BufferedSocketDevice::SetSocketDevice( MSocketDevice *pSocket )
 void BufferedSocketDevice::SetDestAddress(
     QHostAddress hostAddress, quint16 nPort)
 {
-    m_DestHostAddress = std::move(hostAddress);
+    m_destHostAddress = std::move(hostAddress);
     m_nDestPort       = nPort;
 }
 
@@ -285,7 +286,7 @@ void BufferedSocketDevice::Flush()
             }
 
             if (m_nDestPort != 0)
-                nwritten = m_pSocket->writeBlock( out.data(), i, m_DestHostAddress, m_nDestPort );
+                nwritten = m_pSocket->writeBlock( out.data(), i, m_destHostAddress, m_nDestPort );
             else
                 nwritten = m_pSocket->writeBlock( out.data(), i );
         } 
@@ -295,7 +296,7 @@ void BufferedSocketDevice::Flush()
             i = a->size() - m_nWriteIndex;
 
             if (m_nDestPort != 0)
-                nwritten = m_pSocket->writeBlock( a->data() + m_nWriteIndex, i, m_DestHostAddress, m_nDestPort );
+                nwritten = m_pSocket->writeBlock( a->data() + m_nWriteIndex, i, m_destHostAddress, m_nDestPort );
             else
                 nwritten = m_pSocket->writeBlock( a->data() + m_nWriteIndex, i );
         }
@@ -381,7 +382,7 @@ qulonglong BufferedSocketDevice::BytesAvailable(void)
 /////////////////////////////////////////////////////////////////////////////
 
 qulonglong BufferedSocketDevice::WaitForMore(
-    int msecs, bool *pTimeout /* = nullptr*/ ) 
+    std::chrono::milliseconds msecs, bool *pTimeout /* = nullptr*/ )
 {
     bool bTimeout = false;
 
@@ -409,7 +410,7 @@ qulonglong BufferedSocketDevice::WaitForMore(
             // give up control
 
             // should be some multiple of msWait.
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            std::this_thread::sleep_for(1ms);
 
         }
     }
@@ -417,7 +418,7 @@ qulonglong BufferedSocketDevice::WaitForMore(
         // -=>TODO: Override the timeout to 1 second... Closes connection sooner
         //          to help recover from lost requests.  (hack until better fix found)
 
-        msecs  = 1000;
+        msecs  = 1s;
 
         nBytes = m_pSocket->waitForMore( msecs, &bTimeout );
 
@@ -533,7 +534,7 @@ qlonglong BufferedSocketDevice::WriteBlockDirect(
     Flush();
 
     if (m_nDestPort != 0)
-        nWritten = m_pSocket->writeBlock( data, len, m_DestHostAddress, m_nDestPort );
+        nWritten = m_pSocket->writeBlock( data, len, m_destHostAddress , m_nDestPort );
     else
         nWritten = m_pSocket->writeBlock( data, len );
 
@@ -569,11 +570,9 @@ int BufferedSocketDevice::Getch()
 
 int BufferedSocketDevice::Putch( int ch )
 {
-    char buf[2];
+    std::array <char,2> buf  { static_cast<char>(ch), 0 };
 
-    buf[0] = ch;
-
-    return WriteBlock(buf, 1) == 1 ? ch : -1;
+    return WriteBlock(buf.data(), 1) == 1 ? ch : -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -625,7 +624,7 @@ QString BufferedSocketDevice::ReadLine()
 //
 /////////////////////////////////////////////////////////////////////////////
 
-QString BufferedSocketDevice::ReadLine( int msecs )
+QString BufferedSocketDevice::ReadLine( std::chrono::milliseconds msecs )
 {
     MythTimer timer;
     QString   sLine;
@@ -638,7 +637,7 @@ QString BufferedSocketDevice::ReadLine( int msecs )
     // or timeout.
     // ----------------------------------------------------------------------
 
-    if ( msecs > 0)
+    if ( msecs > 0ms)
     {
         bool bTimeout = false;
 
@@ -652,7 +651,7 @@ QString BufferedSocketDevice::ReadLine( int msecs )
 
             WaitForMore( msecs, &bTimeout );
 
-            if ( timer.elapsed() >= msecs ) 
+            if ( timer.elapsed() >= msecs )
             {
                 bTimeout = true;
                 LOG(VB_HTTP, LOG_INFO, "Exceeded Total Elapsed Wait Time." );

@@ -8,25 +8,25 @@
 #include "mythdate.h"
 
 #include <deque>
-using std::deque;
 
-const char *kPlayerInUseID           = "player";
-const char *kPIPPlayerInUseID        = "pipplayer";
-const char *kPBPPlayerInUseID        = "pbpplayer";
-const char *kImportRecorderInUseID   = "import_recorder";
-const char *kRecorderInUseID         = "recorder";
-const char *kFileTransferInUseID     = "filetransfer";
-const char *kTruncatingDeleteInUseID = "truncatingdelete";
-const char *kFlaggerInUseID          = "flagger";
-const char *kTranscoderInUseID       = "transcoder";
-const char *kPreviewGeneratorInUseID = "preview_generator";
-const char *kJobQueueInUseID         = "jobqueue";
-const char *kCCExtractorInUseID      = "ccextractor";
+const QString kPlayerInUseID           { QStringLiteral("player") };
+const QString kPIPPlayerInUseID        { QStringLiteral("pipplayer") };
+const QString kPBPPlayerInUseID        { QStringLiteral("pbpplayer") };
+const QString kImportRecorderInUseID   { QStringLiteral("import_recorder") };
+const QString kRecorderInUseID         { QStringLiteral("recorder") };
+const QString kFileTransferInUseID     { QStringLiteral("filetransfer") };
+const QString kTruncatingDeleteInUseID { QStringLiteral("truncatingdelete") };
+const QString kFlaggerInUseID          { QStringLiteral("flagger") };
+const QString kTranscoderInUseID       { QStringLiteral("transcoder") };
+const QString kPreviewGeneratorInUseID { QStringLiteral("preview_generator") };
+const QString kJobQueueInUseID         { QStringLiteral("jobqueue") };
+const QString kCCExtractorInUseID      { QStringLiteral("ccextractor") };
 
 QString toString(MarkTypes type)
 {
     switch (type)
     {
+        case MARK_INVALID:      return "INVALID";
         case MARK_ALL:          return "ALL";
         case MARK_UNSET:        return "UNSET";
         case MARK_TMP_CUT_END:  return "TMP_CUT_END";
@@ -48,6 +48,7 @@ QString toString(MarkTypes type)
         case MARK_ASPECT_16_9:  return "ASPECT_16_9";
         case MARK_ASPECT_2_21_1:return "ASPECT_2_21_1";
         case MARK_ASPECT_CUSTOM:return "ASPECT_CUSTOM";
+        case MARK_SCAN_PROGRESSIVE: return "PROGRESSIVE";
         case MARK_VIDEO_WIDTH:  return "VIDEO_WIDTH";
         case MARK_VIDEO_HEIGHT: return "VIDEO_HEIGHT";
         case MARK_VIDEO_RATE:   return "VIDEO_RATE";
@@ -58,6 +59,14 @@ QString toString(MarkTypes type)
     }
 
     return "unknown";
+}
+
+MarkTypes markTypeFromString(const QString & str)
+{
+    stringMarkMap::const_iterator Im;
+    if ((Im = MarkTypeStrings.find(str)) == MarkTypeStrings.end())
+        return MARK_INVALID;
+    return (*Im).second;
 }
 
 QString toString(AvailableStatusType status)
@@ -113,9 +122,9 @@ QString SkipTypeToString(int flags)
     return ret;
 }
 
-deque<int> GetPreferredSkipTypeCombinations(void)
+std::deque<int> GetPreferredSkipTypeCombinations(void)
 {
-    deque<int> tmp;
+    std::deque<int> tmp;
     tmp.push_back(COMM_DETECT_BLANK | COMM_DETECT_SCENE | COMM_DETECT_LOGO);
     tmp.push_back(COMM_DETECT_BLANK);
     tmp.push_back(COMM_DETECT_BLANK | COMM_DETECT_SCENE);

@@ -30,11 +30,11 @@ class ProgramRecPriorityInfo : public RecordingInfo
     ProgramRecPriorityInfo() = default;
     ProgramRecPriorityInfo(const ProgramRecPriorityInfo &/*other*/) = default;
     ProgramRecPriorityInfo &operator=(const ProgramRecPriorityInfo &other)
-        { clone(other); return *this; }
+        { if (this != &other) clone(other); return *this; }
     ProgramRecPriorityInfo &operator=(const RecordingInfo &other)
-        { clone(other); return *this; }
+        { if (this != &other) clone(other); return *this; }
     ProgramRecPriorityInfo &operator=(const ProgramInfo &other)
-        { clone(other); return *this; }
+        { if (this != &other) clone(other); return *this; }
     virtual void clone(const ProgramRecPriorityInfo &other,
                        bool ignore_non_serialized_data = false);
     void clone(const RecordingInfo &other,
@@ -46,7 +46,8 @@ class ProgramRecPriorityInfo : public RecordingInfo
 
     void ToMap(InfoMap &progMap,
                bool showrerecord = false,
-               uint star_range = 10) const override; // ProgramInfo
+               uint star_range = 10,
+               uint date_format = 0) const override; // ProgramInfo
 
     RecordingType m_recType     {kNotRecording};
     int           m_matchCount  {0};
@@ -54,6 +55,8 @@ class ProgramRecPriorityInfo : public RecordingInfo
     QDateTime     m_last_record;
     int           m_avg_delay   {0};
     QString       m_profile;
+    QString       m_recordingGroup;
+    QString       m_storageGroup;
 };
 
 class ProgramRecPriority : public ScheduleCommon
@@ -80,7 +83,7 @@ class ProgramRecPriority : public ScheduleCommon
 
   protected slots:
     void updateInfo(MythUIButtonListItem *item);
-    void edit(MythUIButtonListItem *item);
+    void edit(MythUIButtonListItem *item) const;
     void scheduleChanged(int recid);
 
   private:

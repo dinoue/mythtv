@@ -4,8 +4,8 @@
  *  Distributed as part of MythTV under GPL v2 and later.
  */
 
-#ifndef _FIREWIRECHANNEL_H_
-#define _FIREWIRECHANNEL_H_
+#ifndef FIREWIRECHANNEL_H
+#define FIREWIRECHANNEL_H
 
 #include "tv_rec.h"
 #include "dtvchannel.h"
@@ -52,10 +52,10 @@ class FirewireChannel : public DTVChannel
 
   protected:
     QString            m_videodevice;
-    FireWireDBOptions  m_fw_opts;
+    FireWireDBOptions  m_fwOpts;
     FirewireDevice    *m_device          {nullptr};
-    uint               m_current_channel {0};
+    uint               m_currentChannel {0};
     bool               m_isopen          {false};
 };
 
-#endif // _FIREWIRECHANNEL_H_
+#endif // FIREWIRECHANNEL_H

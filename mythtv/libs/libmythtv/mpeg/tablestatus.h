@@ -5,8 +5,8 @@
 
 // C++
 #include <cstdint>  // uint64_t
+#include <array>
 #include <vector>
-using namespace std;
 
 // Qt
 #include "qmap.h"
@@ -14,7 +14,7 @@ using namespace std;
 class TableStatus
 {
 public:
-    using sections_t = vector<uint8_t>;
+    using sections_t = std::vector<uint8_t>;
     static void InitSections(sections_t &sect, uint32_t last_section);
 
     TableStatus() = default;
@@ -28,7 +28,7 @@ public:
     sections_t  m_sections;
 
 private:
-    static const uint8_t kInitBits[8];
+    static const std::array<const uint8_t,8> kInitBits;
 };
 
 

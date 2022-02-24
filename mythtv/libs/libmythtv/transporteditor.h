@@ -29,8 +29,8 @@
  *
  */
 
-#ifndef _TRANSPORT_EDITOR_H_
-#define _TRANSPORT_EDITOR_H_
+#ifndef TRANSPORT_EDITOR_H
+#define TRANSPORT_EDITOR_H
 
 #include <QObject>
 
@@ -73,10 +73,10 @@ class MTV_PUBLIC TransportListEditor : public GroupSetting
     explicit TransportListEditor(uint initial_sourceid);
     void Load(void) override; // StandardSetting
 
-    void SetSourceID(uint _sourceid);
+    void SetSourceID(uint sourceid);
 
   public slots:
-    void SetSourceID(const QString &_sourceid);
+    void SetSourceID(const QString &name);
     void Menu(TransportSetting *transport);
     void NewTransport(void);
 
@@ -92,4 +92,4 @@ class MTV_PUBLIC TransportListEditor : public GroupSetting
     bool m_isLoading {false};
 };
 
-#endif // _TRANSPORT_EDITOR_H_
+#endif // TRANSPORT_EDITOR_H

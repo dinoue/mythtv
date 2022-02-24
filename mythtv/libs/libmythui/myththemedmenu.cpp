@@ -124,10 +124,10 @@ void MythThemedMenu::SetMenuTheme(const QString &menufile)
 
     CopyFrom(m_state);
 
-    connect(m_buttonList, SIGNAL(itemSelected(MythUIButtonListItem*)),
-            SLOT(setButtonActive(MythUIButtonListItem*)));
-    connect(m_buttonList, SIGNAL(itemClicked(MythUIButtonListItem*)),
-            SLOT(buttonAction(MythUIButtonListItem*)));
+    connect(m_buttonList, &MythUIButtonList::itemSelected,
+            this, &MythThemedMenu::setButtonActive);
+    connect(m_buttonList, &MythUIButtonList::itemClicked,
+            this, qOverload<MythUIButtonListItem*>(&MythThemedMenu::buttonAction));
 
     if (!parseMenu(menufile))
         m_foundtheme = false;
@@ -141,7 +141,7 @@ MythThemedMenu::~MythThemedMenu(void)
 
 /// \brief Returns true iff a theme has been
 ///        found by a previous call to SetMenuTheme().
-bool MythThemedMenu::foundTheme(void)
+bool MythThemedMenu::foundTheme(void) const
 {
     return m_foundtheme;
 }
@@ -174,7 +174,7 @@ QString MythThemedMenu::getSelection(void)
 
 void MythThemedMenu::setButtonActive(MythUIButtonListItem* item)
 {
-    ThemedButton button = item->GetData().value<ThemedButton>();
+    auto button = item->GetData().value<ThemedButton>();
     if (m_watermarkState)
     {
         if (!(m_watermarkState->DisplayState(button.type)))
@@ -282,7 +282,7 @@ bool MythThemedMenu::keyPressEvent(QKeyEvent *event)
     m_ignorekeys = false;
 
     if (m_wantpop)
-        m_ScreenStack->PopScreen();
+        m_screenStack->PopScreen();
 
     return handled;
 }
@@ -310,28 +310,28 @@ void MythThemedMenu::ShowMenu()
 
     // HACK Implement a better check for this
     if (QCoreApplication::applicationName() == MYTH_APPNAME_MYTHFRONTEND)
-        m_menuPopup->AddButton(tr("Enter standby mode"), QVariant("standby"));
+        m_menuPopup->AddButtonV(tr("Enter standby mode"), QVariant("standby"));
 
     // don't show the exit application option if standby option is enabled
     if (override_menu != 7)
-        m_menuPopup->AddButton(tr("Exit application"), QVariant("exit"));
+        m_menuPopup->AddButtonV(tr("Exit application"), QVariant("exit"));
 
     switch (override_menu)
     {
         case 2:
         case 4:
             // shutdown
-            m_menuPopup->AddButton(tr("Shutdown"), QVariant("shutdown"));
+            m_menuPopup->AddButtonV(tr("Shutdown"), QVariant("shutdown"));
             break;
         case 5:
             // reboot
-            m_menuPopup->AddButton(tr("Reboot"), QVariant("reboot"));
+            m_menuPopup->AddButtonV(tr("Reboot"), QVariant("reboot"));
             break;
         case 3:
         case 6:
             // both
-            m_menuPopup->AddButton(tr("Shutdown"), QVariant("shutdown"));
-            m_menuPopup->AddButton(tr("Reboot"), QVariant("reboot"));
+            m_menuPopup->AddButtonV(tr("Shutdown"), QVariant("shutdown"));
+            m_menuPopup->AddButtonV(tr("Reboot"), QVariant("reboot"));
             break;
         case 0:
         case 7:
@@ -339,7 +339,7 @@ void MythThemedMenu::ShowMenu()
             break;
     }
 
-    m_menuPopup->AddButton(tr("About"), QVariant("about"));
+    m_menuPopup->AddButtonV(tr("About"), QVariant("about"));
 }
 
 void MythThemedMenu::aboutScreen()
@@ -355,9 +355,9 @@ void MythThemedMenu::aboutScreen()
     }
 
     QString label = tr("Revision: %1\n Branch: %2\n %3")
-                        .arg(MYTH_SOURCE_VERSION)
-                        .arg(MYTH_SOURCE_PATH)
-                        .arg(distro_line);
+                        .arg(GetMythSourceVersion(),
+                             GetMythSourcePath(),
+                             distro_line);
 
     MythScreenStack* mainStack = GetMythMainWindow()->GetMainStack();
     m_menuPopup = new MythDialogBox(label, mainStack, "version_dialog");
@@ -412,7 +412,7 @@ void MythThemedMenu::customEvent(QEvent *event)
         {
             QString text = dce->GetResultText();
             MythUIButtonListItem *item = m_buttonList->GetItemCurrent();
-            ThemedButton button = item->GetData().value<ThemedButton>();
+            auto button = item->GetData().value<ThemedButton>();
             QString password = GetMythDB()->GetSetting(button.password);
             if (text == password)
             {
@@ -460,7 +460,7 @@ void MythThemedMenu::parseThemeButton(QDomElement &element)
                 if (text.isEmpty() &&
                     info.attribute("lang","").isEmpty())
                 {
-                    text = qApp->translate("ThemeUI",
+                    text = QCoreApplication::translate("ThemeUI",
                                            parseText(info).toUtf8() );
                 }
                 else if ((info.attribute("lang","").toLower() ==
@@ -476,7 +476,7 @@ void MythThemedMenu::parseThemeButton(QDomElement &element)
                 if (alttext.isEmpty() &&
                     info.attribute("lang","").isEmpty())
                 {
-                    alttext = qApp->translate("ThemeUI",
+                    alttext = QCoreApplication::translate("ThemeUI",
                                               parseText(info).toUtf8());
                 }
                 else if ((info.attribute("lang","").toLower() ==
@@ -522,7 +522,7 @@ void MythThemedMenu::parseThemeButton(QDomElement &element)
                 if (description.isEmpty() &&
                     info.attribute("lang","").isEmpty())
                 {
-                    description = qApp->translate("ThemeUI",
+                    description = QCoreApplication::translate("ThemeUI",
                                                   getFirstText(info).toUtf8());
                 }
                 else if ((info.attribute("lang","").toLower() ==
@@ -700,17 +700,22 @@ void MythThemedMenu::addButton(const QString &type, const QString &text,
 
 void MythThemedMenu::buttonAction(MythUIButtonListItem *item, bool skipPass)
 {
-    ThemedButton button = item->GetData().value<ThemedButton>();
+    auto button = item->GetData().value<ThemedButton>();
 
     QString password;
     if (!skipPass)
         password = button.password;
 
-    foreach (auto & act, button.action)
+    for (const auto & act : qAsConst(button.action))
     {
         if (handleAction(act, password))
             break;
     }
+}
+
+void MythThemedMenu::buttonAction(MythUIButtonListItem *item)
+{
+    buttonAction(item, false);
 }
 
 /** \brief Locates the appropriate menu file from which to parse the menu
@@ -856,7 +861,7 @@ bool MythThemedMenu::findDepends(const QString &fileList)
     QStringList files = fileList.split(" ");
     MythPluginManager *pluginManager = gCoreContext->GetPluginManager();
 
-    foreach (auto & file, files)
+    for (const auto & file : qAsConst(files))
     {
         QString filename = findMenuFile(file);
         if (!filename.isEmpty() && filename.endsWith(".xml"))

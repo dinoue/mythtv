@@ -3,7 +3,6 @@
 
 #include <utility>
 #include <vector>
-using namespace std;
 
 // Qt headers
 #include <QReadWriteLock>
@@ -131,7 +130,7 @@ class MainServer : public QObject, public MythSocketCBs
     void customEvent(QEvent *e) override; // QObject
 
     bool isClientConnected(bool onlyBlockingClients = false);
-    void ShutSlaveBackendsDown(QString &haltcmd);
+    void ShutSlaveBackendsDown(const QString &haltcmd);
 
     void ProcessRequest(MythSocket *sock);
 
@@ -153,6 +152,8 @@ class MainServer : public QObject, public MythSocketCBs
     int GetExitCode() const { return m_exitCode; }
 
     void UpdateSystemdStatus(void);
+    void GetActiveBackends(QStringList &hosts);
+    PlaybackSock *GetMediaServerByHostname(const QString &hostname);
 
   protected slots:
     void reconnectTimeout(void);
@@ -160,7 +161,7 @@ class MainServer : public QObject, public MythSocketCBs
     static void autoexpireUpdate(void);
 
   private slots:
-    void NewConnection(qt_socket_fd_t socketDescriptor);
+    void NewConnection(qintptr socketDescriptor);
 
   private:
 
@@ -168,13 +169,11 @@ class MainServer : public QObject, public MythSocketCBs
     void HandleAnnounce(QStringList &slist, QStringList commands,
                         MythSocket *socket);
     void HandleDone(MythSocket *socket);
-
-    void GetActiveBackends(QStringList &hosts);
     void HandleActiveBackendsQuery(PlaybackSock *pbs);
-    void HandleIsActiveBackendQuery(QStringList &slist, PlaybackSock *pbs);
+    void HandleIsActiveBackendQuery(const QStringList &slist, PlaybackSock *pbs);
     void HandleMoveFile(PlaybackSock *pbs, const QString &storagegroup,
                         const QString &src, const QString &dst);
-    bool HandleDeleteFile(QStringList &slist, PlaybackSock *pbs);
+    bool HandleDeleteFile(const QStringList &slist, PlaybackSock *pbs);
     bool HandleDeleteFile(const QString& filename, const QString& storagegroup,
                           PlaybackSock *pbs = nullptr);
     void HandleQueryRecordings(const QString& type, PlaybackSock *pbs);
@@ -187,7 +186,7 @@ class MainServer : public QObject, public MythSocketCBs
     void HandleDeleteRecording(QStringList &slist, PlaybackSock *pbs,
                                bool forceMetadataDelete);
     void DoHandleDeleteRecording(RecordingInfo &recinfo, PlaybackSock *pbs,
-                                 bool forceMetadataDelete, bool expirer=false,
+                                 bool forceMetadataDelete, bool lexpirer=false,
                                  bool forgetHistory=false);
     void HandleUndeleteRecording(QStringList &slist, PlaybackSock *pbs);
     void DoHandleUndeleteRecording(RecordingInfo &recinfo, PlaybackSock *pbs);
@@ -223,12 +222,12 @@ class MainServer : public QObject, public MythSocketCBs
     void HandleGetRecorderNum(QStringList &slist, PlaybackSock *pbs);
     void HandleGetRecorderFromNum(QStringList &slist, PlaybackSock *pbs);
     void HandleMessage(QStringList &slist, PlaybackSock *pbs);
-    void HandleSetVerbose(QStringList &slist, PlaybackSock *pbs);
-    void HandleSetLogLevel(QStringList &slist, PlaybackSock *pbs);
+    void HandleSetVerbose(const QStringList &slist, PlaybackSock *pbs);
+    void HandleSetLogLevel(const QStringList &slist, PlaybackSock *pbs);
     void HandleGenPreviewPixmap(QStringList &slist, PlaybackSock *pbs);
     void HandlePixmapLastModified(QStringList &slist, PlaybackSock *pbs);
     void HandlePixmapGetIfModified(const QStringList &slist, PlaybackSock *pbs);
-    void HandleIsRecording(QStringList &slist, PlaybackSock *pbs);
+    void HandleIsRecording(const QStringList &slist, PlaybackSock *pbs);
     void HandleCheckRecordingActive(QStringList &slist, PlaybackSock *pbs);
     void HandleFillProgramInfo(QStringList &slist, PlaybackSock *pbs);
     void HandleSetChannelInfo(QStringList &slist, PlaybackSock *pbs);
@@ -245,8 +244,8 @@ class MainServer : public QObject, public MythSocketCBs
     void HandleBookmarkQuery(const QString &chanid, const QString &starttime,
                              PlaybackSock *pbs);
     void HandleSetBookmark(QStringList &tokens, PlaybackSock *pbs);
-    void HandleSettingQuery(QStringList &tokens, PlaybackSock *pbs);
-    void HandleSetSetting(QStringList &tokens, PlaybackSock *pbs);
+    void HandleSettingQuery(const QStringList &tokens, PlaybackSock *pbs);
+    void HandleSetSetting(const QStringList &tokens, PlaybackSock *pbs);
     void HandleScanVideos(PlaybackSock *pbs);
     void HandleScanMusic(const QStringList &slist, PlaybackSock *pbs);
     void HandleMusicTagUpdateVolatile(const QStringList &slist, PlaybackSock *pbs);
@@ -280,7 +279,6 @@ class MainServer : public QObject, public MythSocketCBs
     static void getGuideDataThrough(QDateTime &GuideDataThrough);
 
     PlaybackSock *GetSlaveByHostname(const QString &hostname);
-    PlaybackSock *GetMediaServerByHostname(const QString &hostname);
     PlaybackSock *GetPlaybackBySock(MythSocket *socket);
     FileTransfer *GetFileTransferByID(int id);
     FileTransfer *GetFileTransferBySock(MythSocket *socket);
@@ -309,7 +307,7 @@ class MainServer : public QObject, public MythSocketCBs
                                  int fd, const QString &filename,
                                  off_t fsize);
 
-    vector<LiveTVChain*> m_liveTVChains;
+    std::vector<LiveTVChain*> m_liveTVChains;
     QMutex               m_liveTVChainsLock;
 
     QMap<int, EncoderLink *> *m_encoderList  {nullptr};
@@ -318,10 +316,10 @@ class MainServer : public QObject, public MythSocketCBs
     MetadataFactory       *m_metadatafactory {nullptr};
 
     QReadWriteLock         m_sockListLock;
-    vector<PlaybackSock *> m_playbackList;
-    vector<FileTransfer *> m_fileTransferList;
+    std::vector<PlaybackSock *> m_playbackList;
+    std::vector<FileTransfer *> m_fileTransferList;
     QSet<MythSocket*>      m_controlSocketList;
-    vector<MythSocket*>    m_decrRefSocketList;
+    std::vector<MythSocket*>    m_decrRefSocketList;
 
     QMutex                      m_masterFreeSpaceListLock;
     FreeSpaceUpdater * volatile m_masterFreeSpaceListUpdater {nullptr};
@@ -370,7 +368,7 @@ class MainServer : public QObject, public MythSocketCBs
 
     bool m_stopped                           {false};
 
-    static const uint kMasterServerReconnectTimeout;
+    static const std::chrono::milliseconds kMasterServerReconnectTimeout;
 };
 
 #endif

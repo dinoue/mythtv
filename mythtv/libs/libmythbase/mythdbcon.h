@@ -6,7 +6,6 @@
 #include <QSqlError>
 #include <QVariant>
 #include <QSqlQuery>
-#include <QRegExp>
 #include <QDateTime>
 #include <QMutex>
 #include <QList>
@@ -28,7 +27,7 @@ class MSqlDatabase
   friend class MDBManager;
   friend class MSqlQuery;
   public:
-    explicit MSqlDatabase(QString name);
+    explicit MSqlDatabase(QString name, QString driver = "QMYSQL");
    ~MSqlDatabase(void);
 
     bool OpenDatabase(bool skipdb = false);
@@ -44,6 +43,7 @@ class MSqlDatabase
 
   private:
     QString m_name;
+    QString m_driver;
     QSqlDatabase m_db;
     QDateTime m_lastDBKick;
     DatabaseParams m_dbparms;
@@ -101,7 +101,7 @@ using MSqlBindings = QMap<QString, QVariant>;
  MBASE_PUBLIC  void MSqlAddMoreBindings(MSqlBindings &output, MSqlBindings &addfrom);
 
 /// \brief Given a partial query string and a bindings object, escape the string
- MBASE_PUBLIC  void MSqlEscapeAsAQuery(QString &query, MSqlBindings &bindings);
+ MBASE_PUBLIC  void MSqlEscapeAsAQuery(QString &query, const MSqlBindings &bindings);
 
 /** \brief QSqlQuery wrapper that fetches a DB connection from the connection pool.
  *
@@ -132,7 +132,7 @@ class MBASE_PUBLIC MSqlQuery : private QSqlQuery
     ~MSqlQuery();
 
     /// \brief Only updated once during object creation
-    bool isConnected(void) { return m_isConnected; }
+    bool isConnected(void) const { return m_isConnected; }
 
     /// \brief Wrap QSqlQuery::exec() so we can display SQL
     bool exec(void);
@@ -201,8 +201,13 @@ class MBASE_PUBLIC MSqlQuery : private QSqlQuery
     // Thunks that allow us to make QSqlQuery private
     QVariant value(int i) const { return QSqlQuery::value(i); }
     QString executedQuery(void) const { return QSqlQuery::executedQuery(); }
+
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     QMap<QString, QVariant> boundValues(void) const
         { return QSqlQuery::boundValues(); }
+#else
+    QVariantList boundValues(void) const { return QSqlQuery::boundValues(); }
+#endif
     QSqlError lastError(void) const { return QSqlQuery::lastError(); }
     int size(void) const { return QSqlQuery::size();}
     bool isActive(void) const { return  QSqlQuery::isActive(); }

@@ -21,8 +21,8 @@
  */
 
 
-#ifndef __MythXCode__audioconvert__
-#define __MythXCode__audioconvert__
+#ifndef MythXCode_audioconvert
+#define MythXCode_audioconvert
 
 #include "mythexp.h"
 #include "audiooutputsettings.h"
@@ -49,9 +49,9 @@ public:
     AudioFormat Out(void) { return m_out; }
     AudioFormat In(void)  { return m_in;  }
 
-    bool operator==(AudioConvert& rhs) const
+    bool operator==(const AudioConvert& rhs) const
     { return m_in == rhs.m_in && m_out == rhs.m_out; }
-    bool operator!=(AudioConvert& rhs) const
+    bool operator!=(const AudioConvert& rhs) const
     { return m_in != rhs.m_in || m_out != rhs.m_out; }
 
     void DeinterleaveSamples(int channels,
@@ -82,4 +82,4 @@ private:
     AudioFormat m_in, m_out;
 };
 
-#endif /* defined(__MythXCode__audioconvert__) */
+#endif /* defined(MythXCode_audioconvert) */

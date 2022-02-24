@@ -1,10 +1,9 @@
 // -*- Mode: c++ -*-
 
-#ifndef _ASISTREAMHANDLER_H_
-#define _ASISTREAMHANDLER_H_
+#ifndef ASISTREAMHANDLER_H
+#define ASISTREAMHANDLER_H
 
 #include <vector>
-using namespace std;
 
 #include <QString>
 #include <QMutex>
@@ -50,7 +49,7 @@ class ASIStreamHandler : public StreamHandler
     void AddListener(MPEGStreamData *data,
                      bool /*allow_section_reader*/ = false,
                      bool /*needs_drb*/            = false,
-                     QString output_file       = QString()) override // StreamHandler
+                     const QString& output_file    = QString()) override // StreamHandler
     {
         StreamHandler::AddListener(data, false, true, output_file);
     }
@@ -86,4 +85,4 @@ class ASIStreamHandler : public StreamHandler
     static QMap<QString, uint>              s_handlersRefCnt;
 };
 
-#endif // _ASISTREAMHANDLER_H_
+#endif // ASISTREAMHANDLER_H

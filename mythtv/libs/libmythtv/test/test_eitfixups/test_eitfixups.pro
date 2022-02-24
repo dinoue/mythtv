@@ -1,6 +1,8 @@
 include ( ../../../../settings.pro )
+include ( ../../../../test.pro )
 
-QT += xml sql network testlib
+QT += xml sql network testlib widgets
+using_opengl: QT += opengl
 
 TEMPLATE = app
 TARGET = test_eitfixups
@@ -8,19 +10,11 @@ DEPENDPATH += . ../..
 INCLUDEPATH += . ../.. ../../mpeg ../../../libmythui ../../../libmyth ../../../libmythbase
 INCLUDEPATH += ../../../libmythservicecontracts
 
-LIBS += ../../$(OBJECTS_DIR)/eitfixup.o
-LIBS += ../../$(OBJECTS_DIR)/dishdescriptors.o
-LIBS += ../../$(OBJECTS_DIR)/atsc_huffman.o
-LIBS += ../../$(OBJECTS_DIR)/dvbdescriptors.o
-LIBS += ../../$(OBJECTS_DIR)/iso6937tables.o
-LIBS += ../../$(OBJECTS_DIR)/freesat_huffman.o
-
 LIBS += -L../../../libmythbase -lmythbase-$$LIBVERSION
 LIBS += -L../../../libmythui -lmythui-$$LIBVERSION
 LIBS += -L../../../libmythupnp -lmythupnp-$$LIBVERSION
 LIBS += -L../../../libmythservicecontracts -lmythservicecontracts-$$LIBVERSION
 LIBS += -L../../../libmyth -lmyth-$$LIBVERSION
-LIBS += -L../.. -lmythtv-$$LIBVERSION
 LIBS += -L../../../../external/FFmpeg/libswresample -lmythswresample
 LIBS += -L../../../../external/FFmpeg/libavutil -lmythavutil
 LIBS += -L../../../../external/FFmpeg/libavcodec -lmythavcodec
@@ -29,11 +23,7 @@ LIBS += -L../../../../external/FFmpeg/libavformat -lmythavformat
 LIBS += -L../../../../external/FFmpeg/libavfilter -lmythavfilter
 LIBS += -L../../../../external/FFmpeg/libpostproc -lmythpostproc
 using_mheg:LIBS += -L../../../libmythfreemheg -lmythfreemheg-$$LIBVERSION
-
-contains(QMAKE_CXX, "g++") {
-  QMAKE_CXXFLAGS += -O0 -fprofile-arcs -ftest-coverage
-  QMAKE_LFLAGS += -fprofile-arcs
-}
+LIBS += -L../.. -lmythtv-$$LIBVERSION
 
 QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../../external/FFmpeg/libswresample
 QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../../external/FFmpeg/libavutil
@@ -48,7 +38,6 @@ QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../libmythui
 QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../libmythupnp
 QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../libmythservicecontracts
 QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../../../libmythfreemheg
-QMAKE_LFLAGS += -Wl,$$_RPATH_$(PWD)/../..
 
 # Input
 HEADERS += test_eitfixups.h

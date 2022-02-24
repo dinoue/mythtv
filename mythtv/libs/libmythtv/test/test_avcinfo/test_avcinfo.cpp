@@ -22,11 +22,7 @@
 #include <iostream>
 #include <random>
 #include "test_avcinfo.h"
-
-#define GUID_ONLY
-#include "recorders/avcinfo.cpp"
-
-using namespace std;
+#include "recorders/avcinfo.h"
 
 void TestAvcInfo::initTestCase(void)
 {
