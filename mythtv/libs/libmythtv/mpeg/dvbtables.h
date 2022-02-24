@@ -25,13 +25,13 @@ class MTV_PUBLIC DVBTable : public PSIPTable
     DVBKind _dvbkind;
 };
 
-static inline QDateTime dvbdate2qt(const std::array<uint8_t,5> buf)
+static inline QDateTime dvbdate2qt(const std::array<uint8_t,5> buf, DVBKind dvbkind)
 {
-    return dvbdate2qt(buf.data());
+    return dvbdate2qt(buf.data(), dvbkind);
 }
-static inline time_t dvbdate2unix(const std::array<uint8_t,5> buf)
+static inline time_t dvbdate2unix(const std::array<uint8_t,5> buf, DVBKind dvbkind)
 {
-    return dvbdate2unix(buf.data());
+    return dvbdate2unix(buf.data(), dvbkind);
 }
 
 /** \class NetworkInformationTable

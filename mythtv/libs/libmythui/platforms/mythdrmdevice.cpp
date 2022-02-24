@@ -785,34 +785,7 @@ bool MythDRMDevice::Initialise()
             }
             else
             {
-                // Does the connected display have the serial number we are looking for?
-                drmModePropertyBlobPtr edidblob = GetBlobProperty(connector, "EDID");
-                if (edidblob)
-                {
-                    MythEDID edid(reinterpret_cast<const char *>(edidblob->data),
-                                  static_cast<int>(edidblob->length));
-                    drmModeFreePropertyBlob(edidblob);
-                    if (edid.Valid() && edid.SerialNumbers().contains(serial))
-                    {
-                        LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Matched connector with serial '%1'")
-                            .arg(serial));
-                        m_connector = connector;
-                        m_physicalSize = QSize(static_cast<int>(connector->mmWidth),
-                                               static_cast<int>(connector->mmHeight));
-                        m_serialNumber = serial;
-                        m_edid = edid;
-                        break;
-                    }
-                    if (!edid.Valid())
-                        LOG(VB_GENERAL, m_verbose, LOC + "Connected device has invalid EDID");
-
-                    if (m_connector && !m_serialNumber.isEmpty())
-                        break;
-                }
-                else
-                {
-                    LOG(VB_GENERAL, m_verbose, LOC + "Connected device has no EDID");
-                }
+                LOG(VB_GENERAL, m_verbose, LOC + "Connected device has no EDID");
             }
         }
         LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Ignoring disconnected connector %1")
@@ -859,10 +832,6 @@ QString MythDRMDevice::FindBestDevice()
     auto [root, devices] = GetDeviceList();
     if (devices.isEmpty())
         return {};
-
-    // Only one device - return it
-    if (devices.size() == 1)
-        return root + devices.first();
 
     // Only one device - return it
     if (devices.size() == 1)

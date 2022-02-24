@@ -170,7 +170,7 @@ ChannelScanSM::ChannelScanSM(ScanMonitor *scan_monitor,
         LOG(VB_CHANSCAN, LOG_INFO, LOC + "Connecting up DTVSignalMonitor");
         DVBKind dvbkind = kKindDVB;
 #ifdef USING_DVB
-        DVBChannel *dvbchannel = dynamic_cast<DVBChannel*>(_channel);
+        DVBChannel *dvbchannel = dynamic_cast<DVBChannel*>(m_channel);
         if (dvbchannel) {
             if (dvbchannel->GetFrontendName().indexOf("ISDB") >= 0)
                 dvbkind = kKindISDB;

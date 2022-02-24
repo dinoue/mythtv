@@ -10,10 +10,6 @@ SubtitleReader::SubtitleReader()
             this, &SubtitleReader::TextSubtitlesUpdated);
 }
 
-// If the count of subtitle buffers is greater than this, force a clear
-static const int MAX_BUFFERS_BEFORE_CLEAR = 175;  // 125 too low for karaoke
-
-
 SubtitleReader::~SubtitleReader()
 {
     ClearAVSubtitles();

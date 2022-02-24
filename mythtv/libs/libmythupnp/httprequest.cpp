@@ -2265,12 +2265,7 @@ void HTTPRequest::AddCORSHeaders( const QString &sOrigin )
 
     QStringList allowedOriginsList =
         gCoreContext->GetSetting("AllowedOriginsList", QString(
-<<<<<<< HEAD
-            "https://chromecast.mythtv.org"
-            )).split(",");
-=======
             "https://chromecast.mythtv.org")).split(",");
->>>>>>> fixes/32
 
     for (const auto & origin : qAsConst(allowedOriginsList))
     {

@@ -41,7 +41,6 @@ class MUI_PUBLIC MythUITextEdit : public MythUIType, public StorageUser
 
     void Pulse(void) override; // MythUIType
     bool keyPressEvent(QKeyEvent *event) override; // MythUIType
-    bool inputMethodEvent(QInputMethodEvent *event) override; // MythUIType
     bool gestureEvent(MythGestureEvent *event) override; // MythUIType
 	bool inputMethodEvent(QInputMethodEvent *event) override; // MythUIType
     void Reset(void) override; // MythUIType

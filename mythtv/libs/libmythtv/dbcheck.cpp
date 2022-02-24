@@ -3929,8 +3929,8 @@ static bool doUpgradeTVDatabaseSchema(void)
     {
         // missed in 1357 - convert old vdpau and openglvaapi renderers to opengl
         // convert ancient quartz-blit to opengl as well
-        ProfileItem temp;
-        vector<ProfileItem> profiles;
+        MythVideoProfileItem temp;
+		std::vector<MythVideoProfileItem> profiles;
 
         MSqlQuery query(MSqlQuery::InitCon());
         query.prepare("SELECT profileid, value, data FROM displayprofiles "
@@ -3963,7 +3963,7 @@ static bool doUpgradeTVDatabaseSchema(void)
                 profiles.push_back(temp);
             }
 
-            foreach(ProfileItem profile, profiles)
+            foreach(MythVideoProfileItem profile, profiles)
             {
                 // the old deinterlacers will have been converted already
                 QString oldrender  = profile.Get("pref_videorenderer");
@@ -3992,7 +3992,7 @@ static bool doUpgradeTVDatabaseSchema(void)
             break;
         }
 
-        if (!UpdateDBVersionNumber("1361", dbver))
+        if (!UpdateDBVersionNumber("MythTV", "DBSchemaVer", "1361", dbver))
             return false;
     }
 

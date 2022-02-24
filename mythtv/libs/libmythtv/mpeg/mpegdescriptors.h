@@ -368,7 +368,8 @@ class MTV_PUBLIC MPEGDescriptor
     static const unsigned char *FindExtension(const desc_list_t &parsed, uint desc_tag);
     static desc_list_t FindAll(const desc_list_t &parsed, uint desc_tag);
 
-  protected:
+//  protected:
+  public: // Note: This is major changes due to changes of DVBDescriptor 20220225 K.Ohta
     const unsigned char *m_data;
 
   public:

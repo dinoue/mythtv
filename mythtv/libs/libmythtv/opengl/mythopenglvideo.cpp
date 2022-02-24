@@ -243,41 +243,6 @@ bool MythOpenGLVideo::AddDeinterlacer(const MythVideoFrame* Frame, FrameScanType
         emit OutputChanged(m_videoDim, size, -1.0F);
     }
 
-    // For basic deinterlacing of software frames, we now create 2 sets of field
-    // based textures - which is the same approach taken by the CPU based onefield/bob
-    // deinterlacer and the EGL basic deinterlacer. The advantages of this
-    // approach are:-
-    //  - no dependent texturing in the samplers (it is just a basic YUV to RGB conversion
-    //    in the shader)
-    //  - better quality (the onefield shader line doubles but does not have the
-    //    implicit interpolation/smoothing of using separate textures directly,
-    //    which leads to 'blockiness').
-    //  - as we are not sampling other fields, there is no need to use an intermediate
-    //    framebuffer to ensure accurate sampling - so we can skip the resize stage.
-    //
-    // YUYV formats are currently not supported as it does not work correctly - force YV12 instead.
-
-    if (deinterlacer == DEINT_BASIC && format_is_yuv(m_inputType))
-    {
-        if (m_outputType == FMT_YUY2)
-        {
-            LOG(VB_GENERAL, LOG_INFO, LOC + "Forcing OpenGL YV12 for basic deinterlacer");
-            m_outputType = FMT_YV12;
-        }
-        MythVideoTexture::DeleteTextures(m_render, m_inputTextures);
-        QSize size(m_videoDim.width(), m_videoDim.height() >> 1);
-        vector<QSize> sizes;
-        sizes.emplace_back(size);
-        // N.B. If we are currently resizing, it will be turned off for this
-        // deinterlacer, so the default linear texture filtering is OK.
-        m_inputTextures = MythVideoTexture::CreateTextures(m_render, m_inputType, m_outputType, sizes);
-        // nextTextures will hold the other field
-        m_nextTextures = MythVideoTexture::CreateTextures(m_render, m_inputType, m_outputType, sizes);
-        LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("Created %1 single field textures")
-            .arg(m_inputTextures.size() * 2));
-        // Con VideoOutWindow into display the field only
-        emit OutputChanged(m_videoDim, size, -1.0F);
-    }
 
     // sanity check max texture units. Should only be an issue on old hardware (e.g. Pi)
     int max = m_openglRender->GetMaxTextureUnits();
@@ -1038,14 +1003,6 @@ void MythOpenGLVideo::RenderFrame(MythVideoFrame* Frame, bool TopFieldFirst, Fra
                                   m_displayVideoRect.width() + 2, m_displayVideoRect.height() + 2);
     }
 
-    // apply scissoring
-    if (tiled)
-    {
-        // N.B. It's not obvious whether this helps
-        m_render->glEnable(GL_SCISSOR_TEST);
-        m_render->glScissor(m_displayVideoRect.left() - 1, m_displayVideoRect.top() - 1,
-                            m_displayVideoRect.width() + 2, m_displayVideoRect.height() + 2);
-    }
 
     // draw
     m_openglRender->DrawBitmap(textures, nullptr, trect, m_displayVideoRect,
@@ -1055,9 +1012,6 @@ void MythOpenGLVideo::RenderFrame(MythVideoFrame* Frame, bool TopFieldFirst, Fra
     if (tiled)
         m_openglRender->glDisable(GL_SCISSOR_TEST);
 
-    // disable scissoring
-    if (tiled)
-        m_render->glDisable(GL_SCISSOR_TEST);
 
     if (VERBOSE_LEVEL_CHECK(VB_GPU, LOG_INFO))
         m_openglRender->logDebugMarker(LOC + "RENDER_FRAME_END");

@@ -1589,24 +1589,3 @@ void MythRenderOpenGL::Check16BitFBO(void)
     }
 }
 
-/*! \brief Check for 16bit framebufferobject support
- *
- * We don't restrict this test based on OpenGL type or version to try and give as
- * much support as possible. It will likely fail on all GL/ES 2.X versions.
- *
- * \note Qt support for 16bit framebuffers is broken until Qt5.12 on OpenGL ES3.X.
- * \note Qt only supports GL_RGBA16, GL_RGB16, GL_RGB10_A2 and GL_RGB10 but we
- * only test for RGBA16 as it should be widely supported and will not restrict
- * the use of alpha blending.
-*/
-void MythRenderOpenGL::Check16BitFBO(void)
-{
-    OpenGLLocker locker(this);
-    QSize size{256, 256};
-    QOpenGLFramebufferObject *fbo = CreateFramebuffer(size, true);
-    if (fbo)
-    {
-        m_extraFeatures |= kGL16BitFBO;
-        delete fbo;
-    }
-}

@@ -291,7 +291,7 @@ static void parse_dvb_event_descriptors(const desc_list_t& list, FixupValue fix,
         }
     }
 
-    vector<const unsigned char*> bestExtendedEvents =
+	std::vector<const unsigned char*> bestExtendedEvents =
         DVBDescriptor::FindBestMatches(
             list, DescriptorID::extended_event, languagePreferences, dvbkind);
 

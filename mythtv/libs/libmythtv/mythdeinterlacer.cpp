@@ -182,17 +182,6 @@ void MythDeinterlacer::Filter(MythVideoFrame *Frame, FrameScanType Scan,
         }
         Force = true;
     }
-    else if ((m_deintType == DEINT_HIGH) && (abs(Frame->frameCounter - m_discontinuityCounter) > 1))
-    {
-        if (!Initialise(Frame, deinterlacer, doublerate, topfieldfirst, Profile))
-        {
-            Cleanup();
-            return;
-        }
-        Force = true;
-    }
-
-    m_discontinuityCounter = Frame->frameCounter;
 
     m_discontinuityCounter = Frame->m_frameCounter;
 

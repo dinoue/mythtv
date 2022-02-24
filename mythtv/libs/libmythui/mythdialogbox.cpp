@@ -342,13 +342,6 @@ bool MythDialogBox::inputMethodEvent(QInputMethodEvent *event)
     return GetFocusWidget()->inputMethodEvent(event);
 }
 
-bool MythDialogBox::inputMethodEvent(QInputMethodEvent *event)
-{
-    if (GetFocusWidget()->inputMethodEvent(event))
-        return true;
-
-	return false;
-}
 
 bool MythDialogBox::keyPressEvent(QKeyEvent *event)
 {
