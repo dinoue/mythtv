@@ -83,6 +83,5 @@ class MUI_PUBLIC MythOpenGLPainter : public MythPainterGPU
     QHash<QString,QOpenGLShaderProgram*> m_procedurals;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(MythOpenGLPainter::ViewControls)
 
 #endif
