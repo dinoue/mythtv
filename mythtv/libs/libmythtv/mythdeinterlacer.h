@@ -4,7 +4,6 @@
 // MythTV
 #include "videoouttypes.h"
 #include "mythavutil.h"
-#include "videodisplayprofile.h"
 
 extern "C" {
 #include "libavfilter/avfilter.h"
