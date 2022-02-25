@@ -321,7 +321,6 @@ static void parse_dvb_event_descriptors(const desc_list_t& list, FixupValue fix,
         items.unite (eed.Items());
     }
     if (dvbkind == kKindISDB && !saved_text.isEmpty()) {
-        MPEGDescriptor d(NULL, 0);
         description += dvb_decode_text((unsigned char *)saved_text.data(),
 									   saved_text.size(), kKindISDB);
         description += "\n";
