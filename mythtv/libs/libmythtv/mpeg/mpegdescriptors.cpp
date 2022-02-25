@@ -102,7 +102,7 @@ desc_list_t MPEGDescriptor::FindAll(const desc_list_t &parsed, uint desc_tag)
     return tmp;
 }
 
-/*
+
 static uint maxPriority(const QMap<uint,uint> &langPrefs)
 {
     uint max_pri = 0;
@@ -112,7 +112,7 @@ static uint maxPriority(const QMap<uint,uint> &langPrefs)
 }
 
 const unsigned char *MPEGDescriptor::FindBestMatch(
-    const desc_list_t &parsed, uint desc_tag, QMap<uint,uint> &langPrefs)
+    const desc_list_t &parsed, uint desc_tag, QMap<uint,uint> &langPrefs, const DVBKind dvbkind)
 {
     uint match_idx = 0;
     uint match_pri = UINT_MAX;
@@ -123,7 +123,7 @@ const unsigned char *MPEGDescriptor::FindBestMatch(
     {
         if (DescriptorID::short_event == parsed[i][0])
         {
-            ShortEventDescriptor sed(parsed[i]);
+            ShortEventDescriptor sed(parsed[i], dvbkind);
             if (!sed.IsValid())
                 continue;
             QMap<uint,uint>::const_iterator it =
@@ -145,7 +145,7 @@ const unsigned char *MPEGDescriptor::FindBestMatch(
 
     if ((desc_tag == DescriptorID::short_event) && (unmatched_idx >= 0))
     {
-        ShortEventDescriptor sed(parsed[unmatched_idx]);
+        ShortEventDescriptor sed(parsed[unmatched_idx], dvbkind);
         if (sed.IsValid())
         {
             langPrefs[sed.CanonicalLanguageKey()] = maxPriority(langPrefs) + 1;
@@ -157,7 +157,7 @@ const unsigned char *MPEGDescriptor::FindBestMatch(
 }
 
 desc_list_t MPEGDescriptor::FindBestMatches(
-    const desc_list_t &parsed, uint desc_tag, QMap<uint,uint> &langPrefs)
+    const desc_list_t &parsed, uint desc_tag, QMap<uint,uint> &langPrefs, const DVBKind dvbkind)
 {
     uint match_pri = UINT_MAX;
     int  match_key = 0;
@@ -168,7 +168,7 @@ desc_list_t MPEGDescriptor::FindBestMatches(
     {
         if (DescriptorID::extended_event == parsed[i][0])
         {
-            ExtendedEventDescriptor eed(parsed[i]);
+            ExtendedEventDescriptor eed(parsed[i], dvbkind);
             if (!eed.IsValid())
                 continue;
             QMap<uint,uint>::const_iterator it =
@@ -188,7 +188,7 @@ desc_list_t MPEGDescriptor::FindBestMatches(
     if ((desc_tag == DescriptorID::extended_event) &&
         (match_key == 0) && (unmatched_idx >= 0))
     {
-        ExtendedEventDescriptor eed(parsed[unmatched_idx]);
+        ExtendedEventDescriptor eed(parsed[unmatched_idx], dvbkind);
         if (eed.IsValid())
         {
             langPrefs[eed.CanonicalLanguageKey()] = maxPriority(langPrefs) + 1;
@@ -205,7 +205,7 @@ desc_list_t MPEGDescriptor::FindBestMatches(
         if ((DescriptorID::extended_event == desc_tag) &&
             (DescriptorID::extended_event == j[0]))
         {
-            ExtendedEventDescriptor eed(j);
+            ExtendedEventDescriptor eed(j, dvbkind);
             if (eed.IsValid() && (eed.LanguageKey() == match_key))
                 tmp.push_back(j);
         }
@@ -213,7 +213,7 @@ desc_list_t MPEGDescriptor::FindBestMatches(
 
     return tmp;
 }
-*/
+
 
 #define EMPTY_STR_16 "","","","", "","","","", "","","","", "","","","",
 

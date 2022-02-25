@@ -117,35 +117,56 @@ static QString iconv_helper(int which, char *buf, size_t length)
     return result;
 }
 
+static inline IsdbDecode __decoder_open(DVBKind dvbkind)
+{
+	IsdbDecode handle = nullptr;
+	if (_dvbkind == kKindISDB) {
+		QDateTime dt1 = QDateTime::currentDateTime();
+		QDateTime dt2 = dt1.toUTC();
+		dt1.setTimeSpec(Qt::UTC);
+		int offset = dt2.secsTo(dt1) / 3600;
+		if (9 == offset)
+			handle = isdb_decode_open(ISDB_ARIB);
+		else
+			handle = isdb_decode_open(ISDB_ABNT);
+	}
+	return handle;
+}
+
+static void __decoder_close(IsdbDecode handle)
+{
+	if(handle != nullptr) {
+		isdb_decode_close(handle);
+	}
+}
+
 static QString decode_text(const unsigned char *buf, uint length);
 
 // Decode a text string according to ETSI EN 300 468 Annex A or ISDB/ARIB STD-24
-QString DVBDescriptor::dvb_decode_text(const unsigned char *src, uint raw_length,
-                        const enc_override &encoding_override)
+QString dvb_decode_text(const unsigned char *src, uint raw_length,
+                        const enc_override &encoding_override, const DVBKind dvbkind)
 {
     if (!raw_length)
         return "";
 
-    if (_dvbkind == kKindISDB)
+	// ToDo: Support encode_override for ISDB 20220226 K.Ohta
+    if (dvbkind == kKindISDB)
     {
         unsigned char buf[4096 * 6];
         unsigned int len;
-        len = isdb_decode_text(hisdbdecode, src, (unsigned int)raw_length,
-                               buf, (unsigned int)sizeof(buf));
-        return QString::fromUtf8((const char *)buf, (int)len).
-           replace(QString("\n"), QString(" ")); 
+		IsdbDecode hisdbdecode = __decoder_open(dvbkind);
+		//auto *dst = new unsigned char[raw_length + encoding_override.size()];
+		if(hisdbdecode != nullptr) {
+			len = isdb_decode_text(hisdbdecode, src, (unsigned int)raw_length,
+								   buf, (unsigned int)sizeof(buf));
+			__decoder_close(hisdbdecode);
+			return QString::fromUtf8((const char *)buf, (int)len).
+				replace(QString("\n"), QString(" "));
+		}
     }
-
+	
     if (src[0] == 0x1f)
         return freesat_huffman_to_string(src, raw_length);
-   
-    if (src[0] == 0x15) 
-	return QString::fromUtf8((char *)(src + 1), raw_length - 1). 
-	    replace(QString("\n"), QString(" ")); 
-    else if (src[0] == 0x11) 
-	return QTextCodec::codecForName("UTF-16BE")->toUnicode((char *)(src + 1), raw_length - 1). 
-	    replace(QString("\n"), QString(" ")); 
-
 
     /* UCS-2 aka ISO/IEC 10646-1 Basic Multilingual Plane */
     if (src[0] == 0x11)
@@ -234,8 +255,7 @@ static QString decode_text(const unsigned char *buf, uint length)
     return QString::fromLocal8Bit((char*)(buf + 1), length - 1);
 }
 
-
-QString DVBDescriptor::dvb_decode_short_name(const unsigned char *src, uint raw_length) const
+QString dvb_decode_short_name(const unsigned char *src, uint raw_length, DVBKind dvbkind) const
 {
     if (raw_length > 50)
     {
@@ -246,27 +266,21 @@ QString DVBDescriptor::dvb_decode_short_name(const unsigned char *src, uint raw_
         return "";
     }
 
-    if (src[0] == 0x15) 
-	return QString::fromUtf8((char *)(src + 1), raw_length - 1). 
-	    replace(QString("\n"), QString(" ")); 
-    else if (src[0] == 0x11) 
-	return QTextCodec::codecForName("UTF-16BE")->toUnicode((char *)(src + 1), raw_length - 1). 
-	    replace(QString("\n"), QString(" ")); 
-
-    if (_dvbkind == kKindISDB)
+	// ToDo: Support encode_override for ISDB 20220226 K.Ohta
+    if (dvbkind == kKindISDB)
     {
         unsigned char buf[50 * 6];
         unsigned int len;
-        len = isdb_decode_text(hisdbdecode, src, (unsigned int)raw_length,
-                               buf, (unsigned int)sizeof(buf));
-        return QString::fromUtf8((const char *)buf, (int)len).
-           replace(QString("\n"), QString(" ")); 
+		IsdbDecode hisdbdecode = __decoder_open(dvbkind);
+		if(hisdbdecode != nullptr) {
+			len = isdb_decode_text(hisdbdecode, src, (unsigned int)raw_length,
+								   buf, (unsigned int)sizeof(buf));
+			__decoder_close(hisdbdecode);
+			return QString::fromUtf8((const char *)buf, (int)len).
+				replace(QString("\n"), QString(" "));
+		}
     }
-
-    if (src[0] == 0x11) 
-       return QTextCodec::codecForName("UTF-16BE")->toUnicode((char *)(src + 1), raw_length - 1). 
-           replace(QString("\n"), QString(" ")); 
-
+	
     if (((0x10 < src[0]) && (src[0] < 0x15)) ||
         ((0x15 < src[0]) && (src[0] < 0x20)))
     {
@@ -308,105 +322,6 @@ QString DVBDescriptor::dvb_decode_short_name(const unsigned char *src, uint raw_
 }
 
 
-static uint maxPriority(const QMap<uint,uint> &langPrefs)
-{
-    uint max_pri = 0;
-    QMap<uint,uint>::const_iterator it = langPrefs.begin();
-    for (; it != langPrefs.end(); ++it)
-        max_pri = std::max(max_pri, *it);
-    return max_pri;
-}
-
-const unsigned char *DVBDescriptor::FindBestMatch(
-    const desc_list_t &parsed, uint desc_tag, QMap<uint,uint> &langPrefs, DVBKind dvbkind)
-{
-    uint match_idx = 0;
-    uint match_pri = UINT_MAX;
-    int  unmatched_idx = -1;
-
-    uint i = (desc_tag == DescriptorID::short_event) ? 0 : parsed.size();
-    for (; i < parsed.size(); i++)
-    {
-        if (DescriptorID::short_event == parsed[i][0])
-        {
-            ShortEventDescriptor sed(parsed[i], dvbkind);
-            QMap<uint,uint>::const_iterator it =
-                langPrefs.find(sed.CanonicalLanguageKey());
-
-            if ((it != langPrefs.end()) && (*it < match_pri))
-            {
-                match_idx = i;
-                match_pri = *it;
-            }
-
-            if (unmatched_idx < 0)
-                unmatched_idx = i;
-        }
-    }
-
-    if (match_pri != UINT_MAX)
-        return parsed[match_idx];
-
-    if ((desc_tag == DescriptorID::short_event) && (unmatched_idx >= 0))
-    {
-        ShortEventDescriptor sed(parsed[unmatched_idx], dvbkind);
-        langPrefs[sed.CanonicalLanguageKey()] = maxPriority(langPrefs) + 1;
-        return parsed[unmatched_idx];
-    }
-
-    return NULL;
-}
-
-desc_list_t DVBDescriptor::FindBestMatches(
-    const desc_list_t &parsed, uint desc_tag, QMap<uint,uint> &langPrefs, DVBKind dvbkind)
-{
-    uint match_pri = UINT_MAX;
-    int  match_key = 0;
-    int  unmatched_idx = -1;
-
-    uint i = (desc_tag == DescriptorID::extended_event) ? 0 : parsed.size();
-    for (; i < parsed.size(); i++)
-    {
-        if (DescriptorID::extended_event == parsed[i][0])
-        {
-            ExtendedEventDescriptor eed(parsed[i], dvbkind);
-            QMap<uint,uint>::const_iterator it =
-                langPrefs.find(eed.CanonicalLanguageKey());
-
-            if ((it != langPrefs.end()) && (*it < match_pri))
-            {
-                match_key = eed.LanguageKey();
-                match_pri = *it;
-            }
-            if (unmatched_idx < 0)
-                unmatched_idx = i;
-        }
-    }
-
-    if ((desc_tag == DescriptorID::extended_event) &&
-        (match_key == 0) && (unmatched_idx >= 0))
-    {
-        ExtendedEventDescriptor eed(parsed[unmatched_idx], dvbkind);
-        langPrefs[eed.CanonicalLanguageKey()] = maxPriority(langPrefs) + 1;
-        match_key = eed.LanguageKey();
-    }
-
-    desc_list_t tmp;
-    if (match_pri == UINT_MAX)
-        return tmp;
-
-    for (uint i = 0; i < parsed.size(); i++)
-    {
-        if ((DescriptorID::extended_event == desc_tag) &&
-            (DescriptorID::extended_event == parsed[i][0]))
-        {
-            ExtendedEventDescriptor eed(parsed[i], dvbkind);
-            if (eed.LanguageKey() == match_key)
-                tmp.push_back(parsed[i]);
-        }
-    }
-    return tmp;
-}
 
 #define SET_STRING(DESC_NAME) do { \
     if (IsValid()) { DESC_NAME d(m_data, _dvbkind, DescriptorLength()+2); \
@@ -1321,9 +1236,9 @@ QMultiMap<QString,QString> ExtendedEventDescriptor::Items(void) const
      */
     while (LengthOfItems() - index >= 2)
     {
-        QString item_description = dvb_decode_text (&m_data[8 + index], m_data[7 + index]);
+        QString item_description = dvb_decode_text (&m_data[8 + index], m_data[7 + index], _dvbkind);
         index += 1 + m_data[7 + index];
-        QString item = dvb_decode_text (&m_data[8 + index], m_data[7 + index]);
+        QString item = dvb_decode_text (&m_data[8 + index], m_data[7 + index], _dvbkind);
         index += 1 + m_data[7 + index];
         ret.insert (item_description, item);
     }
