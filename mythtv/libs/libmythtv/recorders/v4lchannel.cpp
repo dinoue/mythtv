@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include "videodev2.h" // our copy
+#include <linux/videodev2.h> // our copy
 
 // MythTV headers
 #include "v4lchannel.h"
