@@ -253,7 +253,7 @@ bool MythPlayer::IsPlaying(std::chrono::milliseconds wait_in_msec, bool wait_for
 {
     QMutexLocker locker(&m_playingLock);
 
-    if (wait_in_msec != 0ms)
+    if (wait_in_msec == 0ms)
         return m_playing;
 
     MythTimer t;
@@ -832,15 +832,10 @@ bool MythPlayer::PrebufferEnoughFrames(int min_buffers)
         return false;
     }
 
-    // Make sure we have at least one frame available.  The EOF case
-    // can get here without one.
-    if (!m_videoOutput->ValidVideoFrames())
-        return false;
-
     if (!m_avSync.GetAVSyncAudioPause())
         m_audio.Pause(false);
     SetBuffering(false);
-    return true;
+    return m_videoOutput->ValidVideoFrames();
 }
 
 void MythPlayer::VideoEnd(void)
