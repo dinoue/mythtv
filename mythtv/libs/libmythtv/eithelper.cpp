@@ -632,7 +632,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
 					std::vector<uint8_t> __st;
 					// ToDo: More smarter
 					if(st != nullptr) {
-						for(int __i = 0; __st[__i] != '\0' ; __i++) {
+						for(int __i = 0; st[__i] != '\0' ; __i++) {
 							__st.push_back(st[__i]);
 						}
 					}
