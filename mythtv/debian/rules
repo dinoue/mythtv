@@ -61,6 +61,8 @@ override_dh_auto_configure:
 	./configure --compile-type=release --prefix=/usr --runprefix=/usr \
 	--enable-libx264 --enable-libmp3lame --enable-libxvid --enable-libx265 \
 	--enable-libvpx --enable-nonfree --enable-pic --enable-hdhomerun \
+	--enable-bdjava \
+	--enable-vulkan --enable-libglslang	\
 	--arch=$(DEB_HOST_GNU_CPU) --disable-ffprobe --disable-ffserver \
 	--libdir-name=lib/$(DEB_HOST_MULTIARCH) $(CONFIGURE_OPTS)
 

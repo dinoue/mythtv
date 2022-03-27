@@ -7,6 +7,7 @@ Homepage: https://www.mythtv.org/
 Standards-Version: 4.5.1
 Build-Conflicts: libmyth-dev, liboss4-salsa-dev, libroar-dev
 Build-Depends: debhelper-compat (= 13), dh-sequence-python3, libxext-dev,
+ glslang-dev, libvulkan-dev,
  libvorbis-dev, libdbi-perl, default-libmysqlclient-dev, libfreetype-dev,
  libjack-jackd2-dev, qtscript5-dev, libavc1394-dev [linux-any], libfaad-dev,
  liblircclient-dev, libsamplerate0-dev, libasound2-dev [linux-any], libdts-dev,
@@ -135,14 +136,14 @@ Description: Personal video recorder application (client)
  For a complete installation of all MythTV components, install the 'mythtv'
  package.
 
-Package: libmyth-31
+Package: libmyth-32
 Architecture: any
 Section: libs
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}, libqt5sql5-mysql, procps, iputils-ping
 Recommends: udisks2, ${shlibs:Recommends}
-Breaks: libmyth-0.27-0, libmyth-0.28-0, libmyth-30
+Breaks: libmyth-0.27-0, libmyth-0.28-0, libmyth-30, libmyth-31
 Description: Common library code for MythTV and add-on modules (runtime)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
@@ -157,7 +158,7 @@ Package: libmyth-dev
 Architecture: any
 Section: libdevel
 Multi-Arch: same
-Depends: libmyth-31 (= ${binary:Version}), ${misc:Depends}
+Depends: libmyth-32 (= ${binary:Version}), ${misc:Depends}
 Description: Common library code for MythTV and add-on modules (development)
  MythTV provides a unified graphical interface for recording and viewing
  television programs. Refer to the mythtv package for more information.
