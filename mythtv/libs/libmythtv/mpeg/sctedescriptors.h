@@ -33,8 +33,8 @@
 class FrameRateDescriptor : public MPEGDescriptor
 {
   public:
-    FrameRateDescriptor(const unsigned char *data, uint len) :
-        MPEGDescriptor(data, len, DescriptorID::scte_frame_rate, 1) { }
+    FrameRateDescriptor(const unsigned char *data, uint len, DVBKind dvbkind = kKindUnknown) :
+        MPEGDescriptor(data, len, DescriptorID::scte_frame_rate, 1, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x82
     // descriptor_length        8   1.0
@@ -83,8 +83,8 @@ class FrameRateDescriptor : public MPEGDescriptor
 class ExtendedVideoDescriptor : public MPEGDescriptor
 {
   public:
-    ExtendedVideoDescriptor(const unsigned char *data, uint len) :
-        MPEGDescriptor(data, len, DescriptorID::scte_extended_video, 1) { }
+    ExtendedVideoDescriptor(const unsigned char *data, uint len, DVBKind dvbkind = kKindUnknown) :
+        MPEGDescriptor(data, len, DescriptorID::scte_extended_video, 1, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x83
     // descriptor_length        8   1.0
@@ -104,11 +104,11 @@ class ExtendedVideoDescriptor : public MPEGDescriptor
 };
 
 // SCTE 57 p 85
-class SCTEComponentNameDescriptor : public DVBDescriptor
+class SCTEComponentNameDescriptor : public MPEGDescriptor
 {
   public:
-    SCTEComponentNameDescriptor(const unsigned char *data, DVBKind dvbkind, int len = 300) :
-        DVBDescriptor(data, dvbkind, len, DescriptorID::scte_component_name)
+    SCTEComponentNameDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+        MPEGDescriptor(data, len, DescriptorID::scte_component_name, dvbkind)
     {
         // TODO make sure descriptor is long enough.. set _data NULL otherwise
     }
@@ -157,8 +157,8 @@ class SCTEComponentNameDescriptor : public DVBDescriptor
 class CueIdentifierDescriptor : public MPEGDescriptor
 {
   public:
-    CueIdentifierDescriptor(const unsigned char *data, uint len) :
-        MPEGDescriptor(data, len, DescriptorID::scte_cue_identifier, 1) { }
+    CueIdentifierDescriptor(const unsigned char *data, uint len, DVBKind dvbkind = kKindUnknown) :
+        MPEGDescriptor(data, len, DescriptorID::scte_cue_identifier, 1, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x8A
     // descriptor_length        8   1.0       0x01
@@ -182,8 +182,8 @@ class CueIdentifierDescriptor : public MPEGDescriptor
 class FrequencySpecificationDescriptor : public MPEGDescriptor
 {
   public:
-    FrequencySpecificationDescriptor(const unsigned char *data, uint len) :
-        MPEGDescriptor(data, len, DescriptorID::scte_frequency_spec, 2)
+    FrequencySpecificationDescriptor(const unsigned char *data, uint len, DVBKind dvbkind = kKindUnknown) :
+        MPEGDescriptor(data, len, DescriptorID::scte_frequency_spec, 2, dvbkind)
     { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x90
@@ -211,8 +211,8 @@ class FrequencySpecificationDescriptor : public MPEGDescriptor
 class ModulationParamsDescriptor : public MPEGDescriptor
 {
   public:
-    ModulationParamsDescriptor(const unsigned char *data, uint len) :
-        MPEGDescriptor(data, len, DescriptorID::scte_modulation_params, 6) { }
+    ModulationParamsDescriptor(const unsigned char *data, uint len, DVBKind dvbkind = kKindUnknown) :
+        MPEGDescriptor(data, len, DescriptorID::scte_modulation_params, 6, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x91
     // descriptor_length        8   1.0
@@ -238,8 +238,8 @@ class ModulationParamsDescriptor : public MPEGDescriptor
 class TransportStreamIdDescriptor : public MPEGDescriptor
 {
   public:
-    TransportStreamIdDescriptor(const unsigned char *data, uint len) :
-        MPEGDescriptor(data, len, DescriptorID::scte_transport_stream_id, 2) { }
+    TransportStreamIdDescriptor(const unsigned char *data, uint len, DVBKind dvbkind = kKindUnknown) :
+        MPEGDescriptor(data, len, DescriptorID::scte_transport_stream_id, 2, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x92
     // descriptor_length        8   1.0
@@ -258,8 +258,8 @@ class TransportStreamIdDescriptor : public MPEGDescriptor
 class RevisionDetectionDescriptor : public MPEGDescriptor
 {
   public:
-    RevisionDetectionDescriptor(const unsigned char *data, uint len) :
-        MPEGDescriptor(data, len, DescriptorID::scte_revision_detection, 3) { }
+    RevisionDetectionDescriptor(const unsigned char *data, uint len, DVBKind dvbkind = kKindUnknown) :
+        MPEGDescriptor(data, len, DescriptorID::scte_revision_detection, 3, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x93
     // descriptor_length        8   1.0       0x01

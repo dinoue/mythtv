@@ -18,11 +18,11 @@ class MTV_PUBLIC DVBTable : public PSIPTable
 {
   public:
     DVBTable(const PSIPTable& table, DVBKind dvbkind)
-        : PSIPTable(table), _dvbkind(dvbkind) {}
+        : PSIPTable(table), m_dvbkind(dvbkind) {}
     ~DVBTable() {}
-    DVBKind DVBKindStatus() const { return _dvbkind; }
+    DVBKind DVBKindStatus() const { return m_dvbkind; }
   protected:
-    DVBKind _dvbkind;
+    DVBKind m_dvbkind;
 };
 
 static inline QDateTime dvbdate2qt(const std::array<uint8_t,5> buf, DVBKind dvbkind)
@@ -351,9 +351,9 @@ class MTV_PUBLIC DVBEventInformationTable : public DVBTable
     const unsigned char *StartTime(uint i) const
         { return m_ptrs[i]+2; }
     QDateTime StartTimeUTC(uint i) const
-        { return dvbdate2qt(StartTime(i), _dvbkind); }
+        { return dvbdate2qt(StartTime(i), m_dvbkind); }
     time_t StartTimeUnixUTC(uint i) const
-        { return dvbdate2unix(StartTime(i), _dvbkind); }
+        { return dvbdate2unix(StartTime(i), m_dvbkind); }
     time_t EndTimeUnixUTC(uint i) const
         { return StartTimeUnixUTC(i) + DurationInSeconds(i); }
     uint32_t StartTimeKey(uint i) const
@@ -411,8 +411,8 @@ class MTV_PUBLIC TimeDateTable : public DVBTable
     const unsigned char *UTCdata(void) const
         { return pesdata() + 3; }
 
-    QDateTime UTC(void)  const { return dvbdate2qt(UTCdata(), _dvbkind);   }
-    time_t UTCUnix(void) const { return dvbdate2unix(UTCdata(), _dvbkind); }
+    QDateTime UTC(void)  const { return dvbdate2qt(UTCdata(), m_dvbkind);   }
+    time_t UTCUnix(void) const { return dvbdate2unix(UTCdata(), m_dvbkind); }
 };
 
 #endif // DVB_TABLES_H

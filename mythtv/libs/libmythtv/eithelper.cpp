@@ -220,7 +220,7 @@ static void parse_dvb_event_descriptors(const desc_list_t& list, FixupValue fix,
 										DVBKind dvbkind)
 {
     const unsigned char *bestShortEvent =
-        DVBDescriptor::FindBestMatch(
+        MPEGDescriptor::FindBestMatch(
             list, DescriptorID::short_event, languagePreferences, dvbkind);
 
     // from EN 300 468, Appendix A.2 - Selection of character table
@@ -292,7 +292,7 @@ static void parse_dvb_event_descriptors(const desc_list_t& list, FixupValue fix,
     }
 
 	std::vector<const unsigned char*> bestExtendedEvents =
-        DVBDescriptor::FindBestMatches(
+        MPEGDescriptor::FindBestMatches(
             list, DescriptorID::extended_event, languagePreferences, dvbkind);
 
     QByteArray saved_text;
@@ -518,7 +518,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
         {
             if ((EITFixUp::kFixDish & fix) || (EITFixUp::kFixBell & fix))
             {
-                DishContentDescriptor content(content_data, dvbkind);
+                DishContentDescriptor content(content_data, 300, dvbkind);
                 switch (content.GetTheme(dvbkind))
                 {
                     case kThemeMovie :
@@ -544,7 +544,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
                      /* 8*/"Current Affairs", "Education", "Infotainment",
                      /*11*/"Special", "Comedy", "Drama", "Documentary",
                      /*15*/"Unknown"};
-                ContentDescriptor content(content_data, dvbkind);
+                ContentDescriptor content(content_data, 300, dvbkind);
                 if (content.IsValid())
                 {
                     category = QString::fromStdString(s_auGenres[content.Nibble1(0)]);
@@ -558,7 +558,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
                      /* 4*/"Αθλητικό", "Παιδικό", "Unknown", "Unknown",
                      /* 8*/"Unknown", "Ντοκιμαντέρ", "Unknown", "Unknown",
                      /*12*/"Unknown", "Unknown", "Unknown", "Unknown"};
-                ContentDescriptor content(content_data, dvbkind);
+                ContentDescriptor content(content_data, 300, dvbkind);
                 if (content.IsValid())
                 {
                     category = QString::fromStdString(s_grGenres[content.Nibble2(0)]);
@@ -567,7 +567,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
             }
             else
             {
-                ContentDescriptor content(content_data, dvbkind);
+                ContentDescriptor content(content_data, 300, dvbkind);
                 if (content.IsValid())
                 {
                     category      = content.GetDescription(0);
@@ -629,7 +629,14 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
             if (isUPC) {
                 desc_list_t subtitles = MPEGDescriptor::FindAll(list, PrivateDescriptorID::upc_event_episode_title);
                 for (auto & st : subtitles) {
-                    PrivateUPCCablecomEpisodeTitleDescriptor desc(st);
+					std::vector<uint8_t> __st;
+					// ToDo: More smarter
+					if(st != nullptr) {
+						for(int __i = 0; __st[__i] != '\0' ; __i++) {
+							__st.push_back(st[__i]);
+						}
+					}
+                    PrivateUPCCablecomEpisodeTitleDescriptor desc(__st, dvbkind);
                     if (!desc.IsValid())
                         continue;
                     subtitle = desc.Text();

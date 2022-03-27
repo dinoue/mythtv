@@ -390,10 +390,13 @@ QString MPEGDescriptor::DescriptorTagString(void) const
     return str;
 }
 
-#define SET_STRING(DESC_NAME) do { \
-		if (IsValid()) { DESC_NAME d(m_data, DescriptorLength()+2); \
-			if (d.IsValid()) str = d.toString(); } } while (false)
+//#define SET_STRING(DESC_NAME) do {								\
+//		if (IsValid()) { DESC_NAME d(m_data, DescriptorLength()+2); \
+//			if (d.IsValid()) str = d.toString(); } } while (false)
 
+#define SET_STRING(DESC_NAME) do { \
+		if (IsValid()) { DESC_NAME d(m_data, DescriptorLength()+2, m_dvbkind);	\
+    if (d.IsValid()) str = d.toString(); } } while (false)
 
 QString MPEGDescriptor::descrDump(const QString &name) const
 {
@@ -468,10 +471,10 @@ QString MPEGDescriptor::toStringPD(uint priv_dsid) const
         SET_STRING(HEVCVideoDescriptor);
 	// ToDo: Check not comment out is right 20200324
     }
-//    else if (DescriptorID::network_name == DescriptorTag())
-//  {
-//       SET_STRING(NetworkNameDescriptor);
-//  }
+    else if (DescriptorID::network_name == DescriptorTag())
+	{
+		SET_STRING(NetworkNameDescriptor);
+	}
     else if (DescriptorID::service_list == DescriptorTag())
     {
         SET_STRING(ServiceListDescriptor);
@@ -485,22 +488,22 @@ QString MPEGDescriptor::toStringPD(uint priv_dsid) const
         SET_STRING(CableDeliverySystemDescriptor);
 	// ToDo: Check not comment out is right 20200324
     }
-//    else if (DescriptorID::bouquet_name == DescriptorTag())
-//    {
-//        SET_STRING(BouquetNameDescriptor);
-//    }
-//    else if (DescriptorID::service == DescriptorTag())
-//    {
-//        SET_STRING(ServiceDescriptor);
-//    }
+    else if (DescriptorID::bouquet_name == DescriptorTag())
+    {
+        SET_STRING(BouquetNameDescriptor);
+    }
+    else if (DescriptorID::service == DescriptorTag())
+    {
+        SET_STRING(ServiceDescriptor);
+    }
     else if (DescriptorID::country_availability == DescriptorTag())
     {
         SET_STRING(CountryAvailabilityDescriptor);
     }
-    //else if (DescriptorID::linkage == DescriptorTag())
-    //{
-    //    SET_STRING(LinkageDescriptor);
-    //}
+    else if (DescriptorID::linkage == DescriptorTag())
+    {
+        SET_STRING(LinkageDescriptor);
+    }
     else if (DescriptorID::stream_identifier == DescriptorTag())
     {
         SET_STRING(StreamIdentifierDescriptor);
@@ -529,10 +532,10 @@ QString MPEGDescriptor::toStringPD(uint priv_dsid) const
     {
         SET_STRING(AC3Descriptor);
     }
-    //else if (DescriptorID::ancillary_data == DescriptorTag())
-    //{
-    //    SET_STRING(AncillaryDataDescriptor);
-    //}
+    else if (DescriptorID::ancillary_data == DescriptorTag())
+    {
+        SET_STRING(AncillaryDataDescriptor);
+    }
     else if (DescriptorID::application_signalling == DescriptorTag())
     {
         SET_STRING(ApplicationSignallingDescriptor);

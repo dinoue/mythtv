@@ -120,7 +120,7 @@ static QString iconv_helper(int which, char *buf, size_t length)
 static inline IsdbDecode __decoder_open(DVBKind dvbkind)
 {
 	IsdbDecode handle = nullptr;
-	if (_dvbkind == kKindISDB) {
+	if (dvbkind == kKindISDB) {
 		QDateTime dt1 = QDateTime::currentDateTime();
 		QDateTime dt2 = dt1.toUTC();
 		dt1.setTimeSpec(Qt::UTC);
@@ -255,7 +255,7 @@ static QString decode_text(const unsigned char *buf, uint length)
     return QString::fromLocal8Bit((char*)(buf + 1), length - 1);
 }
 
-QString dvb_decode_short_name(const unsigned char *src, uint raw_length, DVBKind dvbkind) const
+QString dvb_decode_short_name(const unsigned char *src, uint raw_length, DVBKind dvbkind)
 {
     if (raw_length > 50)
     {
@@ -313,7 +313,7 @@ QString dvb_decode_short_name(const unsigned char *src, uint raw_length, DVBKind
         }
     }
 
-    QString sStr = (!length) ? dvb_decode_text(src, raw_length)
+    QString sStr = (!length) ? dvb_decode_text(src, raw_length, dvbkind)
                              : decode_text(dst, length);
 
     delete [] dst;
@@ -323,33 +323,6 @@ QString dvb_decode_short_name(const unsigned char *src, uint raw_length, DVBKind
 
 
 
-#define SET_STRING(DESC_NAME) do { \
-    if (IsValid()) { DESC_NAME d(m_data, _dvbkind, DescriptorLength()+2); \
-    if (d.IsValid()) str = d.toString(); } } while (0)
-
-QString DVBDescriptor::toString() const
-{
-    QString str;
-
-    if (DescriptorID::network_name == DescriptorTag())
-        SET_STRING(NetworkNameDescriptor);
-    else if (DescriptorID::service == DescriptorTag())
-        SET_STRING(ServiceDescriptor);
-    else if (DescriptorID::bouquet_name == DescriptorTag())
-        SET_STRING(BouquetNameDescriptor);
-    else if (IsValid())
-    {
-        str = QString("%1 Descriptor (0x%2) length(%3)")
-            .arg(DescriptorTagString())
-            .arg(DescriptorTag(),2,16,QChar('0'))
-            .arg(DescriptorLength());
-     }
-     else
-     {
-         str = "Invalid Descriptor";
-     }
-     return str;
-}
 
 QMutex             ContentDescriptor::s_categoryLock;
 QMap<uint,QString> ContentDescriptor::s_categoryDesc;
@@ -357,7 +330,7 @@ volatile bool      ContentDescriptor::s_categoryDescExists = false;
 
 ProgramInfo::CategoryType ContentDescriptor::GetMythCategory(uint i) const
 {
-    if (_dvbkind == kKindISDB) {
+    if (m_dvbkind == kKindISDB) {
         if (0x6 == Nibble1(i))
             return ProgramInfo::kCategoryMovie;
         if (0x1 == Nibble1(i))
@@ -414,7 +387,7 @@ QString LinkageDescriptor::MobileHandOverTypeString(void) const
 QString ContentDescriptor::GetDescription(uint i) const
 {
     if (!s_categoryDescExists)
-        Init(_dvbkind);
+        Init(m_dvbkind);
 
     QMutexLocker locker(&s_categoryLock);
 
@@ -1236,9 +1209,9 @@ QMultiMap<QString,QString> ExtendedEventDescriptor::Items(void) const
      */
     while (LengthOfItems() - index >= 2)
     {
-        QString item_description = dvb_decode_text (&m_data[8 + index], m_data[7 + index], _dvbkind);
+        QString item_description = dvb_decode_text (&m_data[8 + index], m_data[7 + index], m_dvbkind);
         index += 1 + m_data[7 + index];
-        QString item = dvb_decode_text (&m_data[8 + index], m_data[7 + index], _dvbkind);
+        QString item = dvb_decode_text (&m_data[8 + index], m_data[7 + index], m_dvbkind);
         index += 1 + m_data[7 + index];
         ret.insert (item_description, item);
     }

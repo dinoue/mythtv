@@ -90,7 +90,7 @@ QString NetworkInformationTable::NetworkName() const
 
         if (desc)
         {
-            auto nndesc = NetworkNameDescriptor(desc, _dvbkind);
+            auto nndesc = NetworkNameDescriptor(desc, m_dvbkind);
             if (nndesc.IsValid())
                 m_cachedNetworkName = nndesc.Name();
         }
@@ -171,7 +171,7 @@ ServiceDescriptor *ServiceDescriptionTable::GetServiceDescriptor(uint i) const
         MPEGDescriptor::Find(parsed, DescriptorID::service);
 
     if (desc)
-        return new ServiceDescriptor(desc, _dvbkind);
+        return new ServiceDescriptor(desc, m_dvbkind);
 
     return nullptr;
 }

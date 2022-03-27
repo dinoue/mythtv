@@ -2172,6 +2172,19 @@ void CetonSetting::CetonConfigurationGroup(CaptureCard& parent, CardType& cardty
 }
 #endif
 
+// Override database schema default, set schedgroup false
+class SchedGroupFalse : public MythUICheckBoxSetting
+{
+  public:
+    explicit SchedGroupFalse(const CaptureCard &parent) :
+        MythUICheckBoxSetting(new CaptureCardDBStorage(this, parent,
+                                                       "schedgroup"))
+    {
+        setValue(false);
+        setVisible(false);
+   };
+};
+
 
 V4LConfigurationGroup::V4LConfigurationGroup(CaptureCard& parent,
                                              CardType& cardtype,
@@ -2378,19 +2391,6 @@ void ExternalConfigurationGroup::probeApp(const QString & path)
     m_info->setHelpText(ci);
 }
 #endif // !defined( USING_MINGW ) && !defined( _MSC_VER )
-
-// Override database schema default, set schedgroup false
-class SchedGroupFalse : public MythUICheckBoxSetting
-{
-  public:
-    explicit SchedGroupFalse(const CaptureCard &parent) :
-        MythUICheckBoxSetting(new CaptureCardDBStorage(this, parent,
-                                                       "schedgroup"))
-    {
-        setValue(false);
-        setVisible(false);
-   };
-};
 
 HDPVRConfigurationGroup::HDPVRConfigurationGroup(CaptureCard &a_parent,
                                                  CardType &a_cardtype) :

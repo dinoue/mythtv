@@ -347,7 +347,7 @@ DishThemeType DishContentDescriptor::GetTheme(DVBKind dvbkind) const
 QString DishContentDescriptor::GetCategory(DVBKind dvbkind) const
 {
     if (!s_dishCategoryDescExists)
-        Init(_dvbkind);
+        Init(dvbkind);
 
     QMutexLocker locker(&s_categoryLock);
 
@@ -358,14 +358,14 @@ QString DishContentDescriptor::GetCategory(DVBKind dvbkind) const
         return *it;
 
     // Fallback to just the theme
-    QString theme = dish_theme_type_to_string(GetTheme(_dvbkind));
+    QString theme = dish_theme_type_to_string(GetTheme(dvbkind));
 
     return theme;
 }
 
 QString DishContentDescriptor::toString() const
 {
-    return QString("%1 : %2").arg(int(GetTheme(_dvbkind))).arg(GetCategory(_dvbkind));
+    return QString("%1 : %2").arg(int(GetTheme(m_dvbkind))).arg(GetCategory(m_dvbkind));
 }
 
 void DishContentDescriptor::Init(DVBKind dvbkind)

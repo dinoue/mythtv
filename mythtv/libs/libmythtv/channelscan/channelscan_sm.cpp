@@ -176,7 +176,7 @@ ChannelScanSM::ChannelScanSM(ScanMonitor *scan_monitor,
                 dvbkind = kKindISDB;
         }
 #endif
-        auto *data = new ScanStreamData(dvbkind);
+        auto *data = new ScanStreamData(false, dvbkind);
         MSqlQuery query(MSqlQuery::InitCon());
         query.prepare(
                 "SELECT dvb_nit_id, bouquet_id, region_id, lcnoffset "
