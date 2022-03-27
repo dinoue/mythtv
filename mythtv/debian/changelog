@@ -1,3 +1,12 @@
+mythtv-isdb-ja (2:32.0+fixes20220327.gitb02a1e4a91.ISDB.1) experimental; urgency=medium
+
+  * IMPORTANT: Update upstream to MythTV 32 (from 31).Still be test version.
+  * Based on b02a1e4a918456cd052f26cce60de03b5a622b1f of branch 32+ISDB-Ja.
+  * Merge from fixes/32 commit f69ce764b78a15989455957eda235d5b1993a08a .
+  * See https://github.com/Artanejp/mythtv/tree/32+ISDB-Ja .
+  
+ -- Kyuma Ohta <whatisthis.sowhat@gmail.com>  Sun, 27 Mar 2022 20:28:31 +0900
+
 mythtv-isdb-ja (2:32.0+fixes20220327.git28d360e989.ISDB.1) experimental; urgency=medium
 
   * IMPORTANT: Update upstream to MythTV 32 (from 31).Still be test version.
