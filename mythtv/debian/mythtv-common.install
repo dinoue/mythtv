@@ -8,3 +8,5 @@ usr/share/mythtv/metadata/Movie/tmdb3.py
 usr/share/mythtv/metadata/Television/ttvdb4.py
 usr/share/mythtv/themes
 debian/mythtv_logo.svg				usr/share/pixmaps
+AUTHORS								usr/share/doc/mythtv-common
+README.ISDB-Ja.rst					usr/share/doc/mythtv-common

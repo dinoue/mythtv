@@ -155,7 +155,7 @@ override_dh_clean:
 override_dh_shlibdeps: debian/libmythtv-recommends-dummy.so
 	dh_shlibdeps
 
-	dpkg-shlibdeps -dRecommends -edebian/libmythtv-recommends-dummy.so -xlibc6 -O >> debian/libmyth-31.substvars
+	dpkg-shlibdeps -dRecommends -edebian/libmythtv-recommends-dummy.so -xlibc6 -O >> debian/libmyth-32.substvars
 
 debian/libmythtv-recommends-dummy.so:
 	cc -xc -shared -Wl,--no-as-needed -o $@ /dev/null \
