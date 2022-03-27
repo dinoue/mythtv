@@ -83,7 +83,7 @@ case "$1" in
         else
             chown root:adm -R /var/log/mythtv
         fi
-        chmod 2755 /var/log/mythtv
+        chmod 2775 /var/log/mythtv
     fi
 
 
