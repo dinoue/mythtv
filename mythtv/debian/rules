@@ -108,7 +108,7 @@ override_dh_install:
 	rm -f debian/mythtv/usr/share/mythtv/setup.xml
 
 override_dh_installdocs:
-	dh_installdocs -XCOPYING README debian/README.Debian AUTHORS keys.txt FAQ UPGRADING keys.txt
+	dh_installdocs -XCOPYING README debian/README.Debian README.ISDB-Ja.rst AUTHORS keybindings.txt
 
 override_dh_strip:
 ifneq (nostrip,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
