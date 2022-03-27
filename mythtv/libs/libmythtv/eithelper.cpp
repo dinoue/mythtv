@@ -274,20 +274,23 @@ static void parse_dvb_event_descriptors(const desc_list_t& list, FixupValue fix,
         ShortEventDescriptor sed(bestShortEvent, dvbkind);
         if (sed.IsValid())
         {
-
-#if 0
+			if(enc == enc_none) {
+                title    = sed.EventName();
+//                subtitle = sed.Text();
+			} else {
                 title    = sed.EventName(enc);
-                subtitle = sed.Text(enc);
-#else
-                title    = sed.EventName(enc);
-				pre_pattern.indexIn(title);
-				subtitle = pre_pattern.cap(1);
-				title    = title.remove(pre_pattern);
-				suf_pattern.indexIn(title);
-				subtitle += suf_pattern.cap(1);
-				title    = title.remove(suf_pattern.cap(1)).trimmed();
+			}
+			pre_pattern.indexIn(title);
+			subtitle = pre_pattern.cap(1);
+			title    = title.remove(pre_pattern);
+			suf_pattern.indexIn(title);
+			subtitle += suf_pattern.cap(1);
+			title    = title.remove(suf_pattern.cap(1)).trimmed();
+			if(enc == enc_none) {
+				subtitle += sed.Text();
+			} else {
 				subtitle += sed.Text(enc);
-#endif
+			}
         }
     }
 
@@ -384,6 +387,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
 
     uint tableid   = eit->TableID();
     uint version   = eit->Version();
+    DVBKind dvbkind = eit->DVBKindStatus();
     DVBKind dvbkind = eit->DVBKindStatus();
     for (uint i = 0; i < eit->EventCount(); i++)
     {

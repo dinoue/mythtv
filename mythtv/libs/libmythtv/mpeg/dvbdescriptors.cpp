@@ -117,28 +117,7 @@ static QString iconv_helper(int which, char *buf, size_t length)
     return result;
 }
 
-static inline IsdbDecode __decoder_open(DVBKind dvbkind)
-{
-	IsdbDecode handle = nullptr;
-	if (dvbkind == kKindISDB) {
-		QDateTime dt1 = QDateTime::currentDateTime();
-		QDateTime dt2 = dt1.toUTC();
-		dt1.setTimeSpec(Qt::UTC);
-		int offset = dt2.secsTo(dt1) / 3600;
-		if (9 == offset)
-			handle = isdb_decode_open(ISDB_ARIB);
-		else
-			handle = isdb_decode_open(ISDB_ABNT);
-	}
-	return handle;
-}
 
-static void __decoder_close(IsdbDecode handle)
-{
-	if(handle != nullptr) {
-		isdb_decode_close(handle);
-	}
-}
 
 static QString decode_text(const unsigned char *buf, uint length);
 
