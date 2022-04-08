@@ -8,6 +8,31 @@
 #include "dvbdescriptors.h"
 #include "mythmiscutil.h" // for xml_indent
 
+MTV_PUBLIC IsdbDecode __isdb_decoder_open(DVBKind dvbkind)
+{
+	if (dvbkind == kKindISDB) {
+		IsdbDecode _handle = nullptr;
+		QDateTime dt1 = QDateTime::currentDateTime();
+		QDateTime dt2 = dt1.toUTC();
+		dt1.setTimeSpec(Qt::UTC);
+		int offset = dt2.secsTo(dt1) / 3600;
+		if (9 == offset)
+			_handle = isdb_decode_open(ISDB_ARIB);
+		else
+			_handle = isdb_decode_open(ISDB_ABNT);
+		return _handle;
+	}
+	return nullptr;
+}
+
+MTV_PUBLIC void __isdb_decoder_close(const IsdbDecode isdb_handle)
+{
+	if(isdb_handle != nullptr) {
+		isdb_decode_close(isdb_handle);
+	}
+}
+
+
 QMutex                RegistrationDescriptor::description_map_lock;
 bool                  RegistrationDescriptor::description_map_initialized = false;
 QMap<QString,QString> RegistrationDescriptor::description_map;

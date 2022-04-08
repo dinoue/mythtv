@@ -41,14 +41,14 @@ static QString coderate_inner(uint coderate);
 
 using enc_override = std::vector<uint8_t>;
 MTV_PUBLIC QString dvb_decode_text(const unsigned char *src, uint length,
-								   const enc_override &encoding_override, DVBKind dvbkind);
+								   const enc_override &encoding_override, const IsdbDecode isdb_handle = nullptr);
 
-inline QString dvb_decode_text(const unsigned char *src, uint length, DVBKind dvbkind)
+inline QString dvb_decode_text(const unsigned char *src, uint length, const IsdbDecode isdb_handle = nullptr)
 {
-    return dvb_decode_text(src, length, {}, dvbkind);
+    return dvb_decode_text(src, length, {}, isdb_handle);
 }
 
-QString dvb_decode_short_name(const unsigned char *src, uint raw_length, DVBKind dvbkind);
+QString dvb_decode_short_name(const unsigned char *src, uint raw_length, const IsdbDecode isdb_handle = nullptr);
 
 
 #define byteBCDH2int(i) ((i) >> 4)
@@ -78,9 +78,9 @@ class NetworkNameDescriptor : public MPEGDescriptor
     // descriptor_length        8   1.0
     // for (i=0;i<N;i++){ char 8 uimsbf }
     QString Name(void) const
-	{ return dvb_decode_text(m_data+2, DescriptorLength(), m_dvbkind); }
+	{ return dvb_decode_text(m_data+2, DescriptorLength(), m_isdbhandle); }
     QString ShortName(void) const
-	{ return dvb_decode_short_name(m_data+2, DescriptorLength(), m_dvbkind); }
+	{ return dvb_decode_short_name(m_data+2, DescriptorLength(), m_isdbhandle); }
     QString toString(void) const override // MPEGDescriptor
         { return QString("NetworkNameDescriptor: ")+Name(); }
 };
@@ -302,9 +302,9 @@ class BouquetNameDescriptor : public MPEGDescriptor
     // descriptor_length        8   1.0
     // for(i=0;i<N;i++) { char 8 }
     QString BouquetName(void) const
-	{ return dvb_decode_text(m_data+2, m_data[1], m_dvbkind); }
+	{ return dvb_decode_text(m_data+2, m_data[1], m_isdbhandle); }
     QString BouquetShortName(void) const
-	{ return dvb_decode_short_name(m_data+2, m_data[1], m_dvbkind); }
+	{ return dvb_decode_short_name(m_data+2, m_data[1], m_isdbhandle); }
 
     QString toString(void) const override // MPEGDescriptor
     {
@@ -716,7 +716,7 @@ class DataBroadcastDescriptor : public MPEGDescriptor
     // for (i=0; i<text_length; i++) { text_char 8 }
     QString Text(void) const
     {
-        return dvb_decode_text(&m_data[6 + SelectorLength() + 4], TextLength(), m_dvbkind);
+        return dvb_decode_text(&m_data[6 + SelectorLength() + 4], TextLength(), m_isdbhandle);
     }
 
     QString toString(void) const override; // MPEGDescriptor
@@ -1356,7 +1356,7 @@ class MessageDescriptor : public MPEGDescriptor
 
     // text_char                8   7.0
     QString Message(void) const
-	{ return dvb_decode_text(m_data+7, DescriptorLength()-5, m_dvbkind); }
+	{ return dvb_decode_text(m_data+7, DescriptorLength()-5, m_isdbhandle); }
 
     QString toString(void) const override; // MPEGDescriptor
 };
@@ -1609,7 +1609,7 @@ class MTV_PUBLIC ExtendedEventDescriptor : public MPEGDescriptor
                if (ItemDescriptionLen == 0)
                        item_byte.prepend(saved_text);
                saved_text.clear();
-               item += dvb_decode_text((unsigned char *)item_byte.data(), item_byte.size(), m_dvbkind);
+               item += dvb_decode_text((unsigned char *)item_byte.data(), item_byte.size(), m_isdbhandle);
                if (ItemLength > 0)
                    item += "\n";
                if (left > 0)
@@ -1622,13 +1622,13 @@ class MTV_PUBLIC ExtendedEventDescriptor : public MPEGDescriptor
     uint TextLength(void)       const { return m_data[7 + LengthOfItems()]; }
     // for (i=0; i<N; i++) { text_char 8 }
     QString Text(void) const
-	{ return dvb_decode_text((const unsigned char*)(&m_data[8 + LengthOfItems()]), TextLength(), m_dvbkind); }
+	{ return dvb_decode_text((const unsigned char*)(&m_data[8 + LengthOfItems()]), TextLength(), m_isdbhandle); }
 
     // HACK beg -- Pro7Sat is missing encoding
     QString Text(const enc_override &encoding_override) const
     {
         return dvb_decode_text((const unsigned char*)(&m_data[8 + LengthOfItems()]), TextLength(),
-                               encoding_override, m_dvbkind);
+                               encoding_override, m_isdbhandle);
     }
     // HACK end -- Pro7Sat is missing encoding
 };
@@ -2095,10 +2095,10 @@ class ServiceDescriptor : public MPEGDescriptor
     uint ServiceProviderNameLength(void) const { return m_data[3]; }
     // for (i=0;i<N;I++) { char 8 }
     QString ServiceProviderName(void) const
-	{ return dvb_decode_text(m_data + 4, ServiceProviderNameLength(), m_dvbkind); }
+	{ return dvb_decode_text(m_data + 4, ServiceProviderNameLength(), m_isdbhandle); }
     QString ServiceProviderShortName(void) const
     {
-        return dvb_decode_short_name(m_data + 4, ServiceProviderNameLength(), m_dvbkind);
+        return dvb_decode_short_name(m_data + 4, ServiceProviderNameLength(), m_isdbhandle);
     }
     // service_name_length      8
     uint ServiceNameLength(void) const
@@ -2107,12 +2107,12 @@ class ServiceDescriptor : public MPEGDescriptor
     QString ServiceName(void) const
     {
         return dvb_decode_text(m_data + 5 + ServiceProviderNameLength(),
-                               ServiceNameLength(), m_dvbkind);
+                               ServiceNameLength(), m_isdbhandle);
     }
     QString ServiceShortName(void) const
     {
         return dvb_decode_short_name(m_data + 5 + ServiceProviderNameLength(),
-                                     ServiceNameLength(), m_dvbkind);
+                                     ServiceNameLength(), m_isdbhandle);
     }
     bool IsDTV(void) const
         { return ServiceDescriptorMapping(ServiceType()).IsDTV(); }
@@ -2223,26 +2223,26 @@ class ShortEventDescriptor : public MPEGDescriptor
     uint EventNameLength(void) const { return m_data[5]; }
     // for (i=0;i<event_name_length;i++) { event_name_char 8 }
     QString EventName(void) const
-	{ return dvb_decode_text(&m_data[6], m_data[5], m_dvbkind); }
+	{ return dvb_decode_text(&m_data[6], m_data[5], m_isdbhandle); }
     QString EventShortName(void) const
-	{ return dvb_decode_short_name(&m_data[6], m_data[5], m_dvbkind); }
+	{ return dvb_decode_short_name(&m_data[6], m_data[5], m_isdbhandle); }
     // text_length              8
     uint TextLength(void) const { return m_data[6 + m_data[5]]; }
     // for (i=0;i<text_length;i++) { text_char 8 }
     QString Text(void) const
-	{ return dvb_decode_text(&m_data[7 + m_data[5]], TextLength(), m_dvbkind); }
+	{ return dvb_decode_text(&m_data[7 + m_data[5]], TextLength(), m_isdbhandle); }
 
     // HACK beg -- Pro7Sat is missing encoding
     QString EventName(const enc_override& encoding_override) const
     {
         return dvb_decode_text((const unsigned char*)(&m_data[6]), m_data[5],
-                               encoding_override, m_dvbkind);
+                               encoding_override, m_isdbhandle);
     }
 
     QString Text(const enc_override& encoding_override) const
     {
         return dvb_decode_text((const unsigned char*)(&m_data[7 + m_data[5]]), TextLength(),
-                               encoding_override, m_dvbkind);
+                               encoding_override, m_isdbhandle);
     }
     // HACK end -- Pro7Sat is missing encoding
 
@@ -2448,7 +2448,7 @@ class TransportStreamDescriptor : public MPEGDescriptor
 
     // for (i=0; i<N; i++) { byte 8 }
     QString Data(void) const
-	{ return dvb_decode_text(&m_data[2], DescriptorLength(), m_dvbkind); }
+	{ return dvb_decode_text(&m_data[2], DescriptorLength(), m_isdbhandle); }
     QString toString(void) const override // MPEGDescriptor
         { return QString("TransportStreamDescriptor data(%1)").arg(Data()); }
 };
@@ -2806,7 +2806,7 @@ class FreesatCallsignDescriptor : public MPEGDescriptor
 	// Hack 20200324 K.O
 	{ return QString::fromLatin1((char *)(&m_data[6]), m_data[5]); }
 		
-	//        { return dvb_decode_short_name(&_data[6], _data[5]); }
+	//        { return dvb_decode_short_name(&_data[6], _data[5], m_isdbhandle); }
 
     QString toString(void) const override; // MPEGDescriptor
 };
@@ -3020,7 +3020,7 @@ class PrivateUPCCablecomEpisodeTitleDescriptor : public MPEGDescriptor
 
     QString Text(void) const
     {
-        return dvb_decode_text(&m_data[5], TextLength(), m_dvbkind);
+        return dvb_decode_text(&m_data[5], TextLength(), m_isdbhandle);
     }
 };
 

@@ -269,27 +269,26 @@ static void parse_dvb_event_descriptors(const desc_list_t& list, FixupValue fix,
 
     if (bestShortEvent)
     {
-        QRegExp pre_pattern(QString::fromUtf8("^((\\[.{1,2}\\]|【.】|<[^>]+>|5[\\.．]1)+)")); 
-        QRegExp suf_pattern(QString::fromUtf8(".+(?:〜[^〜]+〜)?.*(?:(?:-[^\\-]+-)|(?:−[^−]+−))?.*(((\\[.{1,2}\\])+|[#＃]\\d+|\\([#＃]?\\d+\\)|（[#＃]?\\d+）|vol\\.\\d+|\\(?第(?!.{1,3}部)|最終回|「(?![^」]+」(.?[<＜]|.*[#＃第]\\d+))|[<＜【▽◆]).*)"), Qt::CaseInsensitive); 
         ShortEventDescriptor sed(bestShortEvent, dvbkind);
         if (sed.IsValid())
         {
-			if(enc == enc_none) {
-                title    = sed.EventName();
-//                subtitle = sed.Text();
-			} else {
-                title    = sed.EventName(enc);
-			}
-			pre_pattern.indexIn(title);
-			subtitle = pre_pattern.cap(1);
-			title    = title.remove(pre_pattern);
-			suf_pattern.indexIn(title);
-			subtitle += suf_pattern.cap(1);
-			title    = title.remove(suf_pattern.cap(1)).trimmed();
-			if(enc == enc_none) {
-				subtitle += sed.Text();
-			} else {
+			title    = sed.EventName(enc);
+			if(dvbkind == kKindISDB) {
+				// Make SUBTITLE from both parsed TITLE and SUBTITLE.
+				QRegExp pre_pattern(QString::fromUtf8("^((\\[.{1,2}\\]|【.】|<[^>]+>|5[\\.．]1)+)")); 
+				QRegExp suf_pattern(QString::fromUtf8(".+(?:〜[^〜]+〜)?.*(?:(?:-[^\\-]+-)|(?:−[^−]+−))?.*(((\\[.{1,2}\\])+|[#＃]\\d+|\\([#＃]?\\d+\\)|（[#＃]?\\d+）|vol\\.\\d+|\\(?第(?!.{1,3}部)|最終回|「(?![^」]+」(.?[<＜]|.*[#＃第]\\d+))|[<＜【▽◆]).*)"), Qt::CaseInsensitive);
+				// Pass1 : SPLIT TITLE TO TITLE AND SUBTITLE.
+				pre_pattern.indexIn(title);
+				subtitle = pre_pattern.cap(1);
+				title    = title.remove(pre_pattern);
+				
+				suf_pattern.indexIn(title);
+				subtitle += suf_pattern.cap(1);
+				title    = title.remove(suf_pattern.cap(1)).trimmed();
+				// Pass2 : ADD *REAL* SUBTITLE TO SUBTITLE.
 				subtitle += sed.Text(enc);
+			} else {
+				subtitle = sed.Text(enc);
 			}
         }
     }
@@ -324,8 +323,10 @@ static void parse_dvb_event_descriptors(const desc_list_t& list, FixupValue fix,
         items.unite (eed.Items());
     }
     if (dvbkind == kKindISDB && !saved_text.isEmpty()) {
+		IsdbDecode isdb_handle = __isdb_decoder_open(dvbkind);
         description += dvb_decode_text((unsigned char *)saved_text.data(),
-									   saved_text.size(), kKindISDB);
+									   saved_text.size(), isdb_handle);
+		__isdb_decoder_close(isdb_handle);
         description += "\n";
     }
 }
@@ -387,7 +388,6 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
 
     uint tableid   = eit->TableID();
     uint version   = eit->Version();
-    DVBKind dvbkind = eit->DVBKindStatus();
     DVBKind dvbkind = eit->DVBKindStatus();
     for (uint i = 0; i < eit->EventCount(); i++)
     {

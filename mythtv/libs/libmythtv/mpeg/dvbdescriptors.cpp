@@ -123,25 +123,21 @@ static QString decode_text(const unsigned char *buf, uint length);
 
 // Decode a text string according to ETSI EN 300 468 Annex A or ISDB/ARIB STD-24
 QString dvb_decode_text(const unsigned char *src, uint raw_length,
-                        const enc_override &encoding_override, const DVBKind dvbkind)
+                        const enc_override &encoding_override, const IsdbDecode isdb_handle)
 {
     if (!raw_length)
         return "";
 
 	// ToDo: Support encode_override for ISDB 20220226 K.Ohta
-    if (dvbkind == kKindISDB)
+    if (isdb_handle)
     {
         unsigned char buf[4096 * 6];
         unsigned int len;
-		IsdbDecode hisdbdecode = __decoder_open(dvbkind);
 		//auto *dst = new unsigned char[raw_length + encoding_override.size()];
-		if(hisdbdecode != nullptr) {
-			len = isdb_decode_text(hisdbdecode, src, (unsigned int)raw_length,
-								   buf, (unsigned int)sizeof(buf));
-			__decoder_close(hisdbdecode);
-			return QString::fromUtf8((const char *)buf, (int)len).
-				replace(QString("\n"), QString(" "));
-		}
+		len = isdb_decode_text(isdb_handle, src, (unsigned int)raw_length,
+							   buf, (unsigned int)sizeof(buf));
+		return QString::fromUtf8((const char *)buf, (int)len).
+			replace(QString("\n"), QString(" "));
     }
 	
     if (src[0] == 0x1f)
@@ -234,7 +230,7 @@ static QString decode_text(const unsigned char *buf, uint length)
     return QString::fromLocal8Bit((char*)(buf + 1), length - 1);
 }
 
-QString dvb_decode_short_name(const unsigned char *src, uint raw_length, DVBKind dvbkind)
+QString dvb_decode_short_name(const unsigned char *src, uint raw_length, const IsdbDecode isdb_handle)
 {
     if (raw_length > 50)
     {
@@ -246,18 +242,14 @@ QString dvb_decode_short_name(const unsigned char *src, uint raw_length, DVBKind
     }
 
 	// ToDo: Support encode_override for ISDB 20220226 K.Ohta
-    if (dvbkind == kKindISDB)
+    if (isdb_handle)
     {
         unsigned char buf[50 * 6];
         unsigned int len;
-		IsdbDecode hisdbdecode = __decoder_open(dvbkind);
-		if(hisdbdecode != nullptr) {
-			len = isdb_decode_text(hisdbdecode, src, (unsigned int)raw_length,
-								   buf, (unsigned int)sizeof(buf));
-			__decoder_close(hisdbdecode);
-			return QString::fromUtf8((const char *)buf, (int)len).
-				replace(QString("\n"), QString(" "));
-		}
+		len = isdb_decode_text(isdb_handle, src, (unsigned int)raw_length,
+							   buf, (unsigned int)sizeof(buf));
+		return QString::fromUtf8((const char *)buf, (int)len).
+			replace(QString("\n"), QString(" "));
     }
 	
     if (((0x10 < src[0]) && (src[0] < 0x15)) ||
@@ -292,7 +284,7 @@ QString dvb_decode_short_name(const unsigned char *src, uint raw_length, DVBKind
         }
     }
 
-    QString sStr = (!length) ? dvb_decode_text(src, raw_length, dvbkind)
+    QString sStr = (!length) ? dvb_decode_text(src, raw_length, nullptr)
                              : decode_text(dst, length);
 
     delete [] dst;
@@ -1188,9 +1180,9 @@ QMultiMap<QString,QString> ExtendedEventDescriptor::Items(void) const
      */
     while (LengthOfItems() - index >= 2)
     {
-        QString item_description = dvb_decode_text (&m_data[8 + index], m_data[7 + index], m_dvbkind);
+        QString item_description = dvb_decode_text (&m_data[8 + index], m_data[7 + index], m_isdbhandle);
         index += 1 + m_data[7 + index];
-        QString item = dvb_decode_text (&m_data[8 + index], m_data[7 + index], m_dvbkind);
+        QString item = dvb_decode_text (&m_data[8 + index], m_data[7 + index], m_isdbhandle);
         index += 1 + m_data[7 + index];
         ret.insert (item_description, item);
     }

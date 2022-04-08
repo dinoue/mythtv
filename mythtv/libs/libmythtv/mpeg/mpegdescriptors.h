@@ -306,6 +306,10 @@ typedef enum
     kKindISDB    = 2,
 } DVBKind;
 
+
+MTV_PUBLIC IsdbDecode __isdb_decoder_open(DVBKind dvbkind);
+MTV_PUBLIC void __isdb_decoder_close(const IsdbDecode isdb_handle);
+
 class MTV_PUBLIC MPEGDescriptor
 {
   public:
@@ -313,55 +317,50 @@ class MTV_PUBLIC MPEGDescriptor
 
     explicit MPEGDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) : m_data(data), m_dvbkind(dvbkind)
     {
-		m_isdbhandle = nullptr;
         if ((len < 2) || (int(DescriptorLength()) + 2) > len)
             m_data = nullptr;
 		
-		isdb_decoder_open(dvbkind);
+		m_isdbhandle = __isdb_decoder_open(dvbkind);
     }
     explicit MPEGDescriptor(const std::vector<uint8_t> &data, DVBKind dvbkind = kKindUnknown) : m_data(data.data()), m_dvbkind(dvbkind)
     {
-		m_isdbhandle = nullptr;
         if ((data.size() < 2) ||
             ((static_cast<size_t>(DescriptorLength()) + 2) > data.size()))
             m_data = nullptr;
 		
-		isdb_decoder_open(dvbkind);
+		m_isdbhandle = __isdb_decoder_open(dvbkind);
     }
     MPEGDescriptor(const unsigned char *data,
                    int len, uint tag, DVBKind dvbkind = kKindUnknown) : m_data(data), m_dvbkind(dvbkind)
 	 {
-		m_isdbhandle = nullptr;
         if ((len < 2) || ((int(DescriptorLength()) + 2) > len)
             || (DescriptorTag() != tag))
             m_data = nullptr;
 		
-		isdb_decoder_open(dvbkind);
+		m_isdbhandle = __isdb_decoder_open(dvbkind);
     }
 	MPEGDescriptor(const std::vector<uint8_t> &data, uint tag, DVBKind dvbkind = kKindUnknown) : m_data(data.data()), m_dvbkind(dvbkind)
     {
-    	m_isdbhandle = nullptr;
 		if ((data.size() < 2) ||
             ((static_cast<size_t>(DescriptorLength()) + 2) > data.size())
             || (DescriptorTag() != tag))
             m_data = nullptr;
 		
-		isdb_decoder_open(dvbkind);
+		m_isdbhandle = __isdb_decoder_open(dvbkind);
     }
     MPEGDescriptor(const unsigned char *data,
                    int len, uint tag, uint req_desc_len, DVBKind dvbkind = kKindUnknown) : m_data(data), m_dvbkind(dvbkind)
     {
-		m_isdbhandle = nullptr;
         if ((len < 2) || ((int(DescriptorLength()) + 2) > len)
             || (DescriptorTag() != tag)
             || (DescriptorLength() != req_desc_len))
             m_data = nullptr;
 
-		isdb_decoder_open(dvbkind);
+		m_isdbhandle = __isdb_decoder_open(dvbkind);
     }
 	virtual ~MPEGDescriptor()
 	{
-		isdb_decoder_close();
+		__isdb_decoder_close(m_isdbhandle);
 	}
 
     bool IsValid(void) const { return m_data; }
@@ -382,8 +381,6 @@ class MTV_PUBLIC MPEGDescriptor
     static desc_list_t ParseOnlyInclude(const unsigned char *data, uint len,
                                         int excluded_descid);
 
-	inline IsdbDecode isdb_decoder_open(DVBKind dvbkind);
-	inline void isdb_decoder_close();
 	
     static const unsigned char *Find(const desc_list_t &parsed, uint desc_tag);
     static const unsigned char *FindExtension(const desc_list_t &parsed, uint desc_tag);
@@ -398,36 +395,12 @@ class MTV_PUBLIC MPEGDescriptor
   public: // Note: This is major changes due to changes of DVBDescriptor 20220225 K.Ohta
     const unsigned char *m_data;
     const DVBKind m_dvbkind;
-	IsdbDecode *m_isdbhandle;
+	IsdbDecode m_isdbhandle;
   public:
     QString hexdump(void) const;
     QString descrDump(const QString &name) const;
 };
 
-inline IsdbDecode MPEGDescriptor::isdb_decoder_open(DVBKind dvbkind)
-{
-	if(m_isdbhandle != nullptr) {
-		return m_isdbhandle;
-	}
-	if (dvbkind == kKindISDB) {
-		QDateTime dt1 = QDateTime::currentDateTime();
-		QDateTime dt2 = dt1.toUTC();
-		dt1.setTimeSpec(Qt::UTC);
-		int offset = dt2.secsTo(dt1) / 3600;
-		if (9 == offset)
-			m_isdbhandle = isdb_decode_open(ISDB_ARIB);
-		else
-			m_isdbhandle = isdb_decode_open(ISDB_ABNT);
-	}
-	return m_isdbhandle;
-}
-
-inline void MPEGDescriptor::isdb_decoder_close()
-{
-	if(m_isdbhandle != nullptr) {
-		isdb_decode_close(m_isdbhandle);
-	}
-}
 
 
 // ISO 13181-1:2019 page 75
