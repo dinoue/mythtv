@@ -626,7 +626,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
                                                        "Remarkable People");
 
 	uint upper_nibble_edu = (dvbkind == kKindISDB) ? 0xA0 : 0x90;
-	{
+	(dvbkind == kKindISDB) {
 		s_categoryDesc[upper_nibble_edu + 0x0] = QCoreApplication::translate("(Categories)",
 																			 "Hobbies/Education");
 	} else {
