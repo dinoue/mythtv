@@ -107,7 +107,7 @@ class ExtendedVideoDescriptor : public MPEGDescriptor
 class SCTEComponentNameDescriptor : public MPEGDescriptor
 {
   public:
-    SCTEComponentNameDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    SCTEComponentNameDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
         MPEGDescriptor(data, len, DescriptorID::scte_component_name, dvbkind)
     {
         // TODO make sure descriptor is long enough.. set _data NULL otherwise

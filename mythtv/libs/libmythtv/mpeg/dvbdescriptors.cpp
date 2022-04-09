@@ -134,6 +134,9 @@ QString dvb_decode_text(const unsigned char *src, uint raw_length,
         unsigned char buf[4096 * 6];
         unsigned int len;
 		//auto *dst = new unsigned char[raw_length + encoding_override.size()];
+        LOG(VB_SIPARSER, LOG_DEBUG,
+            "dvb_decode_text: ISDB: Via isdb_decode_text().");
+		
 		len = isdb_decode_text(isdb_handle, src, (unsigned int)raw_length,
 							   buf, (unsigned int)sizeof(buf));
 		return QString::fromUtf8((const char *)buf, (int)len).
@@ -240,7 +243,7 @@ QString dvb_decode_short_name(const unsigned char *src, uint raw_length, const I
                 .arg(raw_length));
         return "";
     }
-
+#if 0
 	// ToDo: Support encode_override for ISDB 20220226 K.Ohta
     if (isdb_handle)
     {
@@ -251,6 +254,30 @@ QString dvb_decode_short_name(const unsigned char *src, uint raw_length, const I
 		return QString::fromUtf8((const char *)buf, (int)len).
 			replace(QString("\n"), QString(" "));
     }
+#endif
+    if (isdb_handle) {
+		if(src[0] == 0x15) {
+			LOG(VB_SIPARSER, LOG_DEBUG,
+				"dvb_decode_short_name: "
+				"ISDB: RETURN 0x15 (Maybe UTF8)");
+			return QString::fromUtf8((char *)(src + 1), raw_length - 1).replace(QString("\n"), QString(" ")); 
+		} else if(src[0] == 0x11) {
+			LOG(VB_SIPARSER, LOG_DEBUG,
+				"dvb_decode_short_name: "
+				"ISDB: RETURN 0x11 (UTF-16BE)");
+			return QTextCodec::codecForName("UTF-16BE")->toUnicode((char *)(src + 1), raw_length - 1).replace(QString("\n"), QString(" ")); 
+		} else {
+			unsigned char buf[50 * 6];
+			unsigned int len;
+			len = isdb_decode_text(isdb_handle, src, (unsigned int)raw_length,
+								   buf, (unsigned int)sizeof(buf));
+			LOG(VB_SIPARSER, LOG_DEBUG,
+				"dvb_decode_short_name: "
+				"ISDB: Via isdb_decode_text() ");
+			return QString::fromUtf8((const char *)buf, (int)len).
+				replace(QString("\n"), QString(" ")); 
+		}
+	}
 	
     if (((0x10 < src[0]) && (src[0] < 0x15)) ||
         ((0x15 < src[0]) && (src[0] < 0x20)))
@@ -301,6 +328,7 @@ volatile bool      ContentDescriptor::s_categoryDescExists = false;
 
 ProgramInfo::CategoryType ContentDescriptor::GetMythCategory(uint i) const
 {
+#if 1	
     if (m_dvbkind == kKindISDB) {
         if (0x6 == Nibble1(i))
             return ProgramInfo::kCategoryMovie;
@@ -308,7 +336,7 @@ ProgramInfo::CategoryType ContentDescriptor::GetMythCategory(uint i) const
             return ProgramInfo::kCategorySports;
         return ProgramInfo::kCategoryTVShow;
     }
-
+#endif
     if (0x1 == Nibble1(i))
         return ProgramInfo::kCategoryMovie;
     if (0x4 == Nibble1(i))
@@ -394,14 +422,13 @@ void ContentDescriptor::Init(DVBKind dvbkind)
     //: %1 is the main category, %2 is the subcategory
     QString subCatStr = QCoreApplication::translate("(Categories)",
         "%1 - %2", "Category with subcategory display");
-	
+#if 1
     if (dvbkind == kKindISDB) {
         s_categoryDesc[0x00] = QCoreApplication::translate("(Categories)",
                                                     "ニュース／報道", 0
                                          );
         s_categoryDesc[0x10] = QCoreApplication::translate("(Categories)",
-                                                          "スポーツ", 0
-                                         );
+                                                          "スポーツ", 0);
         s_categoryDesc[0x20] = QCoreApplication::translate("(Categories)",
                                                 "情報／ワイドショー", 0
                                          );
@@ -435,136 +462,162 @@ void ContentDescriptor::Init(DVBKind dvbkind)
         s_categoryDescExists = true;
         return;
     }
-
-    s_categoryDesc[0x10] = QCoreApplication::translate("(Categories)", "Movie");
-    s_categoryDesc[0x11] = subCatStr
+#endif
+	uint upper_nibble_movie = (dvbkind == kKindISDB) ? 0x60 : 0x10;
+    s_categoryDesc[upper_nibble_movie + 0x0] = QCoreApplication::translate("(Categories)", "Movie");
+    s_categoryDesc[upper_nibble_movie + 0x1] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"),
              QCoreApplication::translate("(Categories)", "Detective/Thriller"));
-    s_categoryDesc[0x12] = subCatStr
+    s_categoryDesc[upper_nibble_movie + 0x2] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"),
              QCoreApplication::translate("(Categories)",
                                          "Adventure/Western/War"));
-    s_categoryDesc[0x13] = subCatStr
+    s_categoryDesc[upper_nibble_movie + 0x3] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"),
              QCoreApplication::translate("(Categories)",
                                          "Science Fiction/Fantasy/Horror"));
-    s_categoryDesc[0x14] = subCatStr
+    s_categoryDesc[upper_nibble_movie + 0x4] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"),
              QCoreApplication::translate("(Categories)", "Comedy"));
-    s_categoryDesc[0x15] = subCatStr
+    s_categoryDesc[upper_nibble_movie + 0x5] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"),
              QCoreApplication::translate("(Categories)",
                                          "Soap/melodrama/folkloric"));
-    s_categoryDesc[0x16] = subCatStr
+    s_categoryDesc[upper_nibble_movie + 0x6] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"),
              QCoreApplication::translate("(Categories)", "Romance"));
-    s_categoryDesc[0x17] = subCatStr
+    s_categoryDesc[upper_nibble_movie + 0x7] = subCatStr
         .arg(QCoreApplication::translate("(Categories)","Movie"),
              QCoreApplication::translate("(Categories)",
             "Serious/Classical/Religious/Historical Movie/Drama"));
-    s_categoryDesc[0x18] = subCatStr
+    s_categoryDesc[upper_nibble_movie + 0x8] = subCatStr
         .arg(QCoreApplication::translate("(Categories)","Movie"),
              QCoreApplication::translate("(Categories)", "Adult",
                                          "Adult Movie"));
 
-    s_categoryDesc[0x20] = QCoreApplication::translate("(Categories)", "News");
-    s_categoryDesc[0x21] = QCoreApplication::translate("(Categories)",
+	uint upper_nibble_news = (dvbkind == kKindISDB) ? 0x00 : 0x20;
+    s_categoryDesc[upper_nibble_news + 0x0] = QCoreApplication::translate("(Categories)", "News");
+    s_categoryDesc[upper_nibble_news + 0x1] = QCoreApplication::translate("(Categories)",
                                                        "News/weather report");
-    s_categoryDesc[0x22] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_news + 0x2] = QCoreApplication::translate("(Categories)",
                                                        "News magazine");
-    s_categoryDesc[0x23] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_news + 0x3] = QCoreApplication::translate("(Categories)",
                                                        "Documentary");
-    s_categoryDesc[0x24] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_news + 0x4] = QCoreApplication::translate("(Categories)",
                                                        "Intelligent Programs");
 
-    s_categoryDesc[0x30] = QCoreApplication::translate("(Categories)",
-                                                       "Entertainment");
-    s_categoryDesc[0x31] = QCoreApplication::translate("(Categories)",
-                                                       "Game Show");
-    s_categoryDesc[0x32] = QCoreApplication::translate("(Categories)",
-                                                       "Variety Show");
-    s_categoryDesc[0x33] = QCoreApplication::translate("(Categories)",
-                                                       "Talk Show");
+	uint upper_nibble_ent = (dvbkind == kKindISDB) ? 0x50 : 0x30;
+	// ToDo: Will Intehrate.
+	if(dvbkind == kKindISDB) {
+		s_categoryDesc[upper_nibble_ent + 0x0] = QCoreApplication::translate("(Categories)",
+																			 "Variety Show");
+	} else {
+		s_categoryDesc[upper_nibble_ent + 0x0] = QCoreApplication::translate("(Categories)",
+																			 "Entertainment");
+		s_categoryDesc[upper_nibble_ent + 0x1] = QCoreApplication::translate("(Categories)",
+																			 "Game Show");
+		s_categoryDesc[upper_nibble_ent + 0x2] = QCoreApplication::translate("(Categories)",
+																			 "Variety Show");
+		s_categoryDesc[upper_nibble_ent + 0x3] = QCoreApplication::translate("(Categories)",
+																			 "Talk Show");
+	}
 
-    s_categoryDesc[0x40] = QCoreApplication::translate("(Categories)",
+	
+	uint upper_nibble_sports = (dvbkind == kKindISDB) ? 0x10 : 0x40;
+    s_categoryDesc[upper_nibble_sports + 0x0] = QCoreApplication::translate("(Categories)",
                                                        "Sports");
-    s_categoryDesc[0x41] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_sports + 0x1] = QCoreApplication::translate("(Categories)",
                                                        "Special Events (World Cup, World Series, etc)");
-    s_categoryDesc[0x42] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_sports + 0x2] = QCoreApplication::translate("(Categories)",
                                                        "Sports Magazines");
-    s_categoryDesc[0x43] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_sports + 0x3] = QCoreApplication::translate("(Categories)",
                                                        "Football (Soccer)");
-    s_categoryDesc[0x44] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_sports + 0x4] = QCoreApplication::translate("(Categories)",
                                                        "Tennis/Squash");
-    s_categoryDesc[0x45] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_sports + 0x5] = QCoreApplication::translate("(Categories)",
                                                        "Misc. Team Sports");
     // not football/soccer
-    s_categoryDesc[0x46] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_sports + 0x6] = QCoreApplication::translate("(Categories)",
                                                        "Athletics");
-    s_categoryDesc[0x47] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_sports + 0x7] = QCoreApplication::translate("(Categories)",
                                                        "Motor Sport");
-    s_categoryDesc[0x48] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_sports + 0x8] = QCoreApplication::translate("(Categories)",
                                                        "Water Sport");
-    s_categoryDesc[0x49] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_sports + 0x9] = QCoreApplication::translate("(Categories)",
                                                        "Winter Sports");
-    s_categoryDesc[0x4A] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_sports + 0xA] = QCoreApplication::translate("(Categories)",
                                                        "Equestrian");
-    s_categoryDesc[0x4B] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_sports + 0xB] = QCoreApplication::translate("(Categories)",
                                                      "Martial Sports");
 
-    s_categoryDesc[0x50] = QCoreApplication::translate("(Categories)", "Kids");
-    s_categoryDesc[0x51] = QCoreApplication::translate("(Categories)",
-                             "Pre-School Children's Programs");
-    s_categoryDesc[0x52] = QCoreApplication::translate("(Categories)",
-                             "Entertainment Programs for 6 to 14");
-    s_categoryDesc[0x53] = QCoreApplication::translate("(Categories)",
-                             "Entertainment Programs for 10 to 16");
-    s_categoryDesc[0x54] = QCoreApplication::translate("(Categories)",
-                             "Informational/Educational");
-    s_categoryDesc[0x55] = QCoreApplication::translate("(Categories)",
-                                                       "Cartoons/Puppets");
+	uint upper_nibble_kids = (dvbkind == kKindISDB) ? 0x70 : 0x50;
+	if(dvbkind == kKindISDB) {
+		// ToDo: Will integrate.
+		s_categoryDesc[upper_nibble_kids + 0x0] = QCoreApplication::translate("(Categories)", "Anime/Tokusatsu", 0);
+	} else {
+		s_categoryDesc[upper_nibble_kids + 0x0] = QCoreApplication::translate("(Categories)", "Kids");
+	}
+	s_categoryDesc[upper_nibble_kids + 0x1] = QCoreApplication::translate("(Categories)",
+																		  "Pre-School Children's Programs");
+	s_categoryDesc[upper_nibble_kids + 0x2] = QCoreApplication::translate("(Categories)",
+																		  "Entertainment Programs for 6 to 14");
+	s_categoryDesc[upper_nibble_kids + 0x3] = QCoreApplication::translate("(Categories)",
+																		  "Entertainment Programs for 10 to 16");
+	s_categoryDesc[upper_nibble_kids + 0x4] = QCoreApplication::translate("(Categories)",
+																		  "Informational/Educational");
+	s_categoryDesc[upper_nibble_kids + 0x5] = QCoreApplication::translate("(Categories)",
+																		  "Cartoons/Puppets");
 
-    s_categoryDesc[0x60] = QCoreApplication::translate("(Categories)",
+	uint upper_nibble_music = (dvbkind == kKindISDB) ? 0x40 : 0x60;
+    s_categoryDesc[upper_nibble_music + 0x0] = QCoreApplication::translate("(Categories)",
                                                        "Music/Ballet/Dance");
-    s_categoryDesc[0x61] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_music + 0x1] = QCoreApplication::translate("(Categories)",
                                                        "Rock/Pop");
-    s_categoryDesc[0x62] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_music + 0x2] = QCoreApplication::translate("(Categories)",
                                                        "Classical Music");
-    s_categoryDesc[0x63] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_music + 0x3] = QCoreApplication::translate("(Categories)",
                                                        "Folk Music");
-    s_categoryDesc[0x64] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_music + 0x4] = QCoreApplication::translate("(Categories)",
                                                        "Jazz");
-    s_categoryDesc[0x65] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_music + 0x5] = QCoreApplication::translate("(Categories)",
                                                        "Musical/Opera");
-    s_categoryDesc[0x66] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_music + 0x6] = QCoreApplication::translate("(Categories)",
                                                        "Ballet");
 
-    s_categoryDesc[0x70] = QCoreApplication::translate("(Categories)",
+	uint upper_nibble_arts = (dvbkind == kKindISDB) ? 0x90 : 0x70;
+    s_categoryDesc[upper_nibble_arts + 0x0] = QCoreApplication::translate("(Categories)",
                                                        "Arts/Culture");
-    s_categoryDesc[0x71] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_arts + 0x1] = QCoreApplication::translate("(Categories)",
                                                        "Performing Arts");
-    s_categoryDesc[0x72] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_arts + 0x2] = QCoreApplication::translate("(Categories)",
                                                        "Fine Arts");
-    s_categoryDesc[0x73] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_arts + 0x3] = QCoreApplication::translate("(Categories)",
                                                        "Religion");
-    s_categoryDesc[0x74] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_arts + 0x4] = QCoreApplication::translate("(Categories)",
                                                        "Popular Culture/Traditional Arts");
-    s_categoryDesc[0x75] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_arts + 0x5] = QCoreApplication::translate("(Categories)",
                                                        "Literature");
-    s_categoryDesc[0x76] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_arts + 0x6] = QCoreApplication::translate("(Categories)",
                                                        "Film/Cinema");
-    s_categoryDesc[0x77] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_arts + 0x7] = QCoreApplication::translate("(Categories)",
                                                        "Experimental Film/Video");
-    s_categoryDesc[0x78] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_arts + 0x8] = QCoreApplication::translate("(Categories)",
                                                        "Broadcasting/Press");
-    s_categoryDesc[0x79] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_arts + 0x9] = QCoreApplication::translate("(Categories)",
                                                        "New Media");
-    s_categoryDesc[0x7A] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_arts + 0xA] = QCoreApplication::translate("(Categories)",
                                                        "Arts/Culture Magazines");
-    s_categoryDesc[0x7B] = QCoreApplication::translate("(Categories)", "Fashion");
+    s_categoryDesc[upper_nibble_arts + 0xB] = QCoreApplication::translate("(Categories)", "Fashion");
 
-    s_categoryDesc[0x80] = QCoreApplication::translate("(Categories)",
-                             "Social/Policical/Economics");
+	
+	// Note: Same both DVB and ISDB.
+	if(dvbkind == kKindISDB) {
+		s_categoryDesc[0x80] = QCoreApplication::translate("(Categories)",
+														   "Documentary/Education");
+	} else {
+		s_categoryDesc[0x80] = QCoreApplication::translate("(Categories)",
+														   "Social/Policical/Economics");
+	}
     s_categoryDesc[0x81] = QCoreApplication::translate("(Categories)",
                              "Magazines/Reports/Documentary");
     s_categoryDesc[0x82] = QCoreApplication::translate("(Categories)",
@@ -572,49 +625,67 @@ void ContentDescriptor::Init(DVBKind dvbkind)
     s_categoryDesc[0x83] = QCoreApplication::translate("(Categories)",
                                                        "Remarkable People");
 
-    s_categoryDesc[0x90] = QCoreApplication::translate("(Categories)",
-                             "Education/Science/Factual");
-    s_categoryDesc[0x91] = QCoreApplication::translate("(Categories)",
+	uint upper_nibble_edu = (dvbkind == kKindISDB) ? 0xA0 : 0x90;
+	{
+		s_categoryDesc[upper_nibble_edu + 0x0] = QCoreApplication::translate("(Categories)",
+																			 "Hobbies/Education");
+	} else {
+		s_categoryDesc[upper_nibble_edu + 0x0] = QCoreApplication::translate("(Categories)",
+																			 "Education/Science/Factual");
+	}
+    s_categoryDesc[upper_nibble_edu + 0x1] = QCoreApplication::translate("(Categories)",
                              "Nature/animals/Environment");
-    s_categoryDesc[0x92] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_edu + 0x2] = QCoreApplication::translate("(Categories)",
                              "Technology/Natural Sciences");
-    s_categoryDesc[0x93] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_edu + 0x3] = QCoreApplication::translate("(Categories)",
                              "Medicine/Physiology/Psychology");
-    s_categoryDesc[0x94] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_edu + 0x4] = QCoreApplication::translate("(Categories)",
                              "Foreign Countries/Expeditions");
-    s_categoryDesc[0x95] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_edu + 0x5] = QCoreApplication::translate("(Categories)",
                              "Social/Spiritual Sciences");
-    s_categoryDesc[0x96] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_edu + 0x6] = QCoreApplication::translate("(Categories)",
                                                        "Further Education");
-    s_categoryDesc[0x97] = QCoreApplication::translate("(Categories)",
+    s_categoryDesc[upper_nibble_edu + 0x7] = QCoreApplication::translate("(Categories)",
                                                        "Languages");
 
-    s_categoryDesc[0xA0] = QCoreApplication::translate("(Categories)",
-                                                       "Leisure/Hobbies");
-    s_categoryDesc[0xA1] = QCoreApplication::translate("(Categories)",
-                                                       "Tourism/Travel");
-    s_categoryDesc[0xA2] = QCoreApplication::translate("(Categories)",
-                                                       "Handicraft");
-    s_categoryDesc[0xA3] = QCoreApplication::translate("(Categories)",
-                                                       "Motoring");
-    s_categoryDesc[0xA4] = QCoreApplication::translate("(Categories)",
-                                                       "Fitness & Health");
-    s_categoryDesc[0xA5] = QCoreApplication::translate("(Categories)", "Cooking");
-    s_categoryDesc[0xA6] = QCoreApplication::translate("(Categories)",
-                                                       "Advertizement/Shopping");
-    s_categoryDesc[0xA7] = QCoreApplication::translate("(Categories)",
-                                                       "Gardening");
+	if(dvbkind != kKindISDB) {
+		// ToDo: Integrate ISDB.
+		s_categoryDesc[0xA0] = QCoreApplication::translate("(Categories)",
+														   "Leisure/Hobbies");
+		s_categoryDesc[0xA1] = QCoreApplication::translate("(Categories)",
+														   "Tourism/Travel");
+		s_categoryDesc[0xA2] = QCoreApplication::translate("(Categories)",
+														   "Handicraft");
+		s_categoryDesc[0xA3] = QCoreApplication::translate("(Categories)",
+														   "Motoring");
+		s_categoryDesc[0xA4] = QCoreApplication::translate("(Categories)",
+														   "Fitness & Health");
+		s_categoryDesc[0xA5] = QCoreApplication::translate("(Categories)", "Cooking");
+		s_categoryDesc[0xA6] = QCoreApplication::translate("(Categories)",
+														   "Advertizement/Shopping");
+		s_categoryDesc[0xA7] = QCoreApplication::translate("(Categories)",
+
+														   "Gardening");
+	}
+
+	if(dvbkind == kKindISDB) {
+		// ToDo: Integrate ISDB.
+		    s_categoryDesc[0xB0] = QCoreApplication::translate("(Categories)",
+                                                       "Welfare");
+	} else {
     // Special
-    s_categoryDesc[0xB0] = QCoreApplication::translate("(Categories)",
-                                                       "Original Language");
-    s_categoryDesc[0xB1] = QCoreApplication::translate("(Categories)",
-                                                       "Black & White");
-    s_categoryDesc[0xB2] = QCoreApplication::translate("(Categories)",
-                                                       "\"Unpublished\" Programs");
-    s_categoryDesc[0xB3] = QCoreApplication::translate("(Categories)",
-                                                       "Live Broadcast");
+		s_categoryDesc[0xB0] = QCoreApplication::translate("(Categories)",
+														   "Original Language");
+		s_categoryDesc[0xB1] = QCoreApplication::translate("(Categories)",
+														   "Black & White");
+		s_categoryDesc[0xB2] = QCoreApplication::translate("(Categories)",
+														   "\"Unpublished\" Programs");
+		s_categoryDesc[0xB3] = QCoreApplication::translate("(Categories)",
+														   "Live Broadcast");
+	}
     // UK Freeview custom id
-    s_categoryDesc[0xF0] = QCoreApplication::translate("(Categories)",
+	uint upper_nibble_drama = (dvbkind == kKindISDB) ? 0x30 : 0xF0;
+    s_categoryDesc[upper_nibble_drama + 0x0] = QCoreApplication::translate("(Categories)",
                                                        "Drama");
 
     s_categoryDescExists = true;
