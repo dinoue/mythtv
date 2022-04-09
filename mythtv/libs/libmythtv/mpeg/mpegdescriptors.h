@@ -306,6 +306,7 @@ typedef enum
     kKindISDB    = 2,
 } DVBKind;
 
+#include "isdb_decode_text.h"
 
 MTV_PUBLIC IsdbDecode __isdb_decoder_open(DVBKind dvbkind);
 MTV_PUBLIC void __isdb_decoder_close(const IsdbDecode isdb_handle);
