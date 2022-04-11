@@ -252,8 +252,8 @@ bool DVBStreamData::HandleTables(uint pid, const PSIPTable &psip)
                 QMutexLocker locker(&m_listenerLock);
                 for (auto & listener : m_dvbMainListeners)
                     listener->HandleNIT(&nit);
-//                for (size_t i = 0; i < _dvb_main_listeners.size(); i++)
-//                  _dvb_main_listeners[i]->HandleNIT(&nit);
+                for (size_t i = 0; i < _dvb_main_listeners.size(); i++)
+					_dvb_main_listeners[i]->HandleNIT(&nit);
             }
 
             return true;
