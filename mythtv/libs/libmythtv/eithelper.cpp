@@ -297,7 +297,7 @@ static void parse_dvb_event_descriptors(const desc_list_t& list, FixupValue fix,
         MPEGDescriptor::FindBestMatches(
             list, DescriptorID::extended_event, languagePreferences, dvbkind);
 
-//    QByteArray saved_text;
+    QByteArray saved_text;
     description = "";
     for (auto & best_event : bestExtendedEvents)
     {
@@ -311,9 +311,9 @@ static void parse_dvb_event_descriptors(const desc_list_t& list, FixupValue fix,
         if (eed.IsValid())
         {
 #if 1 /* ToDo: Check this */
-//			if (dvbkind == kKindISDB)
-//				description += eed.ItemText(saved_text);
-//          else
+			if (dvbkind == kKindISDB)
+				description += eed.ItemText(saved_text);
+			else
                 description += eed.Text(enc);
 #else
             description += eed.Text(enc);
@@ -322,13 +322,13 @@ static void parse_dvb_event_descriptors(const desc_list_t& list, FixupValue fix,
         // add items from the descriptor to the items
         items.unite (eed.Items());
     }
-//    if (dvbkind == kKindISDB && !saved_text.isEmpty()) {
-//		IsdbDecode isdb_handle = __isdb_decoder_open(dvbkind);
-//        description += dvb_decode_text((unsigned char *)saved_text.data(),
-//									   saved_text.size(), isdb_handle);
-//		__isdb_decoder_close(isdb_handle);
-//        description += "\n";
-//    }
+    if (dvbkind == kKindISDB && !saved_text.isEmpty()) {
+		IsdbDecode isdb_handle = __isdb_decoder_open(dvbkind);
+        description += dvb_decode_text((unsigned char *)saved_text.data(),
+									   saved_text.size(), isdb_handle);
+		__isdb_decoder_close(isdb_handle);
+        description += "\n";
+    }
 }
 
 static inline void parse_dvb_component_descriptors(const desc_list_t& list,
@@ -633,14 +633,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
             if (isUPC) {
                 desc_list_t subtitles = MPEGDescriptor::FindAll(list, PrivateDescriptorID::upc_event_episode_title);
                 for (auto & st : subtitles) {
-					std::vector<uint8_t> __st;
-					// ToDo: More smarter
-					if(st != nullptr) {
-						for(int __i = 0; st[__i] != '\0' ; __i++) {
-							__st.push_back(st[__i]);
-						}
-					}
-                    PrivateUPCCablecomEpisodeTitleDescriptor desc(__st, dvbkind);
+                    PrivateUPCCablecomEpisodeTitleDescriptor desc(st, 300, dvbkind);
                     if (!desc.IsValid())
                         continue;
                     subtitle = desc.Text();

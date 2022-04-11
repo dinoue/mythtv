@@ -2988,7 +2988,9 @@ class DefaultAuthorityDescriptor : public MPEGDescriptor
 class PrivateUPCCablecomEpisodeTitleDescriptor : public MPEGDescriptor
 {
     public:
-		explicit PrivateUPCCablecomEpisodeTitleDescriptor(const std::vector<uint8_t> &data, DVBKind dvbkind = kKindISDB) :
+     explicit PrivateUPCCablecomEpisodeTitleDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+         MPEGDescriptor(data, len, PrivateDescriptorID::upc_event_episode_title, dvbkind) { }
+	explicit PrivateUPCCablecomEpisodeTitleDescriptor(const std::vector<uint8_t> &data, DVBKind dvbkind = kKindISDB) :
 			MPEGDescriptor(data, PrivateDescriptorID::upc_event_episode_title, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0xa7
