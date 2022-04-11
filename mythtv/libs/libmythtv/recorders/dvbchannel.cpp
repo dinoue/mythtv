@@ -55,7 +55,7 @@
 #include "dvbcam.h"
 #include "tv_rec.h"
 
-
+#define _USE_ISDB_PATCH
 // Local functions
 static struct dvb_frontend_parameters dtvmultiplex_to_dvbparams(
     DTVTunerType tuner_type, const DTVMultiplex& tuning, uint intermediate_freq, bool can_fec_auto);
@@ -794,7 +794,7 @@ bool DVBChannel::Tune(const DTVMultiplex &tuning,
     {
         LOG(VB_GENERAL, LOG_ERR, LOC +
             "DVB-S/S2 needs device tree for LNB handling");
-//        return false; // OK?
+        return false; // OK?
     }
 
     m_desiredTuning = tuning;
@@ -944,8 +944,14 @@ bool DVBChannel::Tune(const DTVMultiplex &tuning,
             // Legacy DVBv3 API
             struct dvb_frontend_parameters params = dtvmultiplex_to_dvbparams(
                 m_tunerType, tuning, intermediate_freq, can_fec_auto);
-
-//            if (ioctl(m_fdFrontend, FE_SET_FRONTEND, &params) < 0)
+#if 1
+            if (ioctl(m_fdFrontend, FE_SET_FRONTEND, &params) < 0)
+			{
+				LOG(VB_GENERAL, LOG_ERR, LOC +
+					"Tune(): Setting Frontend tuning parameters failed." + ENO);
+				return false;
+			}
+#else
             if (DTVTunerType::kTunerTypeDVBS1 == m_tunerType)
             {
                 usleep(500 * 1000);
@@ -992,7 +998,7 @@ bool DVBChannel::Tune(const DTVMultiplex &tuning,
                 }
 			}
         }
-
+#endif
         // Extra delay to add for broken DVB drivers
         if (m_tuningDelay > 0ms)
             std::this_thread::sleep_for(m_tuningDelay);
@@ -1879,6 +1885,10 @@ static struct dtv_properties *dtvmultiplex_to_dtvproperties(uint inputId,
     cmdseq->props[c++].u.data = tuning.m_modulation;
     cmdseq->props[c].cmd      = DTV_INVERSION;
     cmdseq->props[c++].u.data = tuning.m_inversion;
+#if defined(_USE_ISDB_PATCH)
+	cmdseq->props[c].cmd      = DTV_STREAM_ID;
+	cmdseq->props[c++].u.data = tuning.m_transportid;
+#endif
 
     // Symbol rate
     if (tuner_type == DTVTunerType::kTunerTypeDVBS1 ||
