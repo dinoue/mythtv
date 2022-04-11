@@ -59,8 +59,6 @@ DTVRecorder::DTVRecorder(TVRec *rec) :
         gCoreContext->GetNumSetting("MinimumRecordingQuality", 95);
 
     m_containerFormat = formatMPEG2_TS;
-	m_continuityCounter.fill(0xff);
-
 }
 
 DTVRecorder::~DTVRecorder(void)
