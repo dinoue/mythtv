@@ -1867,7 +1867,7 @@ bool TVRec::SetupDTVSignalMonitor(bool EITscan)
 			DVBKind dvbkind = kKindDVB;
             if (dvbchannel)
             {
-                if (dvbchannel->GetFrontendName().indexOf("ISDB") >= 0)
+                if (dvbchannel->GetFrontendName().startsWith("ISDB", Qt::CaseInsensitive))
                     dvbkind = kKindISDB;
                 else
                     dvbkind = kKindDVB;
