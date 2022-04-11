@@ -307,14 +307,14 @@ QDateTime dvbdate2qt(const unsigned char *buf, DVBKind dvbkind)
     uint mjd = (buf[0] << 8) | buf[1];
     if (mjd >= 40587)
     {
-        if (dvbkind == kKindISDB)
-        {
+		// At ISDB for Japan, time must be LOCAL TIME.
+		if (dvbkind == kKindISDB)
+		{
             QDate date(1970, 1, 1);
             QTime time(byteBCD2int(buf[2]), byteBCD2int(buf[3]),
                        byteBCD2int(buf[4]));
-            return QDateTime(date.addDays(mjd - 40587), time).toUTC();
+            return QDateTime(date.addDays(mjd - 40587), time, Qt::LocalTime).toUTC();
         }
-
         // Modified Julian date as number of days since 17th November 1858.
         // 1st Jan 1970 was date 40587.
         uint secsSince1970 = (mjd - 40587)   * 86400;
@@ -344,6 +344,7 @@ QDateTime dvbdate2qt(const unsigned char *buf, DVBKind dvbkind)
     QTime time(byteBCD2int(buf[2]), byteBCD2int(buf[3]),
                byteBCD2int(buf[4]));
 
+	// At ISDB for Japan, time must be LOCAL TIME.
     if (dvbkind == kKindISDB)
         return QDateTime(date, time, Qt::LocalTime).toUTC();
     else
@@ -361,12 +362,13 @@ time_t dvbdate2unix(const unsigned char *buf, DVBKind dvbkind)
     if (mjd < 40587)
         return 0; // we don't handle pre-unix dates..
 
+	// At ISDB for Japan, time must be LOCAL TIME.
     if (dvbkind == kKindISDB)
     {
         QDate date(1970, 1, 1);
         QTime time(byteBCD2int(buf[2]), byteBCD2int(buf[3]),
                    byteBCD2int(buf[4]));
-        return QDateTime(date.addDays(mjd - 40587), time).toUTC().toSecsSinceEpoch();
+        return QDateTime(date.addDays(mjd - 40587), time, Qt::LocalTime).toUTC().toSecsSinceEpoch();
     }
 
     uint secsSince1970 = (mjd - 40587)   * 86400;
