@@ -142,13 +142,12 @@ void DVBStreamHandler::RunTS(void)
         if (dvr_fd >= 0)
             break;
 
-        int openerr = errno;
         LOG(VB_GENERAL, LOG_WARNING, LOC +
             QString("Opening DVR device %1 failed : %2")
 			.arg(m_dvrDevPath, QString::fromLocal8Bit(strerror(errno))));
 
 
-        if (tries >= 20 || (openerr != EBUSY && openerr != EAGAIN))
+        if (tries >= 20 || (errno != EBUSY && errno != EAGAIN))
         {
             LOG(VB_GENERAL, LOG_ERR, LOC +
                 QString("Failed to open DVR device %1 : %2")
