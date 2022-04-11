@@ -168,12 +168,13 @@ ChannelScanSM::ChannelScanSM(ScanMonitor *scan_monitor,
     if (dtvSigMon)
     {
         LOG(VB_CHANSCAN, LOG_INFO, LOC + "Connecting up DTVSignalMonitor");
-        DVBKind dvbkind = kKindDVB;
+        bool dvbkind = CodecUseARIBB24::Unused;
 #ifdef USING_DVB
+		// ToDo: Will detect ARIBB24 Codec.
         DVBChannel *dvbchannel = dynamic_cast<DVBChannel*>(m_channel);
         if (dvbchannel) {
             if (dvbchannel->GetFrontendName().indexOf("ISDB") >= 0)
-                dvbkind = kKindISDB;
+                dvbkind = CodecUseARIBB24::AribB24;
         }
 #endif
         auto *data = new ScanStreamData(false, dvbkind);

@@ -34,7 +34,7 @@ class MTV_PUBLIC DVBStreamData : virtual public MPEGStreamData
   public:
     DVBStreamData(uint desired_netid, uint desired_tsid,
                   int desired_program, int cardnum, bool cacheTables = false,
-				  DVBKind dvbkind = kKindDVB);
+				  bool dvbkind = CodecUseARIBB24::Unused);
     ~DVBStreamData() override;
 
     using MPEGStreamData::Reset;

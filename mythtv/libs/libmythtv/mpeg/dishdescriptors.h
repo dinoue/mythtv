@@ -14,7 +14,7 @@
 class DishEventMPAADescriptor : public MPEGDescriptor
 {
   public:
-    explicit DishEventMPAADescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit DishEventMPAADescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(data, len, PrivateDescriptorID::dish_event_mpaa, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x89
@@ -43,7 +43,7 @@ class DishEventMPAADescriptor : public MPEGDescriptor
 class DishEventVCHIPDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DishEventVCHIPDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit DishEventVCHIPDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(data, len, PrivateDescriptorID::dish_event_vchip, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x95
@@ -68,7 +68,7 @@ class DishEventVCHIPDescriptor : public MPEGDescriptor
 class DishEventNameDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DishEventNameDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit DishEventNameDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(data, len, PrivateDescriptorID::dish_event_name, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x91
@@ -82,7 +82,7 @@ class DishEventNameDescriptor : public MPEGDescriptor
 class DishEventDescriptionDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DishEventDescriptionDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit DishEventDescriptionDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(
             data, len, PrivateDescriptorID::dish_event_description, dvbkind) { }
     //       Name             bits  loc  expected value
@@ -99,7 +99,7 @@ class DishEventDescriptionDescriptor : public MPEGDescriptor
 class DishEventPropertiesDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DishEventPropertiesDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit DishEventPropertiesDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(
             data, len, PrivateDescriptorID::dish_event_properties, dvbkind) { }
     //       Name             bits  loc  expected value
@@ -123,7 +123,7 @@ class DishEventPropertiesDescriptor : public MPEGDescriptor
 class DishEventTagsDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DishEventTagsDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit DishEventTagsDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(data, len, PrivateDescriptorID::dish_event_tags, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x96
@@ -155,7 +155,7 @@ DishThemeType string_to_dish_theme_type(const QString &type);
 class DishContentDescriptor : public ContentDescriptor
 {
   public:
-    explicit DishContentDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit DishContentDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         ContentDescriptor(data, len, dvbkind) { }
 
     DishThemeType GetTheme(DVBKind dvbkind) const;

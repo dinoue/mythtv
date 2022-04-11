@@ -8,9 +8,9 @@
 #include "dvbdescriptors.h"
 #include "mythmiscutil.h" // for xml_indent
 
-MTV_PUBLIC IsdbDecode __isdb_decoder_open(DVBKind dvbkind)
+MTV_PUBLIC IsdbDecode __isdb_decoder_open(bool dvbkind)
 {
-	if (dvbkind == kKindISDB) {
+	if (dvbkind == CodecUseARIBB24::AribB24) {
 		IsdbDecode _handle = nullptr;
 		QDateTime dt1 = QDateTime::currentDateTime();
 		QDateTime dt2 = dt1.toUTC();

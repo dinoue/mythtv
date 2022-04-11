@@ -13,7 +13,7 @@ class MTV_PUBLIC ScanStreamData :
     public DVBStreamData
 {
   public:
-    explicit ScanStreamData(bool no_default_pid = false, DVBKind dvbkind = kKindISDB);
+    explicit ScanStreamData(bool no_default_pid = false, bool dvbkind = CodecUseARIBB24::AribB24);
     ~ScanStreamData() override;
 
     bool IsRedundant(uint pid, const PSIPTable &psip) const override; // ATSCStreamData

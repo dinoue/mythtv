@@ -744,9 +744,9 @@ static int pid_printer(const MythUtilCommandLineParser &cmdline)
 
 	bool isISDB = cmdline.toBool("is_isdb");
 	bool isDVB = cmdline.toBool("is_dvb");
-	DVBKind dvbkind = kKindISDB;
+	bool dvbkind = CodecUseARIBB24::AribB24;
 	if((isDVB) || !(isISDB)) {
-		dvbkind = kKindDVB;
+		dvbkind = CodecUseARIBB24::Unused;
 	}
     auto *sd = new ScanStreamData(true, dvbkind);
     for (QHash<uint,bool>::iterator it = use_pid.begin();

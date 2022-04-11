@@ -308,7 +308,7 @@ QDateTime dvbdate2qt(const unsigned char *buf, DVBKind dvbkind)
     if (mjd >= 40587)
     {
 		// At ISDB for Japan, time must be LOCAL TIME.
-		if (dvbkind == kKindISDB)
+		if (dvbkind == CodecUseARIBB24::AribB24)
 		{
             QDate date(1970, 1, 1);
             QTime time(byteBCD2int(buf[2]), byteBCD2int(buf[3]),
@@ -345,7 +345,7 @@ QDateTime dvbdate2qt(const unsigned char *buf, DVBKind dvbkind)
                byteBCD2int(buf[4]));
 
 	// At ISDB for Japan, time must be LOCAL TIME.
-    if (dvbkind == kKindISDB)
+    if (dvbkind == CodecUseARIBB24::AribB24)
         return QDateTime(date, time, Qt::LocalTime).toUTC();
     else
         return QDateTime(date, time, Qt::UTC);
@@ -363,7 +363,7 @@ time_t dvbdate2unix(const unsigned char *buf, DVBKind dvbkind)
         return 0; // we don't handle pre-unix dates..
 
 	// At ISDB for Japan, time must be LOCAL TIME.
-    if (dvbkind == kKindISDB)
+    if (dvbkind == CodecUseARIBB24::AribB24)
     {
         QDate date(1970, 1, 1);
         QTime time(byteBCD2int(buf[2]), byteBCD2int(buf[3]),

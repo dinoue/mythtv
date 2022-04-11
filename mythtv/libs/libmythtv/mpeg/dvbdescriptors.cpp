@@ -329,7 +329,7 @@ volatile bool      ContentDescriptor::s_categoryDescExists = false;
 ProgramInfo::CategoryType ContentDescriptor::GetMythCategory(uint i) const
 {
 #if 1	
-    if (m_dvbkind == kKindISDB) {
+    if (m_dvbkind == CodecUseARIBB24::AribB24) {
         if (0x6 == Nibble1(i))
             return ProgramInfo::kCategoryMovie;
         if (0x1 == Nibble1(i))
@@ -423,7 +423,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
     QString subCatStr = QCoreApplication::translate("(Categories)",
         "%1 - %2", "Category with subcategory display");
 #if 1
-    if (dvbkind == kKindISDB) {
+    if (dvbkind == CodecUseARIBB24::AribB24) {
         s_categoryDesc[0x00] = QCoreApplication::translate("(Categories)",
                                                     "ニュース／報道", 0
                                          );
@@ -463,7 +463,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
         return;
     }
 #endif
-	uint upper_nibble_movie = (dvbkind == kKindISDB) ? 0x60 : 0x10;
+	uint upper_nibble_movie = (dvbkind == CodecUseARIBB24::AribB24) ? 0x60 : 0x10;
     s_categoryDesc[upper_nibble_movie + 0x0] = QCoreApplication::translate("(Categories)", "Movie");
     s_categoryDesc[upper_nibble_movie + 0x1] = subCatStr
         .arg(QCoreApplication::translate("(Categories)", "Movie"),
@@ -495,7 +495,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
              QCoreApplication::translate("(Categories)", "Adult",
                                          "Adult Movie"));
 
-	uint upper_nibble_news = (dvbkind == kKindISDB) ? 0x00 : 0x20;
+	uint upper_nibble_news = (dvbkind == CodecUseARIBB24::AribB24) ? 0x00 : 0x20;
     s_categoryDesc[upper_nibble_news + 0x0] = QCoreApplication::translate("(Categories)", "News");
     s_categoryDesc[upper_nibble_news + 0x1] = QCoreApplication::translate("(Categories)",
                                                        "News/weather report");
@@ -506,9 +506,9 @@ void ContentDescriptor::Init(DVBKind dvbkind)
     s_categoryDesc[upper_nibble_news + 0x4] = QCoreApplication::translate("(Categories)",
                                                        "Intelligent Programs");
 
-	uint upper_nibble_ent = (dvbkind == kKindISDB) ? 0x50 : 0x30;
+	uint upper_nibble_ent = (dvbkind == CodecUseARIBB24::AribB24) ? 0x50 : 0x30;
 	// ToDo: Will Intehrate.
-	if(dvbkind == kKindISDB) {
+	if(dvbkind == CodecUseARIBB24::AribB24) {
 		s_categoryDesc[upper_nibble_ent + 0x0] = QCoreApplication::translate("(Categories)",
 																			 "Variety Show");
 	} else {
@@ -523,7 +523,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
 	}
 
 	
-	uint upper_nibble_sports = (dvbkind == kKindISDB) ? 0x10 : 0x40;
+	uint upper_nibble_sports = (dvbkind == CodecUseARIBB24::AribB24) ? 0x10 : 0x40;
     s_categoryDesc[upper_nibble_sports + 0x0] = QCoreApplication::translate("(Categories)",
                                                        "Sports");
     s_categoryDesc[upper_nibble_sports + 0x1] = QCoreApplication::translate("(Categories)",
@@ -550,8 +550,8 @@ void ContentDescriptor::Init(DVBKind dvbkind)
     s_categoryDesc[upper_nibble_sports + 0xB] = QCoreApplication::translate("(Categories)",
                                                      "Martial Sports");
 
-	uint upper_nibble_kids = (dvbkind == kKindISDB) ? 0x70 : 0x50;
-	if(dvbkind == kKindISDB) {
+	uint upper_nibble_kids = (dvbkind == CodecUseARIBB24::AribB24) ? 0x70 : 0x50;
+	if(dvbkind == CodecUseARIBB24::AribB24) {
 		// ToDo: Will integrate.
 		s_categoryDesc[upper_nibble_kids + 0x0] = QCoreApplication::translate("(Categories)", "Anime/Tokusatsu", 0);
 	} else {
@@ -568,7 +568,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
 	s_categoryDesc[upper_nibble_kids + 0x5] = QCoreApplication::translate("(Categories)",
 																		  "Cartoons/Puppets");
 
-	uint upper_nibble_music = (dvbkind == kKindISDB) ? 0x40 : 0x60;
+	uint upper_nibble_music = (dvbkind == CodecUseARIBB24::AribB24) ? 0x40 : 0x60;
     s_categoryDesc[upper_nibble_music + 0x0] = QCoreApplication::translate("(Categories)",
                                                        "Music/Ballet/Dance");
     s_categoryDesc[upper_nibble_music + 0x1] = QCoreApplication::translate("(Categories)",
@@ -584,7 +584,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
     s_categoryDesc[upper_nibble_music + 0x6] = QCoreApplication::translate("(Categories)",
                                                        "Ballet");
 
-	uint upper_nibble_arts = (dvbkind == kKindISDB) ? 0x90 : 0x70;
+	uint upper_nibble_arts = (dvbkind == CodecUseARIBB24::AribB24) ? 0x90 : 0x70;
     s_categoryDesc[upper_nibble_arts + 0x0] = QCoreApplication::translate("(Categories)",
                                                        "Arts/Culture");
     s_categoryDesc[upper_nibble_arts + 0x1] = QCoreApplication::translate("(Categories)",
@@ -611,7 +611,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
 
 	
 	// Note: Same both DVB and ISDB.
-	if(dvbkind == kKindISDB) {
+	if(dvbkind == CodecUseARIBB24::AribB24) {
 		s_categoryDesc[0x80] = QCoreApplication::translate("(Categories)",
 														   "Documentary/Education");
 	} else {
@@ -625,8 +625,8 @@ void ContentDescriptor::Init(DVBKind dvbkind)
     s_categoryDesc[0x83] = QCoreApplication::translate("(Categories)",
                                                        "Remarkable People");
 
-	uint upper_nibble_edu = (dvbkind == kKindISDB) ? 0xA0 : 0x90;
-	if(dvbkind == kKindISDB) {
+	uint upper_nibble_edu = (dvbkind == CodecUseARIBB24::AribB24) ? 0xA0 : 0x90;
+	if(dvbkind == CodecUseARIBB24::AribB24) {
 		s_categoryDesc[upper_nibble_edu + 0x0] = QCoreApplication::translate("(Categories)",
 																			 "Hobbies/Education");
 	} else {
@@ -648,7 +648,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
     s_categoryDesc[upper_nibble_edu + 0x7] = QCoreApplication::translate("(Categories)",
                                                        "Languages");
 
-	if(dvbkind != kKindISDB) {
+	if(dvbkind != CodecUseARIBB24::AribB24) {
 		// ToDo: Integrate ISDB.
 		s_categoryDesc[0xA0] = QCoreApplication::translate("(Categories)",
 														   "Leisure/Hobbies");
@@ -668,7 +668,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
 														   "Gardening");
 	}
 
-	if(dvbkind == kKindISDB) {
+	if(dvbkind == CodecUseARIBB24::AribB24) {
 		// ToDo: Integrate ISDB.
 		    s_categoryDesc[0xB0] = QCoreApplication::translate("(Categories)",
                                                        "Welfare");
@@ -684,7 +684,7 @@ void ContentDescriptor::Init(DVBKind dvbkind)
 														   "Live Broadcast");
 	}
     // UK Freeview custom id
-	uint upper_nibble_drama = (dvbkind == kKindISDB) ? 0x30 : 0xF0;
+	uint upper_nibble_drama = (dvbkind == CodecUseARIBB24::AribB24) ? 0x30 : 0xF0;
     s_categoryDesc[upper_nibble_drama + 0x0] = QCoreApplication::translate("(Categories)",
                                                        "Drama");
 

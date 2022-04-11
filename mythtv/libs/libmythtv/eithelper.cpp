@@ -307,14 +307,14 @@ static void parse_isdb_event_descriptors(const desc_list_t& list, FixupValue fix
 {
     const unsigned char *bestShortEvent =
         MPEGDescriptor::FindBestMatch(
-            list, DescriptorID::short_event, languagePreferences, kUseAribB24);
+            list, DescriptorID::short_event, languagePreferences, CodecUseARIBB24::AribB24);
 
     const enc_override enc_none {};
     enc_override enc = enc_none;
 	
     if (bestShortEvent)
     {
-        ShortEventDescriptor sed(bestShortEvent, kUseAribB24);
+        ShortEventDescriptor sed(bestShortEvent, CodecUseARIBB24::AribB24);
         if (sed.IsValid())
         {
 			title    = sed.EventName(enc);
@@ -336,7 +336,7 @@ static void parse_isdb_event_descriptors(const desc_list_t& list, FixupValue fix
 
 	std::vector<const unsigned char*> bestExtendedEvents =
         MPEGDescriptor::FindBestMatches(
-            list, DescriptorID::extended_event, languagePreferences, kUseAribB24);
+            list, DescriptorID::extended_event, languagePreferences, CodecUseARIBB24::AribB24);
 
     QByteArray saved_text;
     description = "";
@@ -348,7 +348,7 @@ static void parse_isdb_event_descriptors(const desc_list_t& list, FixupValue fix
             break;
         }
 
-        ExtendedEventDescriptor eed(best_event, kUseAribB24);
+        ExtendedEventDescriptor eed(best_event, CodecUseARIBB24::AribB24);
         if (eed.IsValid())
         {
 #if 1
@@ -362,7 +362,7 @@ static void parse_isdb_event_descriptors(const desc_list_t& list, FixupValue fix
     }
     if (!saved_text.isEmpty()) {
         description += dvb_decode_text((unsigned char *)saved_text.data(),
-									   saved_text.size(), , kUseAribB24);
+									   saved_text.size(), , CodecUseARIBB24::AribB24);
         description += "\n";
     }
 }
@@ -391,10 +391,10 @@ static inline void parse_isdb_component_descriptors(const desc_list_t& list,
                                                    unsigned char &video_properties)
 {
     desc_list_t components =
-        MPEGDescriptor::FindAll(list, DescriptorID::component, kUseAribB24);
+        MPEGDescriptor::FindAll(list, DescriptorID::component, CodecUseARIBB24::AribB24);
     for (auto & comp : components)
     {
-        ComponentDescriptor component(comp, kUseAribB24);
+        ComponentDescriptor component(comp, CodecUseARIBB24::AribB24);
         if (!component.IsValid())
             continue;
         video_properties |= component.VideoProperties();
@@ -466,27 +466,27 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
 
         // Parse descriptors
         desc_list_t list = MPEGDescriptor::Parse(
-            eit->Descriptors(i), eit->DescriptorsLength(i), kUseAribB24);
+            eit->Descriptors(i), eit->DescriptorsLength(i), CodecUseARIBB24::AribB24);
 
         const unsigned char *dish_event_name = nullptr;
         if (EITFixUp::kFixDish & fix)
         {
             dish_event_name = MPEGDescriptor::Find(
-                    list, PrivateDescriptorID::dish_event_name, kUseAribB24);
+                    list, PrivateDescriptorID::dish_event_name, CodecUseARIBB24::AribB24);
         }
 
         if (dish_event_name)
         {
-            DishEventNameDescriptor dend(dish_event_name, kUseAribB24);
+            DishEventNameDescriptor dend(dish_event_name, CodecUseARIBB24::AribB24);
             if (dend.IsValid() && dend.HasName())
                 title = dend.Name(descCompression);
 
             const unsigned char *dish_event_description =
                 MPEGDescriptor::Find(
-                    list, PrivateDescriptorID::dish_event_description, kUseAribB24);
+                    list, PrivateDescriptorID::dish_event_description, CodecUseARIBB24::AribB24);
             if (dish_event_description)
             {
-                DishEventDescriptionDescriptor dedd(dish_event_description, kUseAribB24);
+                DishEventDescriptionDescriptor dedd(dish_event_description, CodecUseARIBB24::AribB24);
                 if (dedd.HasDescription())
                     description = dedd.Description(descCompression);
             }
@@ -511,10 +511,10 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
         if (EITFixUp::kFixDish & fix)
         {
             const unsigned char *mpaa_data = MPEGDescriptor::Find(
-                list, PrivateDescriptorID::dish_event_mpaa, kUseAribB24);
+                list, PrivateDescriptorID::dish_event_mpaa, CodecUseARIBB24::AribB24);
             if (mpaa_data)
             {
-                DishEventMPAADescriptor mpaa(mpaa_data, kUseAribB24);
+                DishEventMPAADescriptor mpaa(mpaa_data, CodecUseARIBB24::AribB24);
                 stars = mpaa.stars();
 
                 if (stars != 0.0F) // Only movies for now
@@ -528,10 +528,10 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
             if (stars == 0.0F) // Not MPAA rated, check VCHIP
             {
                 const unsigned char *vchip_data = MPEGDescriptor::Find(
-                    list, PrivateDescriptorID::dish_event_vchip, kUseAribB24);
+                    list, PrivateDescriptorID::dish_event_vchip, CodecUseARIBB24::AribB24);
                 if (vchip_data)
                 {
-                    DishEventVCHIPDescriptor vchip(vchip_data, kUseAribB24);
+                    DishEventVCHIPDescriptor vchip(vchip_data, CodecUseARIBB24::AribB24);
                     rating = vchip.rating();
                     rating_system = "VCHIP";
                     advisory = vchip.advisory();
@@ -547,10 +547,10 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
             }
 
             const unsigned char *tags_data = MPEGDescriptor::Find(
-                list, PrivateDescriptorID::dish_event_tags, kUseAribB24);
+                list, PrivateDescriptorID::dish_event_tags, CodecUseARIBB24::AribB24);
             if (tags_data)
             {
-                DishEventTagsDescriptor tags(tags_data, kUseAribB24);
+                DishEventTagsDescriptor tags(tags_data, CodecUseARIBB24::AribB24);
                 seriesId  = tags.seriesid();
                 programId = tags.programid();
                 originalairdate = tags.originalairdate(); // future use
@@ -560,23 +560,23 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
             }
 
             const unsigned char *properties_data = MPEGDescriptor::Find(
-                list, PrivateDescriptorID::dish_event_properties, kUseAribB24);
+                list, PrivateDescriptorID::dish_event_properties, CodecUseARIBB24::AribB24);
             if (properties_data)
             {
-                DishEventPropertiesDescriptor properties(properties_data, kUseAribB24);
+                DishEventPropertiesDescriptor properties(properties_data, CodecUseARIBB24::AribB24);
                 subtitle_type |= properties.SubtitleProperties(descCompression);
                 audio_props   |= properties.AudioProperties(descCompression);
             }
         }
 
         const unsigned char *content_data =
-            MPEGDescriptor::Find(list, DescriptorID::content, kUseAribB24);
+            MPEGDescriptor::Find(list, DescriptorID::content, CodecUseARIBB24::AribB24);
         if (content_data)
         {
             if ((EITFixUp::kFixDish & fix) || (EITFixUp::kFixBell & fix))
             {
-                DishContentDescriptor content(content_data, 300, kUseAribB24);
-                switch (content.GetTheme(kUseAribB24))
+                DishContentDescriptor content(content_data, 300, CodecUseARIBB24::AribB24);
+                switch (content.GetTheme(CodecUseARIBB24::AribB24))
                 {
                     case kThemeMovie :
                         category_type = ProgramInfo::kCategoryMovie;
@@ -591,7 +591,7 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
                         category_type = ProgramInfo::kCategoryNone;
                 }
                 if (EITFixUp::kFixDish & fix)
-                    category  = content.GetCategory(kUseAribB24);
+                    category  = content.GetCategory(CodecUseARIBB24::AribB24);
             }
             else if (EITFixUp::kFixAUDescription & fix)//AU Freeview assigned genres
             {
@@ -601,7 +601,7 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
                      /* 8*/"Current Affairs", "Education", "Infotainment",
                      /*11*/"Special", "Comedy", "Drama", "Documentary",
                      /*15*/"Unknown"};
-                ContentDescriptor content(content_data, 300, kUseAribB24);
+                ContentDescriptor content(content_data, 300, CodecUseARIBB24::AribB24);
                 if (content.IsValid())
                 {
                     category = QString::fromStdString(s_auGenres[content.Nibble1(0)]);
@@ -615,7 +615,7 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
                      /* 4*/"Αθλητικό", "Παιδικό", "Unknown", "Unknown",
                      /* 8*/"Unknown", "Ντοκιμαντέρ", "Unknown", "Unknown",
                      /*12*/"Unknown", "Unknown", "Unknown", "Unknown"};
-                ContentDescriptor content(content_data, 300, kUseAribB24);
+                ContentDescriptor content(content_data, 300, CodecUseARIBB24::AribB24);
                 if (content.IsValid())
                 {
                     category = QString::fromStdString(s_grGenres[content.Nibble2(0)]);
@@ -624,7 +624,7 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
             }
             else
             {
-                ContentDescriptor content(content_data, 300, kUseAribB24);
+                ContentDescriptor content(content_data, 300, CodecUseARIBB24::AribB24);
                 if (content.IsValid())
                 {
                     category      = content.GetDescription(0);
@@ -636,10 +636,10 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
         }
 
         desc_list_t contentIds =
-            MPEGDescriptor::FindAll(list, DescriptorID::dvb_content_identifier, kUseAribB24);
+            MPEGDescriptor::FindAll(list, DescriptorID::dvb_content_identifier, CodecUseARIBB24::AribB24);
         for (auto & id : contentIds)
         {
-            DVBContentIdentifierDescriptor desc(id, kUseAribB24);
+            DVBContentIdentifierDescriptor desc(id, CodecUseARIBB24::AribB24);
             if (!desc.IsValid())
                 continue;
             for (size_t k = 0; k < desc.CRIDCount(); k++)
@@ -673,9 +673,9 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
         if (subtitle.isEmpty()) {
             bool isUPC = false;
             /* is this event carrying UPC private data? */
-            desc_list_t private_data_specifiers = MPEGDescriptor::FindAll(list, DescriptorID::private_data_specifier, kUseAribB24);
+            desc_list_t private_data_specifiers = MPEGDescriptor::FindAll(list, DescriptorID::private_data_specifier, CodecUseARIBB24::AribB24);
             for (auto & specifier : private_data_specifiers) {
-                PrivateDataSpecifierDescriptor desc(specifier, kUseAribB24);
+                PrivateDataSpecifierDescriptor desc(specifier, CodecUseARIBB24::AribB24);
                 if (!desc.IsValid())
                     continue;
                 if (desc.PrivateDataSpecifier() == PrivateDataSpecifierID::UPC1) {
@@ -684,9 +684,9 @@ void EITHelper::AddEIT(const ISDBEventInformationTable *eit)
             }
 
             if (isUPC) {
-                desc_list_t subtitles = MPEGDescriptor::FindAll(list, PrivateDescriptorID::upc_event_episode_title, kUseAribB24);
+                desc_list_t subtitles = MPEGDescriptor::FindAll(list, PrivateDescriptorID::upc_event_episode_title, CodecUseARIBB24::AribB24);
                 for (auto & st : subtitles) {
-                    PrivateUPCCablecomEpisodeTitleDescriptor desc(st, 300, kUseAribB24);
+                    PrivateUPCCablecomEpisodeTitleDescriptor desc(st, 300, CodecUseARIBB24::AribB24);
                     if (!desc.IsValid())
                         continue;
                     subtitle = desc.Text();
@@ -756,7 +756,6 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
 
     uint tableid   = eit->TableID();
     uint version   = eit->Version();
-    DVBKind dvbkind = eit->DVBKindStatus();
     for (uint i = 0; i < eit->EventCount(); i++)
     {
         // Skip event if we have already processed it before...
@@ -801,7 +800,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
                     list, PrivateDescriptorID::dish_event_description);
             if (dish_event_description)
             {
-                DishEventDescriptionDescriptor dedd(dish_event_description, kUseAribB24);
+                DishEventDescriptionDescriptor dedd(dish_event_description, CodecUseARIBB24::AribB24);
                 if (dedd.HasDescription())
                     description = dedd.Description(descCompression);
             }
@@ -809,7 +808,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
         else
         {
 				parse_dvb_event_descriptors(list, fix, m_languagePreferences,
-                                        title, subtitle, description, items, dvbkind);
+                                        title, subtitle, description, items);
         }
 
         parse_dvb_component_descriptors(list, subtitle_type, audio_props,
@@ -890,8 +889,8 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
         {
             if ((EITFixUp::kFixDish & fix) || (EITFixUp::kFixBell & fix))
             {
-                DishContentDescriptor content(content_data, 300, dvbkind);
-                switch (content.GetTheme(dvbkind))
+                DishContentDescriptor content(content_data, 300);
+                switch (content.GetTheme())
                 {
                     case kThemeMovie :
                         category_type = ProgramInfo::kCategoryMovie;
@@ -906,7 +905,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
                         category_type = ProgramInfo::kCategoryNone;
                 }
                 if (EITFixUp::kFixDish & fix)
-                    category  = content.GetCategory(dvbkind);
+                    category  = content.GetCategory();
             }
             else if (EITFixUp::kFixAUDescription & fix)//AU Freeview assigned genres
             {
@@ -916,7 +915,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
                      /* 8*/"Current Affairs", "Education", "Infotainment",
                      /*11*/"Special", "Comedy", "Drama", "Documentary",
                      /*15*/"Unknown"};
-                ContentDescriptor content(content_data, 300, dvbkind);
+                ContentDescriptor content(content_data, 300);
                 if (content.IsValid())
                 {
                     category = QString::fromStdString(s_auGenres[content.Nibble1(0)]);
@@ -930,7 +929,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
                      /* 4*/"Αθλητικό", "Παιδικό", "Unknown", "Unknown",
                      /* 8*/"Unknown", "Ντοκιμαντέρ", "Unknown", "Unknown",
                      /*12*/"Unknown", "Unknown", "Unknown", "Unknown"};
-                ContentDescriptor content(content_data, 300, dvbkind);
+                ContentDescriptor content(content_data, 300);
                 if (content.IsValid())
                 {
                     category = QString::fromStdString(s_grGenres[content.Nibble2(0)]);
@@ -939,7 +938,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
             }
             else
             {
-                ContentDescriptor content(content_data, 300, dvbkind);
+                ContentDescriptor content(content_data, 300);
                 if (content.IsValid())
                 {
                     category      = content.GetDescription(0);
@@ -1001,7 +1000,7 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
             if (isUPC) {
                 desc_list_t subtitles = MPEGDescriptor::FindAll(list, PrivateDescriptorID::upc_event_episode_title);
                 for (auto & st : subtitles) {
-                    PrivateUPCCablecomEpisodeTitleDescriptor desc(st, 300, dvbkind);
+                    PrivateUPCCablecomEpisodeTitleDescriptor desc(st, 300);
                     if (!desc.IsValid())
                         continue;
                     subtitle = desc.Text();

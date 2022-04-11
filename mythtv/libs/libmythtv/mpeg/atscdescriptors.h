@@ -74,7 +74,7 @@ class MultipleStringStructure
 class CaptionServiceDescriptor : public MPEGDescriptor
 {
   public:
-    explicit CaptionServiceDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit CaptionServiceDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(data, len, DescriptorID::caption_service, dvbkind)
     {
         if (m_data && !Parse())
@@ -132,7 +132,7 @@ class CaptionServiceDescriptor : public MPEGDescriptor
 class ContentAdvisoryDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ContentAdvisoryDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit ContentAdvisoryDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(data, len, DescriptorID::content_advisory, dvbkind)
     {
         if (m_data && !Parse())
@@ -186,7 +186,7 @@ class ContentAdvisoryDescriptor : public MPEGDescriptor
 class ComponentNameDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ComponentNameDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit ComponentNameDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(data, len, DescriptorID::component_name, dvbkind)
     {
     }
@@ -206,7 +206,7 @@ class ComponentNameDescriptor : public MPEGDescriptor
 class AC3AudioStreamDescriptor : public MPEGDescriptor
 {
   public:
-    explicit AC3AudioStreamDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit AC3AudioStreamDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(data, len, DescriptorID::ac3_audio_stream, dvbkind) { }
     // descriptor_tag                        8   0.0   0x81
     // sample_rate_code                      3   2.0
@@ -317,7 +317,7 @@ class AC3AudioStreamDescriptor : public MPEGDescriptor
  */
 class ContentIdentifierDescriptor : public MPEGDescriptor
 {
-    explicit ContentIdentifierDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit ContentIdentifierDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(data, len, DescriptorID::atsc_content_identifier, dvbkind) { }
     // descriptor_tag                        8   0.0  0xB6
     // descriptor_length                     8   1.0
@@ -340,7 +340,7 @@ class ContentIdentifierDescriptor : public MPEGDescriptor
 class ExtendedChannelNameDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ExtendedChannelNameDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit ExtendedChannelNameDescriptor(const unsigned char *data, int len = 300, bool dvbkind = CodecUseARIBB24::Unused) :
         MPEGDescriptor(data, len, DescriptorID::extended_channel_name, dvbkind) { }
     MultipleStringStructure LongChannelName(void) const;
     QString LongChannelNameString(void) const;

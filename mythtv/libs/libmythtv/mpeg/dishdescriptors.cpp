@@ -152,7 +152,7 @@ QDate DishEventTagsDescriptor::originalairdate(void) const
     mjd[3] = 0;
     mjd[4] = 0;
 
-    QDateTime t = dvbdate2qt(mjd, kKindDVB);
+    QDateTime t = dvbdate2qt(mjd, m_dvbkind);
 
     if (!t.isValid())
         return {};

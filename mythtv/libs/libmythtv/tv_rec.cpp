@@ -1863,14 +1863,13 @@ bool TVRec::SetupDTVSignalMonitor(bool EITscan)
         auto *dsd = dynamic_cast<DVBStreamData*>(sd);
         if (!dsd)
         {
+			// ToDo: Will detect Codec ARIB B24.
             DVBChannel *dvbchannel = dynamic_cast<DVBChannel*>(m_channel);
-			DVBKind dvbkind = kKindDVB;
+			bool dvbkind = CodecUseARIBB24::Unused;
             if (dvbchannel)
             {
                 if (dvbchannel->GetFrontendName().startsWith("ISDB", Qt::CaseInsensitive))
-                    dvbkind = kKindISDB;
-                else
-                    dvbkind = kKindDVB;
+                    dvbkind = CodecUseARIBB24::AribB24;
             }
             sd = dsd = new DVBStreamData(netid, tsid, progNum, m_inputId, false, dvbkind);
             sd->SetCaching(true);
