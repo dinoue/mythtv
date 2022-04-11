@@ -932,6 +932,20 @@ bool DVBChannel::Tune(const DTVMultiplex &tuning,
             free(cmds->props);
             free(cmds);
 
+			int waitcount = 10;
+            while((res < 0) && (waitcount > 0)) {
+                usleep(100 * 1000); // 100mSec
+
+				cmds = dtvmultiplex_to_dtvproperties(m_inputId,
+													 m_tunerType, m_currentSys, tuning, intermediate_freq, can_fec_auto);
+				waitcount--;
+				if (!cmds) {
+					continue;
+				}
+				int res = ioctl(m_fdFrontend, FE_SET_PROPERTY, cmds);
+				free(cmds->props);
+				free(cmds);
+			}
             if (res < 0)
             {
                 LOG(VB_GENERAL, LOG_ERR, LOC +
@@ -997,8 +1011,8 @@ bool DVBChannel::Tune(const DTVMultiplex &tuning,
                     return false;
                 }
 			}
-        }
 #endif
+        }
         // Extra delay to add for broken DVB drivers
         if (m_tuningDelay > 0ms)
             std::this_thread::sleep_for(m_tuningDelay);

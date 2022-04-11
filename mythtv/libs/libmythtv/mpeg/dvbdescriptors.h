@@ -2805,7 +2805,7 @@ class FreesatCallsignDescriptor : public MPEGDescriptor
     QString Callsign(void) const
 	// Hack 20200324 K.O
 	//{ return QString::fromLatin1((char *)(&m_data[6]), m_data[5]); }
-	     { return dvb_decode_short_name(&_data[6], _data[5], m_isdbhandle); }
+	     { return dvb_decode_short_name(&m_data[6], m_data[5], m_isdbhandle); }
 
     QString toString(void) const override; // MPEGDescriptor
 };
