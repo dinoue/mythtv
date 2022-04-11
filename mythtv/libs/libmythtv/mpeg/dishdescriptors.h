@@ -123,7 +123,7 @@ class DishEventPropertiesDescriptor : public MPEGDescriptor
 class DishEventTagsDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DishEventTagsDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit DishEventTagsDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
         MPEGDescriptor(data, len, PrivateDescriptorID::dish_event_tags, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x96
@@ -155,7 +155,7 @@ DishThemeType string_to_dish_theme_type(const QString &type);
 class DishContentDescriptor : public ContentDescriptor
 {
   public:
-    explicit DishContentDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
+    explicit DishContentDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
         ContentDescriptor(data, len, dvbkind) { }
 
     DishThemeType GetTheme(DVBKind dvbkind) const;
