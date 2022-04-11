@@ -735,7 +735,8 @@ uint ScanDTVTransport::SaveScan(uint scanid) const
         "    hp_code_rate,       lp_code_rate,    modulation,     "
         "    transmission_mode,  guard_interval,  hierarchy,      "
         "    mod_sys,            rolloff,         bandwidth,      "
-        "    sistandard,         tuner_type,      signal_strength "
+        "    sistandard,         tuner_type,      signal_strength,"
+		"    transportid                                          "
         " ) "
         "VALUES "
         " ( :SCANID, "
@@ -745,6 +746,7 @@ uint ScanDTVTransport::SaveScan(uint scanid) const
         "   :TRANSMISSION_MODE, :GUARD_INTERVAL, :HIERARCHY,      "
         "   :MOD_SYS,           :ROLLOFF,        :BANDWIDTH,      "
         "   :SISTANDARD,        :TUNER_TYPE,     :SIGNAL_STRENGTH "
+		"   :TRANSPORT_ID                                         "
         " );");
 
     query.bindValue(":SCANID", scanid);
@@ -766,6 +768,7 @@ uint ScanDTVTransport::SaveScan(uint scanid) const
     query.bindValue(":SISTANDARD", m_sistandard);
     query.bindValue(":TUNER_TYPE", m_tunerType.toUInt());
     query.bindValue(":SIGNAL_STRENGTH", m_signalStrength);
+    query.bindValue(":TRANSPORT_ID", m_transportid);
 
     if (!query.exec())
     {
