@@ -1,3 +1,14 @@
+mythtv-isdb-ja (2:32.0+fixes20220327.gitb318acfe69.ISDB.3) experimental; urgency=medium
+
+  * THIS MAY BE (OR NOT) BREAKING DATABASE. PLEASE BACKUP DATABASE BEFORE.
+  * IMPORTANT: Update upstream to MythTV 32 (from 31).Still be test version.
+  * Try to fix break EPG table when getting from ISDB broadcast.
+  * Based on f562f802af3d24c1130568ff1aa8f9ce214d8340 of branch 32+ISDB-Ja.
+  * Merge from fixes/32 commit f69ce764b78a15989455957eda235d5b1993a08a .
+  * See https://github.com/Artanejp/mythtv/tree/32+ISDB-Ja .
+  
+ -- Kyuma Ohta <whatisthis.sowhat@gmail.com>  Mon, 11 Apr 2022 13:30:02 +0900
+
 mythtv-isdb-ja (2:32.0+fixes20220327.gitb318acfe69.ISDB.2) experimental; urgency=medium
 
   * THIS MAY BE (OR NOT) BREAKING DATABASE. PLEASE BACKUP DATABASE BEFORE.
