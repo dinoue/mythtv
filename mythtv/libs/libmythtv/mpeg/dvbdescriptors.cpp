@@ -1251,9 +1251,9 @@ QMultiMap<QString,QString> ExtendedEventDescriptor::Items(void) const
      */
     while (LengthOfItems() - index >= 2)
     {
-        QString item_description = dvb_decode_text (&m_data[8 + index], m_data[7 + index], m_isdbhandle);
+        QString item_description = dvb_decode_text (&m_data[8 + index], m_data[7 + index], m_dvbkind);
         index += 1 + m_data[7 + index];
-        QString item = dvb_decode_text (&m_data[8 + index], m_data[7 + index], m_isdbhandle);
+        QString item = dvb_decode_text (&m_data[8 + index], m_data[7 + index], m_dvbkind);
         index += 1 + m_data[7 + index];
         ret.insert (item_description, item);
     }

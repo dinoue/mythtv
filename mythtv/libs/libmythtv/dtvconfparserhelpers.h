@@ -100,6 +100,11 @@ class DTVTunerType : public DTVParamHelper
     static const int kTunerTypeASI;   // baseband
     static const int kTunerTypeOCUR;  // Virtual Channel tuning of QAM-64/256
     static const int kTunerTypeIPTV;  // IPTV
+    static const int kTunerTypeISDBS; // TC8PSK, BPSK, QPSK
+    static const int kTunerTypeISDBS3;// [ISDB-S for 4K/8K] TC8PSK, BPSK, QPSK
+    static const int kTunerTypeISDBT; // QAM-16, QAM-64, QPSK, DQPSK
+    static const int kTunerTypeISDBTb;// [ISDB-T International] QAM-16, QAM-64, QPSK, DQPSK
+    static const int kTunerTypeISDBC; // QAM-16, QAM-64, QAM-256, TC8PSK, BPSK, QPSK, DQPSK
     static const int kTunerTypeUnknown;
 
     // Note: Just because some cards sold in different regions support the same
@@ -662,8 +667,10 @@ class DTVModulationSystem : public DTVParamHelper
         kModulationSystem_DVBS2,
         kModulationSystem_DVBH,
         kModulationSystem_ISDBT,
-        kModulationSystem_ISDBS,
+        kModulationSystem_ISDBTb,
         kModulationSystem_ISDBC,
+        kModulationSystem_ISDBS,
+        kModulationSystem_ISDBS3,
         kModulationSystem_ATSC,
         kModulationSystem_ATSCMH,
         kModulationSystem_DTMB,
@@ -683,8 +690,10 @@ class DTVModulationSystem : public DTVParamHelper
                   (kModulationSystem_DVBS2        == (Types)SYS_DVBS2       ) &&
                   (kModulationSystem_DVBH         == (Types)SYS_DVBH        ) &&
                   (kModulationSystem_ISDBT        == (Types)SYS_ISDBT       ) &&
-                  (kModulationSystem_ISDBS        == (Types)SYS_ISDBS       ) &&
+                  (kModulationSystem_ISDBTb       == (Types)SYS_ISDBTb      ) &&
                   (kModulationSystem_ISDBC        == (Types)SYS_ISDBC       ) &&
+                  (kModulationSystem_ISDBS        == (Types)SYS_ISDBS       ) &&
+                  (kModulationSystem_ISDBS2       == (Types)SYS_ISDBS3      ) &&
                   (kModulationSystem_ATSC         == (Types)SYS_ATSC        ) &&
                   (kModulationSystem_ATSCMH       == (Types)SYS_ATSCMH      ) &&
                   (kModulationSystem_DTMB         == (Types)SYS_DTMB        ) &&

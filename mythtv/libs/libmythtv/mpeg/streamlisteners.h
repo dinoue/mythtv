@@ -198,5 +198,34 @@ class DVBEITStreamListener
     virtual void HandleEIT(const PremiereContentInformationTable*) = 0;
 };
 
+class ISDBMainStreamListener
+{
+  protected:
+    virtual ~ISDBMainStreamListener() = default;
+  public:
+    virtual void HandleTDT(const TimeDateTable*) = 0;
+    virtual void HandleNIT(const NetworkInformationTable*) = 0;
+    virtual void HandleSDT(uint tsid, const ServiceDescriptionTable*) = 0;
+};
+
+class ISDBOtherStreamListener
+{
+  protected:
+    virtual ~ISDBOtherStreamListener() = default;
+  public:
+    virtual void HandleNITo(const NetworkInformationTable*) = 0;
+    virtual void HandleSDTo(uint tsid, const ServiceDescriptionTable*) = 0;
+    virtual void HandleBAT(const BouquetAssociationTable*) = 0;
+};
+
+class ISDBEITStreamListener
+{
+  protected:
+    virtual ~ISDBEITStreamListener() = default;
+  public:
+    virtual void HandleEIT(const ISDBEventInformationTable*) = 0;
+    virtual void HandleEIT(const PremiereContentInformationTable*) = 0;
+};
+
 
 #endif // STREAMLISTENERS_H

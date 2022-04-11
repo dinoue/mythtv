@@ -1086,7 +1086,44 @@ bool ChannelScanSM::UpdateChannelInfo(bool wait_until_complete)
                 else
                     item.m_tuning.m_modSys = DTVModulationSystem::kModulationSystem_DVBT;
             }
-
+			// ISDB
+			if (m_scanDTVTunerType == DTVTunerType::kTunerTypeISDBC)
+            {
+                if (item.m_tuning.m_modSys == DTVModulationSystem::kModulationSystem_UNDEFINED)
+                {
+                    item.m_tuning.m_modSys = DTVModulationSystem::kModulationSystem_ISDBC;
+                }
+            }
+			// Note: Should separate via ISDB-T (Japan) and ISDB-TB (international) ? 20220411 K.O
+			if (m_scanDTVTunerType == DTVTunerType::kTunerTypeISDBT)
+            {
+                if (item.m_tuning.m_modSys == DTVModulationSystem::kModulationSystem_UNDEFINED)
+                {
+                    item.m_tuning.m_modSys = DTVModulationSystem::kModulationSystem_ISDBT;
+                }
+            }
+			if (m_scanDTVTunerType == DTVTunerType::kTunerTypeISDBTb)
+            {
+                if (item.m_tuning.m_modSys == DTVModulationSystem::kModulationSystem_UNDEFINED)
+                {
+                    item.m_tuning.m_modSys = DTVModulationSystem::kModulationSystem_ISDBTb;
+                }
+            }
+			if (m_scanDTVTunerType == DTVTunerType::kTunerTypeISDBS)
+            {
+                if (item.m_tuning.m_modSys == DTVModulationSystem::kModulationSystem_UNDEFINED)
+                {
+                    item.m_tuning.m_modSys = DTVModulationSystem::kModulationSystem_ISDBS;
+                }
+            }
+			if (m_scanDTVTunerType == DTVTunerType::kTunerTypeISDBS3)
+            {
+                if (item.m_tuning.m_modSys == DTVModulationSystem::kModulationSystem_UNDEFINED)
+                {
+                    item.m_tuning.m_modSys = DTVModulationSystem::kModulationSystem_ISDBS3;
+                }
+            }
+ 
             LOG(VB_CHANSCAN, LOG_INFO, LOC +
                 QString("Adding %1 offset:%2 ss:%3")
                     .arg(item.m_tuning.toString()).arg(m_current.offset())

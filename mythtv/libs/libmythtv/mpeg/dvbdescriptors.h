@@ -41,14 +41,14 @@ static QString coderate_inner(uint coderate);
 
 using enc_override = std::vector<uint8_t>;
 MTV_PUBLIC QString dvb_decode_text(const unsigned char *src, uint length,
-								   const enc_override &encoding_override, const IsdbDecode isdb_handle = nullptr);
+								   const enc_override &encoding_override, const DVBKind dvbkind = kKindUnknown);
 
-inline QString dvb_decode_text(const unsigned char *src, uint length, const IsdbDecode isdb_handle = nullptr)
+inline QString dvb_decode_text(const unsigned char *src, uint length, const DVBKind dvbkind = kKindUnknown)
 {
-    return dvb_decode_text(src, length, {}, isdb_handle);
+    return dvb_decode_text(src, length, {}, dvbkind);
 }
 
-QString dvb_decode_short_name(const unsigned char *src, uint raw_length, const IsdbDecode isdb_handle = nullptr);
+QString dvb_decode_short_name(const unsigned char *src, uint raw_length, const DVBKind dvbkind = kKindUnknown);
 
 
 #define byteBCDH2int(i) ((i) >> 4)
@@ -71,16 +71,16 @@ QString dvb_decode_short_name(const unsigned char *src, uint raw_length, const I
 class NetworkNameDescriptor : public MPEGDescriptor
 {
   public:
-    explicit NetworkNameDescriptor(const unsigned char *data,  int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit NetworkNameDescriptor(const unsigned char *data,  int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::network_name, dvbkind){ }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x40
     // descriptor_length        8   1.0
     // for (i=0;i<N;i++){ char 8 uimsbf }
     QString Name(void) const
-	{ return dvb_decode_text(m_data+2, DescriptorLength(), m_isdbhandle); }
+	{ return dvb_decode_text(m_data+2, DescriptorLength(), m_dvbkind); }
     QString ShortName(void) const
-	{ return dvb_decode_short_name(m_data+2, DescriptorLength(), m_isdbhandle); }
+	{ return dvb_decode_short_name(m_data+2, DescriptorLength(), m_dvbkind); }
     QString toString(void) const override // MPEGDescriptor
         { return QString("NetworkNameDescriptor: ")+Name(); }
 };
@@ -89,7 +89,7 @@ class NetworkNameDescriptor : public MPEGDescriptor
 class LinkageDescriptor : public MPEGDescriptor
 {
   public:
-    explicit LinkageDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit LinkageDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::linkage, dvbkind)
     {
         if (!m_data)
@@ -209,7 +209,7 @@ class LinkageDescriptor : public MPEGDescriptor
 class ApplicationSignallingDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ApplicationSignallingDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ApplicationSignallingDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::application_signalling, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x6F
@@ -232,7 +232,7 @@ class ApplicationSignallingDescriptor : public MPEGDescriptor
 class AdaptationFieldDataDescriptor : public MPEGDescriptor
 {
   public:
-    explicit AdaptationFieldDataDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit AdaptationFieldDataDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::adaptation_field_data, 1, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x70
@@ -251,7 +251,7 @@ class AdaptationFieldDataDescriptor : public MPEGDescriptor
 class AncillaryDataDescriptor : public MPEGDescriptor
 {
   public:
-    explicit AncillaryDataDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit AncillaryDataDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::ancillary_data, 1, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x6b
@@ -270,7 +270,7 @@ class AncillaryDataDescriptor : public MPEGDescriptor
 class AnnouncementSupportDescriptor : public MPEGDescriptor
 {
   public:
-    explicit AnnouncementSupportDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit AnnouncementSupportDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::announcement_support, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x6e
@@ -295,16 +295,16 @@ class AnnouncementSupportDescriptor : public MPEGDescriptor
 class BouquetNameDescriptor : public MPEGDescriptor
 {
   public:
-    explicit BouquetNameDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit BouquetNameDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::bouquet_name, dvbkind) {}
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x47
     // descriptor_length        8   1.0
     // for(i=0;i<N;i++) { char 8 }
     QString BouquetName(void) const
-	{ return dvb_decode_text(m_data+2, m_data[1], m_isdbhandle); }
+	{ return dvb_decode_text(m_data+2, m_data[1], m_dvbkind); }
     QString BouquetShortName(void) const
-	{ return dvb_decode_short_name(m_data+2, m_data[1], m_isdbhandle); }
+	{ return dvb_decode_short_name(m_data+2, m_data[1], m_dvbkind); }
 
     QString toString(void) const override // MPEGDescriptor
     {
@@ -317,7 +317,7 @@ class BouquetNameDescriptor : public MPEGDescriptor
 class CAIdentifierDescriptor : public MPEGDescriptor
 {
   public:
-    explicit CAIdentifierDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit CAIdentifierDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::ca_identifier, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x53
@@ -335,7 +335,7 @@ class CAIdentifierDescriptor : public MPEGDescriptor
 class CellFrequencyLinkDescriptor : public MPEGDescriptor
 {
   public:
-    explicit CellFrequencyLinkDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit CellFrequencyLinkDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::cell_frequency_link, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x6d
@@ -357,7 +357,7 @@ class CellFrequencyLinkDescriptor : public MPEGDescriptor
 class CellListDescriptor : public MPEGDescriptor
 {
   public:
-    explicit CellListDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit CellListDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::cell_list, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x6c
@@ -385,7 +385,7 @@ class CellListDescriptor : public MPEGDescriptor
 class ComponentDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ComponentDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ComponentDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::component, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x50
@@ -608,7 +608,7 @@ class ComponentDescriptor : public MPEGDescriptor
 class ContentDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ContentDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ContentDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::content, dvbkind){ }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x54
@@ -648,7 +648,7 @@ class ContentDescriptor : public MPEGDescriptor
 class CountryAvailabilityDescriptor : public MPEGDescriptor
 {
   public:
-    explicit CountryAvailabilityDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit CountryAvailabilityDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::country_availability, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x49
@@ -685,7 +685,7 @@ class CountryAvailabilityDescriptor : public MPEGDescriptor
 class DataBroadcastDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DataBroadcastDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit DataBroadcastDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::data_broadcast, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x64
@@ -716,7 +716,7 @@ class DataBroadcastDescriptor : public MPEGDescriptor
     // for (i=0; i<text_length; i++) { text_char 8 }
     QString Text(void) const
     {
-        return dvb_decode_text(&m_data[6 + SelectorLength() + 4], TextLength(), m_isdbhandle);
+        return dvb_decode_text(&m_data[6 + SelectorLength() + 4], TextLength(), m_dvbkind);
     }
 
     QString toString(void) const override; // MPEGDescriptor
@@ -726,7 +726,7 @@ class DataBroadcastDescriptor : public MPEGDescriptor
 class DataBroadcastIdDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DataBroadcastIdDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit DataBroadcastIdDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::data_broadcast_id, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x66
@@ -742,7 +742,7 @@ class DataBroadcastIdDescriptor : public MPEGDescriptor
 class CableDeliverySystemDescriptor : public MPEGDescriptor
 {
   public:
-    explicit CableDeliverySystemDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit CableDeliverySystemDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::cable_delivery_system, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x44
@@ -822,7 +822,7 @@ class SatelliteDeliverySystemDescriptor : public MPEGDescriptor
 {
   public:
     explicit SatelliteDeliverySystemDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::satellite_delivery_system, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x43
@@ -931,7 +931,7 @@ class TerrestrialDeliverySystemDescriptor : public MPEGDescriptor
 {
   public:
     explicit TerrestrialDeliverySystemDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::terrestrial_delivery_system, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x5a
@@ -1073,7 +1073,7 @@ class ImageIconDescriptor : public MPEGDescriptor
 {
   public:
     explicit ImageIconDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extension, dvbkind)
         {
             if (IsValid() && (DescriptorTagExtension() != DescriptorID::image_icon))
@@ -1116,7 +1116,7 @@ class T2DeliverySystemDescriptor : public MPEGDescriptor
 {
   public:
     explicit T2DeliverySystemDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extension, dvbkind)
     {
         if (DescriptorTagExtension() != DescriptorID::t2_delivery_system)
@@ -1247,7 +1247,7 @@ class SHDeliverySystemDescriptor : public MPEGDescriptor
 {
   public:
     explicit SHDeliverySystemDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extension, dvbkind)
     {
         if (IsValid() && (DescriptorTagExtension() != DescriptorID::sh_delivery_system))
@@ -1272,7 +1272,7 @@ class SupplementaryAudioDescriptor : public MPEGDescriptor
 {
   public:
     explicit SupplementaryAudioDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extension, dvbkind)
     {
         if (IsValid() && (DescriptorTagExtension() != DescriptorID::supplementary_audio))
@@ -1311,7 +1311,7 @@ class NetworkChangeNotifyDescriptor : public MPEGDescriptor
 {
   public:
     explicit NetworkChangeNotifyDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extension, dvbkind)
     {
         if (IsValid() && (DescriptorTagExtension() != DescriptorID::network_change_notify))
@@ -1332,7 +1332,7 @@ class MessageDescriptor : public MPEGDescriptor
 {
   public:
     explicit MessageDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extension, dvbkind)
     {
         if (IsValid() && (DescriptorTagExtension() != DescriptorID::supplementary_audio))
@@ -1356,7 +1356,7 @@ class MessageDescriptor : public MPEGDescriptor
 
     // text_char                8   7.0
     QString Message(void) const
-	{ return dvb_decode_text(m_data+7, DescriptorLength()-5, m_isdbhandle); }
+	{ return dvb_decode_text(m_data+7, DescriptorLength()-5, m_dvbkind); }
 
     QString toString(void) const override; // MPEGDescriptor
 };
@@ -1366,7 +1366,7 @@ class TargetRegionDescriptor : public MPEGDescriptor
 {
   public:
     explicit TargetRegionDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extension, dvbkind)
     {
         if (IsValid() && (DescriptorTagExtension() != DescriptorID::target_region))
@@ -1401,7 +1401,7 @@ class TargetRegionNameDescriptor : public MPEGDescriptor
 {
   public:
     explicit TargetRegionNameDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extension, dvbkind)
     {
         if (IsValid() && (DescriptorTagExtension() != DescriptorID::target_region_name))
@@ -1443,7 +1443,7 @@ class ServiceRelocatedDescriptor : public MPEGDescriptor
 {
   public:
     explicit ServiceRelocatedDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extension, dvbkind)
     {
         if (IsValid() && (DescriptorTagExtension() != DescriptorID::service_relocated))
@@ -1471,7 +1471,7 @@ class C2DeliverySystemDescriptor : public MPEGDescriptor
 {
   public:
     explicit C2DeliverySystemDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extension, dvbkind)
     {
         if (IsValid() && (DescriptorTagExtension() != DescriptorID::c2_delivery_system))
@@ -1515,7 +1515,7 @@ class S2XSatelliteDeliverySystemDescriptor : public MPEGDescriptor
 {
   public:
     explicit S2XSatelliteDeliverySystemDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extension, dvbkind)
     {
         if (IsValid() && (DescriptorTagExtension() != DescriptorID::s2x_satellite_delivery_system))
@@ -1539,7 +1539,7 @@ class S2XSatelliteDeliverySystemDescriptor : public MPEGDescriptor
 class DSNGDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DSNGDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit DSNGDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::dsng, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x68
@@ -1551,7 +1551,7 @@ class DSNGDescriptor : public MPEGDescriptor
 class MTV_PUBLIC ExtendedEventDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ExtendedEventDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ExtendedEventDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::extended_event, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x4e
@@ -1609,7 +1609,7 @@ class MTV_PUBLIC ExtendedEventDescriptor : public MPEGDescriptor
                if (ItemDescriptionLen == 0)
                        item_byte.prepend(saved_text);
                saved_text.clear();
-               item += dvb_decode_text((unsigned char *)item_byte.data(), item_byte.size(), m_isdbhandle);
+               item += dvb_decode_text((unsigned char *)item_byte.data(), item_byte.size(), m_dvbkind);
                if (ItemLength > 0)
                    item += "\n";
                if (left > 0)
@@ -1622,13 +1622,13 @@ class MTV_PUBLIC ExtendedEventDescriptor : public MPEGDescriptor
     uint TextLength(void)       const { return m_data[7 + LengthOfItems()]; }
     // for (i=0; i<N; i++) { text_char 8 }
     QString Text(void) const
-	    { return dvb_decode_text((const unsigned char*)(&m_data[8 + LengthOfItems()]), TextLength(), m_isdbhandle); }
+	    { return dvb_decode_text((const unsigned char*)(&m_data[8 + LengthOfItems()]), TextLength(), m_dvbkind); }
 
     // HACK beg -- Pro7Sat is missing encoding
     QString Text(const enc_override &encoding_override) const
     {
         return dvb_decode_text((const unsigned char*)(&m_data[8 + LengthOfItems()]), TextLength(),
-                               encoding_override, m_isdbhandle);
+                               encoding_override, m_dvbkind);
     }
     // HACK end -- Pro7Sat is missing encoding
 };
@@ -1637,7 +1637,7 @@ class MTV_PUBLIC ExtendedEventDescriptor : public MPEGDescriptor
 class FrequencyListDescriptor : public MPEGDescriptor
 {
   public:
-    explicit FrequencyListDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit FrequencyListDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::frequency_list, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x62
@@ -1684,7 +1684,7 @@ class FrequencyListDescriptor : public MPEGDescriptor
 class LocalTimeOffsetDescriptor : public MPEGDescriptor
 {
   public:
-    explicit LocalTimeOffsetDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit LocalTimeOffsetDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::local_time_offset, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x58
@@ -1730,7 +1730,7 @@ class LocalTimeOffsetDescriptor : public MPEGDescriptor
 class MosaicDescriptor : public MPEGDescriptor
 {
   public:
-    explicit MosaicDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit MosaicDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::mosaic, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x51
@@ -1783,7 +1783,7 @@ class MultilingualBouquetNameDescriptor : public MPEGDescriptor
 {
   public:
     explicit MultilingualBouquetNameDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::multilingual_bouquet_name, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x5c
@@ -1802,7 +1802,7 @@ class MultilingualNetworkNameDescriptor : public MPEGDescriptor
 {
   public:
     explicit MultilingualNetworkNameDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::multilingual_network_name, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x5b
@@ -1821,7 +1821,7 @@ class MultilingualServiceNameDescriptor : public MPEGDescriptor
 {
   public:
     explicit MultilingualServiceNameDescriptor(
-        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+        const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::multilingual_service_name, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x5d
@@ -1841,7 +1841,7 @@ class MultilingualServiceNameDescriptor : public MPEGDescriptor
 class NVODReferenceDescriptor : public MPEGDescriptor
 {
   public:
-    explicit NVODReferenceDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit NVODReferenceDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::nvod_reference, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x4b
@@ -1868,9 +1868,9 @@ class NVODReferenceDescriptor : public MPEGDescriptor
 class ParentalRatingDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ParentalRatingDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ParentalRatingDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::parental_rating, dvbkind) { }
-    explicit ParentalRatingDescriptor(const std::vector<uint8_t> &data, DVBKind dvbkind = kKindISDB) :
+    explicit ParentalRatingDescriptor(const std::vector<uint8_t> &data, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, DescriptorID::parental_rating, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x55
@@ -1919,7 +1919,7 @@ class ParentalRatingDescriptor : public MPEGDescriptor
 class PDCDescriptor : public MPEGDescriptor
 {
   public:
-    explicit PDCDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit PDCDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::pdc, 3, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x69
@@ -1940,9 +1940,9 @@ class PDCDescriptor : public MPEGDescriptor
 class PrivateDataSpecifierDescriptor : public MPEGDescriptor
 {
   public:
-    explicit PrivateDataSpecifierDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit PrivateDataSpecifierDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::private_data_specifier, dvbkind) { }
-    explicit PrivateDataSpecifierDescriptor(const std::vector<uint8_t> &data, DVBKind dvbkind = kKindISDB) :
+    explicit PrivateDataSpecifierDescriptor(const std::vector<uint8_t> &data, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, DescriptorID::private_data_specifier, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x5f
@@ -1959,7 +1959,7 @@ class PrivateDataSpecifierDescriptor : public MPEGDescriptor
 class ScramblingDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ScramblingDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ScramblingDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::scrambling, 1, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x65
@@ -2083,7 +2083,7 @@ class ServiceDescriptorMapping
 class ServiceDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ServiceDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ServiceDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::service, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x48
@@ -2095,10 +2095,10 @@ class ServiceDescriptor : public MPEGDescriptor
     uint ServiceProviderNameLength(void) const { return m_data[3]; }
     // for (i=0;i<N;I++) { char 8 }
     QString ServiceProviderName(void) const
-	{ return dvb_decode_text(m_data + 4, ServiceProviderNameLength(), m_isdbhandle); }
+	{ return dvb_decode_text(m_data + 4, ServiceProviderNameLength(), m_dvbkind); }
     QString ServiceProviderShortName(void) const
     {
-        return dvb_decode_short_name(m_data + 4, ServiceProviderNameLength(), m_isdbhandle);
+        return dvb_decode_short_name(m_data + 4, ServiceProviderNameLength(), m_dvbkind);
     }
     // service_name_length      8
     uint ServiceNameLength(void) const
@@ -2107,12 +2107,12 @@ class ServiceDescriptor : public MPEGDescriptor
     QString ServiceName(void) const
     {
         return dvb_decode_text(m_data + 5 + ServiceProviderNameLength(),
-                               ServiceNameLength(), m_isdbhandle);
+                               ServiceNameLength(), m_dvbkind);
     }
     QString ServiceShortName(void) const
     {
         return dvb_decode_short_name(m_data + 5 + ServiceProviderNameLength(),
-                                     ServiceNameLength(), m_isdbhandle);
+                                     ServiceNameLength(), m_dvbkind);
     }
     bool IsDTV(void) const
         { return ServiceDescriptorMapping(ServiceType()).IsDTV(); }
@@ -2136,7 +2136,7 @@ class ServiceDescriptor : public MPEGDescriptor
 class ServiceAvailabilityDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ServiceAvailabilityDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ServiceAvailabilityDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::service_availability, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x72
@@ -2151,7 +2151,7 @@ class ServiceAvailabilityDescriptor : public MPEGDescriptor
 class ServiceListDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ServiceListDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ServiceListDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::service_list, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x41
@@ -2189,7 +2189,7 @@ class ServiceListDescriptor : public MPEGDescriptor
 class ServiceMoveDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ServiceMoveDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ServiceMoveDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::service_move, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x60
@@ -2204,7 +2204,7 @@ class ServiceMoveDescriptor : public MPEGDescriptor
 class ShortEventDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ShortEventDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ShortEventDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::short_event, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x4d
@@ -2223,26 +2223,26 @@ class ShortEventDescriptor : public MPEGDescriptor
     uint EventNameLength(void) const { return m_data[5]; }
     // for (i=0;i<event_name_length;i++) { event_name_char 8 }
     QString EventName(void) const
-	{ return dvb_decode_text(&m_data[6], m_data[5], m_isdbhandle); }
+	{ return dvb_decode_text(&m_data[6], m_data[5], m_dvbkind); }
     QString EventShortName(void) const
-	{ return dvb_decode_short_name(&m_data[6], m_data[5], m_isdbhandle); }
+	{ return dvb_decode_short_name(&m_data[6], m_data[5], m_dvbkind); }
     // text_length              8
     uint TextLength(void) const { return m_data[6 + m_data[5]]; }
     // for (i=0;i<text_length;i++) { text_char 8 }
     QString Text(void) const
-	{ return dvb_decode_text(&m_data[7 + m_data[5]], TextLength(), m_isdbhandle); }
+	{ return dvb_decode_text(&m_data[7 + m_data[5]], TextLength(), m_dvbkind); }
 
     // HACK beg -- Pro7Sat is missing encoding
     QString EventName(const enc_override& encoding_override) const
     {
         return dvb_decode_text((const unsigned char*)(&m_data[6]), m_data[5],
-                               encoding_override, m_isdbhandle);
+                               encoding_override, m_dvbkind);
     }
 
     QString Text(const enc_override& encoding_override) const
     {
         return dvb_decode_text((const unsigned char*)(&m_data[7 + m_data[5]]), TextLength(),
-                               encoding_override, m_isdbhandle);
+                               encoding_override, m_dvbkind);
     }
     // HACK end -- Pro7Sat is missing encoding
 
@@ -2254,7 +2254,7 @@ class ShortEventDescriptor : public MPEGDescriptor
 class ShortSmoothingBufferDescriptor : public MPEGDescriptor
 {
   public:
-    explicit ShortSmoothingBufferDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit ShortSmoothingBufferDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::short_smoothing_buffer, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x61
@@ -2272,7 +2272,7 @@ class ShortSmoothingBufferDescriptor : public MPEGDescriptor
 class StreamIdentifierDescriptor : public MPEGDescriptor
 {
   public:
-    explicit StreamIdentifierDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit StreamIdentifierDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::stream_identifier, 1, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x52
@@ -2291,7 +2291,7 @@ class StreamIdentifierDescriptor : public MPEGDescriptor
 class StuffingDescriptor : public MPEGDescriptor
 {
   public:
-    explicit StuffingDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit StuffingDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::dvb_stuffing, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x42
@@ -2308,7 +2308,7 @@ class StuffingDescriptor : public MPEGDescriptor
 class SubtitlingDescriptor : public MPEGDescriptor
 {
   public:
-    explicit SubtitlingDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit SubtitlingDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::subtitling, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x59
@@ -2344,7 +2344,7 @@ class SubtitlingDescriptor : public MPEGDescriptor
 class TelephoneDescriptor : public MPEGDescriptor
 {
   public:
-    explicit TelephoneDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit TelephoneDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::telephone, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x57
@@ -2377,7 +2377,7 @@ class TelephoneDescriptor : public MPEGDescriptor
 class TeletextDescriptor : public MPEGDescriptor
 {
   public:
-    explicit TeletextDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit TeletextDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::teletext, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x56
@@ -2413,7 +2413,7 @@ class TeletextDescriptor : public MPEGDescriptor
 class TimeShiftedEventDescriptor : public MPEGDescriptor
 {
   public:
-    explicit TimeShiftedEventDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit TimeShiftedEventDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::time_shifted_event, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x4f
@@ -2427,7 +2427,7 @@ class TimeShiftedEventDescriptor : public MPEGDescriptor
 class TimeShiftedServiceDescriptor : public MPEGDescriptor
 {
   public:
-    explicit TimeShiftedServiceDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit TimeShiftedServiceDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::dvb_time_shifted_service, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x4c
@@ -2440,7 +2440,7 @@ class TimeShiftedServiceDescriptor : public MPEGDescriptor
 class TransportStreamDescriptor : public MPEGDescriptor
 {
   public:
-    explicit TransportStreamDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit TransportStreamDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::transport_stream, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x67
@@ -2448,7 +2448,7 @@ class TransportStreamDescriptor : public MPEGDescriptor
 
     // for (i=0; i<N; i++) { byte 8 }
     QString Data(void) const
-	{ return dvb_decode_text(&m_data[2], DescriptorLength(), m_isdbhandle); }
+	{ return dvb_decode_text(&m_data[2], DescriptorLength(), m_dvbkind); }
     QString toString(void) const override // MPEGDescriptor
         { return QString("TransportStreamDescriptor data(%1)").arg(Data()); }
 };
@@ -2457,7 +2457,7 @@ class TransportStreamDescriptor : public MPEGDescriptor
 class VBIDataDescriptor : public MPEGDescriptor
 {
   public:
-    explicit VBIDataDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit VBIDataDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::vbi_data, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x45
@@ -2487,7 +2487,7 @@ class VBIDataDescriptor : public MPEGDescriptor
 class VBITeletextDescriptor : public MPEGDescriptor
 {
   public:
-    explicit VBITeletextDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit VBITeletextDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::vbi_teletext, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x46
@@ -2506,7 +2506,7 @@ class VBITeletextDescriptor : public MPEGDescriptor
 class PartialTransportStreamDescriptor : public MPEGDescriptor
 {
   public:
-    explicit PartialTransportStreamDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit PartialTransportStreamDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::partial_transport_stream, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x63
@@ -2532,7 +2532,7 @@ class PartialTransportStreamDescriptor : public MPEGDescriptor
 class AC3Descriptor : public MPEGDescriptor
 {
   public:
-    explicit AC3Descriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit AC3Descriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::ac3, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x6A
@@ -2606,7 +2606,7 @@ static QString coderate_inner(uint coderate)
 class DVBLogicalChannelDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DVBLogicalChannelDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit DVBLogicalChannelDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, PrivateDescriptorID::dvb_logical_channel_descriptor, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x83
@@ -2634,7 +2634,7 @@ class DVBLogicalChannelDescriptor : public MPEGDescriptor
 class DVBSimulcastChannelDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DVBSimulcastChannelDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit DVBSimulcastChannelDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, PrivateDescriptorID::dvb_simulcast_channel_descriptor, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x88
@@ -2664,7 +2664,7 @@ class DVBSimulcastChannelDescriptor : public MPEGDescriptor
 class FreesatLCNDescriptor : public MPEGDescriptor
 {
   public:
-    explicit FreesatLCNDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit FreesatLCNDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, PrivateDescriptorID::freesat_lcn_table, dvbkind)
     {
         assert(m_data && PrivateDescriptorID::freesat_lcn_table== DescriptorTag());
@@ -2729,7 +2729,7 @@ class FreesatLCNDescriptor : public MPEGDescriptor
 class FreesatRegionDescriptor : public MPEGDescriptor
 {
   public:
-    explicit FreesatRegionDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit FreesatRegionDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, PrivateDescriptorID::freesat_region_table, dvbkind)
     {
         assert(m_data && PrivateDescriptorID::freesat_region_table == DescriptorTag());
@@ -2784,7 +2784,7 @@ class FreesatRegionDescriptor : public MPEGDescriptor
 class FreesatCallsignDescriptor : public MPEGDescriptor
 {
   public:
-    explicit FreesatCallsignDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit FreesatCallsignDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, PrivateDescriptorID::freesat_callsign, dvbkind)
     {
         assert(m_data && PrivateDescriptorID::freesat_callsign == DescriptorTag());
@@ -2805,7 +2805,7 @@ class FreesatCallsignDescriptor : public MPEGDescriptor
     QString Callsign(void) const
 	// Hack 20200324 K.O
 	//{ return QString::fromLatin1((char *)(&m_data[6]), m_data[5]); }
-	     { return dvb_decode_short_name(&m_data[6], m_data[5], m_isdbhandle); }
+	     { return dvb_decode_short_name(&m_data[6], m_data[5], m_dvbkind); }
 
     QString toString(void) const override; // MPEGDescriptor
 };
@@ -2824,7 +2824,7 @@ class FreesatCallsignDescriptor : public MPEGDescriptor
 class SkyLCNDescriptor : public MPEGDescriptor
 {
   public:
-    explicit SkyLCNDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit SkyLCNDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, PrivateDescriptorID::sky_lcn_table, dvbkind)
     {
         assert(m_data && PrivateDescriptorID::sky_lcn_table== DescriptorTag());
@@ -2872,7 +2872,7 @@ class SkyLCNDescriptor : public MPEGDescriptor
 class OpenTVChannelListDescriptor : public MPEGDescriptor
 {
   public:
-    explicit OpenTVChannelListDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit OpenTVChannelListDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, PrivateDescriptorID::opentv_channel_list, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0xB1
@@ -2905,7 +2905,7 @@ class OpenTVChannelListDescriptor : public MPEGDescriptor
 class DVBContentIdentifierDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DVBContentIdentifierDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit DVBContentIdentifierDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::dvb_content_identifier, dvbkind)
     {
         size_t count  = 0;
@@ -2964,7 +2964,7 @@ class DVBContentIdentifierDescriptor : public MPEGDescriptor
 class DefaultAuthorityDescriptor : public MPEGDescriptor
 {
   public:
-    explicit DefaultAuthorityDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+    explicit DefaultAuthorityDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
         MPEGDescriptor(data, len, DescriptorID::default_authority, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0x73
@@ -2988,9 +2988,9 @@ class DefaultAuthorityDescriptor : public MPEGDescriptor
 class PrivateUPCCablecomEpisodeTitleDescriptor : public MPEGDescriptor
 {
     public:
-     explicit PrivateUPCCablecomEpisodeTitleDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindISDB) :
+     explicit PrivateUPCCablecomEpisodeTitleDescriptor(const unsigned char *data, int len = 300, DVBKind dvbkind = kKindUnknown) :
          MPEGDescriptor(data, len, PrivateDescriptorID::upc_event_episode_title, dvbkind) { }
-	explicit PrivateUPCCablecomEpisodeTitleDescriptor(const std::vector<uint8_t> &data, DVBKind dvbkind = kKindISDB) :
+	explicit PrivateUPCCablecomEpisodeTitleDescriptor(const std::vector<uint8_t> &data, DVBKind dvbkind = kKindUnknown) :
 			MPEGDescriptor(data, PrivateDescriptorID::upc_event_episode_title, dvbkind) { }
     //       Name             bits  loc  expected value
     // descriptor_tag           8   0.0       0xa7
@@ -3021,7 +3021,7 @@ class PrivateUPCCablecomEpisodeTitleDescriptor : public MPEGDescriptor
 
     QString Text(void) const
     {
-        return dvb_decode_text(&m_data[5], TextLength(), m_isdbhandle);
+        return dvb_decode_text(&m_data[5], TextLength(), m_dvbkind);
     }
 };
 

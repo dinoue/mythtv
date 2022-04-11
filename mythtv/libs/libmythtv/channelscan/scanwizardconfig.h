@@ -62,6 +62,11 @@ class PaneDVBS2;
 class PaneSingle;
 class PaneDVBUtilsImport;
 class PaneExistingScanImport;
+class PaneISDBT;
+class PaneISDBTb;
+class PaneISDBS;
+class PaneISDBS3;
+class PaneISDBC;
 
 class ScanTypeSetting : public TransMythUIComboBoxSetting
 {
@@ -78,6 +83,9 @@ class ScanTypeSetting : public TransMythUIComboBoxSetting
         FullScan_DVBC,
         FullScan_DVBT,
         FullScan_DVBT2,
+        FullScan_ISDBC,
+        FullScan_ISDBT,
+        FullScan_ISDBTb,
         // Scans starting on one frequency that adds each transport
         // seen in the Network Information Tables to the scan.
         NITAddScan_DVBT,
@@ -85,6 +93,11 @@ class ScanTypeSetting : public TransMythUIComboBoxSetting
         NITAddScan_DVBS,
         NITAddScan_DVBS2,
         NITAddScan_DVBC,
+        NITAddScan_ISDBT,
+        NITAddScan_ISDBTb,
+        NITAddScan_ISDBS,
+        NITAddScan_ISDBS3,
+        NITAddScan_ISDBC,
         // Scan of all transports already in the database
         FullTransportScan,
         // Scan of one transport already in the database
@@ -144,13 +157,19 @@ class ScanOptionalConfig : public GroupSetting
     ScanTypeSetting        *m_scanType                 {nullptr};
     ScanCountry            *m_dvbTCountry              {nullptr};
     ScanCountry            *m_dvbT2Country             {nullptr};
+    ScanCountry            *m_isdbTbCountry            {nullptr};
     ScanNetwork            *m_network                  {nullptr};
     PaneDVBT               *m_paneDVBT                 {nullptr};
     PaneDVBT2              *m_paneDVBT2                {nullptr};
     PaneDVBS               *m_paneDVBS                 {nullptr};
     PaneDVBS2              *m_paneDVBS2                {nullptr};
+    PaneISDBT              *m_paneISDBT                {nullptr};
+    PaneISDBTb             *m_paneISDBTb               {nullptr};
+    PaneISDBS              *m_paneISDBS                {nullptr};
+    PaneISDBS3             *m_paneISDB3                {nullptr};
     PaneATSC               *m_paneATSC                 {nullptr};
     PaneDVBC               *m_paneDVBC                 {nullptr};
+    PaneISDBC              *m_paneISDBC                {nullptr};
     PaneAnalog             *m_paneAnalog               {nullptr};
     PaneSingle             *m_paneSingle               {nullptr};
     PaneAll                *m_paneAll                  {nullptr};

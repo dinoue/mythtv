@@ -44,6 +44,11 @@ const int DTVTunerType::kTunerTypeATSC    = 0x0003;
 const int DTVTunerType::kTunerTypeASI     = 0x1000;
 const int DTVTunerType::kTunerTypeOCUR    = 0x2000;
 const int DTVTunerType::kTunerTypeIPTV    = 0x4000;
+const int DTVTunerType::kTunerTypeISDBS   = 0x8000;
+const int DTVTunerType::kTunerTypeISDBS3  = 0x8020;
+const int DTVTunerType::kTunerTypeISDBT   = 0x8001;
+const int DTVTunerType::kTunerTypeISDBTb  = 0x8021;
+const int DTVTunerType::kTunerTypeISDBC   = 0x8002;
 const int DTVTunerType::kTunerTypeUnknown = 0x80000000;
 
 static QMutex dtv_tt_canonical_str_lock;
@@ -59,6 +64,11 @@ void DTVTunerType::initStr(void)
     dtv_tt_canonical_str[kTunerTypeDVBS2]   = "DVB_S2";
     dtv_tt_canonical_str[kTunerTypeASI]     = "ASI";
     dtv_tt_canonical_str[kTunerTypeOCUR]    = "OCUR";
+    dtv_tt_canonical_str[kTunerTypeISDBS]   = "ISDB_S";
+    dtv_tt_canonical_str[kTunerTypeISDBS3]  = "ISDB_S3";
+    dtv_tt_canonical_str[kTunerTypeISDBC]   = "ISDB_C";
+    dtv_tt_canonical_str[kTunerTypeISDBT]   = "ISDB_T";
+    dtv_tt_canonical_str[kTunerTypeISDBTb]  = "ISDB_Tb";
     dtv_tt_canonical_str[kTunerTypeUnknown] = "UNKNOWN";
 }
 
@@ -81,6 +91,11 @@ const DTVParamHelperVec DTVTunerType::kParseTable
     { "DVB_S2",  kTunerTypeDVBS2   },
     { "ASI",     kTunerTypeASI     },
     { "OCUR",    kTunerTypeOCUR    },
+    { "ISDB_S",  kTunerTypeISDBS   },
+    { "ISDB_S3", kTunerTypeISDBS3  },
+    { "ISDB_C",  kTunerTypeISDBC   },
+    { "ISDB_T",  kTunerTypeISDBT   },
+    { "ISDB_Tb", kTunerTypeISDBTb  },
     { "UNKNOWN", kTunerTypeUnknown },
     { nullptr,   kTunerTypeUnknown },
 };
@@ -535,8 +550,10 @@ const DTVParamHelperVec DTVModulationSystem::kConfTable
     { "SYS_DVBS2",         kModulationSystem_DVBS2         },
     { "SYS_DVBH",          kModulationSystem_DVBH          },
     { "SYS_ISDBT",         kModulationSystem_ISDBT         },
-    { "SYS_ISDBS",         kModulationSystem_ISDBS         },
+    { "SYS_ISDBTb",        kModulationSystem_ISDBTb        },
     { "SYS_ISDBC",         kModulationSystem_ISDBC         },
+    { "SYS_ISDBS",         kModulationSystem_ISDBS         },
+    { "SYS_ISDBS3",        kModulationSystem_ISDBS3        },
     { "SYS_ATSC",          kModulationSystem_ATSC          },
     { "SYS_ATSCMH",        kModulationSystem_ATSCMH        },
     { "SYS_DTMB",          kModulationSystem_DTMB          },
@@ -565,8 +582,10 @@ const DTVParamHelperVec DTVModulationSystem::kParseTable
     { "DVB-S2",       kModulationSystem_DVBS2         },
     { "DVBH",         kModulationSystem_DVBH          },
     { "ISDBT",        kModulationSystem_ISDBT         },
-    { "ISDBS",        kModulationSystem_ISDBS         },
+    { "ISDBTb",       kModulationSystem_ISDBTb        },
     { "ISDBC",        kModulationSystem_ISDBC         },
+    { "ISDBS",        kModulationSystem_ISDBS         },
+    { "ISDBS3",       kModulationSystem_ISDBS3        },
     { "ATSC",         kModulationSystem_ATSC          },
     { "ATSCMH",       kModulationSystem_ATSCMH        },
     { "DTMB",         kModulationSystem_DTMB          },
@@ -589,8 +608,10 @@ const DTVParamStringVec DTVModulationSystem::kParseStrings
     "DVB-S2",        ///< kModulationSystem_DVBS2
     "DVBH",          ///< kModulationSystem_DVBH
     "ISDBT",         ///< kModulationSystem_ISDBT
-    "ISDBS",         ///< kModulationSystem_ISDBS
+    "ISDBTb",        ///< kModulationSystem_ISDBTb
     "ISDBC",         ///< kModulationSystem_ISDBC
+    "ISDBS",         ///< kModulationSystem_ISDBS
+    "ISDBS3",        ///< kModulationSystem_ISDBS3
     "ATSC",          ///< kModulationSystem_ATSC
     "ATSCMH",        ///< kModulationSystem_ATSCMH
     "DTMB",          ///< kModulationSystem_DTMB

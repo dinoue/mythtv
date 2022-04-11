@@ -769,15 +769,20 @@ DTVTunerType CardUtil::ConvertToTunerType(DTVModulationSystem delsys)
         case DTVModulationSystem::kModulationSystem_DVBT2:
             tunertype = DTVTunerType::kTunerTypeDVBT2;
             break;
-
         case DTVModulationSystem::kModulationSystem_ISDBT:
-            tunertype = DTVTunerType::kTunerTypeDVBT; // ISDB-T still be WRAPPING of DVB-T
+            tunertype = DTVTunerType::kTunerTypeISDBT;
+            break;
+        case DTVModulationSystem::kModulationSystem_ISDBTb:
+            tunertype = DTVTunerType::kTunerTypeISDBTb;
             break;
         case DTVModulationSystem::kModulationSystem_ISDBS:
-            tunertype = DTVTunerType::kTunerTypeDVBS1; // ISDB-S still be WRAPPING of DVB-S1
+            tunertype = DTVTunerType::kTunerTypeISDBS;
+            break;
+        case DTVModulationSystem::kModulationSystem_ISDBS3:
+            tunertype = DTVTunerType::kTunerTypeISDBS3;
             break;
         case DTVModulationSystem::kModulationSystem_ISDBC:
-            tunertype = DTVTunerType::kTunerTypeDVBC; // ISDB-C (Digital cable television standard of Japan) still be WRAPPING of DVB-C
+            tunertype = DTVTunerType::kTunerTypeISDBC;
             break;
         case DTVModulationSystem::kModulationSystem_DTMB:
             tunertype = DTVTunerType::kTunerTypeDVBT;

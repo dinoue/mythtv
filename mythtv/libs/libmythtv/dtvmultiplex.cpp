@@ -460,6 +460,323 @@ bool DTVMultiplex::ParseDVB_T2(
     return ok;
 }
 
+bool DTVMultiplex::ParseISDB_BASE(
+    const QString &_frequency,   const QString &_inversion,
+    const QString &_symbol_rate, const QString &_fec_inner,
+    const QString &_modulation,  const QString &_polarity)
+{
+    bool ok = m_inversion.Parse(_inversion);
+    if (!ok)
+    {
+        LOG(VB_GENERAL, LOG_WARNING, LOC +
+            QString("Invalid inversion parameter '%1', falling back to 'auto'.")
+                .arg(_inversion));
+
+        ok = true;
+    }
+
+    m_symbolRate = _symbol_rate.toUInt();
+    if (!m_symbolRate)
+    {
+        LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid symbol rate " +
+            QString("parameter '%1', aborting.").arg(_symbol_rate));
+
+        return false;
+    }
+
+    if (ok)
+    {
+        ok &= m_fec.Parse(_fec_inner);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid fec parameter " + _fec_inner);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_modulation.Parse(_modulation.toLower());
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid modulation parameter " + _modulation);
+        }
+    }
+
+    if (ok)
+    {
+        if (!_polarity.isEmpty())
+        {
+            ok = m_polarity.Parse(_polarity.toLower());
+            if (!ok)
+            {
+                LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid polarity parameter " + _polarity);
+            }
+        }
+    }
+
+    if (ok)
+    {
+        m_frequency = _frequency.toUInt(&ok);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid frequency parameter " + _frequency);
+        }
+    }
+
+    return ok;
+}
+
+bool DTVMultiplex::ParseISDB_S(
+    const QString &_frequency,   const QString &_inversion,
+    const QString &_symbol_rate, const QString &_fec_inner,
+    const QString &_modulation,  const QString &_polarity)
+{
+    bool ok = ParseISDB_BASE(_frequency, _inversion, _symbol_rate,
+                               _fec_inner, _modulation, _polarity);
+    m_modSys = DTVModulationSystem::kModulationSystem_ISDBS;
+    return ok;
+}
+
+bool DTVMultiplex::ParseISDB_S3(
+    const QString &_frequency,   const QString &_inversion,
+    const QString &_symbol_rate, const QString &_fec_inner,
+    const QString &_modulation,  const QString &_polarity)
+{
+    bool ok = ParseISDB_BASE(_frequency, _inversion, _symbol_rate,
+                               _fec_inner, _modulation, _polarity);
+    m_modSys = DTVModulationSystem::kModulationSystem_ISDBS3;
+    return ok;
+}
+
+bool DTVMultiplex::ParseISDB_C(
+    const QString &_frequency,   const QString &_inversion,
+    const QString &_symbol_rate, const QString &_fec_inner,
+    const QString &_modulation,  const QString &_polarity,
+    const QString &_mod_sys)
+{
+	// ToDo: Enable both ISDB-T/S ?
+    bool ok = ParseISDB_BASE(_frequency, _inversion, _symbol_rate,
+                               _fec_inner, _modulation, _polarity);
+
+    m_modSys.Parse(_mod_sys);
+    if (DTVModulationSystem::kModulationSystem_UNDEFINED == m_modSys)
+    {
+        LOG(VB_GENERAL, LOG_WARNING, LOC + "Undefined modulation system " +
+                QString("parameter '%1', using ISDB-C.").arg(_mod_sys));
+        m_modSys = DTVModulationSystem::kModulationSystem_ISDBC;
+    }
+
+    // Only DVB-C variants can be used with a ISDB-C tuner.
+    if ((DTVModulationSystem::kModulationSystem_ISDBC  != m_modSys) &&
+        (DTVModulationSystem::kModulationSystem_ISDBS  != m_modSys) &&
+        (DTVModulationSystem::kModulationSystem_ISDBS3 != m_modSys) &&
+        (DTVModulationSystem::kModulationSystem_ISDBT  != m_modSys) &&
+        (DTVModulationSystem::kModulationSystem_ISDBTb != m_modSys))
+    {
+        LOG(VB_GENERAL, LOG_ERR, LOC + "Unsupported ISDB-C modulation system " +
+            QString("parameter '%1', aborting.").arg(_mod_sys));
+        return false;
+    }
+
+    return ok;
+}
+
+
+bool DTVMultiplex::ParseISDB_T(
+    const QString &_frequency,   const QString &_inversion,
+    const QString &_bandwidth,   const QString &_coderate_hp,
+    const QString &_coderate_lp, const QString &_modulation,
+    const QString &_trans_mode,  const QString &_guard_interval,
+    const QString &_hierarchy)
+{
+    bool ok = m_inversion.Parse(_inversion);
+    if (!ok)
+    {
+        LOG(VB_GENERAL, LOG_WARNING, LOC +
+            QString("Invalid inversion parameter '%1', falling back to 'auto'.")
+                .arg(_inversion));
+        ok = true;
+    }
+
+    m_frequency = _frequency.toUInt(&ok);
+    if (!ok)
+    {
+        LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid frequency parameter " + _frequency);
+    }
+
+    if (ok)
+    {
+        ok &= m_modSys.Parse("ISDBT");
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid modulation system parameter " + "ISDBT");
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_bandwidth.Parse(_bandwidth);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid modulation system parameter " + _bandwidth);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_hpCodeRate.Parse(_coderate_hp);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid coderate_hp parameter " + _coderate_hp);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_lpCodeRate.Parse(_coderate_lp);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid coderate_lp parameter " + _coderate_lp);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_modulation.Parse(_modulation);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid modulation parameter " + _modulation);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_transMode.Parse(_trans_mode);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid transmission mode parameter " + _trans_mode);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_hierarchy.Parse(_hierarchy);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid hierarchy parameter " + _hierarchy);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_guardInterval.Parse(_guard_interval);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid guard interval parameter " + _guard_interval);
+        }
+    }
+
+    return ok;
+}
+
+bool DTVMultiplex::ParseISDB_Tb(
+    const QString &_frequency,   const QString &_inversion,
+    const QString &_bandwidth,   const QString &_coderate_hp,
+    const QString &_coderate_lp, const QString &_modulation,
+    const QString &_trans_mode,  const QString &_guard_interval,
+    const QString &_hierarchy)
+{
+    bool ok = m_inversion.Parse(_inversion);
+    if (!ok)
+    {
+        LOG(VB_GENERAL, LOG_WARNING, LOC +
+            QString("Invalid inversion parameter '%1', falling back to 'auto'.")
+                .arg(_inversion));
+        ok = true;
+    }
+
+    m_frequency = _frequency.toUInt(&ok);
+    if (!ok)
+    {
+        LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid frequency parameter " + _frequency);
+    }
+
+    if (ok)
+    {
+        ok &= m_modSys.Parse("ISDBTb");
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid modulation system parameter " + "ISDBTb");
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_bandwidth.Parse(_bandwidth);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid modulation system parameter " + _bandwidth);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_hpCodeRate.Parse(_coderate_hp);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid coderate_hp parameter " + _coderate_hp);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_lpCodeRate.Parse(_coderate_lp);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid coderate_lp parameter " + _coderate_lp);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_modulation.Parse(_modulation);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid modulation parameter " + _modulation);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_transMode.Parse(_trans_mode);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid transmission mode parameter " + _trans_mode);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_hierarchy.Parse(_hierarchy);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid hierarchy parameter " + _hierarchy);
+        }
+    }
+
+    if (ok)
+    {
+        ok &= m_guardInterval.Parse(_guard_interval);
+        if (!ok)
+        {
+            LOG(VB_GENERAL, LOG_ERR, LOC + "Invalid guard interval parameter " + _guard_interval);
+        }
+    }
+
+    return ok;
+}
+
+
 bool DTVMultiplex::ParseTuningParams(
     DTVTunerType type,
     const QString& _frequency,    const QString& _inversion,      const QString& _symbolrate,
@@ -506,6 +823,41 @@ bool DTVMultiplex::ParseTuningParams(
             _frequency,       _inversion,       _bandwidth,
             _hp_code_rate,    _lp_code_rate,    _ofdm_modulation,
             _trans_mode,      _guard_interval,  _hierarchy,
+            _mod_sys);
+    }
+	// ToDo: Should separate both ISDB-T and ISDB-Tb?
+    if (DTVTunerType::kTunerTypeISDBT == type)
+    {
+        return ParseISDB_T(
+            _frequency,       _inversion,       _bandwidth,
+            _hp_code_rate,    _lp_code_rate,    _ofdm_modulation,
+            _trans_mode,      _guard_interval,  _hierarchy);
+    }
+    if (DTVTunerType::kTunerTypeISDBTb == type)
+    {
+        return ParseISDB_Tb(
+            _frequency,       _inversion,       _bandwidth,
+            _hp_code_rate,    _lp_code_rate,    _ofdm_modulation,
+            _trans_mode,      _guard_interval,  _hierarchy);
+    }
+    if (DTVTunerType::kTunerTypeISDBS == type)
+    {
+        return ParseISDB_S(
+            _frequency,       _inversion,       _symbolrate,
+            _fec,             _modulation,      _polarity);
+    }
+	// ToDo: Should separate both ISDB-S and ISDB-S3?
+    if (DTVTunerType::kTunerTypeISDBS3 == type)
+    {
+        return ParseISDB_S3(
+            _frequency,       _inversion,       _symbolrate,
+            _fec,             _modulation,      _polarity);
+    }
+    if (DTVTunerType::kTunerTypeISDBC  == type)
+    {
+        return ParseISDB_C(
+            _frequency,       _inversion,       _symbolrate,
+            _fec,             _modulation,      _polarity,
             _mod_sys);
     }
 
