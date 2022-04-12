@@ -18,6 +18,9 @@
 // Highest version number. version is 5bits
 const uint EITCache::kVersionMax = 31;
 
+// ToDo: Will fix unexpected clear all EPG table (at a one station/stream)
+// with some Japanese station. i.e. NHK-G with some situations (mostly on
+// Holiday and a before day) -- 20220413 K.Ohta 
 EITCache::EITCache()
 {
     // 24 hours ago
@@ -203,7 +206,6 @@ static void unlock_channel(uint chanid, uint updated)
     if (!query.exec())
         MythDB::DBError("Error inserting eit statistics", query);
 }
-
 
 event_map_t * EITCache::LoadChannel(uint chanid)
 {

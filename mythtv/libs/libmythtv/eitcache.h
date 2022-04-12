@@ -16,6 +16,9 @@
 // MythTV headers
 #include "mythtvexp.h"
 
+// ToDo: Will fix unexpected clear all EPG table (at a one station/stream)
+// with some Japanese station. i.e. NHK-G with some situations (mostly on
+// Holiday and a before day) -- 20220413 K.Ohta 
 using event_map_t = QMap<uint, uint64_t>;
 using key_map_t = QMap<uint, event_map_t*>;
 
