@@ -52,6 +52,9 @@
 #include "dvbtypes.h"
 #endif
 
+// ToDo: Will Implement for "As Character device driver" with
+// Earthsoft PTx or another some Japanese ISDB cards.
+// Name reserved for "PT1CHAR" . --  20220413 K.Ohta
 #ifdef USING_VBOX
 #include "vboxutils.h"
 #endif
@@ -2530,6 +2533,8 @@ CaptureCardGroup::CaptureCardGroup(CaptureCard &parent)
 #ifdef USING_DVB
     cardtype->addTargetedChild("DVB",
                                new DVBConfigurationGroup(parent, *cardtype));
+    cardtype->addTargetedChild("ISDB",
+                               new ISDBConfigurationGroup(parent, *cardtype));
 #endif // USING_DVB
 
 #ifdef USING_V4L2
@@ -2727,7 +2732,9 @@ void CardType::fillSelections(MythUIComboBoxSetting* setting)
 {
 #ifdef USING_DVB
     setting->addSelection(
-        QObject::tr("DVB-T/S/C, ATSC or ISDB-T tuner card"), "DVB");
+        QObject::tr("DVB-T/S/C, ATSC tuner card"), "DVB");
+    setting->addSelection(
+        QObject::tr("ISDB-T/S/C/S3 or ISDB-T international tuner card "), "ISDB");
 #endif // USING_DVB
 
 #ifdef USING_V4L2
@@ -3820,7 +3827,8 @@ void DVBConfigurationGroup::probeCard(const QString &videodevice)
         return;
     }
 
-    if ((m_parent.getCardID() != 0) && m_parent.GetRawCardType() != "DVB")
+    if ((m_parent.getCardID() != 0) &&
+		(m_parent.GetRawCardType() != "DVB") && (m_parent.GetRawCardType() != "ISDB"))
     {
         m_cardName->setValue("");
         m_cardType->setValue("");
