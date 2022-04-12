@@ -25,10 +25,14 @@
 #include "mythmiscutil.h" // for ping()
 #include "mythdownloadmanager.h"
 
+
 #ifdef USING_DVB
 #include "dvbtypes.h"
 #endif
 
+// ToDo: Will Implement for "As Character device driver" with
+// Earthsoft PTx or another some Japanese ISDB cards.
+// Name reserved for "PT1CHAR" . --  20220413 K.Ohta
 #ifdef USING_V4L2
 #include "v4l2util.h"
 #endif
@@ -61,8 +65,10 @@ QString CardUtil::GetScanableInputTypes(void)
 
 #ifdef USING_DVB
     inputTypes += "'DVB'";
+    inputTypes += "'ISDB'";
 #endif // USING_DVB
 
+// ToDo: Will add "PT1CHAR".
 #ifdef USING_V4L2
     inputTypes += "'V4L'";
     inputTypes += "'MPEG'";
@@ -218,7 +224,8 @@ bool CardUtil::HasTuner(const QString &rawtype, const QString & device)
 {
     if (rawtype == "DVB"     || rawtype == "HDHOMERUN" ||
         rawtype == "FREEBOX" || rawtype == "CETON" ||
-        rawtype == "VBOX"    || rawtype == "SATIP")
+        rawtype == "VBOX"    || rawtype == "SATIP" ||
+		rawtype == "ISDB"    || rawtype == "PT1CHAR")
         return true;
 
 #ifdef USING_V4L2
@@ -454,7 +461,8 @@ QStringList CardUtil::ProbeVideoDevices(const QString &rawtype)
 
     QStringList devs;
 
-    if (rawtype.toUpper() == "DVB")
+    // ToDo: Will add "PT1CHAR".
+    if ((rawtype.toUpper() == "DVB") || (rawtype.toUpper() == "ISDB"))
     {
         QDir dir("/dev/dvb", "adapter*", QDir::Name, QDir::Dirs);
         QFileInfoList entries = dir.entryInfoList();
@@ -945,7 +953,8 @@ DTVModulationSystem CardUtil::ProbeCurrentDeliverySystem(int fd_frontend)
 QString CardUtil::ProbeSubTypeName(uint inputid)
 {
     QString type = GetRawInputType(inputid);
-    if ("DVB" != type)
+    // ToDo: Will add "PT1CHAR".
+    if (("DVB" != type) && (("ISDB") != type)) /* ToDo: PT1CHAR */
         return type;
 
     DTVTunerType tunertype;
@@ -994,6 +1003,14 @@ bool CardUtil::IsDVBInputType(const QString &inputType)
     QString t = inputType.toUpper();
     return (t == "DVB") || (t == "QPSK") || (t == "QAM") || (t == "OFDM") ||
         (t == "ATSC") || (t == "DVB_S2") || (t == "DVB_T2");
+}
+
+/// \brief Returns true iff the input_type is one of the ISDB types.
+bool CardUtil::IsISDBInputType(const QString &inputType)
+{
+    QString t = inputType.toUpper();
+    return (t == "ISDB_S") || (t == "ISDB_S3") || (t == "ISDB_C") ||
+        (t == "ISDB_T") || (t == "ISDB_Tb");
 }
 
 // Get the current delivery system from the card
@@ -2436,8 +2453,8 @@ QStringList CardUtil::ProbeVideoInputs(const QString& device, const QString& inp
 
     if (IsSingleInputType(inputtype))
         ret += "MPEG2TS";
-    else if ("DVB" == inputtype)
-        ret += ProbeDVBInputs(device);
+    else if (("DVB" == inputtype) || ("ISDB" == inputtype))
+        ret += ProbeDVBInputs(device); // DVB card may (or not) include ISDB feature.
     else
         ret += ProbeV4LVideoInputs(device);
 

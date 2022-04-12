@@ -67,7 +67,12 @@ class MTV_PUBLIC CardUtil
         VBOX      = 19,
         DVBT2     = 20,
         V4L2ENC   = 21,
-        SATIP     = 22
+        SATIP     = 22,
+		ISDBS     = 23,
+		ISDBS3    = 24,
+		ISDBT     = 25,
+        ISDBTb    = 26,
+        ISDBC     = 27,		
     };
 
     static enum INPUT_TYPES toInputType(const QString &name)
@@ -388,6 +393,7 @@ class MTV_PUBLIC CardUtil
     static bool         IsDVB(uint inputid)
         { return "DVB" == GetRawInputType(inputid); }
     static bool         IsDVBInputType(const QString &inputType);
+    static bool         IsISDBInputType(const QString &inputType);
     static QStringList  ProbeDeliverySystems(const QString &device);
     static QStringList  ProbeDeliverySystems(int fd_frontend);
     static QString      ProbeDefaultDeliverySystem(const QString &device);
