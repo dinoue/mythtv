@@ -5538,7 +5538,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythfrontend/exitprompt.cpp" line="299"/>
         <source>Mythbackend is running on this system. </source>
-        <translation type="unfinished"><このシステムで Mythbackend が実行中です。/translation>
+        <translation>このシステムで Mythbackend が実行中です。 </translation>
     </message>
     <message>
         <source>No</source>
