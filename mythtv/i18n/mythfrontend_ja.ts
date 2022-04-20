@@ -167,7 +167,7 @@
         <location filename="../libs/libmythtv/mpeg/dishdescriptors.cpp" line="442"/>
         <location filename="../libs/libmythtv/mpeg/dvbdescriptors.cpp" line="376"/>
         <source>Comedy</source>
-        <translation type="unfinished">コメディー</translation>
+        <translation>コメディー</translation>
     </message>
     <message>
         <source>Concert</source>
@@ -1621,7 +1621,7 @@
     <message>
         <location filename="../libs/libmythtv/channelsettings.cpp" line="76"/>
         <source>It is NOT a good idea to change this value as it only changes the sourceid in table channel but not in dtv_multiplex. The sourceid in dtv_multiplex cannot and should not be changed.</source>
-        <translation type="unfinished"></translation>
+        <translation>この値を変更しようとは考えないことです。channel テーブルの souceid は変わりますが dtv_multiplex テーブルでは違います。dtv_multiplex 内の sourceid の変更は不可であり禁止です。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelsettings.cpp" line="133"/>
@@ -1962,7 +1962,7 @@ Check if the video exists</source>
     <message>
         <location filename="../programs/mythfrontend/main.cpp" line="1361"/>
         <source>BD Failure</source>
-        <translation type="unfinished"></translation>
+        <translation>BD 失敗</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/main.cpp" line="2045"/>
@@ -2305,32 +2305,32 @@ Check if the video exists</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2148"/>
         <source>16:20 (16:10 Above and below)</source>
-        <translation type="unfinished"></translation>
+        <translation>16:20 (16:10 スクリーンの上下置き)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1518"/>
         <source>Paint engine</source>
-        <translation type="unfinished"></translation>
+        <translation>描画エンジン</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1522"/>
         <source>This selects what MythTV uses to draw. </source>
-        <translation type="unfinished"></translation>
+        <translation>ここでMythTV の描画に使用するものを選択します。 </translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2136"/>
         <source>Auto (Assume square pixels)</source>
-        <translation type="unfinished"></translation>
+        <translation>自動 (正方形ピクセルを想定)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2137"/>
         <source>Auto (Detect from display)</source>
-        <translation type="unfinished"></translation>
+        <translation>自動 (ディスプレーから検出)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2149"/>
         <source>Most modern displays have square pixels and the aspect ratio of the screen can be computed from the resolution (default). The aspect ratio can also be automatically detected from the connected display - though this may be slightly less accurate. If automatic detection fails, the correct aspect ratio can be specified here. Note: Some values (e.g 32:10) are primarily intended for multiscreen setups.</source>
-        <translation type="unfinished"></translation>
+        <translation>最近のほとんどのディスプレーはピクセルが正方形であり、画面のアスペクト比は解像度から計算できます（デフォルト）。またアスペクト比は、接続されているディスプレーから自動的に検出できる - これはわずかに正確ではありません。自動検出に失敗した場合に、ここで正しいアスペクト比を指定できます。注 : いくつかの値（e.g 32:10）は主にマルチスクリーン設定を目的としています。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2227"/>
@@ -3198,7 +3198,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythfrontend/audiogeneralsettings.cpp" line="649"/>
         <source>Unable to create AudioOutput.</source>
-        <translation type="unfinished">オーディオ出力を作成できませんでした。</translation>
+        <translation>オーディオ出力を作成できません。</translation>
     </message>
 </context>
 <context>
@@ -3234,12 +3234,12 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="130"/>
         <source>Listen on All IP Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>すべての IP Address で待ち受ける</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="132"/>
         <source>Allow this backend to receive connections on any IP Address assigned to it. Recommended for most users for ease and reliability.</source>
-        <translation type="unfinished"></translation>
+        <translation>このバックエンドで、割り当てられたすべての IP アドレスからの接続の受信を許可します。簡単で信頼性もあるので、ほとんどのユーザーにおすすめです。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="893"/>
@@ -3262,7 +3262,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythfrontend/main.cpp" line="230"/>
         <source>Clear bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークをクリアー</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/main.cpp" line="231"/>
@@ -3272,12 +3272,12 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythfrontend/main.cpp" line="232"/>
         <source>Play from last played position</source>
-        <translation type="unfinished"></translation>
+        <translation>最後に見ていたつづきから再生</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/main.cpp" line="233"/>
         <source>Clear last played position</source>
-        <translation type="unfinished"></translation>
+        <translation>最後に見ていた場所のクリアー</translation>
     </message>
 </context>
 <context>
@@ -3433,27 +3433,27 @@ Device supports up to %1</source>
         <location filename="../libs/libmythtv/videosource.cpp" line="2150"/>
         <source>CetonConfigurationGroup</source>
         <comment>Description</comment>
-        <translation type="unfinished"></translation>
+        <translation>Ceton 設定グループ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2151"/>
         <source>IP Address</source>
-        <translation type="unfinished"></translation>
+        <translation>IP アドレス</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2152"/>
         <source>IP Address of the Ceton device (192.168.200.1 by default)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ceton 製機器の IP アドレス ( デフォルトは 192.168.200.1 )</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2153"/>
         <source>Tuner</source>
-        <translation type="unfinished">チューナー</translation>
+        <translation>チューナー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2154"/>
         <source>Number of the tuner on the Ceton device (first tuner is number 0)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ceton 製機器の チューナー  番号 ( 最初のチューナーの番号は 0 )</translation>
     </message>
 </context>
 <context>
@@ -3461,7 +3461,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="725"/>
         <source>Add some channels first!</source>
-        <translation type="unfinished"></translation>
+        <translation>最初にチャンネルをいくつか登録しましょう！</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="112"/>
@@ -3530,36 +3530,36 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="108"/>
         <source>Delete all channels on currently selected video source.</source>
-        <translation type="unfinished"></translation>
+        <translation>現在選択しているビデオソースからすべてのチャンネルを削除します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="113"/>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="321"/>
         <source>Service ID</source>
-        <translation type="unfinished"></translation>
+        <translation>サービスID</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="114"/>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="325"/>
         <source>Frequency</source>
-        <translation type="unfinished">周波数</translation>
+        <translation>周波数</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="115"/>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="329"/>
         <source>Transport ID</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスポート ID</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="116"/>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="333"/>
         <source>Video Source</source>
-        <translation type="unfinished">ビデオソース</translation>
+        <translation>ビデオソース</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="151"/>
         <source>Restore Data from deleted channels.</source>
-        <translation type="unfinished"></translation>
+        <translation>削除したチャンネルからデータを復元します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="523"/>
@@ -3662,7 +3662,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4735"/>
         <source>Select/Unselect channels for this channel group</source>
-        <translation type="unfinished"></translation>
+        <translation>このチャンネルグループからチャンネルを選択・非選択してください</translation>
     </message>
 </context>
 <context>
@@ -5518,22 +5518,22 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythfrontend/exitprompt.cpp" line="273"/>
         <source>Yes, Suspend</source>
-        <translation type="unfinished"></translation>
+        <translation>はい。サスペンド</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/exitprompt.cpp" line="291"/>
         <source>Are you sure you want to shutdown?</source>
-        <translation type="unfinished"></translation>
+        <translation>電源を切ります。よろしいですか？</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/exitprompt.cpp" line="292"/>
         <source>Are you sure you want to reboot?</source>
-        <translation type="unfinished"></translation>
+        <translation>再起動します。よろしいですか？</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/exitprompt.cpp" line="293"/>
         <source>Are you sure you want to suspend?</source>
-        <translation type="unfinished"></translation>
+        <translation>サスペンドします。よろしいですか？</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/exitprompt.cpp" line="299"/>
@@ -5556,7 +5556,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythtv-setup/exitprompt.cpp" line="77"/>
         <source>...and more...</source>
-        <translation type="unfinished"></translation>
+        <translation>...その他...</translation>
     </message>
     <message numerus="yes">
         <location filename="../programs/mythtv-setup/exitprompt.cpp" line="84"/>
@@ -5568,7 +5568,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythtv-setup/exitprompt.cpp" line="87"/>
         <source>Configuration Problems</source>
-        <translation type="unfinished"></translation>
+        <translation>設定の問題</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/exitprompt.cpp" line="99"/>
@@ -5653,7 +5653,8 @@ Device supports up to %1</source>
         <location filename="../libs/libmythtv/videosource.cpp" line="2348"/>
         <source>A &apos;black box&apos; application controlled via stdin, status on stderr and TransportStream read from stdout.
 Use absolute path or path relative to the current directory.</source>
-        <translation>stdin を通じた制御、stderrでのステータス、stdoutを読み取っての転送ストリームといった「ブラックボックス」アプリケーション</translation>
+        <translation>stdin を通じた制御、stderr でのステータス、stdoutを読み取っての転送ストリームといった「ブラックボックス」アプリケーションです。
+絶対パスをか、現在のディレクトリーからの相対パスかを使います。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2353"/>
