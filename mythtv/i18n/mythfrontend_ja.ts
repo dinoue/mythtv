@@ -6036,12 +6036,12 @@ PCにメディアを挿入・マウントしてください。
     <message>
         <location filename="../programs/mythfrontend/gallerythumbview.cpp" line="1153"/>
         <source>Move Marked Into</source>
-        <translation>マークしたものを移動する : </translation>
+        <translation>マークしたものを移動</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/gallerythumbview.cpp" line="1154"/>
         <source>Copy Marked Into</source>
-        <translation>マークしたものをコピーする : </translation>
+        <translation>マークしたものをコピー</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/gallerythumbview.cpp" line="1156"/>
@@ -6333,8 +6333,8 @@ PCにメディアを挿入・マウントしてください。
         <location filename="../programs/mythfrontend/gallerythumbview.cpp" line="1631"/>
         <source>Do you want to delete
 %1 ?</source>
-        <translation>以下の項目を削除します。よろしいですか?
-%1</translation>
+        <translation>%1 を削除します。
+よろしいですか ?</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/gallerythumbview.cpp" line="1641"/>
@@ -6526,7 +6526,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4558"/>
         <source>Scheduler Options</source>
-        <translation>スケジューラー設定</translation>
+        <translation>予約設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4569"/>
@@ -6684,32 +6684,32 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="635"/>
         <source>Maximum Start Gap (secs)</source>
-        <translation type="unfinished"></translation>
+        <translation>冒頭の最大許容欠落(秒)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="639"/>
         <source>If more than this number of seconds is missing at the start of a recording that will be regarded as a gap for assessing recording quality. The recording may be marked as damaged.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の冒頭にこの秒数より多く欠落した場合、録画品質の評価でギャップと見なします。録画に破損のマークがつきます。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="651"/>
         <source>Maximum End Gap (secs)</source>
-        <translation type="unfinished"></translation>
+        <translation>末尾の最大許容欠落(秒)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="655"/>
         <source>If more than this number of seconds is missing at the end of a recording that will be regarded as a gap for assessing recording quality. The recording may be marked as damaged.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の末尾にこの秒数より多く欠落した場合、録画品質の評価でギャップと見なします。録画に破損のマークがつきます。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="667"/>
         <source>Minimum Recording Quality (percent)</source>
-        <translation type="unfinished"></translation>
+        <translation>最小録画品質 (％)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="671"/>
         <source>If recording quality is below this value the recording is marked as damaged.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画品質がこの値を下回る場合、破損とマークをつけます。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="680"/>
@@ -7253,7 +7253,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5591"/>
         <source>Recording is in Standard Definition</source>
-        <translation type="unfinished"></translation>
+        <translation>録画は標準画質</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5593"/>
@@ -7263,42 +7263,42 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5595"/>
         <source>Recording is in 1080i High Definition</source>
-        <translation>録画は1080iのHD画質</translation>
+        <translation>録画は1080i HD画質</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5596"/>
         <source>Recording is in 1080p High Definition</source>
-        <translation>録画は1080pのHD画質</translation>
+        <translation>録画は1080p HD画質</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5597"/>
         <source>Recording is in 4k(interlaced) UHD resolution</source>
-        <translation type="unfinished"></translation>
+        <translation>録画は4K (インターレス) UHD 画質</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5598"/>
         <source>Recording is in 4k UHD resolution</source>
-        <translation type="unfinished"></translation>
+        <translation>録画は4K UHD画質</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5599"/>
         <source>Recording is using MPEG-2 codec</source>
-        <translation type="unfinished"></translation>
+        <translation>録画は MPEG-2 コーデックを使用</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5600"/>
         <source>Recording is using AVC/H.264 codec</source>
-        <translation type="unfinished"></translation>
+        <translation>録画はAVC/H.264コーデックを使用</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5601"/>
         <source>Recording is using HEVC/H.265 codec</source>
-        <translation type="unfinished"></translation>
+        <translation>録画はHEVC/H.265コーデックを使用</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5571"/>
         <source>Recording has been watched</source>
-        <translation type="unfinished"></translation>
+        <translation>録画は視聴済み</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5594"/>
@@ -7316,214 +7316,214 @@ Error: %1</source>
     <message>
         <location filename="../html/htmlstrings.h" line="12"/>
         <source>Loading ...</source>
-        <translation type="unfinished"></translation>
+        <translation>読み込んでいます...</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="14"/>
         <source>Idle</source>
-        <translation type="unfinished"></translation>
+        <translation>待機中</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="15"/>
         <location filename="../html/htmlstrings.h" line="237"/>
         <source>Unknown</source>
-        <translation type="unfinished">不明</translation>
+        <translation>不明</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="16"/>
         <source>Watching Blu-ray Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray ディスクを視聴</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="17"/>
         <source>Watching DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD を視聴</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="18"/>
         <source>Watching Live TV</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中のテレビを視聴</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="19"/>
         <source>Watching Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>録画を視聴</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="20"/>
         <source>Watching Video</source>
-        <translation type="unfinished"></translation>
+        <translation>動画を視聴</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="22"/>
         <source>Installing</source>
-        <translation type="unfinished"></translation>
+        <translation>インストール</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="23"/>
         <source>No</source>
-        <translation type="unfinished">いいえ</translation>
+        <translation>いいえ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="24"/>
         <source>Package installed</source>
-        <translation type="unfinished"></translation>
+        <translation>パッケージをインストールしました</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="25"/>
         <source>Unable to install package.</source>
-        <translation type="unfinished"></translation>
+        <translation>パッケージをインストールできません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="26"/>
         <source>Unable to retrieve setting.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定を取得できません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="27"/>
         <source>Unable to save setting.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定を保存できません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="28"/>
         <source>Unable to send message.</source>
-        <translation type="unfinished"></translation>
+        <translation>メッセージを送信できません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="29"/>
         <source>Yes</source>
-        <translation type="unfinished">はい</translation>
+        <translation>はい</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="31"/>
         <source>3rd Party Software</source>
-        <translation type="unfinished"></translation>
+        <translation>サードパーティー ソフト</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="32"/>
         <source>API</source>
-        <translation type="unfinished"></translation>
+        <translation>API</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="33"/>
         <source>Advanced Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>詳細設定</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="34"/>
         <source>Backend Status</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドの状態</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="35"/>
         <source>Capture Card Service</source>
-        <translation type="unfinished"></translation>
+        <translation>キャプチャーカード サービス</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="36"/>
         <source>Change Password</source>
-        <translation type="unfinished"></translation>
+        <translation>パスワードの変更</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="37"/>
         <source>Channel Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル エディター</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="38"/>
         <source>Channel Service</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル サービス</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="39"/>
         <source>Content Service</source>
-        <translation type="unfinished"></translation>
+        <translation>コンテンツ サービス</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="40"/>
         <source>DVR Service</source>
-        <translation type="unfinished"></translation>
+        <translation>DVR サービス</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="41"/>
         <source>Data Sources</source>
-        <translation type="unfinished"></translation>
+        <translation>データソース</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="42"/>
         <source>Database</source>
-        <translation type="unfinished"></translation>
+        <translation>データベース</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="43"/>
         <source>Database Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>データベース ツール</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="44"/>
         <source>Examples</source>
-        <translation type="unfinished"></translation>
+        <translation>例</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="45"/>
         <source>Expert/Dev Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>エキスパート・開発者設定</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="46"/>
         <location filename="../html/htmlstrings.h" line="148"/>
         <source>General</source>
-        <translation type="unfinished">全般</translation>
+        <translation>全般</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="47"/>
         <source>GetStorageGroups()</source>
-        <translation type="unfinished"></translation>
+        <translation>GetStorageGroups()</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="48"/>
         <source>Guide Data</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表データ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="49"/>
         <source>Guide Service</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表サービス</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="50"/>
         <source>HTTP Live Streaming</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP Live ストリーミング</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="51"/>
         <source>Hardware Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア プロファイル</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="52"/>
         <source>Information</source>
-        <translation type="unfinished">情報</translation>
+        <translation>情報</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="53"/>
         <source>JW Player&amp;trade;</source>
-        <translation type="unfinished"></translation>
+        <translation>JW Player&amp;trade;</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="54"/>
         <source>Job Queue</source>
-        <translation type="unfinished">ジョブキュー</translation>
+        <translation>ジョブキュー</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="55"/>
         <source>Myth Service</source>
-        <translation type="unfinished"></translation>
+        <translation>Myth サービス</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="56"/>
         <source>Overview</source>
-        <translation type="unfinished"></translation>
+        <translation>概要</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="57"/>
@@ -7534,183 +7534,183 @@ Error: %1</source>
     <message>
         <location filename="../html/htmlstrings.h" line="58"/>
         <source>Program Search</source>
-        <translation type="unfinished"></translation>
+        <translation>番組検索</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="59"/>
         <source>Recording Devices</source>
-        <translation type="unfinished"></translation>
+        <translation>録画機器</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="60"/>
         <location filename="../html/htmlstrings.h" line="231"/>
         <source>Recording Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルール</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="61"/>
         <location filename="../html/htmlstrings.h" line="259"/>
         <source>Recordings</source>
-        <translation type="unfinished">ろくが</translation>
+        <translation>録画</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="62"/>
         <source>Send a Message</source>
-        <translation type="unfinished"></translation>
+        <translation>メッセージの送信</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="63"/>
         <source>Server Side Scripting</source>
-        <translation type="unfinished"></translation>
+        <translation>サーバーサイド・スクリプト</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="64"/>
         <source>Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>セットアップ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="65"/>
         <source>Setup Wizard</source>
-        <translation type="unfinished"></translation>
+        <translation>セットアップ ウィザード</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="66"/>
         <location filename="../html/htmlstrings.h" line="108"/>
         <source>Storage Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージグループ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="67"/>
         <source>System Events</source>
-        <translation type="unfinished"></translation>
+        <translation>システムイベント</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="68"/>
         <source>TV</source>
-        <translation type="unfinished">テレビ</translation>
+        <translation>テレビ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="69"/>
         <location filename="../html/htmlstrings.h" line="348"/>
         <source>Upcoming Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>今後の録画</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="70"/>
         <source>Utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>ツール</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="71"/>
         <source>Video</source>
-        <translation type="unfinished">ビデオ</translation>
+        <translation>ビデオ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="72"/>
         <location filename="../html/htmlstrings.h" line="351"/>
         <source>Video Gallery</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオギャラリー</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="73"/>
         <source>Video Library Service</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオライブラリー サービス</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="74"/>
         <source>View Logs</source>
-        <translation type="unfinished"></translation>
+        <translation>ログを表示</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="75"/>
         <source>WSDL Links</source>
-        <translation type="unfinished"></translation>
+        <translation>WSDL リンク</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="76"/>
         <source>WebFrontend</source>
-        <translation type="unfinished"></translation>
+        <translation>Web フロントエンド</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="78"/>
         <source>Current Tuner Activity</source>
-        <translation type="unfinished"></translation>
+        <translation>現在のチューナー動作</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="79"/>
         <source>Encoder %1 is currently idle.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 エンコーダーは現在待機中です。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="80"/>
         <source>Encoder %1 is currently recording &quot;%2.&quot;  This program is being viewed.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 エンコーダーは現在「%2」を録画中です。この番組は視聴中です。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="81"/>
         <source>Encoder %1 is currently recording &quot;%2.&quot;  This recording will end at %3.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 エンコーダーは現在「%2」を録画中です。この録画は %3 に終了します。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="82"/>
         <source>Encoder %1 is currently watching &quot;%2&quot; on Live TV.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 エンコーダーは現在放送中の番組「%2」の視聴に利用しています。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="83"/>
         <source>Frontend Status</source>
-        <translation type="unfinished"></translation>
+        <translation>フロントエンドの状態</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="84"/>
         <source>Last Ten Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>最新の10録画</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="85"/>
         <source>MythTV System Overview</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV システム概要</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="86"/>
         <source>Offline</source>
-        <translation type="unfinished"></translation>
+        <translation>オフライン</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="87"/>
         <source>Online</source>
-        <translation type="unfinished"></translation>
+        <translation>オンライン</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="88"/>
         <source>Recorded %2 at %3.</source>
-        <translation type="unfinished"></translation>
+        <translation>%2 を %3 に録画済み。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="90"/>
         <source>Add Stream</source>
-        <translation type="unfinished"></translation>
+        <translation>ストリームを追加</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="91"/>
         <source>Audio</source>
-        <translation type="unfinished">オーディオ</translation>
+        <translation>オーディオ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="92"/>
         <source>Bitrate</source>
-        <translation type="unfinished">ビットレート</translation>
+        <translation>ビットレート</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="93"/>
         <location filename="../html/htmlstrings.h" line="243"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>削除</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="94"/>
         <source>Filename</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル名</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="95"/>
@@ -7719,24 +7719,24 @@ Error: %1</source>
         <location filename="../html/htmlstrings.h" line="128"/>
         <location filename="../html/htmlstrings.h" line="250"/>
         <source>Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルター</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="96"/>
         <location filename="../html/htmlstrings.h" line="180"/>
         <source>Group</source>
-        <translation type="unfinished">グループ</translation>
+        <translation>グループ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="97"/>
         <location filename="../html/htmlstrings.h" line="121"/>
         <source>HTTP Live Stream Demo</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP Live ストリーム デモ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="98"/>
         <source>Height</source>
-        <translation type="unfinished">高さ</translation>
+        <translation>高さ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="99"/>
@@ -7744,12 +7744,12 @@ Error: %1</source>
         <location filename="../html/htmlstrings.h" line="123"/>
         <location filename="../html/htmlstrings.h" line="129"/>
         <source>List Files</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル一覧</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="100"/>
         <source>List Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画一覧</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="101"/>
@@ -7757,282 +7757,282 @@ Error: %1</source>
         <location filename="../html/htmlstrings.h" line="124"/>
         <location filename="../html/htmlstrings.h" line="130"/>
         <source>Loading</source>
-        <translation type="unfinished"></translation>
+        <translation>読み込み中</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="102"/>
         <source>Play</source>
-        <translation type="unfinished">再生</translation>
+        <translation>再生</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="103"/>
         <source>Recordings:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画 : </translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="104"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>最新に更新</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="105"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>サイズ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="106"/>
         <source>Status</source>
-        <translation type="unfinished">ステータス</translation>
+        <translation>ステータス</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="107"/>
         <source>Stop</source>
-        <translation type="unfinished">停止</translation>
+        <translation>停止</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="109"/>
         <location filename="../html/htmlstrings.h" line="126"/>
         <source>Waiting</source>
-        <translation type="unfinished"></translation>
+        <translation>待機中</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="110"/>
         <source>Width</source>
-        <translation type="unfinished">幅</translation>
+        <translation>幅</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="111"/>
         <location filename="../html/htmlstrings.h" line="330"/>
         <source>install JW Player&amp;trade;</source>
-        <translation type="unfinished"></translation>
+        <translation>JW Player&amp;trade; をインストール</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="114"/>
         <source>HTTP Live Stream Demo2</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP Live ストリーム デモ2</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="115"/>
         <source>HTTP Live Streams Demo2</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP Live ストリーム デモ2</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="118"/>
         <location filename="../html/htmlstrings.h" line="258"/>
         <location filename="../html/htmlstrings.h" line="302"/>
         <source>Recording Group</source>
-        <translation type="unfinished">録画グループ</translation>
+        <translation>録画グループ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="122"/>
         <source>HTTP Live Streams Demo</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP Live ストリーム デモ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="125"/>
         <location filename="../html/htmlstrings.h" line="132"/>
         <location filename="../html/htmlstrings.h" line="314"/>
         <source>Storage Group</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージグループ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="131"/>
         <source>Sample Storage Group browser</source>
-        <translation type="unfinished"></translation>
+        <translation>サンプル ストレージグループ ブラウザー</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="134"/>
         <source>Actions</source>
-        <translation type="unfinished">アクション</translation>
+        <translation>アクション</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="135"/>
         <source>Commercial Flagger</source>
-        <translation type="unfinished"></translation>
+        <translation>CMマーク</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="136"/>
         <source>Commercial Flagging</source>
-        <translation type="unfinished">CMマーク中</translation>
+        <translation>CMマーク中</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="137"/>
         <source>Description</source>
-        <translation type="unfinished">内容</translation>
+        <translation>内容</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="138"/>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>編集</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="139"/>
         <location filename="../html/htmlstrings.h" line="318"/>
         <source>Transcoder</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスコード</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="140"/>
         <source>Transcoding</source>
-        <translation type="unfinished">トランスコード中</translation>
+        <translation>トランスコード</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="141"/>
         <source>User Job #%1</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ %1</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="143"/>
         <source>Appearance</source>
-        <translation type="unfinished"></translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="144"/>
         <source>CA Certificate Path</source>
-        <translation type="unfinished"></translation>
+        <translation>CA 証明書パス</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="145"/>
         <location filename="../html/htmlstrings.h" line="274"/>
         <source>Changes Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>変更を保存しました</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="146"/>
         <source>Enable Animations</source>
-        <translation type="unfinished"></translation>
+        <translation>アニメーションを有効に</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="147"/>
         <source>Enable TLS</source>
-        <translation type="unfinished"></translation>
+        <translation>TLS を有効に</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="149"/>
         <source>Host Certificate Path</source>
-        <translation type="unfinished"></translation>
+        <translation>Host 証明書パス</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="150"/>
         <source>Optional</source>
-        <translation type="unfinished"></translation>
+        <translation>オプション</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="151"/>
         <source>Private Key Path</source>
-        <translation type="unfinished"></translation>
+        <translation>プライベートキー パス</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="152"/>
         <location filename="../html/htmlstrings.h" line="309"/>
         <source>Save Changes</source>
-        <translation type="unfinished"></translation>
+        <translation>変更の保存</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="153"/>
         <location filename="../html/htmlstrings.h" line="310"/>
         <source>Save Failed!</source>
-        <translation type="unfinished"></translation>
+        <translation>保存に失敗！</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="154"/>
         <source>Security</source>
-        <translation type="unfinished"></translation>
+        <translation>セキュリティー</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="155"/>
         <source>TLS Options</source>
-        <translation type="unfinished"></translation>
+        <translation>TLS オプション</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="156"/>
         <source>WebFrontend Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Web フロントエンド 設定</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="158"/>
         <source>Local Backend</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカル バックエンド</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="159"/>
         <source>Local Backend (IPv6)</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカル バックエンド ( IPv6 )</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="160"/>
         <source>Make this server the master backend</source>
-        <translation type="unfinished"></translation>
+        <translation>このサーバーをマスターバックエンドにする</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="161"/>
         <source>Master Backend</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンド</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="162"/>
         <source>Security PIN</source>
-        <translation type="unfinished"></translation>
+        <translation>セキュリティー PIN</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="163"/>
         <source>Use Link-Local</source>
-        <translation type="unfinished"></translation>
+        <translation>リンクローカルを使用</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="165"/>
         <source>Category:</source>
-        <translation type="unfinished">カテゴリー:</translation>
+        <translation>カテゴリー:</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="166"/>
         <source>Duration:</source>
-        <translation type="unfinished"></translation>
+        <translation>長さ :</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="167"/>
         <source>Episode:</source>
-        <translation type="unfinished"></translation>
+        <translation>回 :</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="168"/>
         <source>No matching program found</source>
-        <translation type="unfinished"></translation>
+        <translation>一致する番組が見つかりません</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="169"/>
         <source>Recording Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画グループ :</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="170"/>
         <source>Recording Status:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ステータス :</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="171"/>
         <source>Season:</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン :</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="172"/>
         <source>Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>サイズ :</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="173"/>
         <source>Start/End Times:</source>
-        <translation type="unfinished"></translation>
+        <translation>開始・終了時間 :</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="175"/>
         <source>All Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのチャンネル</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="176"/>
         <source>Date</source>
-        <translation type="unfinished"></translation>
+        <translation>日付</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="177"/>
@@ -8040,14 +8040,14 @@ Error: %1</source>
         <location filename="../html/htmlstrings.h" line="222"/>
         <location filename="../html/htmlstrings.h" line="334"/>
         <source>Delete Recording Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルールを削除</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="178"/>
         <location filename="../html/htmlstrings.h" line="197"/>
         <location filename="../html/htmlstrings.h" line="335"/>
         <source>Don&apos;t Record</source>
-        <translation type="unfinished">録画しない</translation>
+        <translation>録画しない</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="179"/>
@@ -8056,7 +8056,7 @@ Error: %1</source>
         <location filename="../html/htmlstrings.h" line="247"/>
         <location filename="../html/htmlstrings.h" line="336"/>
         <source>Edit recording rule</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルールの編集</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="181"/>
@@ -8064,82 +8064,82 @@ Error: %1</source>
         <location filename="../html/htmlstrings.h" line="255"/>
         <location filename="../html/htmlstrings.h" line="341"/>
         <source>Movie</source>
-        <translation type="unfinished">映画</translation>
+        <translation>映画</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="182"/>
         <location filename="../html/htmlstrings.h" line="204"/>
         <location filename="../html/htmlstrings.h" line="342"/>
         <source>Never Record</source>
-        <translation type="unfinished">これ以上録画しない</translation>
+        <translation>今後録画しない</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="184"/>
         <location filename="../html/htmlstrings.h" line="208"/>
         <source>Record all showings</source>
-        <translation type="unfinished"></translation>
+        <translation>番組をすべて録画する</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="185"/>
         <location filename="../html/htmlstrings.h" line="209"/>
         <source>Record all showings (this channel)</source>
-        <translation type="unfinished"></translation>
+        <translation>番組のすべてを録画（このチャンネル）</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="186"/>
         <location filename="../html/htmlstrings.h" line="210"/>
         <source>Record one showing</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組の1つを録画</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="187"/>
         <location filename="../html/htmlstrings.h" line="211"/>
         <source>Record this showing</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組を録画</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="188"/>
         <location filename="../html/htmlstrings.h" line="213"/>
         <location filename="../html/htmlstrings.h" line="344"/>
         <source>Scheduling</source>
-        <translation type="unfinished"></translation>
+        <translation>予約</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="189"/>
         <source>There are no channels to display.</source>
-        <translation type="unfinished"></translation>
+        <translation>表示するチャンネルがありません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="190"/>
         <source>Time</source>
-        <translation type="unfinished">タイム</translation>
+        <translation>時間</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="192"/>
         <source>%1-%2 of %3 Matches</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 〜 %2 / 一致 %3 件中</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="193"/>
         <source>All</source>
-        <translation type="unfinished">全て</translation>
+        <translation>すべて</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="194"/>
         <location filename="../html/htmlstrings.h" line="273"/>
         <source>Category</source>
-        <translation type="unfinished">カテゴリー</translation>
+        <translation>カテゴリー</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="195"/>
         <source>Channel</source>
-        <translation type="unfinished">チャンネル</translation>
+        <translation>チャンネル</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="198"/>
         <location filename="../html/htmlstrings.h" line="281"/>
         <source>Duration</source>
-        <translation type="unfinished"></translation>
+        <translation>長さ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="200"/>
@@ -8148,7 +8148,7 @@ Error: %1</source>
         <location filename="../html/htmlstrings.h" line="337"/>
         <source>Ep %1</source>
         <comment>Episode x</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 回</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="201"/>
@@ -8157,27 +8157,27 @@ Error: %1</source>
         <location filename="../html/htmlstrings.h" line="338"/>
         <source>Ep %1/%2</source>
         <comment>Episode x of y</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 回 / 全 %2 回</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="202"/>
         <source>Keyword</source>
-        <translation type="unfinished"></translation>
+        <translation>キーワード</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="205"/>
         <source>No Matches</source>
-        <translation type="unfinished"></translation>
+        <translation>一致なし</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="206"/>
         <source>People</source>
-        <translation type="unfinished"></translation>
+        <translation>人</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="207"/>
         <source>Person</source>
-        <translation type="unfinished"></translation>
+        <translation>人</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="212"/>
@@ -8186,74 +8186,74 @@ Error: %1</source>
         <location filename="../html/htmlstrings.h" line="343"/>
         <source>S %1</source>
         <comment>Season x</comment>
-        <translation type="unfinished"></translation>
+        <translation>シーズン %1</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="214"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>検索</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="215"/>
         <location filename="../html/htmlstrings.h" line="261"/>
         <source>Sort</source>
-        <translation type="unfinished">選り分ける</translation>
+        <translation>並び</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="216"/>
         <source>Start Time</source>
-        <translation type="unfinished"></translation>
+        <translation>開始時間</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="217"/>
         <source>There are no matching programs.</source>
-        <translation type="unfinished"></translation>
+        <translation>一致する番組がありません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="218"/>
         <location filename="../html/htmlstrings.h" line="235"/>
         <source>Title</source>
-        <translation type="unfinished">タイトル</translation>
+        <translation>タイトル</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="220"/>
         <source>Any</source>
-        <translation type="unfinished">どれか</translation>
+        <translation>いずれも</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="221"/>
         <source>Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>昇順</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="223"/>
         <source>Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>降順</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="224"/>
         <source>Disable Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールを無効化</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="226"/>
         <source>Enable Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールを有効化</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="227"/>
         <source>Last Recorded</source>
-        <translation type="unfinished"></translation>
+        <translation>最新の録画</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="228"/>
         <source>Next Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>次の録画</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="229"/>
         <source>Order</source>
-        <translation type="unfinished"></translation>
+        <translation>並び</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="230"/>
@@ -8264,203 +8264,203 @@ Error: %1</source>
     <message>
         <location filename="../html/htmlstrings.h" line="232"/>
         <source>Sort By</source>
-        <translation type="unfinished"></translation>
+        <translation>並び順</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="233"/>
         <location filename="../html/htmlstrings.h" line="346"/>
         <source>There are no conflicting or errored recordings.</source>
-        <translation type="unfinished"></translation>
+        <translation>衝突またはエラーの録画はありません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="234"/>
         <source>There are no recording rules defined.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルールが登録されていません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="236"/>
         <source>Type</source>
-        <translation type="unfinished">タイプ</translation>
+        <translation>タイプ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="239"/>
         <source>ASX</source>
-        <translation type="unfinished"></translation>
+        <translation>ASX</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="240"/>
         <source>Auto-Expire</source>
-        <translation type="unfinished"></translation>
+        <translation>自動削除</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="241"/>
         <source>Bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマーク</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="242"/>
         <source>Commercial Flagged</source>
-        <translation type="unfinished"></translation>
+        <translation>CMマーク済み</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="244"/>
         <source>Delete Forever</source>
-        <translation type="unfinished"></translation>
+        <translation>完全に削除</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="245"/>
         <source>Delete and Re-Record</source>
-        <translation type="unfinished"></translation>
+        <translation>削除して再録画</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="246"/>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>ダウンロード</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="251"/>
         <source>HD</source>
-        <translation type="unfinished"></translation>
+        <translation>HD</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="252"/>
         <source>HD 1080</source>
-        <translation type="unfinished"></translation>
+        <translation>HD 1080</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="253"/>
         <source>HD 720</source>
-        <translation type="unfinished"></translation>
+        <translation>HD 720</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="254"/>
         <source>M3U8</source>
-        <translation type="unfinished"></translation>
+        <translation>M3U8</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="256"/>
         <source>Play in Browser</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウザ内で再生</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="257"/>
         <source>Play on Frontend</source>
-        <translation type="unfinished"></translation>
+        <translation>フロントエンドで再生</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="262"/>
         <source>Stop Recording</source>
-        <translation type="unfinished">録画停止</translation>
+        <translation>録画停止</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="263"/>
         <source>There are no deleted recordings.</source>
-        <translation type="unfinished"></translation>
+        <translation>削除済みの録画はありません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="264"/>
         <source>There are no recordings available.</source>
-        <translation type="unfinished"></translation>
+        <translation>利用可能な録画はありません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="265"/>
         <source>There are no recordings matching the given filters.</source>
-        <translation type="unfinished"></translation>
+        <translation>指定の条件に一致する録画はありません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="266"/>
         <source>Undelete</source>
-        <translation type="unfinished"></translation>
+        <translation>削除の取り消し</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="267"/>
         <source>Wastebin</source>
-        <translation type="unfinished"></translation>
+        <translation>ごみ箱</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="268"/>
         <source>Watch</source>
-        <translation type="unfinished"></translation>
+        <translation>再生する</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="269"/>
         <source>Watched</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴済み</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="270"/>
         <source>XSPF</source>
-        <translation type="unfinished"></translation>
+        <translation>XSPF</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="272"/>
         <source>Allow Auto-Expire</source>
-        <translation type="unfinished"></translation>
+        <translation>自動削除する</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="275"/>
         <source>Commercial Flag</source>
-        <translation type="unfinished"></translation>
+        <translation>CMマーク</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="276"/>
         <source>Default</source>
-        <translation type="unfinished">既定値</translation>
+        <translation>標準</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="277"/>
         <source>Delete old and record new</source>
-        <translation type="unfinished"></translation>
+        <translation>古いものを削除して、新しいものを録画</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="278"/>
         <source>Details</source>
-        <translation type="unfinished"></translation>
+        <translation>詳細</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="279"/>
         <source>Don&apos;t record new</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいものを録画しない</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="280"/>
         <source>Duplicate Matching</source>
-        <translation type="unfinished"></translation>
+        <translation>重複の検査</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="282"/>
         <source>End Early/Late</source>
-        <translation type="unfinished"></translation>
+        <translation>終了時間の短縮・延長</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="283"/>
         <source>Episode</source>
-        <translation type="unfinished"></translation>
+        <translation>回</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="284"/>
         <source>Episode Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>回数の上限</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="285"/>
         <source>Episodes</source>
-        <translation type="unfinished"></translation>
+        <translation>回</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="286"/>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルター</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="287"/>
         <source>High Quality</source>
-        <translation type="unfinished">高品質</translation>
+        <translation>高品質</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="288"/>
         <source>Input</source>
-        <translation type="unfinished">入力</translation>
+        <translation>入力</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="289"/>
@@ -8470,182 +8470,182 @@ Error: %1</source>
     <message>
         <location filename="../html/htmlstrings.h" line="290"/>
         <source>Look Up Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータを検索</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="291"/>
         <source>Lookup Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータを検索</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="292"/>
         <source>Low Quality</source>
-        <translation type="unfinished"></translation>
+        <translation>低品質</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="293"/>
         <source>Metadata Options</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ設定</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="294"/>
         <source>Minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>分</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="295"/>
         <source>Next 5 Conflicts</source>
-        <translation type="unfinished"></translation>
+        <translation>次の5件の衝突</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="296"/>
         <source>Next 5 Showings</source>
-        <translation type="unfinished"></translation>
+        <translation>次の5番組</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="297"/>
         <source>No Conflicts</source>
-        <translation type="unfinished">衝突なし</translation>
+        <translation>衝突なし</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="298"/>
         <source>No Upcoming Showings</source>
-        <translation type="unfinished"></translation>
+        <translation>これからの録画なし</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="299"/>
         <source>Playback Group</source>
-        <translation type="unfinished">プレイバックグループ</translation>
+        <translation>再生グループ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="300"/>
         <source>Post Processing</source>
-        <translation type="unfinished"></translation>
+        <translation>事後処理</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="303"/>
         <source>Recording Profile</source>
-        <translation type="unfinished">録画プロファイル</translation>
+        <translation>録画プロファイル</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="304"/>
         <source>Rule Type</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールタイプ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="305"/>
         <source>Run User Job 1</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 1 を実行</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="306"/>
         <source>Run User Job 2</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 2 を実行</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="307"/>
         <source>Run User Job 3</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 3 を実行</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="308"/>
         <source>Run User Job 4</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 4 を実行</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="311"/>
         <source>Schedule Options</source>
-        <translation type="unfinished"></translation>
+        <translation>予約設定</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="312"/>
         <source>Season</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="313"/>
         <source>Start Early/Late</source>
-        <translation type="unfinished"></translation>
+        <translation>開始時間の前倒し・遅れ</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="315"/>
         <source>Storage Options</source>
-        <translation type="unfinished">保存オプション</translation>
+        <translation>ストレージ設定</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="316"/>
         <source>TVDB or TMDB ID</source>
-        <translation type="unfinished"></translation>
+        <translation>TVDB または TMDB ID</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="317"/>
         <source>Transcode</source>
-        <translation type="unfinished">トランスコーダー</translation>
+        <translation>トランスコード</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="319"/>
         <source>Use any available Input</source>
-        <translation type="unfinished"></translation>
+        <translation>利用可能な入力はどれでも使用</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="321"/>
         <source>MythTV PlayList</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV プレイリスト</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="323"/>
         <source>360p (Mobile)</source>
-        <translation type="unfinished"></translation>
+        <translation>360p (モバイル)</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="324"/>
         <source>720p (WiFi)</source>
-        <translation type="unfinished"></translation>
+        <translation>720p ( WiFi )</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="327"/>
         <source>Playing</source>
-        <translation type="unfinished">再生中</translation>
+        <translation>再生中</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="328"/>
         <source>Quality</source>
-        <translation type="unfinished">品質</translation>
+        <translation>品質</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="332"/>
         <source>All scheduler matches</source>
-        <translation type="unfinished"></translation>
+        <translation>一致するすべての予約</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="333"/>
         <source>Conflicting or Failed Schedules</source>
-        <translation type="unfinished"></translation>
+        <translation>衝突または失敗した予約</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="339"/>
         <source>Important</source>
-        <translation type="unfinished">重要</translation>
+        <translation>重要</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="340"/>
         <source>Inactive rule matches</source>
-        <translation type="unfinished"></translation>
+        <translation>一致した無効ルール</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="345"/>
         <source>Show</source>
-        <translation type="unfinished">ショウ</translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="347"/>
         <source>There are no upcoming recordings.</source>
-        <translation type="unfinished"></translation>
+        <translation>今後の録画はありません。</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="349"/>
         <source>Upcoming Records</source>
-        <translation type="unfinished"></translation>
+        <translation>今後の録画</translation>
     </message>
 </context>
 <context>
@@ -9279,7 +9279,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3613"/>
         <source>Display selected menu on LCD display. </source>
-        <translation>LCDに選択したメニューを表示します。</translation>
+        <translation>LCDに選択したメニューを表示します。 </translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3624"/>
@@ -12825,7 +12825,7 @@ Returning to the previous menu.</source>
     <message>
         <location filename="../libs/libmythtv/mythvideoprofile.cpp" line="723"/>
         <source>Default (Bilinear)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/mythvideoprofile.cpp" line="724"/>
@@ -13735,7 +13735,7 @@ Returning to the previous menu.</source>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3100"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3374"/>
         <source>Storage Options</source>
-        <translation>保存オプション</translation>
+        <translation>ストレージ設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3284"/>
@@ -14245,7 +14245,7 @@ Are you sure you want to delete:</source>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3121"/>
         <source>Scheduling Options</source>
-        <translation>録画オプション</translation>
+        <translation>予約設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="566"/>
@@ -15645,7 +15645,7 @@ name cannot be blank.</source>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="860"/>
         <source>Last Recorded</source>
-        <translation>最後の録画</translation>
+        <translation>最新の録画</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="861"/>
@@ -15811,7 +15811,7 @@ name cannot be blank.</source>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="916"/>
         <source>Playback Group</source>
-        <translation>プレイバックグループ</translation>
+        <translation>再生グループ</translation>
     </message>
 </context>
 <context>
@@ -15924,7 +15924,7 @@ name cannot be blank.</source>
     <message>
         <location filename="../programs/mythfrontend/progfind.cpp" line="88"/>
         <source>Times</source>
-        <translation>タイム</translation>
+        <translation>回数</translation>
     </message>
 </context>
 <context>
@@ -16946,7 +16946,7 @@ name cannot be blank.</source>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="88"/>
         <source>MP3 quality</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="90"/>
@@ -18933,7 +18933,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Any</source>
-        <translation>どれか</translation>
+        <translation>いずれも</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1866"/>
@@ -20246,7 +20246,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="176"/>
         <source>Never Record</source>
-        <translation>これ以上録画しない</translation>
+        <translation>今後録画しない</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="299"/>
@@ -25876,7 +25876,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="518"/>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="604"/>
         <source>Upcoming Recordings</source>
-        <translation>これからの録画</translation>
+        <translation>今後の録画</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="520"/>
@@ -26232,7 +26232,7 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="115"/>
         <source>Schedule Status</source>
-        <translation>スケジュール状態</translation>
+        <translation>予約状態</translation>
     </message>
     <message>
         <source>Tuner Status</source>
@@ -28961,7 +28961,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1970"/>
         <source>Time</source>
-        <translation>タイム</translation>
+        <translation>時間</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1363"/>
@@ -37186,7 +37186,7 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1409"/>
         <source>Playback Groups</source>
-        <translation>プレイバックグループ</translation>
+        <translation>再生グループ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="373"/>
@@ -37714,7 +37714,7 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1880"/>
         <source>Storage Options</source>
-        <translation>保存オプション</translation>
+        <translation>ストレージ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1435"/>
