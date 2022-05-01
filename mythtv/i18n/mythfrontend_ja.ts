@@ -1633,7 +1633,7 @@
         <location filename="../programs/mythfrontend/audiogeneralsettings.cpp" line="1237"/>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="155"/>
         <source>Default</source>
-        <translation>既定値</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelsettings.cpp" line="261"/>
@@ -1915,7 +1915,7 @@
     <message>
         <location filename="../libs/libmythtv/channelscan/modulationsetting.h" line="92"/>
         <source>Modulation (Default: Auto)</source>
-        <translation>変調（規定値 : 自動）</translation>
+        <translation>変調 (デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/modulationsetting.h" line="102"/>
@@ -1925,7 +1925,7 @@
     <message>
         <location filename="../libs/libmythtv/channelscan/modulationsetting.h" line="105"/>
         <source>Constellation (Default: Auto)</source>
-        <translation>位相（規定値 : 自動）</translation>
+        <translation>位相 (デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/modulationsetting.h" line="125"/>
@@ -2335,22 +2335,22 @@ Check if the video exists</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2227"/>
         <source>GUI width (pixels)</source>
-        <translation>GUI の幅(px)</translation>
+        <translation>GUI の幅 (ピクセル)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2231"/>
         <source>The width of the GUI. Do not make the GUI wider than your actual screen resolution. Set to 0 to automatically scale to fullscreen.</source>
-        <translation>GUIの幅。実際の画面解像度より大きい値は設定しないでください。0 を指定すると自動的にフルスクリーンになります。</translation>
+        <translation>GUIの幅。実際の画面解像度より大きい値は設定しないでください。0 を指定すると自動的に全画面になります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2243"/>
         <source>GUI height (pixels)</source>
-        <translation>GUI の高さ(px)</translation>
+        <translation>GUI 高さ (ピクセル)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2247"/>
         <source>The height of the GUI. Do not make the GUI taller than your actual screen resolution. Set to 0 to automatically scale to fullscreen.</source>
-        <translation>GUIの高さ。実際の画面解像度より大きい値は設定しないでください。0 を指定すると自動的にフルスクリーンになります。</translation>
+        <translation>GUIの高さ。実際の画面解像度より大きい値は設定しないでください。0 を指定すると自動的に全画面になります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2259"/>
@@ -2380,7 +2380,7 @@ Check if the video exists</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2290"/>
         <source>If enabled, use the above size for TV, otherwise use full screen.</source>
-        <translation>有効にすると、テレビ表示を上記のサイズで。無効にするとフルスクリーンに。</translation>
+        <translation>有効にすると、テレビ表示を上記のサイズで。無効にすると全画面に。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2582"/>
@@ -2435,19 +2435,19 @@ Check if the video exists</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2656"/>
         <source>Date format</source>
-        <translation>日付の書式</translation>
+        <translation>日付書式</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2659"/>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2714"/>
         <source>Samples are shown using today&apos;s date.</source>
-        <translation>サンプルは今日の日付を指定の日付書式で表示しています。</translation>
+        <translation>サンプルは今日の日付を表示しています。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2665"/>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2720"/>
         <source>Samples are shown using tomorrow&apos;s date.</source>
-        <translation>サンプルは明日の日付を指定の日付書式で表示しています。</translation>
+        <translation>サンプルは明日の日付を表示しています。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2701"/>
@@ -2509,7 +2509,7 @@ Check if the video exists</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4621"/>
         <source>Fullscreen</source>
-        <translation>フルスクリーン</translation>
+        <translation>全画面</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4655"/>
@@ -3295,11 +3295,11 @@ Device supports up to %1</source>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3632"/>
         <source>Capture cards</source>
-        <translation>キャプチャカード</translation>
+        <translation>キャプチャーカード</translation>
     </message>
     <message>
         <source>Capture Card Menu</source>
-        <translation>キャプチャカードメニュー</translation>
+        <translation>キャプチャーカード メニュー</translation>
     </message>
     <message>
         <source>Edit..</source>
@@ -4679,7 +4679,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../libs/libmyth/dbsettings.cpp" line="36"/>
         <source>The host name or IP address of the machine hosting the database. This information is required.</source>
-        <translation>データベースをホストしているマシンのホスト名かIPアドレスを指定してください。必須項目です。</translation>
+        <translation>データベースをホストしているマシンのホスト名かIPアドレス。必須項目です。</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/dbsettings.cpp" line="42"/>
@@ -4704,7 +4704,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../libs/libmyth/dbsettings.cpp" line="62"/>
         <source>The name of the database. This information is required.</source>
-        <translation>データベースの名称。必須項目です。</translation>
+        <translation>データベース名。必須項目です。</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/dbsettings.cpp" line="69"/>
@@ -4724,7 +4724,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../libs/libmyth/dbsettings.cpp" line="84"/>
         <source>Use custom identifier for frontend preferences</source>
-        <translation>フロントエンドの設定にカスタムIDを使用する</translation>
+        <translation>フロントエンドの設定にカスタム識別子を使用する</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/dbsettings.cpp" line="87"/>
@@ -4734,7 +4734,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../libs/libmyth/dbsettings.cpp" line="98"/>
         <source>Custom identifier</source>
-        <translation>カスタムID</translation>
+        <translation>カスタム識別子</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/dbsettings.cpp" line="100"/>
@@ -5508,7 +5508,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythfrontend/exitprompt.cpp" line="268"/>
         <source>Yes, Exit and Shutdown</source>
-        <translation>はい。終了してシャットダウンする</translation>
+        <translation>はい。終了して電源オフする</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/exitprompt.cpp" line="271"/>
@@ -6614,7 +6614,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="506"/>
         <source>Weighted time/priority combination</source>
-        <translation>時刻と優先度の組み合わせ</translation>
+        <translation>時間と優先順位で決定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="509"/>
@@ -6644,7 +6644,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="553"/>
         <source>Live TV max age (days)</source>
-        <translation>放送中表示用録画の最大保存期間（日数）</translation>
+        <translation>放送中視聴用録画の最大保存期間（日数）</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="555"/>
@@ -6774,13 +6774,13 @@ Error: %1</source>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2807"/>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2826"/>
         <source>number name</source>
-        <translation>番号 名前</translation>
+        <translation>番号 チャンネル名</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2809"/>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2828"/>
         <source>name</source>
-        <translation>名前</translation>
+        <translation>チャンネル名</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2811"/>
@@ -6831,27 +6831,27 @@ Error: %1</source>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4485"/>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4487"/>
         <source>General (Basic)</source>
-        <translation>全般（基本）</translation>
+        <translation>全般 (基本)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4496"/>
         <source>General (Auto-Expire)</source>
-        <translation>全般（自動削除）</translation>
+        <translation>全般 (自動削除)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4514"/>
         <source>General (Jobs)</source>
-        <translation>全般（ジョブ）</translation>
+        <translation>全般 (ジョブ)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4525"/>
         <source>General (Advanced)</source>
-        <translation>全般（詳細）</translation>
+        <translation>全般 (詳細)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4537"/>
         <source>General (Channel Groups)</source>
-        <translation>全般（チャンネル グループ）</translation>
+        <translation>全般 (チャンネル グループ)</translation>
     </message>
 </context>
 <context>
@@ -7273,7 +7273,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5597"/>
         <source>Recording is in 4k(interlaced) UHD resolution</source>
-        <translation>録画は4K (インターレス) UHD 画質</translation>
+        <translation>録画は4K (インターレース) UHD 画質</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5598"/>
@@ -7427,7 +7427,7 @@ Error: %1</source>
     <message>
         <location filename="../html/htmlstrings.h" line="37"/>
         <source>Channel Editor</source>
-        <translation>チャンネル エディター</translation>
+        <translation>チャンネル編集</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="38"/>
@@ -8089,7 +8089,7 @@ Error: %1</source>
         <location filename="../html/htmlstrings.h" line="186"/>
         <location filename="../html/htmlstrings.h" line="210"/>
         <source>Record one showing</source>
-        <translation>この番組の1つを録画</translation>
+        <translation>番組を1度録画</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="187"/>
@@ -8405,7 +8405,7 @@ Error: %1</source>
     <message>
         <location filename="../html/htmlstrings.h" line="276"/>
         <source>Default</source>
-        <translation>標準</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="277"/>
@@ -9173,7 +9173,7 @@ Error: %1</source>
     <message>
         <location filename="../libs/libmythtv/jobqueue.h" line="43"/>
         <source>Errored</source>
-        <translation>エラー発生</translation>
+        <translation>エラー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/jobqueue.h" line="44"/>
@@ -9259,7 +9259,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3585"/>
         <source>Display current time on idle LCD display.</source>
-        <translation>特にLCDに表示する内容がないときに、現在時刻を表示します。</translation>
+        <translation>LCD 表示の待機中に、現在時刻を表示します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3597"/>
@@ -9294,7 +9294,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3638"/>
         <source>Display music artist and title</source>
-        <translation>ミュージックのアーティストとタイトルを表示</translation>
+        <translation>音楽のアーティストとタイトルを表示</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3640"/>
@@ -9334,7 +9334,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3681"/>
         <source>Display volume information</source>
-        <translation>ボリューム情報を表示</translation>
+        <translation>音量情報を表示する</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3683"/>
@@ -9399,7 +9399,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3767"/>
         <source>Use an LCD display to view MythTV status information.</source>
-        <translation>LCDディスプレイで MythTV のステータスを表示します。</translation>
+        <translation>LCD ディスプレーで MythTV のステータスを表示します。</translation>
     </message>
 </context>
 <context>
@@ -9455,7 +9455,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3986"/>
         <source>Video on the desktop will skip this many frames for each frame drawn. Set to 0 to show every frame.</source>
-        <translation>デスクトップにビデオ表示の際、スキップするフレーム数を指定します。「0」で、すべてのフレームを表示します。</translation>
+        <translation>デスクトップでのビデオ表示時に指定フレーム分スキップします。すべてのフレームを表示するには「0」を設定します。</translation>
     </message>
 </context>
 <context>
@@ -9463,7 +9463,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3934"/>
         <source>Video in the dock</source>
-        <translation>ドックでビデオ表示</translation>
+        <translation>ドックにビデオ表示</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3938"/>
@@ -9478,7 +9478,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3954"/>
         <source>Video in the dock icon will skip this many frames for each frame drawn. Set to 0 to show every frame.</source>
-        <translation>ドック アイコンにビデオ表示の際、スキップするフレーム数を指定します。「0」で、すべてのフレームを表示します。</translation>
+        <translation>ドック アイコンでのビデオ表示時に指定フレーム分スキップします。すべてのフレームを表示するには「0」を設定します。</translation>
     </message>
 </context>
 <context>
@@ -9491,7 +9491,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3892"/>
         <source>If enabled, video will be displayed in a floating window. Only valid when &quot;Use GUI size for TV playback&quot; and &quot;Run the frontend in a window&quot; are checked.</source>
-        <translation>ビデオ表示をウインドウで行います。&quot;テレビ再生時にGUIサイズを使用する&quot;と&quot;ウインドウ内で実行する&quot;が設定されている場合に使えます。</translation>
+        <translation>有効にすると、ビデオを子ウインドウに表示します。「テレビ再生時にGUIサイズを使用する」と「フロントエンドをウインドウ内で実行する」の両方がチェックされている場合に有効になります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3904"/>
@@ -9511,7 +9511,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3923"/>
         <source>The opacity of the floating window. Set to 100 for completely opaque, set to 0 for completely transparent.</source>
-        <translation>子ウインドウ表示時の透明度 : 「100」で完全不透明、「0」で完全透過です。</translation>
+        <translation>子ウインドウの不透明度。「100」に設定するとで完全不透明、「0」に設定すると完全透過です。</translation>
     </message>
 </context>
 <context>
@@ -9534,7 +9534,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3863"/>
         <source>Video in the main window will skip this many frames for each frame drawn. Set to 0 to show every frame.</source>
-        <translation>メインウインドウでのビデオ表示時に指定フレーム分スキップします。すべてのフレームを表示するには「0」を設定します。</translation>
+        <translation>メインウィンドウでのビデオ表示時に描画フレームごとに指定フレーム分スキップします。0 を設定するとすべてのフレームを表示します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3874"/>
@@ -9544,7 +9544,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3878"/>
         <source>The opacity of the main window. Set to 100 for completely opaque, set to 0 for completely transparent.</source>
-        <translation>メインウインドウの不透明度 : 「100」で完全不透明、「0」で完全透過です。</translation>
+        <translation>メインウインドウの不透明度。「100」に設定するとで完全不透明、「0」に設定すると完全透過です。</translation>
     </message>
 </context>
 <context>
@@ -9582,7 +9582,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1955"/>
         <source>Confirm before suspending/shutting down</source>
-        <translation>サスペンド・シャットダウンの前に確認する</translation>
+        <translation>サスペンド・電源オフの前に確認する</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1956"/>
@@ -9597,7 +9597,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1968"/>
         <source>Default</source>
-        <translation>標準</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1969"/>
@@ -9612,12 +9612,12 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1971"/>
         <source>Show quit and shutdown</source>
-        <translation>「終了」と「シャットダウン」を表示</translation>
+        <translation>「終了」と「電源オフ」を表示</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1972"/>
         <source>Show quit, reboot and shutdown</source>
-        <translation>「終了」、「再起動」と「シャットダウン」を表示</translation>
+        <translation>「終了」、「再起動」と「電源オフ」を表示</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1973"/>
@@ -9627,7 +9627,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1974"/>
         <source>Show shutdown</source>
-        <translation>「シャットダウン」を表示</translation>
+        <translation>「電源オフ」を表示</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1975"/>
@@ -9637,7 +9637,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1976"/>
         <source>Show reboot and shutdown</source>
-        <translation>「再起動」と「シャットダウン」を表示</translation>
+        <translation>「再起動」と「電源オフ」を表示</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1977"/>
@@ -9652,7 +9652,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1980"/>
         <source>By default, only remote frontends are shown the shutdown option on the exit menu. Here you can force specific shutdown, reboot and suspend options to be displayed.</source>
-        <translation>標準では、リモートのフロントエンドの終了メニューにのみ「シャットダウン」が表示されます。ここで「シャットダウン」や「再起動」を強制的に表示するよう設定します。</translation>
+        <translation>標準では、リモートのフロントエンドの終了メニューにのみ「電源オフ」が表示されます。ここで「電源オフ」や「再起動」を強制的に表示するよう設定します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1989"/>
@@ -9702,7 +9702,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2047"/>
         <source>Optional. Script to run if you select the shutdown option from the exit menu, if the option is displayed. You must configure an exit key to display the exit menu.</source>
-        <translation>任意の設定。終了メニューに「シャットダウン」を表示する設定で、「シャットダウン」を選択した際に実行するスクリプト。終了メニューを表示するには、終了キーを設定しなくてはなりません。</translation>
+        <translation>任意の設定。終了メニューに「電源オフ」を表示する設定で、「電源オフ」を選択した際に実行するスクリプト。終了メニューを表示するには、終了キーを設定しなくてはなりません。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2055"/>
@@ -9732,7 +9732,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2105"/>
         <source>Setup PIN code</source>
-        <translation>セットアップ PIN コード</translation>
+        <translation>PIN コードの設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2107"/>
@@ -9752,7 +9752,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3208"/>
         <source>Enable Network Remote Control interface</source>
-        <translation>ネットリモコン インターフェースを有効</translation>
+        <translation>ネットワーク リモートコントロールを有効</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3211"/>
@@ -9762,7 +9762,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3224"/>
         <source>Network Remote Control port</source>
-        <translation>ネットリモコン ポート</translation>
+        <translation>ネットワークリモートコントロールポート</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3228"/>
@@ -9907,7 +9907,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4013"/>
         <source>Shutdown/Reboot Settings</source>
-        <translation>シャットダウン・再起動の設定</translation>
+        <translation>電源オフ・再起動の設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4096"/>
@@ -10046,7 +10046,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="1803"/>
         <source>No match found for this recording. You can try entering a TVDB/TMDB number, season, and episode manually.</source>
-        <translation>この録画のメタデータは見つかりません。TVDB・TMDBの番号や、シーズンと回を手入力するなどお試しください。</translation>
+        <translation>この録画に一致するものは見つかりません。TVDB・TMDBの番号や、シーズンと回を手入力するなどお試しください。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="1846"/>
@@ -10834,7 +10834,7 @@ Error: %1</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="898"/>
         <source>Auto 3D</source>
-        <translation>自動3D</translation>
+        <translation>自動 3D</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="900"/>
@@ -11105,12 +11105,12 @@ Error: %1</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="589"/>
         <source>Fast Forward (Sticky) or Forward one second while paused</source>
-        <translation>一時停止している間に、早送り (スティッキー) または 1 秒先に</translation>
+        <translation>一時停止している間に、早送り (長押し) または 1 秒先に</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="591"/>
         <source>Rewind (Sticky) or Rewind one second while paused</source>
-        <translation>一時停止している間に、巻戻し (スティッキー) または 1 秒前に</translation>
+        <translation>一時停止している間に、巻戻し (長押し) または 1 秒前に</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="829"/>
@@ -12368,7 +12368,7 @@ Error: %1</source>
     <message>
         <location filename="../libs/libmythbase/mythpower.cpp" line="250"/>
         <source>Shutdown</source>
-        <translation>シャットダウン</translation>
+        <translation>電源オフ</translation>
     </message>
     <message>
         <location filename="../libs/libmythbase/mythpower.cpp" line="251"/>
@@ -12712,7 +12712,7 @@ Returning to the previous menu.</source>
         <location filename="../libs/libmythui/myththemedmenu.cpp" line="324"/>
         <location filename="../libs/libmythui/myththemedmenu.cpp" line="333"/>
         <source>Shutdown</source>
-        <translation>シャットダウン</translation>
+        <translation>電源オフ</translation>
     </message>
     <message>
         <location filename="../libs/libmythui/myththemedmenu.cpp" line="328"/>
@@ -13285,7 +13285,7 @@ Returning to the previous menu.</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1720"/>
         <source>If enabled, browse mode will automatically be activated whenever you use channel up/down while watching Live TV.</source>
-        <translation>有効にすると、放送中番組を視聴しているときに、チャンネルを上下すると、自動的に閲覧モードになります。</translation>
+        <translation>有効にすると、放送中番組を視聴しているときにチャンネルを上下すると、自動的に閲覧モードになります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1731"/>
@@ -13361,32 +13361,32 @@ Returning to the previous menu.</source>
     <message>
         <location filename="../libs/libmythtv/channelscan/paneatsc.h" line="34"/>
         <source>First Channel</source>
-        <translation type="unfinished">：</translation>
+        <translation>最初のチャンネル</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/paneatsc.h" line="35"/>
         <source>Start scanning at this channel.</source>
-        <translation type="unfinished"></translation>
+        <translation>このチャンネルからスキャンをはじめます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/paneatsc.h" line="38"/>
         <source>Last Channel</source>
-        <translation type="unfinished"></translation>
+        <translation>最後のチャンネル</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/paneatsc.h" line="39"/>
         <source>Stop scanning after this channel.</source>
-        <translation type="unfinished"></translation>
+        <translation>このチャンネルでスキャンを終了します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/paneatsc.h" line="42"/>
         <source>Channel Count</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル数</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/paneatsc.h" line="43"/>
         <source>Total number of channels to scan.</source>
-        <translation type="unfinished"></translation>
+        <translation>スキャンするチャンネルの総数。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/paneatsc.h" line="47"/>
@@ -13564,7 +13564,7 @@ Returning to the previous menu.</source>
     <message>
         <location filename="../libs/libmythtv/playgroup.cpp" line="327"/>
         <source>Default</source>
-        <translation>標準</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/playgroup.cpp" line="272"/>
@@ -13700,7 +13700,7 @@ Returning to the previous menu.</source>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="4844"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5069"/>
         <source>Default</source>
-        <translation>既定値</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2708"/>
@@ -13760,7 +13760,7 @@ Returning to the previous menu.</source>
     </message>
     <message>
         <source>Playlist options</source>
-        <translation>プレイリストオプション</translation>
+        <translation>プレイリスト設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2554"/>
@@ -13848,8 +13848,8 @@ Returning to the previous menu.</source>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="4646"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="4808"/>
         <source>%1 [%n item(s)]</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%1 [ %n 個 ]</numerusform>
         </translation>
     </message>
     <message>
@@ -13910,34 +13910,34 @@ Returning to the previous menu.</source>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="390"/>
         <source>Watch List</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴リスト</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="1518"/>
         <source>There are no recordings in your current view</source>
-        <translation type="unfinished"></translation>
+        <translation>現在の画面には録画がありません</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="1517"/>
         <source>There are no recordings available</source>
-        <translation type="unfinished"></translation>
+        <translation>有効な録画がありません</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2870"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3370"/>
         <source>Mark as Unwatched</source>
-        <translation type="unfinished"></translation>
+        <translation>未視聴とマーク</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2869"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3372"/>
         <source>Mark as Watched</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴済みとマーク</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="1785"/>
         <source>_NO_TITLE_</source>
-        <translation type="unfinished"></translation>
+        <translation>_タイトルなし_</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="1733"/>
@@ -13951,94 +13951,96 @@ Returning to the previous menu.</source>
     <message numerus="yes">
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="706"/>
         <source>There is/are %n recording(s) in this display group, which consume(s) %1 GiB.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>この表示グループには %n 個の録画があり、データ量は %1 GB です。</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="712"/>
         <source>There is no recording in this display group.</source>
-        <translation type="unfinished"></translation>
+        <translation>この表示グループには録画がありません。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="1350"/>
         <source>%1% used, %2 GB free</source>
         <comment>Diskspace</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 ％使用、空きは %2 GB</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2559"/>
         <source>Help (Status Icons)</source>
-        <translation type="unfinished"></translation>
+        <translation>ヘルプ (ステータスアイコン )</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2852"/>
         <source>Delete, and allow re-record</source>
-        <translation type="unfinished"></translation>
+        <translation>削除し、再録画可能にする</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2871"/>
         <source>Allow Re-record</source>
-        <translation type="unfinished"></translation>
+        <translation>再録画可能に</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3281"/>
         <source>Recording file cannot be found</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ファイルが見つかりません</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3283"/>
         <source>Recording file contains no data</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ファイルにデータがありません</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3394"/>
         <source>Undelete</source>
-        <translation type="unfinished"></translation>
+        <translation>削除の取り消し</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3395"/>
         <source>Delete Forever</source>
-        <translation type="unfinished"></translation>
+        <translation>完全に削除</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="4597"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="4806"/>
         <source>Deleted</source>
-        <translation type="unfinished">デリート</translation>
+        <translation>削除済み</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="610"/>
         <source>Password for group &apos;%1&apos;:</source>
-        <translation type="unfinished"></translation>
+        <translation>「%1」グループのパスワード :</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2678"/>
         <source>Recording file does not exist.
 Are you sure you want to delete:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ファイルがありません。
+削除してよろしいですか？ :</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2728"/>
         <source>Yes, stop recording</source>
-        <translation type="unfinished"></translation>
+        <translation>はい、録画を停止</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2745"/>
         <source>No, keep it</source>
-        <translation type="unfinished"></translation>
+        <translation>いいえ、残します</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2749"/>
         <source>No, continue recording</source>
-        <translation type="unfinished"></translation>
+        <translation>いいえ、録画をつづけます</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2776"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2783"/>
         <source>Recording Available
 </source>
-        <translation type="unfinished"></translation>
+        <translation>録画可能
+</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2445"/>
@@ -14063,35 +14065,36 @@ Are you sure you want to delete:</source>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2444"/>
         <source>Cannot delete
 </source>
-        <translation type="unfinished"></translation>
+        <translation>削除できません
+</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2425"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2440"/>
         <source>This recording is already being deleted</source>
-        <translation type="unfinished"></translation>
+        <translation>この録画はすでに削除済みです</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2525"/>
         <source>Group List Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>グループリストメニュー</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2543"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3303"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3355"/>
         <source>Playlist Options</source>
-        <translation type="unfinished"></translation>
+        <translation>プレイリスト設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2737"/>
         <source>Yes, delete it and the remaining %1 list items</source>
-        <translation type="unfinished"></translation>
+        <translation>はい、削除します。残り %1 録画がリストに残っています</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2757"/>
         <source>No, and keep the remaining %1 list items</source>
-        <translation type="unfinished"></translation>
+        <translation>いいえ、%1 録画がリストに残っています</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2785"/>
@@ -14106,113 +14109,114 @@ Are you sure you want to delete:</source>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2814"/>
         <source>Recording Unavailable
 </source>
-        <translation type="unfinished"></translation>
+        <translation>録画不可
+</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2792"/>
         <source>This recording is currently being deleted and is unavailable</source>
-        <translation>この録画は削除されたため利用できません</translation>
+        <translation>この録画は現在削除されているため利用できません</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2798"/>
         <source>This recording has been deleted and is unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>この録画は削除されたため利用できません</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2804"/>
         <source>The file for this recording can not be found</source>
-        <translation>この録画のファイルを見付けられません</translation>
+        <translation>この録画のファイルが見つかりません</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2810"/>
         <source>The file for this recording is empty.</source>
-        <translation type="unfinished"></translation>
+        <translation>この録画のファイルは空です。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2816"/>
         <source>This recording is not yet available.</source>
-        <translation type="unfinished"></translation>
+        <translation>この録画はまだ利用できません。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2841"/>
         <source>Toggle playlist for this Group</source>
-        <translation type="unfinished"></translation>
+        <translation>このグループのプレイリストを切り替える</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2939"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3184"/>
         <source>Begin Commercial Detection</source>
-        <translation type="unfinished"></translation>
+        <translation>CM検出を開始</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2941"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3184"/>
         <source>Stop Commercial Detection</source>
-        <translation type="unfinished"></translation>
+        <translation>CM検出を停止</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2944"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3185"/>
         <source>Begin Metadata Lookup</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ検索を開始</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2946"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3185"/>
         <source>Stop Metadata Lookup</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ検索を停止</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3078"/>
         <source>Play from last played position</source>
-        <translation type="unfinished"></translation>
+        <translation>最後に見ていたつづきから再生</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3086"/>
         <source>Clear last played position</source>
-        <translation type="unfinished"></translation>
+        <translation>最後に見ていた場所のクリアー</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3089"/>
         <source>Clear bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークをクリアー</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3128"/>
         <source>Allow this episode to re-record</source>
-        <translation type="unfinished">このタイトルを採録がする</translation>
+        <translation>この回を再度録画してもよい</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3130"/>
         <source>Show Recording Details</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の詳細を表示</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3132"/>
         <source>Change Recording Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>録画メタデータの変更</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3134"/>
         <source>Custom Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム編集</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3222"/>
         <source>Transcoding profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスコード プロファイル</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3309"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3380"/>
         <source>List Recorded Episodes</source>
-        <translation type="unfinished"></translation>
+        <translation>録画済み回のリスト</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3314"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3385"/>
         <source>List All Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>全録画リスト</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="4664"/>
@@ -14222,7 +14226,7 @@ Are you sure you want to delete:</source>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="4790"/>
         <source>Add New</source>
-        <translation type="unfinished"></translation>
+        <translation>新規追加</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="4812"/>
@@ -14237,12 +14241,12 @@ Are you sure you want to delete:</source>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5002"/>
         <source>New Recording Group</source>
-        <translation type="unfinished"></translation>
+        <translation>新しい録画グループ</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3072"/>
         <source>Play Options</source>
-        <translation type="unfinished"></translation>
+        <translation>再生設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="3121"/>
@@ -14259,8 +14263,8 @@ Are you sure you want to delete:</source>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2860"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2878"/>
         <source>There is %n item(s) in the playlist. Actions affect all items in the playlist</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>プレイリストに %n 個のアイテムがあります。操作はプレイリスト内のすべてのアイテムに影響します</numerusform>
         </translation>
     </message>
 </context>
@@ -14329,7 +14333,7 @@ Are you sure you want to delete:</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="767"/>
         <source>All formats</source>
-        <translation type="unfinished"></translation>
+        <translation>全フォーマット</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="775"/>
@@ -14359,7 +14363,7 @@ Are you sure you want to delete:</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="788"/>
         <source>Video scaler</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオスケーラー</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="793"/>
@@ -14414,7 +14418,7 @@ Are you sure you want to delete:</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="850"/>
         <source>The default scaler provides good quality in the majority of situations. Higher quality scalers may offer some benefit when scaling very low resolution material but may not be as fast.</source>
-        <translation type="unfinished"></translation>
+        <translation>標準のスケーラーは多くの状況において良好な品質を提供します。きわめて解像度が低い素材を処理する際は、高品質スケーラーがより良好な結果をもたらしますが、スピードは遅くなります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1010"/>
@@ -14452,13 +14456,13 @@ Are you sure you want to delete:</source>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1218"/>
         <source>Formats</source>
         <comment>video formats</comment>
-        <translation type="unfinished"></translation>
+        <translation>フォーマット</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1227"/>
         <source>&amp;</source>
         <comment>and</comment>
-        <translation type="unfinished"></translation>
+        <translation>&amp;</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1221"/>
@@ -14513,37 +14517,37 @@ Are you sure you want to delete:</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="63"/>
         <source>Audio read ahead (ms)</source>
-        <translation type="unfinished"></translation>
+        <translation>音声の先読み (ミリ秒)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="67"/>
         <source>Increase this value if audio cuts out frequently. This is more likely to occur when adjusting audio sync to a negative value. If using high negative audio sync values you may need to set a large value here. Default is 100.</source>
-        <translation type="unfinished"></translation>
+        <translation>音声が途切れることが多い場合は、この値を増やします。この症状は音声同期をマイナスの値にしている際に発生しがちです。音声同期の値に大きな負の値を設定している場合はここでより大きい値を設定する必要があるでしょう。デフォルト値は 100。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="78"/>
         <source>Primary colourspace conversion</source>
-        <translation type="unfinished"></translation>
+        <translation>一次色空間変換</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="82"/>
         <source>Converting between different primary colourspaces incurs a small performance penalty but in some situations the difference in output is negligible. The default (&apos;Auto&apos;) behaviour is to only enforce this conversion when there is a significant difference between source colourspace primaries and the display.</source>
-        <translation type="unfinished"></translation>
+        <translation>異なる一次色空間同士での変換は、パフォーマンスがわずかに低下しますが、状況によっては結果の差は無視できる程度の場合があります。 デフォルト (「自動」) では、元の一次色空間とディスプレーの間に大きな違いがある場合にのみ、この変換を強制します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="94"/>
         <source>Enable Chroma Upsampling Filter when deinterlacing</source>
-        <translation type="unfinished"></translation>
+        <translation>インタレース除去の際に、クロマ アップサンプリングを有効に</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="95"/>
         <source>The &apos;Chroma upsampling error&apos; affects the quality of interlaced material for the most common, standard video formats and results in jagged/indistinct edges to brightly coloured areas of video. This filter attempts to fix the problem in the OpenGL shaders. It adds a small amount of overhead to video rendering but may not be suitable in all cases. Enabled by default.</source>
-        <translation type="unfinished"></translation>
+        <translation>「クロマ アップサンプリング エラー」は、ごく一般的で標準的のビデオフォーマットであるインターレース素材の品質に影響を与え、ビデオの明るい色の領域にギザギザ・不明瞭なエッジをもたらします。このフィルターは、OpenGL シェーダーの問題を修正しようと試みます。ビデオレンダリングにわずかな過負荷をもたらしますが、つねに最適な結果が得られるとは限りません。 デフォルトで有効です。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="137"/>
         <source>Use FFmpeg&apos;s original MPEG-TS demuxer</source>
-        <translation type="unfinished"></translation>
+        <translation>FFmpeg オリジナルの MPEG-TS demuxer を使用</translation>
     </message>
     <message>
         <source>PIP video location</source>
@@ -14556,296 +14560,298 @@ Are you sure you want to delete:</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="141"/>
         <source>Experimental: Enable this setting to use FFmpeg&apos;s native demuxer. Try this when encountering playback issues.</source>
-        <translation type="unfinished"></translation>
+        <translation>実験的 : この設定を有効にすると FFmpeg オリジナルの demuxer を利用します。再生で問題が発生したら試してください。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="151"/>
         <source>Default group filter to apply</source>
-        <translation type="unfinished">規定のグループフィルターを適用する</translation>
+        <translation>適用する標準グループフィルター</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="154"/>
         <source>All Programs</source>
-        <translation type="unfinished">全番組</translation>
+        <translation>全番組</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="184"/>
         <source>Default group filter to apply on the View Recordings screen.</source>
-        <translation type="unfinished">録画再生画面での規定のフィルター。</translation>
+        <translation>録画表示画面に適用する標準のグループフィルター。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="193"/>
         <source>Always prompt for initial group filter</source>
-        <translation type="unfinished">初期のグループフィルター選択を常に表示する</translation>
+        <translation>初期グループフィルターをつねに確認する</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="198"/>
         <source>If enabled, always prompt the user for the initial filter to apply when entering the Watch Recordings screen.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、録画視聴画面に入った際、つねに初期フィルター適用の確認画面を表示します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="209"/>
         <source>Save current group filter when changed</source>
-        <translation type="unfinished">グループフィルターが変更されたときは保存する</translation>
+        <translation>グループフィルターが変更されたときに保存する</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="214"/>
         <source>If enabled, remember the last selected filter instead of displaying the default filter whenever you enter the playback screen.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、再生画面に入ったらいつでも、標準フィルター表示中であっても最後に選択したフィルターを記憶する。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="226"/>
         <source>Change Recording Group using the arrow keys</source>
-        <translation type="unfinished"></translation>
+        <translation>矢印キーで録画グループを変更する</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="231"/>
         <source>If enabled, change recording group directly using the arrow keys instead of having to use &lt; and &gt;. Requires theme support for this feature.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、&lt; と &gt; を使わずに矢印キーを使って録画グループを直接変更します。テーマがこの機能をサポートしている必要があります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="244"/>
         <source>Start in group list</source>
-        <translation type="unfinished"></translation>
+        <translation>グループリストからはじめる</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="248"/>
         <source>If enabled, the focus will start on the group list, otherwise the focus will default to the recordings.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、ハイライトがグループリストからはじまります。無効なら、ハイライトが録画からはじまります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="258"/>
         <source>Smart fast forwarding</source>
-        <translation type="unfinished">スマート早送り</translation>
+        <translation>スマート早送り</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="262"/>
         <source>If enabled, then immediately after rewinding, only skip forward the same amount as skipping backwards.</source>
-        <translation type="unfinished">巻き戻しの直後に早送りをすると，巻き戻した量と同じ分だけ早送りをします.</translation>
+        <translation>有効にすると、巻き戻しの直後に早送りをすると，巻き戻した量と同じ分だけ早送りをします.</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="304"/>
         <source>Automatically skip commercials</source>
-        <translation type="unfinished">自動的にCMをスキップ</translation>
+        <translation>自動的にCMをスキップ</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="307"/>
         <source>Notify, but do not skip</source>
         <comment>Skip commercials</comment>
-        <translation type="unfinished">通知するがスキップはしない</translation>
+        <translation>通知するがスキップしない</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="309"/>
         <source>Automatically Skip</source>
         <comment>Skip commercials</comment>
-        <translation type="unfinished">自動的にスキップする</translation>
+        <translation>自動的にスキップする</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="312"/>
         <source>Automatically skip commercial breaks that have been flagged during automatic commercial detection or by the mythcommflag program, or just notify that a commercial has been detected.</source>
-        <translation type="unfinished"></translation>
+        <translation>自動コマーシャル検出、または mythcommflag プログラムによってフラグが立てられたCMを自動的にスキップするか、または検出済みのCMを通知するだけか。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="355"/>
         <source>Commercial skip automatic rewind amount (secs)</source>
-        <translation type="unfinished">CMスキップ自動巻き戻し量</translation>
+        <translation>CMスキップ自動巻戻し量 (秒)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="358"/>
         <source>MythTV will automatically rewind this many seconds after performing a commercial skip.</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTVは CMスキップを実行した後、この秒数分、自動的に巻戻します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="371"/>
         <source>Commercial skip notify amount (secs)</source>
-        <translation type="unfinished">CMスキップ通知秒数</translation>
+        <translation>CMスキップ通知時間 (秒)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="373"/>
         <source>MythTV will act like a commercial begins this many seconds early. This can be useful when commercial notification is used in place of automatic skipping.</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTVは CM がこの秒数だけ早く始まるように扱います。 これは自動スキップではなく、CM通知を使用する場合に役立ちます。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="388"/>
         <source>Maximum commercial skip (secs)</source>
-        <translation type="unfinished">最大CMスキップ (秒)</translation>
+        <translation>最大CMスキップ (秒)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="390"/>
         <source>MythTV will discourage long manual commercial skips. Skips which are longer than this will require the user to hit the SKIP key twice. Automatic commercial skipping is not affected by this limit.</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTVは、手動のCMスキップを長くさせないようにします。指定の秒数よりも長くスキップするには、ユーザーは SKIP キーを 2 度押す必要があります。自動CMスキップは、この制限の影響を受けません。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="406"/>
         <source>Merge short commercial breaks (secs)</source>
-        <translation type="unfinished"></translation>
+        <translation>短いCMをいっしょにする (秒数)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="408"/>
         <source>Treat consecutive commercial breaks shorter than this as one break when skipping forward. Useful if you have to skip a few times during breaks. Applies to automatic skipping as well. Set to 0 to disable.</source>
-        <translation type="unfinished"></translation>
+        <translation>指定の秒数より短い連続したCMは、先にスキップするときに1つのCMとして扱います。CMで数回スキップする必要があるときに便利です。 自動スキップにも適用します。 0を設定すると無効になります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1376"/>
         <source>Enter Playback Profile Name</source>
-        <translation type="unfinished"></translation>
+        <translation>再生プロファイル名を入力</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1401"/>
         <source>Sorry, playback group
 name cannot be blank.</source>
-        <translation type="unfinished"></translation>
+        <translation>再生グループ名に
+空白は受け付けません。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1402"/>
         <source>Sorry, playback group name
 &apos;%1&apos; is already being used.</source>
-        <translation type="unfinished"></translation>
+        <translation>再生グループ名「%1」は
+すでに使われています。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1421"/>
         <source>Sort all sub-titles/multi-titles Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのサブタイトル・マルチタイトルを昇順に並べる</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1422"/>
         <source>Sort all sub-titles/multi-titles Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのサブタイトル・マルチタイトルを逆順に並べる</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1423"/>
         <source>Sort sub-titles Descending, multi-titles Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>サブタイトルは降順、マルチタイトルは昇順に並べる</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1425"/>
         <source>Sort sub-titles Ascending, multi-titles Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>サブタイトルは昇順、マルチタイトルは降順に並べる</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1428"/>
         <source>Selects how to sort show episodes. Sub-titles refers to the episodes listed under a specific show title. Multi-title refers to sections (e.g. &quot;All Programs&quot;) which list multiple titles. Sections in parentheses are not affected.</source>
-        <translation type="unfinished"></translation>
+        <translation>番組の回を並べる方法を選択します。サブタイトルは、特定の番組タイトルの下に列挙されているもので、回を示します。マルチタイトルとは、複数のタイトルを列挙するセクション（「すべてのプログラム」など）を示します。括弧内のセクションは影響を受けません。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1438"/>
         <source>Episode sort orderings</source>
-        <translation type="unfinished"></translation>
+        <translation>回の並び順</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1453"/>
         <source>Sort episodes</source>
-        <translation type="unfinished">番組並び替え</translation>
+        <translation>回の並び</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1455"/>
         <source>Record date</source>
-        <translation type="unfinished">録画日</translation>
+        <translation>録画日</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1456"/>
         <source>Season/Episode</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン・回</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1457"/>
         <source>Original air date</source>
-        <translation type="unfinished">初回放送日</translation>
+        <translation>初回放送日</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1458"/>
         <source>Program ID</source>
-        <translation type="unfinished">番組ID</translation>
+        <translation>番組ID</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1460"/>
         <source>Selects how to sort a show&apos;s episodes</source>
-        <translation type="unfinished"></translation>
+        <translation>番組の回の並べ替え方法を選択</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1470"/>
         <source>Fast forward/rewind reposition amount</source>
-        <translation type="unfinished">早送り/巻戻しリポジション量</translation>
+        <translation>早送り・巻戻しリポジション量</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1474"/>
         <source>When exiting sticky keys fast forward/rewind mode, reposition this many 1/100th seconds before resuming normal playback. This compensates for the reaction time between seeing where to resume playback and actually exiting seeking.</source>
-        <translation type="unfinished"></translation>
+        <translation>長押し早送り・巻戻しモードを抜ける際、この値 × 0.01 秒、通常の再生を再開する前にリポジションします。これにより、再生を再開する場所を確認してから実際にシークを終了するまでの反応時間が補正されます。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1489"/>
         <source>Reverse direction in fast forward/rewind</source>
-        <translation type="unfinished">早送り/巻戻し中に向きを反転</translation>
+        <translation>早送り・巻戻し中に向きを反転</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1494"/>
         <source>If enabled, pressing the sticky rewind key in fast forward mode switches to rewind mode, and vice versa. If disabled, it will decrease the current speed or switch to play mode if the speed can&apos;t be decreased further.</source>
-        <translation type="unfinished">早送り/巻き戻し時に逆方向キーにより方向をスイッチします。指定しない場合は減速として動作し、それ以上減速できない場合は再生モードになります。</translation>
+        <translation>有効にすると、早送りモード中に巻戻しキーを長押しすると巻戻しモードに、またはその逆に切り替えます。無効にすると、減速として動作し、それ以上減速できない場合は再生モードになります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1603"/>
         <source>Vertical scaling</source>
-        <translation type="unfinished"></translation>
+        <translation>垂直拡大・縮小</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1607"/>
         <source>Adjust this if the image does not fill your screen vertically. Range -100% to 100%</source>
-        <translation type="unfinished"></translation>
+        <translation>画像が垂直方向に画面にぴったり収まらない場合にこの値を調整してください。範囲は -100 ％〜 100 ％</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1617"/>
         <source>Horizontal scaling</source>
-        <translation type="unfinished"></translation>
+        <translation>水平拡大・縮小</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1621"/>
         <source>Adjust this if the image does not fill your screen horizontally. Range -100% to 100%</source>
-        <translation type="unfinished"></translation>
+        <translation>画像が水平方向に画面にぴったり収まらない場合にこの値を調整してください。範囲は -100 ％〜 100 ％</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1631"/>
         <source>Scan displacement (X)</source>
-        <translation type="unfinished">映像位置(横)</translation>
+        <translation>映像位置 (横)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1635"/>
         <source>Adjust this to move the image horizontally.</source>
-        <translation type="unfinished">映像を水平に移動します.</translation>
+        <translation>映像を水平に移動します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1645"/>
         <source>Scan displacement (Y)</source>
-        <translation type="unfinished">映像位置(縦)</translation>
+        <translation>映像位置 (縦)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1649"/>
         <source>Adjust this to move the image vertically.</source>
-        <translation type="unfinished">映像を縦に移動します.</translation>
+        <translation>映像を縦に移動します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1772"/>
         <source>If set to prompt, a menu will be displayed when you exit playback mode. The options available will allow you delete the recording, continue watching, or exit.</source>
-        <translation type="unfinished"></translation>
+        <translation>通知に設定すると、再生モードを抜ける際にメニューを表示します。選択肢の「録画の削除」、「再生を続行」、「終了」から選ぶことができます。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1746"/>
         <source>Playback from start of program</source>
-        <translation type="unfinished"></translation>
+        <translation>番組の最初から再生</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1750"/>
         <source>If enabled and no bookmark is set, playback starts at the program scheduled start time rather than the beginning of the recording. Useful for automatically skipping &apos;start early&apos; parts of a recording.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効でブックマークが設定されていない場合、番組録画の冒頭ではなく、番組の録画予約開始時間から再生します。録画の「早めに開始」を自動スキップするのに便利です。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1763"/>
         <source>Action on playback exit</source>
-        <translation type="unfinished">再生終了時の動作</translation>
+        <translation>再生終了時の動作</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1765"/>
         <source>Just exit</source>
-        <translation type="unfinished">単に終了する</translation>
+        <translation>単に終了する</translation>
     </message>
     <message>
         <source>Save position and exit</source>
@@ -14854,17 +14860,17 @@ name cannot be blank.</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1766"/>
         <source>Always prompt (excluding Live TV)</source>
-        <translation type="unfinished"></translation>
+        <translation>つねに通知 (放送中視聴をのぞく)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1768"/>
         <source>Always prompt (including Live TV)</source>
-        <translation type="unfinished"></translation>
+        <translation>つねに通知 (放送中視聴を含む)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1770"/>
         <source>Prompt for Live TV only</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中視聴のみ通知</translation>
     </message>
     <message>
         <source>If set to prompt, a menu will be displayed when you exit playback mode. The options available will allow you to save your position, delete the recording, or continue watching.</source>
@@ -14873,212 +14879,212 @@ name cannot be blank.</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1784"/>
         <source>Prompt at end of recording</source>
-        <translation type="unfinished">再生終了時にメニューを表示</translation>
+        <translation>録画の末尾でメニューを表示</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1788"/>
         <source>If enabled, a menu will be displayed allowing you to delete the recording when it has finished playing.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、再生が終わったときにメニューが表示され「録画を削除」できます。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1798"/>
         <source>Enable Music Choice</source>
-        <translation type="unfinished"></translation>
+        <translation>Music Choice を有効に</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1802"/>
         <source>Enable this to improve playing of Music Choice channels or recordings from those channels. These are audio channels with slide show from some cable providers. In unusual situations this could cause lip sync problems watching normal videos or TV shows.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、Music Choice チャンネルの再生や、それらのチャンネルからの録音が改善されます。これらは、一部のケーブルテレビ供給業者によるスライドショー付音声チャネルです。一般的でない状況において、この設定が通常のビデオやテレビ番組の視聴でリップシンク問題の原因となる可能性があります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1815"/>
         <source>Jump to program OSD</source>
-        <translation type="unfinished">番組に移動OSD</translation>
+        <translation>番組に移動 OSD</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1819"/>
         <source>Set the choice between viewing the current recording group in the OSD, or showing the &apos;Watch Recording&apos; screen when &apos;Jump to Program&apos; is activated. If enabled, the recordings are shown in the OSD</source>
-        <translation type="unfinished"></translation>
+        <translation>OSDに、現在の録画グループを表示するか、「番組に移動」が有効になっているときに「録画を再生する」画面を表示するかの選択を設定します。 有効にすると、録画が OSD に表示されます</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1832"/>
         <source>Continue playback when embedded</source>
-        <translation type="unfinished"></translation>
+        <translation>埋め込まれたときに再生をつづける</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1836"/>
         <source>If enabled, TV playback continues when the TV window is embedded in the upcoming program list or recorded list. The default is to pause the recorded show when embedded.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、次の番組リストまたは録画リストにテレビ ウインドウが埋め込まれているときにテレビの再生を続けます。 デフォルトでは、埋め込まれたときに録画番組を一時停止します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1849"/>
         <source>Automatically mark a recording as watched</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴済みを自動的にマークする</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1854"/>
         <source>If enabled, when you exit near the end of a recording it will be marked as watched. The automatic detection is not foolproof, so do not enable this setting if you don&apos;t want an unwatched recording marked as watched.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、録画の終わり近くで再生画面を抜けたときに、視聴済みとマークします。自動検出は絶対確実ではないため、未視聴の録画を視聴済みとしてマークしたくない場合は、この設定を有効にしないでください。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1868"/>
         <source>Live TV idle timeout (mins)</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中視聴のタイムアウト (分)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="1872"/>
         <source>Exit Live TV automatically if left idle for the specified number of minutes. 0 disables the timeout.</source>
-        <translation type="unfinished"></translation>
+        <translation>指定された分数、待機状態のままになっている場合は、放送中視聴を自動的に終了します。 0 でタイムアウトを無効にします。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2163"/>
         <source>Letterboxing color</source>
-        <translation type="unfinished"></translation>
+        <translation>レターボックスの色</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2168"/>
         <source>By default MythTV uses black letterboxing to match broadcaster letterboxing, but those with plasma screens may prefer gray to minimize burn-in.</source>
-        <translation type="unfinished"></translation>
+        <translation>放送局のレターボックス化に合わせて、MythTV はデフォルトで黒をレターボックス化に使っています。しかしプラズマ画面では、焼付きを避けるために灰色が向いています。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2181"/>
         <source>If &apos;Side by Side&apos; or &apos;Top and Bottom&apos; 3D material is detected, enabling this setting will discard one field (enabled by default).</source>
-        <translation type="unfinished"></translation>
+        <translation>「サイドバイサイド」または「トップアンドボトム」の 3D 素材を検出した際、この設定を有効にしていると片方のフィールドを破棄します (デフォルトは有効)。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2191"/>
         <source>Video aspect override</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオアスペクト比の上書き</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2196"/>
         <source>When enabled, these will override the aspect ratio specified by any broadcaster for all video streams.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、すべてのビデオストリームについて放送局が指定したアスペクト比を上書きします。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2206"/>
         <source>Zoom</source>
-        <translation type="unfinished">ズーム</translation>
+        <translation>ズーム</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2215"/>
         <source>When enabled, these will apply a predefined zoom to all video playback in MythTV.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、MythTV でのすべてのビデオ再生において、事前に定義したズームを適用します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3433"/>
         <source>Enable realtime priority threads</source>
-        <translation type="unfinished">リアルタイムプライオリティースレッドを有効</translation>
+        <translation>リアルタイム優先度スレッドを有効</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3435"/>
         <source>When running mythfrontend with root privileges, some threads can be given enhanced priority. Disable this if MythFrontend freezes during video playback.</source>
-        <translation type="unfinished"></translation>
+        <translation>mythfrontend を root権限で実行する際、いくつかのスレッドの優先度を引き上げることができます。再生中に mythfrontend がフリーズするなら無効にしてください。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3465"/>
         <source>Sort titles</source>
-        <translation type="unfinished"></translation>
+        <translation>タイトルの並び順</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3467"/>
         <source>Alphabetically</source>
-        <translation type="unfinished"></translation>
+        <translation>アルファベット順</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3469"/>
         <source>By recording priority</source>
-        <translation type="unfinished"></translation>
+        <translation>録画優先度順</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3472"/>
         <source>Sets the title sorting order when the view is set to Titles only.</source>
-        <translation type="unfinished"></translation>
+        <translation>表示が「タイトルのみ」に設定されている際のタイトルの並び順を設定します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3793"/>
         <source>Enable gamma correction for video</source>
-        <translation type="unfinished">映像のガンマ補正を有効</translation>
+        <translation>映像のガンマ補正を有効</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3797"/>
         <source>If enabled, QuickTime will correct the gamma of the video to match your monitor. Turning this off can save some CPU cycles.</source>
-        <translation type="unfinished">QuickTimeによるモニタに合わせた映像のガンマ補正が行われます。オフの場合はCPU負荷が下がります。</translation>
+        <translation>有効にすると、QuickTime はディスプレーに合わせた映像のガンマ補正を行います。無効にすると CPU 負荷が少し下がります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3808"/>
         <source>Scale video as necessary</source>
-        <translation type="unfinished">必要なときにビデオサイズを変更する</translation>
+        <translation>必要なときにビデオを拡大・縮小する</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3812"/>
         <source>If enabled, video will be scaled to fit your window or screen. If unchecked, video will never be made larger than its actual pixel size.</source>
-        <translation type="unfinished">ウインドウまたはスクリーンに合わせた画像サイズのスケーリングを行います。無効の場合は、実際の画像サイズのままとなります。</translation>
+        <translation>有効にすると、ウインドウまたはディスプレーに合わせてビデオを拡大・縮小します。無効の場合は、実際のピクセルサイズより大きく表示することはありません。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3823"/>
         <source>Frames to skip in fullscreen mode</source>
-        <translation type="unfinished">フルスクリーンモードのときフレームをスキップする</translation>
+        <translation>全画面モードでスキップするフレーム数</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3827"/>
         <source>Video displayed in fullscreen or non-windowed mode will skip this many frames for each frame drawn. Set to 0 to show every frame. Only valid when either &quot;Use GUI size for TV playback&quot; or &quot;Run the frontend in a window&quot; is not checked.</source>
-        <translation type="unfinished">フルスクリーン表示時に指定フレーム分スキップします。&quot;0&quot;に設定した場合はすべてのフレームを表示します。</translation>
+        <translation>ビデオの全画面表示または非ウィンドウモード時に描画フレームごとに指定フレーム分スキップします。0 を設定するとすべてのフレームを表示します。「テレビの再生にGUIサイズを使用する」または「ウィンドウでフロントエンドを実行する」をチェックしていない場合にのみ有効です。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4213"/>
         <source>Scaling</source>
-        <translation type="unfinished"></translation>
+        <translation>拡大・縮小</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4237"/>
         <source>No scaling</source>
-        <translation type="unfinished"></translation>
+        <translation>拡大・縮小しない</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4337"/>
         <source>Playback settings</source>
-        <translation type="unfinished"></translation>
+        <translation>再生設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4343"/>
         <source>General Playback</source>
-        <translation type="unfinished"></translation>
+        <translation>再生一般</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4364"/>
         <source>Advanced Playback Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>再生の詳細設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4379"/>
         <source>Add a new playback profile</source>
-        <translation type="unfinished"></translation>
+        <translation>新しい再生プロファイルを作成</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4385"/>
         <source>View Recordings</source>
-        <translation type="unfinished">録画ビュー</translation>
+        <translation>録画画面</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4394"/>
         <source>Recording Groups</source>
-        <translation type="unfinished">録画グループ</translation>
+        <translation>録画グループ</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4413"/>
         <source>Seeking</source>
-        <translation type="unfinished">検索</translation>
+        <translation>検索</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4421"/>
         <source>Commercial Skip</source>
-        <translation type="unfinished">CMスキップ</translation>
+        <translation>CMスキップ</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="4432"/>
         <source>Mac OS X Video Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Mac OS X ビデオ設定</translation>
     </message>
 </context>
 <context>
@@ -15702,27 +15708,27 @@ name cannot be blank.</source>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="447"/>
         <source>HEVC/H.265</source>
-        <translation type="unfinished"></translation>
+        <translation>HEVC/H.265</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="454"/>
         <source>1080p Resolution</source>
-        <translation type="unfinished">720p レゾリューション {1080p?}</translation>
+        <translation>1080p 解像度</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="456"/>
         <source>4K Resolution</source>
-        <translation type="unfinished">720p レゾリューション {4K?}</translation>
+        <translation>4K 解像度</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="461"/>
         <source>1080i Resolution</source>
-        <translation type="unfinished">720p レゾリューション {1080i?}</translation>
+        <translation>1080i 解像度</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="463"/>
         <source>4Ki Resolution</source>
-        <translation type="unfinished"></translation>
+        <translation>4Ki 解像度</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="682"/>
@@ -15778,12 +15784,12 @@ name cannot be blank.</source>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="909"/>
         <source>Recorded ID</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ID</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="910"/>
         <source>Recorded Pathname</source>
-        <translation type="unfinished"></translation>
+        <translation>録画パス名</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="911"/>
@@ -15954,7 +15960,7 @@ name cannot be blank.</source>
     <message>
         <location filename="../programs/mythfrontend/proglist.cpp" line="146"/>
         <source>People Search</source>
-        <translation>人検索</translation>
+        <translation>人物検索</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/proglist.cpp" line="147"/>
@@ -16552,12 +16558,12 @@ name cannot be blank.</source>
     <message>
         <location filename="../libs/libmyth/programtypes.cpp" line="105"/>
         <source>Blank Frame + Scene Change</source>
-        <translation>ブランクフレーム + 場面変更検知</translation>
+        <translation>ブランクフレーム + 場面変更</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programtypes.cpp" line="113"/>
         <source>Scene Change Detection</source>
-        <translation>場面変更検知</translation>
+        <translation>場面変更検出</translation>
     </message>
     <message>
         <source>Automatically Skip Commercials</source>
@@ -16953,12 +16959,12 @@ name cannot be blank.</source>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="90"/>
         <source>The higher the slider number, the lower the quality of the audio. Better quality audio (lower numbers) requires more CPU.</source>
-        <translation type="unfinished"></translation>
+        <translation>スライダの値を高くすると、音質は低下します。より高音質 (小さい数値の指定) はよりCPU負荷が大きくなります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="105"/>
         <source>Recording volume of the capture card.</source>
-        <translation type="unfinished"></translation>
+        <translation>キャプチャーカードの録画音量</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="330"/>
@@ -17255,7 +17261,7 @@ name cannot be blank.</source>
     </message>
     <message>
         <source>Reverse direction in fast forward/rewind</source>
-        <translation>早送り/巻戻し中に向きを反転</translation>
+        <translation>早送り・巻戻し中に向きを反転</translation>
     </message>
     <message>
         <source>Single Recordings Priority</source>
@@ -17364,32 +17370,32 @@ name cannot be blank.</source>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="57"/>
         <source>Ignore Signal Timeout</source>
-        <translation type="unfinished"></translation>
+        <translation>信号タイムアウトを無視</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="59"/>
         <source>This option allows you to slow down the scan for broken drivers, such as the DVB drivers for the Leadtek LR6650 DVB card.</source>
-        <translation type="unfinished"></translation>
+        <translation>この設定で、Leadtek LR6650 DVB カード用 DVBドライバーのような、壊れたドライバーのスキャンスピードを落とすことができます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="70"/>
         <source>Search new Transports</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいトランスポートの検索</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="72"/>
         <source>Digital transmissions may signal other available Transports. If this option is enabled the scanner scans all signaled transports for new/updated channels.</source>
-        <translation type="unfinished"></translation>
+        <translation>デジタル放送は、他の利用可能なトランスポートを通知する場合があります。この設定が有効な場合、通知されたすべての新規チャンネル・更新チャンネルをスキャンします。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="84"/>
         <source>Desired Services</source>
-        <translation type="unfinished"></translation>
+        <translation>望ましいサービス</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="85"/>
         <source>TV - Adds A/V services only, TV+Radio - Adds all services with audio, All - Adds all services (including data only services).</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ――ビデオサービスのみを追加、テレビ・ラジオ――音声を含む全サービスを追加、すべて――(データのみのサービスを含む) 全サービスを追加。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="90"/>
@@ -17399,109 +17405,111 @@ name cannot be blank.</source>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="91"/>
         <source>TV+Radio</source>
-        <translation>テレビ+ラジオ</translation>
+        <translation>テレビ・ラジオ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="114"/>
         <source>Unencrypted Only</source>
-        <translation type="unfinished"></translation>
+        <translation>暗号化していないもののみ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="116"/>
         <source>If set, only non-encrypted channels will be added during the scan.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、スキャンで暗号化していないチャンネルだけをスキャンで追加します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="128"/>
         <source>Logical Channel Numbers required</source>
-        <translation type="unfinished"></translation>
+        <translation>論理チャンネル番号必須</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="130"/>
         <source>If set, only services with a Logical Channel Number will be added during the scan. This will filter out services for set-top-box firmware download and video-on-demand that can be present on DVB-C networks.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、論理チャンネル番号をもったサービスだけをスキャンで追加します。これはセットトップボックスのファームウェア ダウンロードと DVB-C ネットワークのオンデマンドビデオチャンネルを除外します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="144"/>
         <source>Complete scan data required</source>
-        <translation type="unfinished"></translation>
+        <translation>完全なスキャンデータ必須</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="146"/>
         <source>If set, only services that are present in the PAT, the PMT and the SDT and that have a name will be added during the scan. On satellites there are many incomplete channels, such as feeds and offline channels, that are not useful in a MythTV system. These are filtered out by this option.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、PAT、PMT および SDTに存在し、名前をもつサービスだけをスキャンで追加します。衛星にはフィードやオフラインチャンネルなど多くの不完全なチャンネルがあり、MyThTV システムでは役に立ちませんが、これらをこのオプションで除外します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="162"/>
         <source>Full search for old channels</source>
-        <translation type="unfinished"></translation>
+        <translation>古いチャンネルの完全検索</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="164"/>
         <source>If set, compare all channels in the database with the channels found in the scan; otherwise only the channels in the same transport are compared. This option is useful when you want to keep channel data such as the xmltvid and the icon path when doing a rescan after channels have been rearranged across transports.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、データベース内のすべてのチャンネルとスキャンで見つかったチャンネルとを比較します。設定しない場合、同じトランスポートのチャンネルのみを比較します。すでに調整済みのチャンネルがトランスポートをまたがって存在する場合、再スキャンで xmltvid やアイコンパスなどのチャンネルデータを失われないよう、この設定が役立ちます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="179"/>
         <source>Remove duplicates</source>
-        <translation type="unfinished"></translation>
+        <translation>重複の削除</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="181"/>
         <source>If set, select the transport stream multiplex with the best signal when identical transports are received on different frequencies. This option is useful for DVB-T2 and ATSC/OTA when a transport can sometimes be received from different transmitters.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、異なる周波数で同一のトランスポートが受信されたときに、トランスポート ストリーム マルチプレックスから最適な信号を選択します。この設定は DVB-T2およびATSC/OTA でトランスポートを異なる送信機から受信することがある場合に役立ちます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="296"/>
         <source>Symbol Rate (symbols/second).
 Most DVB-S transponders transmit at 27500000 symbols per second.</source>
-        <translation type="unfinished"></translation>
+        <translation>シンボルレート (シンボル / 秒 )。
+ほとんどの DVB-S トランスポンダーは 1 秒あたり 27500000 シンボルで送信されます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="320"/>
         <source>Symbol Rate (symbols/second).
 Most DVB-C transports transmit at 6900000 or 6875000 symbols per second.</source>
-        <translation type="unfinished"></translation>
+        <translation>シンボルレート (シンボル / 秒)。
+ほとんどの DVB-C トランスポンダーは、1秒あたり 6900000 または 6875000 シンボルで送信されます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="477"/>
         <source>Modulation system (Default: DVB-S2)</source>
-        <translation type="unfinished"></translation>
+        <translation>変調システム (デフォルト : DVB-S2)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="489"/>
         <source>Modulation system (Default: DVB-T2)</source>
-        <translation type="unfinished"></translation>
+        <translation>変調システム (デフォルト : DVB-T2)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="195"/>
         <source>Add full Transport Stream channels</source>
-        <translation type="unfinished"></translation>
+        <translation>全トランスポート ストリーム チャンネルを追加</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="197"/>
         <source>If set, create MPTS channels, which allow recording of the full, unaltered, transport stream.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、すべての未変更のストリームの録画を許可するMPTS チャンネルを作成します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="209"/>
         <source>Test Decryptability</source>
-        <translation type="unfinished"></translation>
+        <translation>復号化性をテスト</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="211"/>
         <source>Test all channels to see if they can be decrypted with installed CAM/smartcard. Sometimes the encrypted flag is set spuriously. Attention: Enabling this option increases the scan time for each encrypted channel by a couple of seconds.</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのチャネルを取り付け済みの CAM・SmartCard で復号化できるかどうかをテストします。暗号化フラグが擬似的に設定されることがあります。注意 : この設定を有効にすると、各暗号化チャンネルのスキャン時間が数秒増加します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="226"/>
         <source>Satellite tuning data</source>
-        <translation type="unfinished"></translation>
+        <translation>衛星チューニングデータ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="228"/>
         <source>Select a satellite from this list for the tuning data of the reference transponder.</source>
-        <translation type="unfinished"></translation>
+        <translation>参照トランスポンダーのチューニングデータは、このリストから衛星を選択します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="272"/>
@@ -17515,13 +17523,15 @@ Most DVB-C transports transmit at 6900000 or 6875000 symbols per second.</source
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="273"/>
         <source>Frequency (Option has no default)
 The frequency for this transport (multiplex) in kHz.</source>
-        <translation type="unfinished"></translation>
+        <translation>周波数 (デフォルト値なし)
+このトランスポート (multiplex) の周波数を kHz で。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="284"/>
         <source>Frequency (Option has no default)
 The frequency for this transport (multiplex) in Hz.</source>
-        <translation type="unfinished"></translation>
+        <translation>周波数 (デフォルト値なし)
+このトランスポート (multiplex) の周波数を Hz で。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="294"/>
@@ -17535,7 +17545,8 @@ The frequency for this transport (multiplex) in Hz.</source>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="512"/>
         <source>Symbol Rate (symbols/second).
 Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</source>
-        <translation type="unfinished"></translation>
+        <translation>シンボルレート (シンボル / 秒)。
+ほとんどの DVB-C トランスポンダーは、1秒あたり 690万 または 687万5000 シンボルで送信されます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="338"/>
@@ -17615,13 +17626,13 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="513"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="837"/>
         <source>Roll-off</source>
-        <translation type="unfinished"></translation>
+        <translation>ロールオフ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="514"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="838"/>
         <source>Roll-off factor (Default: 0.35)</source>
-        <translation type="unfinished"></translation>
+        <translation>ロールオフ ファクター (デフォルト : 0.35)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="552"/>
@@ -17666,7 +17677,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Channel Options - Common</source>
-        <translation>チャンネルオプション - 共通</translation>
+        <translation>チャンネル設定 - 共通</translation>
     </message>
     <message>
         <source>Channel Options - Video 4 Linux</source>
@@ -17710,181 +17721,181 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="201"/>
         <source>This showing will be recorded.</source>
-        <translation>この番組は録画されます.</translation>
+        <translation>この番組を録画します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="207"/>
         <source>This showing is being recorded.</source>
-        <translation>この番組は録画中です.</translation>
+        <translation>この番組を録画中です。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="217"/>
         <source>This showing was recorded.</source>
-        <translation>この番組を録画しました。</translation>
+        <translation>この番組は録画済みです。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="51"/>
         <source>A</source>
         <comment>RecStatusChar RecStatus::Aborted</comment>
-        <translation type="unfinished">A</translation>
+        <translation>A</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="54"/>
         <source>R</source>
         <comment>RecStatusChar RecStatus::Recorded</comment>
-        <translation type="unfinished"></translation>
+        <translation>R</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="64"/>
         <source>X</source>
         <comment>RecStatusChar RecStatus::DontRecord</comment>
-        <translation type="unfinished"></translation>
+        <translation>X</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="67"/>
         <source>P</source>
         <comment>RecStatusChar RecStatus::PreviousRecording</comment>
-        <translation type="unfinished"></translation>
+        <translation>P</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="70"/>
         <source>R</source>
         <comment>RecStatusChar RecStatus::CurrentRecording</comment>
-        <translation type="unfinished"></translation>
+        <translation>R</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="73"/>
         <source>E</source>
         <comment>RecStatusChar RecStatus::EarlierShowing</comment>
-        <translation type="unfinished">E</translation>
+        <translation>E</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="76"/>
         <source>T</source>
         <comment>RecStatusChar RecStatus::TooManyRecordings</comment>
-        <translation type="unfinished">T</translation>
+        <translation>T</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="79"/>
         <source>c</source>
         <comment>RecStatusChar RecStatus::Cancelled</comment>
-        <translation type="unfinished"></translation>
+        <translation>c</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="83"/>
         <source>M</source>
         <comment>RecStatusChar RecStatus::Missed</comment>
-        <translation type="unfinished"></translation>
+        <translation>M</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="86"/>
         <source>C</source>
         <comment>RecStatusChar RecStatus::Conflict</comment>
-        <translation type="unfinished">C</translation>
+        <translation>C</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="89"/>
         <source>L</source>
         <comment>RecStatusChar RecStatus::LaterShowing</comment>
-        <translation type="unfinished"></translation>
+        <translation>L</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="92"/>
         <source>r</source>
         <comment>RecStatusChar RecStatus::Repeat</comment>
-        <translation type="unfinished"></translation>
+        <translation>r</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="95"/>
         <source>x</source>
         <comment>RecStatusChar RecStatus::Inactive</comment>
-        <translation type="unfinished"></translation>
+        <translation>x</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="98"/>
         <source>K</source>
         <comment>RecStatusChar RecStatus::LowDiskSpace</comment>
-        <translation type="unfinished"></translation>
+        <translation>K</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="101"/>
         <source>B</source>
         <comment>RecStatusChar RecStatus::TunerBusy</comment>
-        <translation type="unfinished"></translation>
+        <translation>B</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="104"/>
         <source>f</source>
         <comment>RecStatusChar RecStatus::Failed</comment>
-        <translation type="unfinished"></translation>
+        <translation>f</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="107"/>
         <source>N</source>
         <comment>RecStatusChar RecStatus::NotListed</comment>
-        <translation type="unfinished"></translation>
+        <translation>N</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="110"/>
         <source>V</source>
         <comment>RecStatusChar RecStatus::NeverRecord</comment>
-        <translation type="unfinished"></translation>
+        <translation>V</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="113"/>
         <source>F</source>
         <comment>RecStatusChar RecStatus::Offline</comment>
-        <translation type="unfinished">F</translation>
+        <translation>F</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="139"/>
         <source>Failing</source>
-        <translation type="unfinished"></translation>
+        <translation>失敗</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="191"/>
         <source>This showing is not scheduled to record</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組を録画予約していません</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="204"/>
         <source>This showing is about to record.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組をまもなく録画します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="210"/>
         <source>The showing is being tuned.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組にチャンネルを合わせています。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="213"/>
         <source>The showing is failing to record because of errors.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組はエラーで録画に失敗しています。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="220"/>
         <source>This showing was recorded but was aborted before completion.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組を録画しましたが、番組終了前に中断しました。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="225"/>
         <source>This showing was not recorded because the master backend was not running.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組はマスターバックエンドが動作していなかったため録画していません。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="233"/>
         <source>This showing was not recorded because there wasn&apos;t enough disk space.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組はディスク容量不足で録画していません。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="237"/>
         <source>This showing was not recorded because the recorder was already in use.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組はレコーダーが使用中だったため録画していません。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="241"/>
         <source>This showing was not recorded because the recorder failed.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組はレコーダーが失敗したため録画していません。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="245"/>
@@ -17924,22 +17935,22 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="285"/>
         <source>this episode will be recorded at a later time instead.</source>
-        <translation type="unfinished"></translation>
+        <translation>この回は次の機会に録画します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="302"/>
         <source>the required recorder is off-line.</source>
-        <translation type="unfinished"></translation>
+        <translation>必要なレコーダーがオフラインです。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="306"/>
         <source>This showing will not be recorded.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組を今後録画しません。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="308"/>
         <source>This showing was not recorded.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組を録画していません。</translation>
     </message>
     <message>
         <source>there wasn&apos;t enough disk space available.</source>
@@ -18009,12 +18020,12 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3172"/>
         <source>Use DishNet long-term EIT data</source>
-        <translation type="unfinished"></translation>
+        <translation>DishNet 長期 EIT データを利用</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3260"/>
         <source>Input groups are only needed when two or more cards share the same resource such as a FireWire card and an analog card input controlling the same set top box.</source>
-        <translation type="unfinished"></translation>
+        <translation>入力グループは、FireWire カードや同じセットトップボックスを制御するアナログカード入力など、2 枚以上のカードが同じリソースを共有している場合にのみ必要です。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3638"/>
@@ -18036,68 +18047,68 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="72"/>
         <source>Select a video source that is connected to one or more capture cards. Default is the video source selected in the Channel Editor page.</source>
-        <translation type="unfinished"></translation>
+        <translation>1 つまたは複数のキャプチャカードに接続しているビデオソースを選択します。デフォルトは、チャンネル編集ページで選択したビデオソースです。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="137"/>
         <source>The video source that is selected in the Channel Editor page.</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル編集ページで選択したビデオソース。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="180"/>
         <source>Maximum number of simultaneous recordings MythTV will attempt using this device.  If set to a value other than 1, MythTV can sometimes record multiple programs on the same multiplex or overlapping copies of the same program on a single channel.</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTVがこのデバイスを使う同時録画の最大数。1 以外の値に設定すると、MythTVは、同じマルチプレックスに複数の番組を録画したり、1 つのチャンネルで同じ番組の重複したコピーを録画したりすることがあります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="196"/>
         <source>Schedule as group</source>
-        <translation type="unfinished"></translation>
+        <translation>予約をグループに</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="199"/>
         <source>Schedule all virtual inputs on this device as a group.  This is more efficient than scheduling each input individually.  Additional, virtual inputs will be automatically added as needed to fulfill the recording load.</source>
-        <translation type="unfinished"></translation>
+        <translation>このデバイス上のすべての仮想入力をグループとして予約します。これは、各入力を個別に予約するよりも効率的です。くわえて、仮想入力は録画の負荷を満たすために必要に応じて自動的に追加されます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="429"/>
         <source>Scan Frequency</source>
-        <translation type="unfinished"></translation>
+        <translation>周波数のスキャン</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="430"/>
         <source>The frequency to start scanning this video source. This is then default for &apos;Full Scan (Tuned)&apos; channel scanning. Frequency value in Hz for DVB-T/T2/C, in kHz for DVB-S/S2. Leave at 0 if not known. </source>
-        <translation type="unfinished"></translation>
+        <translation>このビデオソースのスキャンを開始する周波数。これは「フルスキャン (調整済み)」チャネルスキャンのデフォルトです。周波数の値は、DVB-T / T2 / C はHz単位、DVB-S/S2の はkHz単位。 わからない場合は 0 のままにします。 </translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="444"/>
         <source>Network ID</source>
-        <translation type="unfinished"></translation>
+        <translation>ネットワーク ID</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="447"/>
         <source>If your provider has asked you to configure a specific network identifier (Network_ID), enter it here. Leave it at -1 otherwise.</source>
         <extracomment>Network_ID is the name of an identifier in the DVB&apos;s Service Information standard specification.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>供給元から特定のネットワーク識別子（Network_ID）の構成を求めらる場合は、ここに入力します。 それ以外の場合は -1 のままにします。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="461"/>
         <source>Bouquet ID</source>
-        <translation type="unfinished"></translation>
+        <translation>ブーケID</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="462"/>
         <source>Bouquet ID for Freesat or Sky on satellite Astra-2 28.2E. Leave this at 0 if you do not receive this satellite. This is needed to get the Freesat and Sky channel numbers. Value 272 selects Freesat bouquet &apos;England HD&apos;. See the MythTV Wiki https://www.mythtv.org/wiki/DVB_UK.</source>
-        <translation type="unfinished"></translation>
+        <translation>Astra-228.2E 衛星の Freesat または Sky のブーケID。この衛星を受信しない場合は、0 のままにします。これは、Freesat と Sky のチャンネル番号を取得するために必要です。 値 272 は、Freesat ブーケ「EnglandHD」を選択します。MythTV Wiki ( https://www.mythtv.org/wiki/DVB_UK ) を参照してください。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="478"/>
         <source>Region ID</source>
-        <translation type="unfinished"></translation>
+        <translation>リージョンID</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="479"/>
         <source>Region ID for Freesat or Sky on satellite Astra-2 28.2E. Leave this at 0 you do not receive this satellite.  This is needed to get the Freesat and Sky channel numbers. Value 1 selects region London. See the MythTV Wiki https://www.mythtv.org/wiki/DVB_UK.</source>
-        <translation type="unfinished"></translation>
+        <translation>Astra-228.2E 衛星の Freesat または Sky のリージョンID。この衛星を受信しない場合は、0 のままにします。これは、Freesat と Sky のチャンネル番号を取得するために必要です。 値 1 は、ロンドンを選択します。MythTV Wiki ( https://www.mythtv.org/wiki/DVB_UK ) を参照してください。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="514"/>
@@ -18116,7 +18127,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythtv/videosource.h" line="886"/>
         <source>This channel is shown when &apos;Watch TV&apos; is selected on the main menu. It is updated on every Live TV channel change. When the value is not valid a suitable default will be chosen.</source>
-        <translation type="unfinished"></translation>
+        <translation>メインメニューで「テレビを見る」を選択した場合にこのチャンネルを表示します。放送中視聴でチャンネルを変更するたびに更新します。 値が有効でない場合、適切なデフォルト値を選択します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="803"/>
@@ -18126,7 +18137,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="915"/>
         <source>VBI device</source>
-        <translation>VBIデバイス</translation>
+        <translation>VBI デバイス</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1016"/>
@@ -18140,7 +18151,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
         <location filename="../libs/libmythtv/videosource.cpp" line="2878"/>
         <location filename="../libs/libmythtv/videosource.cpp" line="2889"/>
         <source>(None)</source>
-        <translation>(無し)</translation>
+        <translation>(なし)</translation>
     </message>
     <message>
         <source>Audio sampling rate limit</source>
@@ -18148,64 +18159,64 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Default input</source>
-        <translation>既定の入力</translation>
+        <translation>デフォルトの入力</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1121"/>
         <source>DVB device</source>
-        <translation type="unfinished"></translation>
+        <translation>DVB デバイス</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1123"/>
         <source>When you change this setting, the text below should change to the name and type of your card. If the card cannot be opened, an error message will be displayed.</source>
-        <translation>この設定を変更すると，下にカード名とタイプが表示されます．カードがオープンできない場合はエラーメッセージが表示されます.</translation>
+        <translation>この設定を変更すると、下のカード名とタイプが変わります。カードがオープンできない場合はエラーメッセージを表示します。</translation>
     </message>
     <message>
         <source>Wait for SEQ start header.</source>
-        <translation>SEQスタートヘッダを待つ.</translation>
+        <translation>SEQ スタートヘッダを待つ。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1304"/>
         <source>Motorola Generic</source>
-        <translation type="unfinished"></translation>
+        <translation>モトローラ全般</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1305"/>
         <source>SA/Cisco Generic</source>
-        <translation type="unfinished"></translation>
+        <translation>SA/Cisco 全般</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1816"/>
         <source>ASI device</source>
-        <translation type="unfinished"></translation>
+        <translation>ASI デバイス</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1873"/>
         <source>Warning: unable to open</source>
-        <translation type="unfinished"></translation>
+        <translation>警告 : オープン不可</translation>
     </message>
     <message>
         <source>Recorder Options</source>
-        <translation>録画オプション</translation>
+        <translation>レコーダー設定</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2781"/>
         <source>DVEO ASI recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>DVEO ASI レコーダー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2784"/>
         <source>Import test recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>レコーダーのインポートテスト</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2785"/>
         <source>Demo test recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>レコーダーのデモテスト</translation>
     </message>
     <message>
         <source>Capture device</source>
-        <translation>キャプチャデバイス</translation>
+        <translation>キャプチャーデバイス</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2877"/>
@@ -18224,7 +18235,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3032"/>
         <source>If enabled, MythTV will tune using only the MPEG program number. The program numbers change more often than DVB or ATSC tuning parameters, so this is slightly less reliable. This will also inhibit EIT gathering during Live TV and recording.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、MythTV は MPEG プログラム番号のみを使用してチャンネルチューニングします。プログラム番号は DVB または ATSC チューニングパラメータよりも頻繁に変更されるため、これは少し信頼性が低くなります。これにより、放送中視聴中および録画中の EIT 収集も禁止されます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3048"/>
@@ -18234,7 +18245,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3063"/>
         <source>Preset tuner to channel</source>
-        <translation>プリセットチャンネル</translation>
+        <translation>チャンネルのプリセットチューナー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.h" line="885"/>
@@ -18255,7 +18266,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Use GUI size for TV playback</source>
-        <translation>GUIのサイズでテレビを再生する</translation>
+        <translation>テレビの再生に GUI サイズを使う</translation>
     </message>
     <message>
         <source>Display Genre Colors</source>
@@ -18275,7 +18286,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>This enables support for monitoring your CD/DVD drives for new disks and launching the proper plugin to handle them.</source>
-        <translation>CD・DVDドライブを監視して，ディスクが挿入された時にプラグインを起動します.</translation>
+        <translation>この設定で CD・DVDドライブでの新しいディスクの監視をサポートし、挿入されたディスクにふさわしいプラグインを起動します。</translation>
     </message>
     <message>
         <source>Program Guide Alpha</source>
@@ -18317,12 +18328,12 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="230"/>
         <source>The TV standard to use for viewing TV.</source>
-        <translation>テレビを見る時のTV規格.</translation>
+        <translation>テレビを見る時のテレビ規格。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="237"/>
         <source>VBI format</source>
-        <translation>VBIフォーマット</translation>
+        <translation>VBI フォーマット</translation>
     </message>
     <message>
         <source>VBI stands for Vertical Blanking Interrupt.  VBI is used to carry Teletext and Closed Captioning data.</source>
@@ -18339,7 +18350,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="417"/>
         <source>Number of times the frontend will try to wake up the master backend.</source>
-        <translation>フロントエンドがマスターバックエンドを起動させようとする回数を指定します.</translation>
+        <translation>フロントエンドがマスターバックエンドのウェークアップを試みる回数。</translation>
     </message>
     <message>
         <source>Wake Command</source>
@@ -18368,7 +18379,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="513"/>
         <source>Wakeup time format</source>
-        <translation>起動時間フォーマット</translation>
+        <translation>ウェークアップ時間書式</translation>
     </message>
     <message>
         <source>The format of the time string passed to the &apos;setWakeuptime Command&apos; as $time. See QT::QDateTime.toString() for details. Set to &apos;time_t&apos; for seconds since epoch.</source>
@@ -18382,81 +18393,81 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="537"/>
         <source>The command used to halt the backends.</source>
-        <translation>バックエンドを停止(halt)させるのに使われるコマンドです.</translation>
+        <translation>バックエンドを停止(halt)するのに使うコマンドです。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="775"/>
         <source>If enabled, the master backend will include the list of recorded shows in the list of videos.  This is mainly to accommodate UPnP players which do not allow more than 1 video section.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、マスターバックエンドは録画した番組のリストをビデオのリストに含めます。これは主に、複数のビデオセクションを許可しない UPnP プレーヤーに対応するためのものです。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="790"/>
         <source>Which tree to show a Windows Media Player client when it requests a list of videos.</source>
-        <translation type="unfinished"></translation>
+        <translation>Windows Media Player クライアントからビデオのリスト要求があった際に表示するツリー。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="798"/>
         <source>Automatically update program listings</source>
-        <translation type="unfinished"></translation>
+        <translation>番組リストの自動更新</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="800"/>
         <source>If enabled, the guide data program will be run automatically.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、番組表データ取得プログラムを自動実行します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="808"/>
         <source>Guide data program execution start</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表データ取得プログラム実行開始</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="810"/>
         <source>This setting and the following one define a time period when the guide data program is allowed to run. For example, setting start to 11 and end to 13 would mean that the program would only run between 11:00 AM and 1:59 PM.</source>
-        <translation type="unfinished"></translation>
+        <translation>この設定と次の設定は、番組表データ取得プログラムの実行を許可する時間を設定します。例えば開始を 11 に、終了を 13 に設定すると、プログラムを午前11:00から午後1:59までしか実行しません。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="821"/>
         <source>Guide data program execution end</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表データ取得プログラム実行終了</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="823"/>
         <source>This setting and the preceding one define a time period when the guide data program is allowed to run. For example, setting start to 11 and end to 13 would mean that the program would only run between 11:00 AM and 1:59 PM.</source>
-        <translation type="unfinished"></translation>
+        <translation>この設定と前の設定は、番組表データ取得プログラムの実行を許可する時間を設定します。例えば開始を 11 に、終了を 13 に設定すると、プログラムを午前11:00から午後1:59までしか実行しません。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="834"/>
         <source>Run guide data program at time suggested by the grabber.</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表データ取得プログラムを取得ツールが提案した時間に実行。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="847"/>
         <source>Guide data program</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表データ取得プログラム</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="859"/>
         <source>Guide data arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表データ取得プログラム引数</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="861"/>
         <source>Any arguments you want passed to the guide data program.</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表データ取得プログラムに渡す引数。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="871"/>
         <source>Program Schedule Downloading Options</source>
-        <translation type="unfinished"></translation>
+        <translation>番組予約ダウンロード設定</translation>
     </message>
     <message>
         <source>Host Address Backend Setup</source>
-        <translation>ホストアドレスバックエンドの設定</translation>
+        <translation>バックエンドのホストアドレス設定</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="957"/>
         <source>Shutdown/Wakeup Options</source>
-        <translation>シャットダウン/起動オプション</translation>
+        <translation>電源オフ・起動設定</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="1768"/>
@@ -18469,12 +18480,12 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2456"/>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2477"/>
         <source>Default</source>
-        <translation>既定値</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1233"/>
         <source>Open DVB card on demand</source>
-        <translation>DVBカードをオンデマンドでオープンする</translation>
+        <translation>DVB カードをオンデマンドでオープン</translation>
     </message>
     <message>
         <source>Password required to view all recordings</source>
@@ -18494,7 +18505,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>View Recordings</source>
-        <translation>録画ビュー</translation>
+        <translation>録画画面</translation>
     </message>
     <message>
         <source>Pre Shutdown check-command</source>
@@ -18503,7 +18514,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="557"/>
         <source>Block shutdown before client connected</source>
-        <translation>クライアントが接続中はシャットダウンしない</translation>
+        <translation>クライアント接続中は電源オフを阻止</translation>
     </message>
     <message>
         <source>If set, the automatic shutdown routine will be disabled until a client connects.</source>
@@ -18527,7 +18538,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Commercial: %1</source>
-        <translation>コマーシャル: %1</translation>
+        <translation>CM : %1</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programtypes.cpp" line="115"/>
@@ -18541,17 +18552,17 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="151"/>
         <source>Earlier Showing</source>
-        <translation>前録画</translation>
+        <translation>古い番組</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="162"/>
         <source>Later Showing</source>
-        <translation>後録画</translation>
+        <translation>新しい番組</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="273"/>
         <source>this episode will be recorded at an earlier time instead.</source>
-        <translation>この番組は以前の番組の代わりに録画されます。</translation>
+        <translation>この回を以前の代わりに録画します。</translation>
     </message>
     <message>
         <source>30m</source>
@@ -18571,7 +18582,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Add New Cut</source>
-        <translation>新しいカットポイントを挿入する</translation>
+        <translation>新しいカットポイントを追加</translation>
     </message>
     <message>
         <source>Independent Muting of Left and Right Audio Channels</source>
@@ -18592,7 +18603,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythtv/channelinfo.cpp" line="510"/>
         <source>Visible</source>
-        <translation>可視</translation>
+        <translation>表示</translation>
     </message>
     <message>
         <source>If set, the channel will be visible in the EPG.</source>
@@ -18725,16 +18736,16 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="685"/>
         <source>Enable interlaced DCT encoding</source>
-        <translation>インターレースドDCTエンコーディング有効</translation>
+        <translation>インターレース DCT エンコードを有効</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="701"/>
         <source>Enable interlaced motion estimation</source>
-        <translation>インターレースドモーションエスティメーション有効</translation>
+        <translation>インターレース モーション エスティメーションを有効</translation>
     </message>
     <message>
         <source>LCD device display</source>
-        <translation>LCDデバイスディスプレイ</translation>
+        <translation>LCD デバイス表示</translation>
     </message>
     <message>
         <source>User ID</source>
@@ -18760,7 +18771,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Retrieve Lineups</source>
-        <translation>ラインナップ取得中</translation>
+        <translation>ラインナップを取得</translation>
     </message>
     <message>
         <source>While selecting a group, show a group summary instead of showing info about the first episode in that group.</source>
@@ -18788,7 +18799,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Channel format</source>
-        <translation>チャンネルフォーマット</translation>
+        <translation>チャンネル書式</translation>
     </message>
     <message>
         <source>number</source>
@@ -18800,7 +18811,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>number name</source>
-        <translation>番号 名前</translation>
+        <translation>番号 チャンネル名</translation>
     </message>
     <message>
         <source>callsign</source>
@@ -18808,11 +18819,11 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>name</source>
-        <translation>名前</translation>
+        <translation>チャンネル名</translation>
     </message>
     <message>
         <source>Your preferred channel format.</source>
-        <translation>優先させるチャンネルフォーマット.</translation>
+        <translation>優先するチャンネル書式です。</translation>
     </message>
     <message>
         <source>Long Channel format</source>
@@ -18820,7 +18831,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Your preferred long channel format.</source>
-        <translation>優先させる長いチャンネルフォーマット.</translation>
+        <translation>優先する長いチャンネル書式です。</translation>
     </message>
     <message>
         <source>Default size is 25.</source>
@@ -18849,7 +18860,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="41"/>
         <source>Override Recording</source>
-        <translation>個別設定録画</translation>
+        <translation>個別録画</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="145"/>
@@ -18901,7 +18912,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="569"/>
         <source>This command is executed right after starting the BE. As a parameter &apos;$status&apos; is replaced by either &apos;auto&apos; if the machine was started automatically or &apos;user&apos; if a user switched it on.</source>
-        <translation>このコマンドはバックエンドの起動後に実行されます。 パラメータ&apos;$status&apos;はマシーンが自動で開始された時は&apos;auto&apos;が、ユーザーがスタートした時は&apos;user&apos;が設定されます。</translation>
+        <translation>このコマンドをバックエンドの起動直後に実行します。「$status」引数は、OSが自動で開始した時は「auto」が、ユーザーが電源を入れた時は「user」に置き換わります。</translation>
     </message>
     <message>
         <source>Title Search</source>
@@ -18913,7 +18924,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>People Search</source>
-        <translation>人検索</translation>
+        <translation>人物検索</translation>
     </message>
     <message>
         <source>Unknown Search</source>
@@ -18922,16 +18933,16 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="289"/>
         <source>this episode is a repeat.</source>
-        <translation>この番組は再放送です。</translation>
+        <translation>この回は再放送です。</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="281"/>
         <source>another program with a higher priority will be recorded.</source>
-        <translation>優先度の高い他の番組が録画されます。</translation>
+        <translation>優先度の高い他の番組を録画します。</translation>
     </message>
     <message>
         <source>this episode will be recorded at a later time.</source>
-        <translation>この番組はあとで録画されます。</translation>
+        <translation>この回は次の機会に録画します。</translation>
     </message>
     <message>
         <source>Any</source>
@@ -18940,17 +18951,17 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1866"/>
         <source>Record using the &quot;%1&quot; profile</source>
-        <translation>&quot;%1&quot;プロファイルで録画する</translation>
+        <translation>「%1」プロファイルで録画する</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3050"/>
         <source>If specified, this command will be run to change the channel for inputs which have an external tuner device such as a cable box. The first argument will be the channel number.</source>
-        <translation>外部チューナー(ケーブルテレビ等)のチャンネルを変更する際に実行するコマンドを指定します。最初の引数がチャンネル番号になります。</translation>
+        <translation>指定すると、外部チューナー (ケーブルテレビ等) のチャンネルを変更する際に指定のコマンドを実行します。最初の引数はチャンネル番号です。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3065"/>
         <source>Leave this blank unless you have an external tuner that is connected to the tuner input of your card. If so, you will need to specify the preset channel for the signal (normally 3 or 4).</source>
-        <translation>外部チューナーを使用する場合はプリセットするチャンネル番号を指定します。使用しない場合は空白のままにします。</translation>
+        <translation>カードのチューナー入力に接続している外部チューナーがなければ、空白のままにします。その場合は、信号のプリセットチャンネル (通常は 3 または 4 )を指定する必要があります。</translation>
     </message>
     <message>
         <source>MythTV can control the PCM and master mixer volume.  If you prefer to use an external mixer program, then disable this option.</source>
@@ -18970,7 +18981,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>One field</source>
-        <translation>1フィールド</translation>
+        <translation>1 フィールド</translation>
     </message>
     <message>
         <source>Show group summary</source>
@@ -19076,15 +19087,15 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>If enabled, use the above size for TV, otherwise use full screen.</source>
-        <translation>上記で設定したサイズでの表示を有効にします。無効の場合はフルスクリーン表示になります。</translation>
+        <translation>有効にすると、テレビに上記で設定したサイズを利用します。無効の場合は全画面表示。</translation>
     </message>
     <message>
         <source>Switch X Window video modes for TV. Requires &quot;xrandr&quot; support.</source>
-        <translation>テレビのときに X Windowのビデオモードを切り替える。「xrandr」のサポートが必要です。</translation>
+        <translation>テレビに X Windowのビデオモードを切り替える。「xrandr」のサポートが必要です。</translation>
     </message>
     <message>
         <source>Toggles between windowed and borderless operation.</source>
-        <translation>ウィンドウの枠あり、無しを切り替える.</translation>
+        <translation>ウィンドウの枠あり・なしを切り替えます。</translation>
     </message>
     <message>
         <source>At startup, MythTV will change the Qt widget style to this setting.  If &quot;Desktop Style&quot; is selected, MythTV will use the existing desktop setting.</source>
@@ -19164,11 +19175,11 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Directed By</source>
-        <translation>監督 </translation>
+        <translation>監督</translation>
     </message>
     <message>
         <source>Show the program guide when starting Live TV</source>
-        <translation>放送中番組の視聴時に、番組表を表示する</translation>
+        <translation>放送中の開始時に、番組表を表示する</translation>
     </message>
     <message>
         <source>The horizontal offset the GUI will be displayed at.  May only work if run in a window.</source>
@@ -19215,7 +19226,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="672"/>
         <source>The command to run whenever this User Job number is scheduled.</source>
-        <translation>このユーザジョブ＃を開始するときに実行するコマンド。</translation>
+        <translation>このユーザージョブ番号が予約されたときに必ず実行するコマンド。</translation>
     </message>
     <message>
         <source>Allow jobs of this type to run on this backend.</source>
@@ -19245,7 +19256,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Scale video as necessary</source>
-        <translation>必要なときにビデオサイズを変更する</translation>
+        <translation>必要なときにビデオを拡大・縮小する</translation>
     </message>
     <message>
         <source>If checked, video will be scaled to fit your window or screen. If unchecked, video will never be made larger than its actual pixel size.</source>
@@ -19253,11 +19264,11 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Frames to skip in fullscreen mode</source>
-        <translation>フルスクリーンモードのときフレームをスキップする</translation>
+        <translation>全画面モードでスキップするフレーム数</translation>
     </message>
     <message>
         <source>Video displayed in fullscreen or non-windowed mode will skip this many frames for each frame drawn. Set to 0 to show every frame. Only valid when either &quot;Use GUI size for TV playback&quot; or &quot;Run the frontend in a window&quot; is not checked.</source>
-        <translation>フルスクリーン表示時に指定フレーム分スキップします。&quot;0&quot;に設定した場合はすべてのフレームを表示します。</translation>
+        <translation>ビデオの全画面表示または非ウィンドウモード時に描画フレームごとに指定フレーム分スキップします。0 を設定するとすべてのフレームを表示します。「テレビの再生にGUIサイズを使用する」または「ウィンドウでフロントエンドを実行する」をチェックしていない場合にのみ有効です。</translation>
     </message>
     <message>
         <source>Video in main window</source>
@@ -19269,11 +19280,11 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Frames to skip</source>
-        <translation>フレームスキップ</translation>
+        <translation>スキップ フレーム数</translation>
     </message>
     <message>
         <source>Video in the main window will skip this many frames for each frame drawn. Set to 0 to show every frame.</source>
-        <translation>メインウインドウでのビデオ表示時に指定フレーム分スキップします。&quot;0&quot;に設定した場合はすべてのフレームを表示します。</translation>
+        <translation>メインウィンドウでのビデオ表示時に描画フレームごとに指定フレーム分スキップします。0 を設定するとすべてのフレームを表示します。</translation>
     </message>
     <message>
         <source>Opacity</source>
@@ -19281,11 +19292,11 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>The opacity of the main window. Set to 100 for completely opaque, set to 0 for completely transparent.</source>
-        <translation>メインウインドウの不透明度を設定します。&quot;100&quot;の場合は完全不透明、&quot;0&quot;の場合は完全透過になります。</translation>
+        <translation>メインウインドウの不透明度。「100」に設定するとで完全不透明、「0」に設定すると完全透過です。</translation>
     </message>
     <message>
         <source>Video in floating window</source>
-        <translation>フローティングウィンドウでビデオ</translation>
+        <translation>子ウィンドウでビデオを表示</translation>
     </message>
     <message>
         <source>If checked, video will be displayed in a floating window. Only valid when &quot;Use GUI size for TV playback&quot; and &quot;Run the frontend in a window&quot; are checked.</source>
@@ -19293,15 +19304,15 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Video in the floating window will skip this many frames for each frame drawn. Set to 0 to show every frame.</source>
-        <translation>ウインドウでのビデオ表示時に指定フレーム分スキップします。&quot;0&quot;に設定した場合はすべてのフレームを表示します。</translation>
+        <translation>子ウインドウでのビデオ表示時に指定フレーム分スキップします。すべてのフレームを表示するには「0」を設定します。</translation>
     </message>
     <message>
         <source>The opacity of the floating window. Set to 100 for completely opaque, set to 0 for completely transparent.</source>
-        <translation>ウインドウ表示時の不透明度を設定します。&quot;100&quot;の場合は完全不透明、&quot;0&quot;の場合は完全透過となります。</translation>
+        <translation>子ウインドウの不透明度。「100」に設定するとで完全不透明、「0」に設定すると完全透過です。</translation>
     </message>
     <message>
         <source>Video in the dock</source>
-        <translation>ドックでビデオ</translation>
+        <translation>ドックにビデオ表示</translation>
     </message>
     <message>
         <source>If checked, video will be displayed in the application&apos;s dock icon. Only valid when &quot;Use GUI size for TV playback&quot; and &quot;Run the frontend in a window&quot; are checked.</source>
@@ -19309,11 +19320,11 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Video in the dock icon will skip this many frames for each frame drawn. Set to 0 to show every frame.</source>
-        <translation>ドックアイコン表示の場合に指定フレーム分スキップします。&quot;0&quot;に設定した場合はすべてのフレームを表示します。</translation>
+        <translation>ドック アイコンでのビデオ表示時に指定フレーム分スキップします。すべてのフレームを表示するには「0」を設定します。</translation>
     </message>
     <message>
         <source>Video on the desktop</source>
-        <translation>デスクトップでビデオ</translation>
+        <translation>デスクトップにビデオ表示</translation>
     </message>
     <message>
         <source>If checked, video will be displayed on the desktop, behind the Finder icons. Only valid when &quot;Use GUI size for TV playback&quot; and &quot;Run the frontend in a window&quot; are checked.</source>
@@ -19321,7 +19332,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Video on the desktop will skip this many frames for each frame drawn. Set to 0 to show every frame.</source>
-        <translation>デスクトップ表示時に指定フレーム分スキップします。&quot;0&quot;に設定した場合はすべてのフレームを表示します。</translation>
+        <translation>デスクトップでのビデオ表示時に指定フレーム分スキップします。すべてのフレームを表示するには「0」を設定します。</translation>
     </message>
     <message>
         <source>Mac OS X video settings</source>
@@ -19337,7 +19348,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Use custom identifier for frontend preferences</source>
-        <translation>フロントエンドの設定にカスタムIDを使用する</translation>
+        <translation>フロントエンドの設定にカスタム識別子を使用する</translation>
     </message>
     <message>
         <source>Database Configuration</source>
@@ -19345,7 +19356,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>All database settings take effect when you restart this program.</source>
-        <translation>全てのデータベースの設定変更はこのプログラムの再起動後に有効になります。</translation>
+        <translation>すべてのデータベースの設定変更は、このプログラムの再起動後に有効になります。</translation>
     </message>
     <message>
         <source>Myth could not connect to the database. Please verify your database settings below.</source>
@@ -19353,11 +19364,11 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>The host name or IP address of the machine hosting the database. This information is required.</source>
-        <translation>データベースサーバーのホスト名かIPアドレスを指定してください。必須項目です。</translation>
+        <translation>データベースをホストしているマシンのホスト名かIPアドレス。必須項目です。</translation>
     </message>
     <message>
         <source>The name of the database. This information is required.</source>
-        <translation>データベースの名称です。必須項目です。</translation>
+        <translation>データベース名。必須項目です。</translation>
     </message>
     <message>
         <source>User</source>
@@ -19365,23 +19376,23 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>The user name to use while connecting to the database. This information is required.</source>
-        <translation>データベースに接続する時に使用するユーザー名です。必須項目です。</translation>
+        <translation>データベース接続時に使用するユーザー名。必須項目です。</translation>
     </message>
     <message>
         <source>The password to use while connecting to the database. This information is required.</source>
-        <translation>データベースに接続する時に使用するパスワード名です。必須項目です。</translation>
+        <translation>データベース接続時に使用するパスワード。必須項目です。</translation>
     </message>
     <message>
         <source>If this frontend&apos;s host name changes often, check this box and provide a network-unique name to identify it. If unchecked, the frontend machine&apos;s local host name will be used to save preferences in the database.</source>
-        <translation>フロントエンドのホスト名が固定でない場合は、カスタムIDを使用して設定を保存することができます。指定しない場合はローカルホスト名が使用されます。</translation>
+        <translation>フロントエンドのホスト名が頻繁に変更される場合、このボックスをチェックし、ネットワーク内で重ならない（ユニークな）な名前を提供します。チェックを外すと、データベースに設定を保存する際にフロントエンド実行中のマシンのローカルホスト名を利用します。</translation>
     </message>
     <message>
         <source>Custom identifier</source>
-        <translation>カスタムID</translation>
+        <translation>カスタム識別子</translation>
     </message>
     <message>
         <source>An identifier to use while saving the settings for this frontend.</source>
-        <translation>このIDはフロントエンドの設定を保存する時に使用します。</translation>
+        <translation>この識別子はフロントエンドの設定を保存する時に使用します。</translation>
     </message>
     <message>
         <source>Reconnect time</source>
@@ -19389,7 +19400,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>The time in seconds to wait for the server to wake up.</source>
-        <translation>サーバーが起動する間で待つ時間を秒で指定してください。</translation>
+        <translation>サーバーが起動する間で待つ秒数。</translation>
     </message>
     <message>
         <source>Retry attempts</source>
@@ -19397,7 +19408,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>The number of retries to wake the server before the frontend gives up.</source>
-        <translation>サーバーを起動するリトライ回数を指定してください。</translation>
+        <translation>サーバーの起動を試行し、フロントエンドがあきらめるまでのリトライ回数。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="426"/>
@@ -19415,7 +19426,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Use on air guide</source>
-        <translation>エアガイドを使用する</translation>
+        <translation>放送データから番組表を受信する</translation>
     </message>
     <message>
         <source>If set the guide information will be taken from the On Air Channel guide.</source>
@@ -19424,12 +19435,12 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="30"/>
         <source>Single Record</source>
-        <translation>シングル録画</translation>
+        <translation>1 回録画</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="34"/>
         <source>Record One</source>
-        <translation type="unfinished"></translation>
+        <translation>1 回録画</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="36"/>
@@ -19444,133 +19455,133 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="43"/>
         <source>Recording Template</source>
-        <translation type="unfinished"></translation>
+        <translation>録画テンプレート</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="55"/>
         <source>Record only this showing</source>
-        <translation type="unfinished">この番組のみ録画する</translation>
+        <translation>この番組のみ録画する</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="57"/>
         <source>Record all showings</source>
-        <translation type="unfinished"></translation>
+        <translation>番組をすべて録画する</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="59"/>
         <source>Record only one showing</source>
-        <translation type="unfinished"></translation>
+        <translation>番組を1度だけ録画</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="61"/>
         <source>Record one showing every day</source>
-        <translation type="unfinished"></translation>
+        <translation>番組を毎日1度録画</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="63"/>
         <source>Record one showing every week</source>
-        <translation type="unfinished"></translation>
+        <translation>番組を毎週1度録画</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="65"/>
         <source>Record this showing with override options</source>
-        <translation type="unfinished">個別設定オプションでこの番組を録画します</translation>
+        <translation>個別設定でこの番組を録画</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="67"/>
         <source>Do not record this showing</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組を録画しない</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="69"/>
         <source>Modify this recording rule template</source>
-        <translation type="unfinished"></translation>
+        <translation>この録画ルールテンプレートを変更</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="71"/>
         <source>Do not record this program</source>
-        <translation type="unfinished">録画しない</translation>
+        <translation>この番組を録画しない</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="136"/>
         <source>1</source>
         <comment>RecTypeChar kOneRecord</comment>
-        <translation type="unfinished">1</translation>
+        <translation>1</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="138"/>
         <source>D</source>
         <comment>RecTypeChar kDailyRecord</comment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="140"/>
         <source>W</source>
         <comment>RecTypeChar kWeeklyRecord</comment>
-        <translation type="unfinished">W</translation>
+        <translation>W</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="146"/>
         <source>T</source>
         <comment>RecTypeChar kTemplateRecord</comment>
-        <translation type="unfinished">T</translation>
+        <translation>T</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="159"/>
         <source>Current Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>現在の録画</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="161"/>
         <source>Previous Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>以前の録画</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="163"/>
         <location filename="../programs/mythbackend/upnpcdstv.cpp" line="171"/>
         <source>All Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>全録画</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="167"/>
         <source>New Episodes Only</source>
-        <translation type="unfinished"></translation>
+        <translation>新しい回のみ</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="178"/>
         <source>Look for duplicates in current recordings only</source>
-        <translation type="unfinished">現在の録画で重複を探します</translation>
+        <translation>現在残っている録画からのみ重複を探す</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="180"/>
         <source>Look for duplicates in previous recordings only</source>
-        <translation type="unfinished">以前の録画で重複を探します</translation>
+        <translation>過去の録画履歴からのみ重複を探す</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="182"/>
         <source>Look for duplicates in current and previous recordings</source>
-        <translation type="unfinished">現在と以前の録画で重複を探します</translation>
+        <translation>現在残っている録画と過去の録画履歴から重複を探す</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="187"/>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2112"/>
         <source>Record new episodes only</source>
-        <translation type="unfinished">新しい番組のみ録画</translation>
+        <translation>新しい回のみ録画</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="247"/>
         <source>Subtitle and Description</source>
-        <translation type="unfinished"></translation>
+        <translation>サブタイトルと説明</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="249"/>
         <source>Subtitle then Description</source>
-        <translation type="unfinished"></translation>
+        <translation>サブタイトル、次に説明</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="260"/>
         <source>Don&apos;t match duplicates</source>
-        <translation type="unfinished">重複一致しない</translation>
+        <translation>重複を探さない</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="262"/>
@@ -19595,17 +19606,17 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="368"/>
         <source>Do not automatically extend recording</source>
-        <translation type="unfinished"></translation>
+        <translation>自動で録画延長しない</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="370"/>
         <source>Automatically extend recording using ESPN</source>
-        <translation type="unfinished"></translation>
+        <translation>ESPN で自動録画延長</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="372"/>
         <source>Automatically extend recording using MLB</source>
-        <translation type="unfinished"></translation>
+        <translation>MLB で自動録画延長</translation>
     </message>
     <message>
         <source>Channel Record</source>
@@ -19614,19 +19625,19 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="32"/>
         <source>Record All</source>
-        <translation>全て録画</translation>
+        <translation>すべて録画</translation>
     </message>
     <message>
         <source>Find One</source>
-        <translation>最初の一つ</translation>
+        <translation>1件検索</translation>
     </message>
     <message>
         <source>Find Daily</source>
-        <translation>一日一回</translation>
+        <translation>毎日検索</translation>
     </message>
     <message>
         <source>Find Weekly</source>
-        <translation>週一回</translation>
+        <translation>毎週検索</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="147"/>
@@ -19646,28 +19657,28 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="292"/>
         <source>this recording rule is inactive.</source>
-        <translation>この予約を停止する。</translation>
+        <translation>この録画ルールは無効です。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="371"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="621"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="637"/>
         <source>6 MHz</source>
-        <translation></translation>
+        <translation>6 MHz</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="372"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="622"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="638"/>
         <source>7 MHz</source>
-        <translation></translation>
+        <translation>7 MHz</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="373"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="623"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="639"/>
         <source>8 MHz</source>
-        <translation></translation>
+        <translation>8 MHz</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="92"/>
@@ -19684,7 +19695,7 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Find One, Find Weekly and Find Daily recording types will receive this additional recording priority value.</source>
-        <translation>検索録画(最初の1つ、1日1回、週1回)にはこの録画優先度の値が加算されます。</translation>
+        <translation>検索録画 (1件検索、毎週検索、毎日検索) にはこの録画優先度の値が加算されます。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="287"/>
@@ -19701,13 +19712,13 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     </message>
     <message>
         <source>Selects how to sort a shows episodes</source>
-        <translation>番組の並び替え方法を選択</translation>
+        <translation>番組の回の並べ替え方法を選択</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="132"/>
         <source>S</source>
         <comment>RecTypeChar kSingleRecord</comment>
-        <translation></translation>
+        <translation>S</translation>
     </message>
     <message>
         <source>T</source>
@@ -19754,17 +19765,17 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1376"/>
         <source>100Mbps</source>
-        <translation></translation>
+        <translation>100Mbps</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1377"/>
         <source>200Mbps</source>
-        <translation></translation>
+        <translation>200Mbps</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1378"/>
         <source>400Mbps</source>
-        <translation></translation>
+        <translation>400Mbps</translation>
     </message>
     <message>
         <source>Default Input</source>
@@ -19786,55 +19797,56 @@ Most DVB-C transports transmit at 6.9 or 6.875 million symbols per second.</sour
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="339"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="532"/>
         <source>Polarity (Option has no default)</source>
-        <translation>極性 (既定値なし)</translation>
+        <translation>極性 (デフォルト値なし)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="353"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="603"/>
         <source>Inversion (Default: Auto):
 Most cards can autodetect this now, so leave it at Auto unless it won&apos;t work.</source>
-        <translation>反転 (既定値: 自動)
-ほとんどのカードは自動で検出できます。</translation>
+        <translation>反転 (デフォルト : 自動)
+現在、ほとんどのカードは自動で検出できるので、動作しない場合を除き自動のままにします。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="369"/>
         <source>Bandwidth (Default: Auto)
 </source>
-        <translation type="unfinished"></translation>
+        <translation>帯域 (デフォルト : 自動)
+</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="403"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="675"/>
         <source>Forward Error Correction (Default: Auto)</source>
-        <translation>FEC (既定値: 自動)</translation>
+        <translation>FEC (前方エラー補正。デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="414"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="688"/>
         <source>Low Priority Code Rate (Default: Auto)</source>
-        <translation>低優先度コードレート(既定値: 自動)</translation>
+        <translation>低優先度コードレート (デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="424"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="701"/>
         <source>High Priority Code Rate (Default: Auto)</source>
-        <translation>高優先度コードレート(既定値: 自動)</translation>
+        <translation>高優先度コードレート (デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="434"/>
         <source>Guard Interval (Default: Auto)</source>
-        <translation>ガードインターバル(既定値: 自動)</translation>
+        <translation>ガードインターバル (デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="449"/>
         <source>Transmission Mode (Default: Auto)</source>
-        <translation>転送モード (既定値: 自動)</translation>
+        <translation>転送モード (デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="462"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="782"/>
         <source>Hierarchy (Default: Auto)</source>
-        <translation>階層(既定値: 自動)</translation>
+        <translation>階層 (デフォルト : 自動)</translation>
     </message>
     <message>
         <source>Menu Pop-up Time</source>
@@ -19846,23 +19858,23 @@ Most cards can autodetect this now, so leave it at Auto unless it won&apos;t wor
     </message>
     <message>
         <source>Enable realtime priority threads</source>
-        <translation>リアルタイムプライオリティースレッドを有効</translation>
+        <translation>リアルタイム優先度スレッドを有効</translation>
     </message>
     <message>
         <source>When running mythfrontend with root privileges, some threads can be given enhanced priority. Disable this if mythfrontend freezes during video playback.</source>
-        <translation>mythfrontendがroot権限で実行された時、いくつかのスレッドのプライオリティーを引き上げます。mythfrontendが再生中に固まるときは無効にしてください。</translation>
+        <translation>mythfrontend を root権限で実行する際、いくつかのスレッドの優先度を引き上げることができます。再生中に mythfrontend がフリーズするなら無効にしてください。</translation>
     </message>
     <message>
         <source>Enable LCD device</source>
-        <translation>LCDデバイスを有効</translation>
+        <translation>LCD デバイスを有効</translation>
     </message>
     <message>
         <source>This global setting allows the recorder to start before the scheduled start time. It does not affect the scheduler. It is ignored when two shows have been scheduled without enough time in between.</source>
-        <translation>このグローバルな設定は予約録画開始前に有効になります。スケジューラーには影響しません。録画と録画の間に十分な時間がないと時は無視されます。</translation>
+        <translation>この全体にわたる設定は、録画予約番組の開始時間より前に、録画を開始します。予約には影響しません。前後の録画の間に十分な時間がない場合は無視します。</translation>
     </message>
     <message>
         <source>This global setting allows the recorder to record beyond the scheduled end time. It does not affect the scheduler. It is ignored when two shows have been scheduled without enough time in between.</source>
-        <translation>このグローバルな設定は予約録画終了時に有効になります。スケジューラーには影響しません。録画と録画の間に十分な時間がないと時は無視されます。</translation>
+        <translation>この全体にわたる設定は、録画予約番組の終了時間を超えて、さらに録画をつづけます。予約には影響しません。前後の録画の間に十分な時間がない場合は無視します。</translation>
     </message>
     <message>
         <source>Resize Video while transcoding</source>
@@ -19871,7 +19883,7 @@ Most cards can autodetect this now, so leave it at Auto unless it won&apos;t wor
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1363"/>
         <source>Point to Point</source>
-        <translation></translation>
+        <translation>ポイント・ツー・ポイント</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="39"/>
@@ -19944,12 +19956,13 @@ Most cards can autodetect this now, so leave it at Auto unless it won&apos;t wor
         <location filename="../libs/libmythtv/transporteditor.cpp" line="473"/>
         <source>Frequency (Option has no default).
 The frequency for this transport (multiplex) in</source>
-        <translation type="unfinished"></translation>
+        <translation>周波数 (デフォルト値なし)
+このトランスポート (multiplex) の周波数を</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="619"/>
         <source>Bandwidth (Default: Auto)</source>
-        <translation>帯域 (規定: 自動)</translation>
+        <translation>帯域 (デフォルト : 自動)</translation>
     </message>
     <message>
         <source>DVB Transport</source>
@@ -19961,7 +19974,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Skipping Back.</source>
-        <translation>巻き戻し.</translation>
+        <translation>戻します。</translation>
     </message>
     <message>
         <source>This is the default value used for the Auto-Commercial Flagging setting when a new scheduled recording is created.</source>
@@ -19969,7 +19982,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Run on the specified screen or spanning all screens.</source>
-        <translation>実行する画面か全ての画面を使用する。</translation>
+        <translation>特定の画面かすべての画面で実行します。</translation>
     </message>
     <message>
         <source>In X</source>
@@ -19977,7 +19990,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Horizontal resolution of video which needs a special output resolution.</source>
-        <translation>特別な解像度を使用するときの横解像度。</translation>
+        <translation>特別な出力解像度を使用するときの水平解像度。</translation>
     </message>
     <message>
         <source>In Y</source>
@@ -19985,19 +19998,19 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Vertical resolution of video which needs a special output resolution.</source>
-        <translation>特別な解像度を使用するときの縦解像度。</translation>
+        <translation>特別な出力解像度を使用するときの垂直解像度。</translation>
     </message>
     <message>
         <source>Resolution of screen when not watching a video.</source>
-        <translation>ビデオ表示以外の解像度。</translation>
+        <translation>ビデオ視聴時以外の解像度。</translation>
     </message>
     <message>
         <source>Default screen resolution when watching a video.</source>
-        <translation>ビデオ表示の規定の解像度。</translation>
+        <translation>ビデオ視聴時の標準解像度。</translation>
     </message>
     <message>
         <source>Screen resolution when watching a video at a specific resolution.</source>
-        <translation>ビデオ表示の解像度を指定します。</translation>
+        <translation>特定の解像度でビデオ視聴する際の解像度。</translation>
     </message>
     <message>
         <source>Video Output</source>
@@ -20013,7 +20026,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Aspect ratio when watching a video.</source>
-        <translation>ビデオ表示時のアスペクト比。</translation>
+        <translation>ビデオ視聴時のアスペクト比。</translation>
     </message>
     <message>
         <source>Aspect</source>
@@ -20073,7 +20086,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="68"/>
         <source>Denmark</source>
-        <translation type="unfinished"></translation>
+        <translation>デンマーク</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="69"/>
@@ -20083,28 +20096,28 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="72"/>
         <source>Greece</source>
-        <translation type="unfinished"></translation>
+        <translation>ギリシャ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="73"/>
         <source>Israel</source>
-        <translation type="unfinished"></translation>
+        <translation>イスラエル</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="74"/>
         <source>Italy</source>
-        <translation type="unfinished"></translation>
+        <translation>イタリア</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="75"/>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="90"/>
         <source>Netherlands</source>
-        <translation type="unfinished"></translation>
+        <translation>オランダ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="78"/>
         <source>Sweden</source>
-        <translation>スエーデン</translation>
+        <translation>スウェーデン</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="79"/>
@@ -20125,7 +20138,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1184"/>
         <source>Enable auto-transcode after recording</source>
-        <translation>録画後に自動トランスコードを有効にする</translation>
+        <translation>録画後の自動トランスコードを有効</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1771"/>
@@ -20146,15 +20159,15 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1860"/>
         <source>Transcode using &quot;%1&quot;</source>
-        <translation>&quot;%1&quot;でトランスコード</translation>
+        <translation>「%1」でトランスコード</translation>
     </message>
     <message>
         <source>Default group filter to apply</source>
-        <translation>規定のグループフィルターを適用する</translation>
+        <translation>適用する標準グループフィルター</translation>
     </message>
     <message>
         <source>Default group filter to apply on the View Recordings screen.</source>
-        <translation>録画再生画面での規定のフィルター。</translation>
+        <translation>録画表示画面に適用する標準のグループフィルター。</translation>
     </message>
     <message>
         <source>Save current group filter when changed</source>
@@ -20162,7 +20175,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Show filter name instead of &quot;All Programs&quot;</source>
-        <translation>&quot;全ての番組&quot;の代わりにフィルター名を表示する</translation>
+        <translation>「全番組」の代わりにフィルター名を表示</translation>
     </message>
     <message>
         <source>Default Transcoder</source>
@@ -20170,7 +20183,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Category of shows to be extended</source>
-        <translation>カテゴリー指定の延長時間</translation>
+        <translation>延長が発生する番組カテゴリー</translation>
     </message>
     <message>
         <source>Record past end of show (in minutes)</source>
@@ -20178,11 +20191,11 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Category record over-time</source>
-        <translation>カテゴリ-指定の録画延長時間</translation>
+        <translation>録画延長カテゴリー</translation>
     </message>
     <message>
         <source>Fast forward/rewind reposition amount</source>
-        <translation>早送り/巻戻しリポジション量</translation>
+        <translation>早送り・巻戻しリポジション量</translation>
     </message>
     <message>
         <source>Aggressive Sound card Buffering</source>
@@ -20198,11 +20211,11 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Display current time on idle LCD display. </source>
-        <translation>アイドル時に時刻をLCDに表示する。</translation>
+        <translation>LCD 表示の待機中に、現在時刻を表示します。 </translation>
     </message>
     <message>
         <source>Display selected menu on LCD display. </source>
-        <translation>LCDに選択されたメニューを表示する。</translation>
+        <translation>LCDに選択したメニューを表示します。 </translation>
     </message>
     <message>
         <source>Items</source>
@@ -20218,23 +20231,23 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Use an LCD display to view MythTV status information.</source>
-        <translation>LCDディスプレイにMythTVのステータスを表示する。</translation>
+        <translation>LCD ディスプレーに MythTV のステータス情報を表示する。</translation>
     </message>
     <message>
         <source>General (Basic)</source>
-        <translation>全般（基本）</translation>
+        <translation>全般 (基本)</translation>
     </message>
     <message>
         <source>General (Jobs)</source>
-        <translation>全般（ジョブ）</translation>
+        <translation>全般 (ジョブ)</translation>
     </message>
     <message>
         <source>General (Advanced)</source>
-        <translation>全般（アドバンスト）</translation>
+        <translation>全般 (詳細)</translation>
     </message>
     <message>
         <source>%1 total, %2 used, %3 (or %4%) free.</source>
-        <translation>全体 %1, 使用中 %2, 空 %3 (%4%).</translation>
+        <translation>全体 : %1／使用中 : %2／空き容量 %3 (または %4% )。</translation>
     </message>
     <message>
         <source>Allow Transcoding jobs</source>
@@ -20253,7 +20266,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="299"/>
         <source>it was marked to never be recorded.</source>
-        <translation>これ以上録画しないようにマークされています。</translation>
+        <translation>今後録画しないマークがついています。</translation>
     </message>
     <message>
         <source>DBOX2 Streaming Port</source>
@@ -20265,7 +20278,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Turn on the LCD heartbeat.</source>
-        <translation>LCDハートビートを有効。</translation>
+        <translation>LCDのハートビートを有効にします。</translation>
     </message>
     <message>
         <source>or</source>
@@ -20274,7 +20287,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../programs/mythbackend/upnpcdstv.cpp" line="215"/>
         <source>Date</source>
-        <translation type="unfinished"></translation>
+        <translation>日付</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdstv.cpp" line="243"/>
@@ -20284,7 +20297,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../programs/mythbackend/upnpcdstv.cpp" line="257"/>
         <source>Recording Group</source>
-        <translation type="unfinished">録画グループ</translation>
+        <translation>録画グループ</translation>
     </message>
     <message numerus="yes">
         <location filename="../programs/mythbackend/upnpcdstv.cpp" line="569"/>
@@ -20292,14 +20305,14 @@ The frequency for this transport (multiplex) in</source>
         <location filename="../programs/mythbackend/upnpcdsvideo.cpp" line="493"/>
         <location filename="../programs/mythbackend/upnpcdsvideo.cpp" line="494"/>
         <source>%n Episode(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 回</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdstv.cpp" line="713"/>
         <source>No Genre</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャンルなし</translation>
     </message>
     <message>
         <source>A</source>
@@ -20323,7 +20336,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>This showing was recorded but was aborted before recording was completed.</source>
-        <translation>この番組は録画しましたが、録画完了前に中断しました。</translation>
+        <translation>この番組を録画しましたが、番組終了前に中断しました。</translation>
     </message>
     <message>
         <source>This showing was not recorded because it was scheduled after it would have ended.</source>
@@ -20340,7 +20353,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Always prompt for initial group filter</source>
-        <translation>初期のグループフィルター選択を常に表示する</translation>
+        <translation>初期グループフィルターをつねに確認する</translation>
     </message>
     <message>
         <source>Lowest Priority First</source>
@@ -20348,7 +20361,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Your preferred language for the user interface.</source>
-        <translation>言語選択。</translation>
+        <translation>ユーザーインターフェース用のお好みの言語。</translation>
     </message>
     <message>
         <source>Guide Language #%1</source>
@@ -20397,7 +20410,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="264"/>
         <source>Save original files after transcoding (globally)</source>
-        <translation>トランスコード後に元のファイルを保存する（全般）</translation>
+        <translation>トランスコード後に元のファイルを保存する (全体設定)</translation>
     </message>
     <message>
         <source>Transport Editor</source>
@@ -20406,7 +20419,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3642"/>
         <source>(Delete all capture cards)</source>
-        <translation>(全てのキャプチャーカードを削除)</translation>
+        <translation>(すべてのキャプチャーカードを削除)</translation>
     </message>
     <message>
         <source>Monitor Aspect Ratio</source>
@@ -20429,7 +20442,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3656"/>
         <source>(Delete all video sources)</source>
-        <translation>(全てのビデオソースを削除する)</translation>
+        <translation>(すべてのビデオソースを削除する)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="3225"/>
@@ -20438,11 +20451,11 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Analog V4L capture card</source>
-        <translation>アナログV4Lキャプチャーカード</translation>
+        <translation>アナログ V4L キャプチャーカード</translation>
     </message>
     <message>
         <source>DVB DTV capture card (v3.x)</source>
-        <translation>DVB DTVキャプチャーカード(v3.x)</translation>
+        <translation>DVB DTV キャプチャーカード (v3.x)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2756"/>
@@ -20451,7 +20464,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>USB MPEG-4 encoder box (Plextor ConvertX, etc)</source>
-        <translation>USB MPEG-4エンコーダーボックス (Plextor ConvertX, etc)</translation>
+        <translation>USB MPEG-4 エンコーダーボックス (Plextor ConvertX 等)</translation>
     </message>
     <message>
         <source>DBox2 TCP/IP cable box</source>
@@ -20469,16 +20482,16 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="753"/>
         <source>Threads to use for software encoding.</source>
-        <translation type="unfinished"></translation>
+        <translation>ソフトウェアエンコードで使用するスレッド数。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="754"/>
         <source>Set to a value less than or equal to the number of processors on the backend that will be doing the encoding.</source>
-        <translation type="unfinished"></translation>
+        <translation>値はバックエンド マシンのCPU 数以下を設定し、エンコードの際に利用します。</translation>
     </message>
     <message>
         <source>MPEG-2 Parameters</source>
-        <translation>MPEG-2パラメータ</translation>
+        <translation>MPEG-2 パラメータ</translation>
     </message>
     <message>
         <source>Standard XvMC</source>
@@ -20490,17 +20503,17 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Decoder to use to play back MPEG2 video.</source>
-        <translation>MPEG2ビデオを再生するときに使用するデコーダー。</translation>
+        <translation>MPEG2 ビデオを再生するときに使用するデコーダー。</translation>
     </message>
     <message>
         <source>Standard will use ffmpeg library.</source>
-        <translation>一般的にはffmpegを使用します。</translation>
+        <translation>標準は ffmpeg ライブラリーを使用します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="42"/>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="47"/>
         <source>Cable HRC</source>
-        <translation type="unfinished"></translation>
+        <translation>ケーブル HRC</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="50"/>
@@ -20558,11 +20571,11 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>MythWelcome Settings</source>
-        <translation>MythWelcome設定</translation>
+        <translation>MythWelcome 設定</translation>
     </message>
     <message>
         <source>Command to set the wakeup time in the BIOS. See the README file for more examples.</source>
-        <translation>BIOSに起動時間をセットするコマンド。</translation>
+        <translation>BIOS に起動時間を設定するコマンド。多くの例について README ファイルを参照してください。</translation>
     </message>
     <message>
         <source>nvram-wakeup Restart Command</source>
@@ -20578,7 +20591,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Command to shutdown</source>
-        <translation>シャットダウンコマンド</translation>
+        <translation>停止コマンド</translation>
     </message>
     <message>
         <source>Command to shutdown computer.</source>
@@ -20586,11 +20599,11 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Command to run Xterm</source>
-        <translation>ターミナル起動コマンド</translation>
+        <translation>Xterm 実行コマンド</translation>
     </message>
     <message>
         <source>Command to start an Xterm. Can be disabled by leaving this setting blank.</source>
-        <translation>ターミナルを起動するコマンド。無効にするには空白にしてください。</translation>
+        <translation>Xterm を起動するコマンド。この設定を空白にすることで無効にできます。</translation>
     </message>
     <message>
         <source>Perform EIT Scan</source>
@@ -20599,7 +20612,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="675"/>
         <source>Use only the transmitted guide data.</source>
-        <translation type="unfinished"></translation>
+        <translation>転送された番組表データのみを使用します。</translation>
     </message>
     <message>
         <source>UDP Notify OSD time-out</source>
@@ -20615,7 +20628,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Period</source>
-        <translation>ピリオド</translation>
+        <translation>期間</translation>
     </message>
     <message>
         <source>start time</source>
@@ -20642,7 +20655,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="245"/>
         <source>Description</source>
-        <translation type="unfinished">内容</translation>
+        <translation>説明</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="3229"/>
@@ -20656,7 +20669,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="3216"/>
         <source>PIP</source>
-        <translation></translation>
+        <translation>PIP</translation>
     </message>
     <message>
         <source>The following programs will be recorded instead:</source>
@@ -20665,15 +20678,15 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../programs/mythfrontend/viewschedulediff.cpp" line="134"/>
         <source>Program Status</source>
-        <translation type="unfinished"></translation>
+        <translation>プログラムステータス</translation>
     </message>
     <message>
         <source>Title match (regex)</source>
-        <translation>タイトル一致 (regex)</translation>
+        <translation>タイトル一致（正規表現）</translation>
     </message>
     <message>
         <source>Automatically set new recording rules to use this group if the title matches this regular expression.  For example, &quot;(News|CNN)&quot; would match any title in which &quot;News&quot; or &quot;CNN&quot; appears.</source>
-        <translation>この正規表現に一致するタイトルを自動的に録画グループにします。 例 &quot;(News|CNN)&quot;は&quot;News&quot;か&quot;CNN&quot;がタイトルに含まれているものを対象にします。</translation>
+        <translation>この正規表現に一致するタイトルを自動的にこの録画グループにします。 例 : 「(ニュース|NHK)」は「ニュース」または「NHK」のいずれかが含まれるあらゆるタイトルに一致します。</translation>
     </message>
     <message>
         <source>Skip ahead (seconds)</source>
@@ -20689,26 +20702,26 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Initial playback speed with adjusted audio.  Use 100 for normal speed, 50 for half speed and 200 for double speed.</source>
-        <translation>再生スピード。  標準は100、50が半分の速度で200が倍の速度です。</translation>
+        <translation>音声に合わせた再生スピードの初期値。標準は100、50が半分の速度で、200が倍速です。</translation>
     </message>
     <message>
         <source>Daily Wakeup/ShutDown Period</source>
-        <translation>日毎の起動/シャットダウン時間</translation>
+        <translation>毎日の起動・電源オフ時間</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1201"/>
         <source>Allows the transcoder to resize the video during transcoding.</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスコードでビデオのトランスコーダーによるビデオのリサイズを許可します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1213"/>
         <source>Lossless transcoding</source>
-        <translation>ロスレストランスコード</translation>
+        <translation>ロスレス トランスコード</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1215"/>
         <source>Only reencode where absolutely needed (normally only around cutpoints).  Otherwise keep audio and video formats identical to the source.  This should result in the highest quality, but won&apos;t save as much space.</source>
-        <translation type="unfinished"></translation>
+        <translation>絶対に必要な場合にのみ再エンコードします（通常はカットポイント周辺のみ）。それ以外の場合は、オーディオとビデオの形式をソースと同じにしてください。これにより最高の品質が得られるはずですが、容量を節約することはできません。</translation>
     </message>
     <message>
         <source>Display Name (optional)</source>
@@ -20736,7 +20749,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Shutdown with Master Backend</source>
-        <translation>マスターバックエンドもいっしょにシャットダウンする</translation>
+        <translation>マスターバックエンドといっしょに電源オフ</translation>
     </message>
     <message>
         <source>Command to run to start the Frontend</source>
@@ -20744,11 +20757,11 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Command to start mythfrontend.</source>
-        <translation>フロントエンド起動コマンド。</translation>
+        <translation>mythfrontend の起動コマンド。</translation>
     </message>
     <message>
         <source>MythShutdown/MythWelcome Settings</source>
-        <translation>MythShutdown/MythWelcome設定</translation>
+        <translation>MythShutdown・MythWelcome 設定</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="77"/>
@@ -20757,7 +20770,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Enable Network Remote Control interface</source>
-        <translation>ネットワークリモートコントロールを有効</translation>
+        <translation>ネットワーク リモートコントロールを有効</translation>
     </message>
     <message>
         <source>Network Remote Control Port</source>
@@ -20773,27 +20786,27 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Too Far %1</source>
-        <translation>%1余計に</translation>
+        <translation>%1 は先過ぎます</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1301"/>
         <source>If the width is set to &apos;Auto&apos;, the width will be calculated based on the height and the recording&apos;s physical aspect ratio.</source>
-        <translation type="unfinished"></translation>
+        <translation>幅を「自動」に設定すると、高さと録画の物理アスペクト比を元に幅を計算します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1328"/>
         <source>If the height is set to &apos;Auto&apos;, the height will be calculated based on the width and the recording&apos;s physical aspect ratio.</source>
-        <translation type="unfinished"></translation>
+        <translation>高さを「自動」に設定すると、幅と録画の物理アスペクト比を元に幅を計算します。</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programtypes.cpp" line="103"/>
         <source>All Available Methods</source>
-        <translation>全ての可能な方法</translation>
+        <translation>すべての可能な方法</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programtypes.cpp" line="111"/>
         <source>Blank Frame Detection</source>
-        <translation>ブランクフレーム検知</translation>
+        <translation>ブランクフレーム検出</translation>
     </message>
     <message>
         <source>Maximum commercial skip (in seconds)</source>
@@ -20805,7 +20818,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Mac hardware acceleration</source>
-        <translation>Macハードウェア&#x3000;アクセラレーション</translation>
+        <translation>Mac ハードウェア アクセラレーション</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="730"/>
@@ -20815,7 +20828,7 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="732"/>
         <source>The program used to transcode recordings. The default is &apos;mythtranscode&apos; if this setting is empty.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画のトランスコードに利用するプログラム。設定が空白だとデフォルトになり「mythtranscode」を利用します。</translation>
     </message>
     <message>
         <source>Commercial Flagger command</source>
@@ -20829,16 +20842,16 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="178"/>
         <source>Recorder Off-Line</source>
-        <translation>レコーダーオフライン</translation>
+        <translation>レコーダー オフライン</translation>
     </message>
     <message>
         <source>the backend recorder is off-line.</source>
-        <translation>バックエンドレコーダーオフライン。</translation>
+        <translation>バックエンドのレコーダーがオフラインです。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3175"/>
         <source>If you point your satellite dish toward DishNet&apos;s birds, you may wish to enable this feature. For best results, enable general EIT collection as well.</source>
-        <translation type="unfinished"></translation>
+        <translation>衛星放送受信アンテナを DishNet の birds に向ける場合は、この機能を有効にすることをお勧めします。最良の結果を得るには、一般的な EIT 収集も有効にします。</translation>
     </message>
     <message>
         <source>Education</source>
@@ -20858,7 +20871,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Religious</source>
-        <translation>しゅうきょう</translation>
+        <translation>宗教</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/eithelper.cpp" line="684"/>
@@ -20899,11 +20912,11 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Classical</source>
-        <translation>クラシカル</translation>
+        <translation>古典・クラシック</translation>
     </message>
     <message>
         <source>College</source>
-        <translation>カレッジ</translation>
+        <translation>大学</translation>
     </message>
     <message>
         <source>Comedy</source>
@@ -20915,11 +20928,11 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Consumer</source>
-        <translation>コンシューマー</translation>
+        <translation>消費者</translation>
     </message>
     <message>
         <source>Crime</source>
-        <translation>つみ</translation>
+        <translation>犯罪</translation>
     </message>
     <message>
         <source>Dance</source>
@@ -20939,7 +20952,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Farm</source>
-        <translation>ファーム</translation>
+        <translation>農作業</translation>
     </message>
     <message>
         <source>Fashion</source>
@@ -20951,7 +20964,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Food</source>
-        <translation>フード</translation>
+        <translation>食</translation>
     </message>
     <message>
         <source>Football</source>
@@ -20959,7 +20972,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Game/Quiz</source>
-        <translation>ゲーム/クイズ</translation>
+        <translation>ゲーム・クイズ</translation>
     </message>
     <message>
         <source>Garden</source>
@@ -20983,7 +20996,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Hobby</source>
-        <translation>ホビー</translation>
+        <translation>趣味</translation>
     </message>
     <message>
         <source>Hockey</source>
@@ -21019,12 +21032,12 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Military</source>
-        <translation>ミリタリー</translation>
+        <translation>軍事</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdsmusic.cpp" line="59"/>
         <source>Music</source>
-        <translation>ミュージック</translation>
+        <translation>音楽</translation>
     </message>
     <message>
         <source>Mystery</source>
@@ -21032,7 +21045,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>National</source>
-        <translation>ナショナル</translation>
+        <translation>国内</translation>
     </message>
     <message>
         <source>Nature</source>
@@ -21044,7 +21057,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Politics</source>
-        <translation>せいじ</translation>
+        <translation>政治</translation>
     </message>
     <message>
         <source>Romance</source>
@@ -21052,12 +21065,12 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Science</source>
-        <translation>サイエンス</translation>
+        <translation>科学</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdsvideo.cpp" line="67"/>
         <source>All Videos</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのビデオ</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdsvideo.cpp" line="95"/>
@@ -21068,8 +21081,8 @@ The frequency for this transport (multiplex) in</source>
         <location filename="../programs/mythbackend/upnpcdsvideo.cpp" line="416"/>
         <location filename="../programs/mythbackend/upnpcdsvideo.cpp" line="417"/>
         <source>%n Seasons</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n シーズン</numerusform>
         </translation>
     </message>
     <message>
@@ -21082,7 +21095,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Technical</source>
-        <translation>テクニカル</translation>
+        <translation>技術</translation>
     </message>
     <message>
         <source>Tennis</source>
@@ -21090,7 +21103,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Travel</source>
-        <translation>トラベル</translation>
+        <translation>旅行</translation>
     </message>
     <message>
         <source>Variety</source>
@@ -21128,12 +21141,12 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <source>CC</source>
         <comment>EIA-608 closed captions</comment>
-        <translation>CC</translation>
+        <translation>クローズドキャプション</translation>
     </message>
     <message>
         <source>TT Menu</source>
         <comment>Teletext Menu</comment>
-        <translation>TTメニュー</translation>
+        <translation>テレテキスト メニュー</translation>
     </message>
     <message>
         <source>Text subtitles</source>
@@ -21160,12 +21173,12 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1232"/>
         <source>This option allows you to filter out unwanted streams. &apos;Normal&apos; will record all relevant streams including interactive television data. &apos;TV Only&apos; will record only audio, video and subtitle streams. </source>
-        <translation type="unfinished"></translation>
+        <translation>このオプションを使用すると、不要なストリームを除外できます。「通常」はインタラクティブテレビデータを含むすべての関連ストリームを記録します。「テレビのみ」は、音声、ビデオおよび字幕ストリームのみを録画します。 </translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1239"/>
         <source>Normal</source>
-        <translation>ノーマル</translation>
+        <translation>通常</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1240"/>
@@ -21175,33 +21188,33 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1241"/>
         <source>Audio Only</source>
-        <translation>オーディオのみ</translation>
+        <translation>音声のみ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1252"/>
         <source>Record Full TS?</source>
-        <translation type="unfinished"></translation>
+        <translation>フル TS を録画？</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1254"/>
         <source>If set, extra files will be created for each recording with the name of the recording followed by &apos;.ts.raw&apos;. These extra files represent the full contents of the transport stream used to generate the recording. (For debugging purposes)</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、録画名の後に「.ts.raw」が続く追加のファイルを録画ごとに作成します。この追加ファイルは、録画の生成に使用するトランスポート ストリームの全内容を表します。（デバッグ目的）</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1275"/>
         <source>Filters used when transcoding with this profile. This value must be blank to perform lossless transcoding.  Format: [[&lt;filter&gt;=&lt;options&gt;,]...]</source>
-        <translation type="unfinished"></translation>
+        <translation>このプロファイルでトランスコードする際に使用するフィルター。ロスレス トランスコードを実行するには、この値を空白にしなければなりません。書式 : [[&lt;filter&gt;=&lt;options&gt;,]...]</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="44"/>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="48"/>
         <source>Cable IRC</source>
-        <translation type="unfinished"></translation>
+        <translation>ケーブル IRC</translation>
     </message>
     <message>
         <source>UNKNOWN%1</source>
         <comment>Synthesized callsign</comment>
-        <translation>不明 %1</translation>
+        <translation>UNKNOWN%1</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1617"/>
@@ -21216,12 +21229,12 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3122"/>
         <source>If the input priority is not equal for all inputs, the scheduler may choose to record a show at a later time so that it can record on an input with a higher value.</source>
-        <translation type="unfinished"></translation>
+        <translation>入力優先度がすべての入力で等しくない場合、スケジューラーはより高い値の入力で録画することで、後から録画予約した番組を録画することを選択できます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3639"/>
         <source>(Delete all capture cards on %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>(%1 のすべてのキャプチャーカードを削除)</translation>
     </message>
     <message>
         <source>OpenGL</source>
@@ -21230,27 +21243,27 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="394"/>
         <source>The minimum number of seconds after a recorder becomes idle to wait before MythTV begins collecting EIT listings data.</source>
-        <translation type="unfinished"></translation>
+        <translation>レコーダーがアイドル状態になってから、MythTV が番組表データの収集を開始するまで待機する最小秒数。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="951"/>
         <source>EIT Scanner Options</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表スキャナー設定</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="52"/>
         <source>The option of scanning only &quot;High&quot; frequency channels is useful because most digital channels are on the higher frequencies.</source>
-        <translation type="unfinished"></translation>
+        <translation>ほとんどのデジタルチャンネルはより高い周波数にあるため、「高」周波数チャンネルのみをスキャンする設定は便利です。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1321"/>
         <source>Choose the model that most closely resembles your set top box. Depending on firmware revision SA4200HD may work better for a SA3250HD box.</source>
-        <translation type="unfinished"></translation>
+        <translation>お使いのセットトップボックスに最も近いモデルを選択してください。ファームウェアのリビジョンによっては、SA4200HD が SA3250HD ボックスでうまく機能する場合があります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv.cpp" line="55"/>
         <source>(CH)</source>
-        <translation type="unfinished"></translation>
+        <translation>(チャンネル)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv.cpp" line="56"/>
@@ -21260,13 +21273,13 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/tv.cpp" line="67"/>
         <source>Adjust Playback</source>
-        <translation>プレイバック調整</translation>
+        <translation>再生調整</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv.cpp" line="68"/>
         <location filename="../libs/libmythtv/tv.cpp" line="69"/>
         <source>Adjust Recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>レコーダー調整</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="293"/>
@@ -21276,17 +21289,17 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1109"/>
         <source>Enable this option for budget BT878 based DVB-T cards such as the AverTV DVB-T which require the audio volume to be left alone.</source>
-        <translation type="unfinished"></translation>
+        <translation>AverTV DVB-T など、BT878ベースの低価格 DVB-T カードでは音声のボリュームをそのままにしておく必要があるので、この設定を有効にします。</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programtypes.cpp" line="118"/>
         <source>Experimental</source>
-        <translation type="unfinished"></translation>
+        <translation>実験的</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="275"/>
         <source>Delete files slowly</source>
-        <translation type="unfinished"></translation>
+        <translation>ゆっくりファイルを削除する</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="66"/>
@@ -21297,32 +21310,32 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="133"/>
         <source>Failed to probe a capture card connected to this transport&apos;s video source. Please make sure the backend is not running.</source>
-        <translation type="unfinished"></translation>
+        <translation>このトランスポートのビデオソースに接続しているキャプチャカードの確認に失敗しました。バックエンドを実行していないことを確認してください。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="96"/>
         <source>Sorry, the Transport Editor can only edit transports of a video source that is connected to a capture card.</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスポートエディタは、キャプチャカードに接続しているビデオソースのトランスポートのみを編集できます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="169"/>
         <source>The capture cards connected to this transport&apos;s video source are incompatible. Please create separate video sources per capture card type.</source>
-        <translation type="unfinished"></translation>
+        <translation>このトランスポートのビデオソースに接続しているキャプチャカードには互換性がありません。キャプチャカードの種類ごとに個別のビデオソースを作成してください。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="447"/>
         <source>Digital TV Standard</source>
-        <translation type="unfinished"></translation>
+        <translation>デジタルテレビ標準</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="448"/>
         <source>Guiding standard to use for making sense of the data streams after they have been demodulated, error corrected and demultiplexed.</source>
-        <translation type="unfinished"></translation>
+        <translation>データストリームを復調、修正、逆多重化した後、データストリームを解釈するために使用するガイド標準。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="458"/>
         <source>OpenCable</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenCable</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="461"/>
@@ -21332,38 +21345,38 @@ The frequency for this transport (multiplex) in</source>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="634"/>
         <source>Bandwidth for DVB-T2 (Default: Auto)</source>
-        <translation type="unfinished"></translation>
+        <translation>DVB-T2 の帯域 (デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="636"/>
         <source>5 MHz</source>
-        <translation type="unfinished"></translation>
+        <translation>5 MHz</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="712"/>
         <source>Guard Interval for DVB-T (Default: Auto)</source>
-        <translation type="unfinished"></translation>
+        <translation>DVB-T のガードインターバル (デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="728"/>
         <source>Guard Interval for DVB-T2 (Default: Auto)</source>
-        <translation type="unfinished"></translation>
+        <translation>DVB-T2 のガードインターバル (デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="746"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="763"/>
         <source>Transmission Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>転送モード</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="747"/>
         <source>Transmission Mode for DVB-T (Default: Auto)</source>
-        <translation type="unfinished"></translation>
+        <translation>DVB-T の転送モード (デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="764"/>
         <source>Transmission Mode for DVB-T2 (Default: Auto)</source>
-        <translation type="unfinished"></translation>
+        <translation>DVB-T2 の転送モード (デフォルト : 自動)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="476"/>
@@ -21373,39 +21386,40 @@ The frequency for this transport (multiplex) in</source>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="810"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="823"/>
         <source>Modulation System</source>
-        <translation type="unfinished"></translation>
+        <translation>変調システム</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="798"/>
         <source>Modulation System (Default: DVB-T2)</source>
-        <translation type="unfinished"></translation>
+        <translation>変調システム (デフォルト : DVB-T2)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscanmiscsettings.h" line="501"/>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="824"/>
         <source>Modulation System (Default: DVB-C/A)</source>
-        <translation type="unfinished"></translation>
+        <translation>変調システム (デフォルト : DVB-C/A)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="811"/>
         <source>Modulation System (Default: DVB-S2)</source>
-        <translation type="unfinished"></translation>
+        <translation>変調システム (デフォルト : DVB-S2)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="487"/>
         <source>Symbol Rate (symbols/sec).
 Most DVB-S transponders transmit at 27.5 million symbols per second.</source>
-        <translation type="unfinished"></translation>
+        <translation>シンボルレート (シンボル / 秒 )。
+ほとんどの DVB-S トランスポンダーは 1 秒あたり 2750万シンボルで送信されます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="553"/>
         <source>Modulation, aka Constellation</source>
-        <translation type="unfinished"></translation>
+        <translation>変調 (位相)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/transporteditor.cpp" line="570"/>
         <source>QAM Auto</source>
-        <translation type="unfinished"></translation>
+        <translation>QAM 自動</translation>
     </message>
     <message>
         <source>Group</source>
@@ -21420,22 +21434,22 @@ Most DVB-S transponders transmit at 27.5 million symbols per second.</source>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="172"/>
         <source>Recorder Failed</source>
-        <translation type="unfinished"></translation>
+        <translation>レコーダー失敗</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="366"/>
         <source>SAP/Bilingual</source>
-        <translation type="unfinished"></translation>
+        <translation>SAP/2か国語</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="368"/>
         <source>Main Language</source>
-        <translation type="unfinished"></translation>
+        <translation>主言語</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="369"/>
         <source>SAP Language</source>
-        <translation type="unfinished"></translation>
+        <translation>SAP 言語</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="370"/>
@@ -21445,77 +21459,77 @@ Most DVB-S transponders transmit at 27.5 million symbols per second.</source>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="373"/>
         <source>Chooses the language(s) to record when two languages are broadcast. Only Layer II supports the recording of two languages (Dual).Requires ivtv 0.4.0 or later.</source>
-        <translation type="unfinished"></translation>
+        <translation>2か国語放送で記録する言語を選択します。レイヤー II のみが2つの言語（デュアル）の録画をサポートします。ivtv 0.4.0 以降が必要です。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="389"/>
         <source>Bitrate Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>ビットレート モード</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="394"/>
         <source>Bitrate mode</source>
-        <translation type="unfinished"></translation>
+        <translation>ビットレート モード</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="613"/>
         <source>Bitrate (kb/s)</source>
-        <translation type="unfinished"></translation>
+        <translation>ビットレート (kb/秒)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="615"/>
         <source>Bitrate in kilobits/second. As a guide, 2200 kb/s is approximately 1 GB/hr.</source>
-        <translation type="unfinished"></translation>
+        <translation>ビットレートをキロビット/秒で。2200Kbps でおよそ1時間あたり1GBになります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="629"/>
         <source>If set, the bitrate specified will be used for 640x480. If other resolutions are used, the bitrate will be scaled appropriately.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、指定したビットレートを 640x480 で使用します。 他の解像度が使用されている場合、ビットレートは適切にスケーリングされます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="687"/>
         <source>If set, the MPEG4 encoder will use interlaced DCT encoding. You may want this when encoding interlaced video; however, this is experimental and may cause damaged video.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、MPEG4 エンコーダーはインターレースDCTエンコードを使用します。インターレースビデオをエンコードする際に利用したいと思うかもしれませんが、これは実験的機能で動画を破損する恐れがあります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="703"/>
         <source>If set, the MPEG4 encoder will use interlaced motion estimation. You may want this when encoding interlaced video; however, this is experimental and may cause damaged video.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、MPEG4 エンコーダーはインターレース エスティメーションを使用します。インターレースビデオをエンコードする際に利用したいと思うかもしれませんが、これは実験的機能で動画を破損する恐れがあります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="719"/>
         <source>If set, the MPEG4 encoder will use &apos;high-quality&apos; encoding options. This requires much more processing, but can result in better video.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、MPEG4 エンコーダーは「高品質」エンコード設定を使用します。処理時間を要しますが、より良好な結果をえられます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="772"/>
         <source>Avg. Bitrate (kb/s)</source>
-        <translation type="unfinished"></translation>
+        <translation>平均ビットレート (kb/秒)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="775"/>
         <source>Average bitrate in kilobits/second. As a guide, 2200 kb/s is approximately 1 GB/hour.</source>
-        <translation type="unfinished"></translation>
+        <translation>平均ビットレートをキロビット/秒で。2200Kbps でおよそ1時間あたり1GBになります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="793"/>
         <source>Max. Bitrate (kb/s)</source>
-        <translation type="unfinished"></translation>
+        <translation>最大ビットレート (kb/秒)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="796"/>
         <source>Maximum bitrate in kilobits/second. As a guide, 2200 kb/s is approximately 1 GB/hour.</source>
-        <translation type="unfinished"></translation>
+        <translation>最大ビットレートをキロビット/秒で。2200Kbps でおよそ1時間あたり1GBになります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1186"/>
         <source>Automatically transcode when a recording is made using this profile and the recording&apos;s schedule is configured to allow transcoding.</source>
-        <translation type="unfinished"></translation>
+        <translation>このプロファイルを利用しトランスコードを許可する録画予約をした際、自動でトランスコードします。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1199"/>
         <source>Resize video while transcoding</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスコード時にリサイズを行います</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1274"/>
@@ -21525,133 +21539,133 @@ Most DVB-S transponders transmit at 27.5 million symbols per second.</source>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1304"/>
         <source>Width to use for encoding. Note: PVR-x50 cards may produce ghosting if this is not set to 720 or 768 for NTSC and PAL, respectively.</source>
-        <translation type="unfinished"></translation>
+        <translation>エンコードで利用する幅。メモ : PVR-x50 カードで NTSC と PAL にこの値を 720 か 768 かを指定しない場合、ゴーストを発生する可能性があります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1331"/>
         <source>Height to use for encoding. Note: PVR-x50 cards may produce ghosting if this is not set to 480 or 576 for NTSC and PAL, respectively.</source>
-        <translation type="unfinished"></translation>
+        <translation>エンコードで利用する幅。メモ : PVR-x50 カードで NTSC と PAL にこの値を 480 か 576 かを指定しない場合、ゴーストを発生する可能性があります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="267"/>
         <source>Listings grabber</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表グラバー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="495"/>
         <source>Logical Channel Number Offset</source>
-        <translation type="unfinished"></translation>
+        <translation>論理チャンネル番号オフセット</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="496"/>
         <source>The offset is added to each logical channel number found during a scan of a DVB video source. This makes it possible to give different video sources a non-overlapping range of channel numbers. Leave at 0 if you have only one video source or if the video sources do not have DVB logical channel numbers.</source>
-        <translation type="unfinished"></translation>
+        <translation>DVBビデオソースのスキャン中に検出された各論理チャネル番号にオフセットを追加します。これにより、さまざまなビデオソースに重複しない範囲のチャネル番号を割り当てることができます。ビデオソースが1つしかない場合、またはビデオソースに DVB 論理チャネル番号がない場合は、0のままにします。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="604"/>
         <source>Perform EIT scan</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表データスキャン実行</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="605"/>
         <source>If enabled, program guide data for channels on this source will be updated with data provided by the channels themselves &apos;Over-the-Air&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、このソースのチャンネルの番組表データを、チャンネル自体が提供するデータ「Over-the-Air」で更新します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="713"/>
         <source>Video Source Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオソース設定</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="917"/>
         <source>Device to read VBI (captions) from.</source>
-        <translation type="unfinished"></translation>
+        <translation>VBI (字幕) の読み込み元デバイス。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="992"/>
         <source>Specify the command to run, with any needed arguments.</source>
-        <translation type="unfinished"></translation>
+        <translation>実行するコマンドを引数とともに指定します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1005"/>
         <source>File path</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルパス</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1027"/>
         <source>Device to read audio from, if audio is separate from the video.</source>
-        <translation type="unfinished"></translation>
+        <translation>音声が映像と分離されている際の音声読み込み元デバイス。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1040"/>
         <source>Signal timeout (ms)</source>
-        <translation type="unfinished"></translation>
+        <translation>信号タイムアウト (ms)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1042"/>
         <source>Maximum time (in milliseconds) MythTV waits for a signal when scanning for channels.</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルスキャンの際に、MythTV が信号を待つ最大時間 (ミリ秒で)。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1065"/>
         <source>Tuning timeout (ms)</source>
-        <translation type="unfinished"></translation>
+        <translation>チューニングタイムアウト (msec)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1087"/>
         <source>Force audio sampling rate</source>
-        <translation type="unfinished"></translation>
+        <translation>強制オーディオサンプリングレート</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1089"/>
         <source>If non-zero, override the audio sampling rate in the recording profile when this card is used.  Use this if your capture card does not support all of the standard rates.</source>
-        <translation type="unfinished"></translation>
+        <translation>0以外を設定すると、録画プロファイルのオーディオサンプリングレートに優先して、このカードを利用する際にこの値を利用します。キャプチャーカードが標準の値をサポートしていない場合にここに設定して利用します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1191"/>
         <location filename="../libs/libmythtv/videosource.cpp" line="2831"/>
         <source>Delivery system</source>
-        <translation type="unfinished"></translation>
+        <translation>デリバリーシステム</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1193"/>
         <source>If your card supports more than one delivery system then you can select here the one that you want to use.</source>
-        <translation type="unfinished"></translation>
+        <translation>お使いのカードが複数のデリバリーシステムをサポートしている場合、どれを使うかをここで選択します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1205"/>
         <source>Identification string reported by the card. If the message &quot;Could not get card info...&quot; appears the card can be in use by another program.</source>
-        <translation type="unfinished"></translation>
+        <translation>カードが報告した識別子文字列。メッセージが「カード情報を取得できません...」となった場合、カードを別のプログラムから利用していると思われます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1218"/>
         <source>Wait for SEQ start header</source>
-        <translation type="unfinished"></translation>
+        <translation>SEQ スタートヘッダを待つ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1221"/>
         <source>If enabled, drop packets from the start of a DVB recording until a sequence start header is seen.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、シーケンス開始ヘッダーを見つけるまで、DVB のはじめからのパケットを破棄します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1236"/>
         <source>If enabled, only open the DVB card when required, leaving it free for other programs at other times.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、要求があった際に DVB カードをオープンし、それ以外の時間は別のプログラムが利用できるよう自由にしておきます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1248"/>
         <source>Use DVB card for active EIT scan</source>
-        <translation type="unfinished"></translation>
+        <translation>DVB カードを番組表データスキャンに利用する</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1263"/>
         <source>DVB tuning delay (ms)</source>
-        <translation type="unfinished"></translation>
+        <translation>DVB チューニング遅延 (ミリ秒)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1266"/>
         <source>Some Linux DVB drivers, in particular for the Hauppauge Nova-T, require that we slow down the tuning process by specifying a delay (in milliseconds).</source>
-        <translation type="unfinished"></translation>
+        <translation>特に Hauppauge Nova-T など、いくつかの Linux DVB ドライバーは、ここで設定する遅延分 (ミリ秒で) チューニング処理を遅らせる必要があります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1279"/>
@@ -21661,211 +21675,213 @@ Most DVB-S transponders transmit at 27.5 million symbols per second.</source>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1462"/>
         <source>Use HDHomeRun %1 (%2 %3)</source>
-        <translation type="unfinished"></translation>
+        <translation>HDHomeRun を使用 %1 (%2 %3)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1466"/>
         <source>If enabled, use tuners from this HDHomeRun device.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、この HDHOmeRun デバイスのチューナーを利用します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1588"/>
         <source>Device IP or ID of a VBox device. eg. &apos;192.168.1.100&apos; or &apos;vbox_3718&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>VBox デバイスのデバイスIP または ID。例 : 「192.168.1.100」または「vbox_3718」</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1618"/>
         <source>Number and type of the tuner to use. eg &apos;1-DVBT/T2&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>利用するチューナーの番号とタイプ。例 : 「1-DVBT/T2」。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1696"/>
         <source>Device IP or ID, tuner number and tuner type of available VBox devices.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効な VBox デバイスのデバイスIP または ID、チューナー番号とタイプ。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1798"/>
         <source>URL of M3U containing RTSP/RTP/UDP channel URLs.</source>
-        <translation type="unfinished"></translation>
+        <translation>RTSP・RTP・UDP チャンネル URL を含んだ M3U の URL。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2451"/>
         <source>V4L2 encoder devices (multirec capable)</source>
-        <translation type="unfinished"></translation>
+        <translation>V4L2 エンコーダーデバイス (複数録画可)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2729"/>
         <source>DVB-T/S/C, ATSC or ISDB-T tuner card</source>
-        <translation type="unfinished"></translation>
+        <translation>DVB-T/S/C、ATSC または ISDB-T チューナーカード</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2734"/>
         <source>V4L2 encoder</source>
-        <translation type="unfinished"></translation>
+        <translation>V4L2 エンコーダー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2736"/>
         <source>HD-PVR H.264 encoder</source>
-        <translation type="unfinished"></translation>
+        <translation>HD-PVR H.264 エンコーダー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2741"/>
         <source>HDHomeRun networked tuner</source>
-        <translation type="unfinished"></translation>
+        <translation>HDHomeRun ネットワークチューナー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2746"/>
         <source>Sat&gt;IP networked tuner</source>
-        <translation type="unfinished"></translation>
+        <translation>Sat&gt;IP ネットワークチューナー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2751"/>
         <source>V@Box TV Gateway networked tuner</source>
-        <translation type="unfinished"></translation>
+        <translation>V@Box テレビゲートウェー ネットワーク チューナー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2761"/>
         <source>Ceton Cablecard tuner</source>
-        <translation type="unfinished"></translation>
+        <translation>Ceton ケーブルカード チューナー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2765"/>
         <source>IPTV recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>IPTV レコーダー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2770"/>
         <source>Analog to MPEG-2 encoder card (PVR-150/250/350, etc)</source>
-        <translation type="unfinished"></translation>
+        <translation>アナログから MPEG-2 へのエンコーダーカード (PVR-150/250/350 他)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2772"/>
         <source>Analog to MJPEG encoder card (Matrox G200, DC10, etc)</source>
-        <translation type="unfinished"></translation>
+        <translation>アナログから MJPEG へのエンコーダーカード (Matrox G200, DC10 他)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2774"/>
         <source>Analog to MPEG-4 encoder (Plextor ConvertX USB, etc)</source>
-        <translation type="unfinished"></translation>
+        <translation>アナログから MPEG-4 へのエンコーダーカード (Plextor ConvertX USB 他)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2777"/>
         <source>Analog capture card</source>
-        <translation type="unfinished"></translation>
+        <translation>アナログ キャプチャーカード</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2787"/>
         <source>External (black box) recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>外部 (ブラックボックス) レコーダー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2798"/>
         <source>Input name</source>
-        <translation type="unfinished"></translation>
+        <translation>入力名</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2832"/>
         <source>This shows the delivery system (modulation), for instance DVB-T2, that you have selected when you configured the capture card. This must be the same as the modulation used by the video source. </source>
-        <translation type="unfinished"></translation>
+        <translation>これは、キャプチャカードを設定したときに選択した配信システム（変調）、たとえば DVB-T2 を示しています。これはビデオソースで使用する変調と同じでなくてはなりません。 </translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2847"/>
         <source>Display name</source>
-        <translation type="unfinished"></translation>
+        <translation>表示名</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2848"/>
         <source>This name is displayed on screen when Live TV begins and in various other places.  Make sure the last two characters are unique for each input.</source>
-        <translation type="unfinished"></translation>
+        <translation>この名前は放送中番組視聴開始時などいくつかの場所で画面に表示します。末尾2文字は各入力でユニークになるようにしてください。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2947"/>
         <source>Generic</source>
-        <translation type="unfinished"></translation>
+        <translation>汎用</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3968"/>
         <source>If there is more than one audio input, select which one to use.</source>
-        <translation type="unfinished"></translation>
+        <translation>1つ以上の音声入力が存在する場合、どれを使うかを選択します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1379"/>
         <source>800Mbps</source>
-        <translation type="unfinished"></translation>
+        <translation>800Mbps</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="640"/>
         <source>You MUST run &apos;mythfilldatabase --manual&apos; the first time,
 instead of just &apos;mythfilldatabase&apos;.
 Your grabber does not provide channel numbers, so you have to set them manually.</source>
-        <translation type="unfinished"></translation>
+        <translation>最初に「mythfilldatabase」のかわりに、
+「mythfilldatabase --manual」を実行しなくてはなりません。
+グラバーはチャンネル番号を提供しないため、手動で設定しなければなりません。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="677"/>
         <source>This will usually only work with ATSC or DVB channels, and generally provides data only for the next few days.</source>
-        <translation type="unfinished"></translation>
+        <translation>これは普通は ATSC か DVB のチャンネルでしか動作しません。一般的には今後数日分のデータのみが提供されます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1067"/>
         <source>Maximum time (in milliseconds) MythTV waits for a channel lock.  For recordings, if this time is exceeded, the recording will be marked as failed.</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV がチャンネルロックを待つ最大時間 (ミリ秒)。録画の際にこの時間をすぎると、録画に失敗とマークします。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1694"/>
         <source>Available devices</source>
-        <translation type="unfinished"></translation>
+        <translation>有効なデバイス</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1796"/>
         <source>M3U URL</source>
-        <translation type="unfinished"></translation>
+        <translation>M3U URL</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3028"/>
         <source>Use quick tuning</source>
-        <translation type="unfinished"></translation>
+        <translation>クイックチューニングを使用</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3029"/>
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>使わない</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3031"/>
         <source>Always</source>
-        <translation type="unfinished"></translation>
+        <translation>いつも使う</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="849"/>
         <source>Use &apos;mythfilldatabase&apos; or the name of a custom script that will populate the program guide info for all your video sources.</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのビデオソースで番組表情報を収集するのに使う、「mythfilldatabase」か自前のスクリプト名。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/checksetup.cpp" line="60"/>
         <location filename="../programs/mythtv-setup/checksetup.cpp" line="84"/>
         <source>No Storage Group directories are defined.  You must add at least one directory to the Default Storage Group where new recordings will be stored.</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージグループ ディレクトリーを定義していません。少なくとも、新しい録画を保存する１つのディレクトリーをデフォルト ストレージ グループに追加しなければなりません。</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programtypes.cpp" line="92"/>
         <source>Use Global Setting</source>
-        <translation type="unfinished"></translation>
+        <translation>全般設定を使用</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="155"/>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="204"/>
         <source>Port</source>
-        <translation type="unfinished"></translation>
+        <translation>ポート</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="1405"/>
         <source>The connection to the master backend server has gone away for some reason. Is it running?</source>
-        <translation type="unfinished"></translation>
+        <translation>接続していたマスターバックエンドサーバーから何らかの理由で接続を解除されました｡ 動作してますか？</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="1409"/>
         <source>Could not connect to the master backend server. Is it running?  Is the IP address set for it in mythtv-setup correct?</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンドサーバーに接続できません｡動作していますか？ mythtv-setup で IPアドレスを正しく設定していますか？</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/recordingtypes.cpp" line="243"/>
@@ -21875,111 +21891,111 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/cardutil.cpp" line="2298"/>
         <source>ERROR, Compile with V4L support to query inputs</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー、入力のクエリーを利用するには V4L サポート付きでコンパイルしてください</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/cardutil.cpp" line="2453"/>
         <location filename="../libs/libmythtv/cardutil.cpp" line="2486"/>
         <source>Could not open &apos;%1&apos; to probe its inputs.</source>
-        <translation type="unfinished"></translation>
+        <translation>入力の確認で「%1」を開けません。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/cardutil.cpp" line="2523"/>
         <source>ERROR, Compile with DVB support to query inputs</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー、入力のクエリーを利用するには DVB サポート付きでコンパイルしてください</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/cardutil.cpp" line="3047"/>
         <source>The VBox software version is too old (%1), we require %2</source>
-        <translation type="unfinished"></translation>
+        <translation>VBox ソフトウェア バージョンが古すぎ (%1) ます。%2 が必要です</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="295"/>
         <source>this rule does not match any showings in the current program listings.</source>
-        <translation type="unfinished"></translation>
+        <translation>このルールで現在の番組表データにマッチする番組はありません。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="1346"/>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="2218"/>
         <source> offset %2</source>
-        <translation type="unfinished"></translation>
+        <translation> オフセット %2</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_rec.cpp" line="3645"/>
         <source>On known multiplex...</source>
-        <translation type="unfinished"></translation>
+        <translation>既知の マルチプレックスで...</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="177"/>
         <source>Max recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>最大録画数</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1162"/>
         <location filename="../libs/libmythtv/videosource.cpp" line="1727"/>
         <location filename="../libs/libmythtv/videosource.cpp" line="1857"/>
         <source>Warning: already in use</source>
-        <translation type="unfinished"></translation>
+        <translation>警告 : すでに使用中</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1251"/>
         <source>If enabled, activate active scanning for program data (EIT). When this option is enabled the DVB card is constantly in use.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、アクティブ番組表データスキャンを有効にします。この設定を有効にすると、DVB カードを恒常的に使用します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1446"/>
         <source>Use HDHomeRun for active EIT scan</source>
-        <translation type="unfinished"></translation>
+        <translation>アクティブ番組表データスキャンに HDHomeRun を利用する</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1449"/>
         <source>If enabled, activate active scanning for program data (EIT). When this option is enabled the HDHomeRun is constantly in use.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、アクティブ番組表データスキャンを有効にします。この設定を有効にすると、HDHomeRun を恒常的に使用します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2903"/>
         <source>Leave as &apos;Generic&apos; unless this input is shared with another device. Only one of the inputs in an input group will be allowed to record at any given time.</source>
-        <translation type="unfinished"></translation>
+        <translation>この入力を別のデバイスと共有しない限り「汎用」のままにします。入力グループ内の1つの入力だけに、録画を許可します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3030"/>
         <source>Live TV only</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中視聴のみ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3136"/>
         <source>Schedule order</source>
-        <translation type="unfinished"></translation>
+        <translation>予約の並び</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3138"/>
         <source>If priorities and other factors are equal the scheduler will choose the available input with the lowest, non-zero value.  Setting this value to zero will make the input unavailable to the scheduler.</source>
-        <translation type="unfinished"></translation>
+        <translation>優先度と他の要因が等しい場合、スケジューラーは 0 以外の最小値で使用可能な入力を選択します。この値を 0 に設定すると、スケジューラーは入力を使用できなくなります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3153"/>
         <source>Live TV order</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中並び</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3155"/>
         <source>When entering Live TV, the available, local input with the lowest, non-zero value will be used.  If no local inputs are available, the available, remote input with the lowest, non-zero value will be used.  Setting this value to zero will make the input unavailable to live TV.</source>
-        <translation type="unfinished"></translation>
+        <translation>「放送中」に入る際、0 以外の最小値を持つ利用可能なローカル入力を使用します。 使用可能なローカル入力がない場合は、0 以外の最小値の使用可能なリモート入力が使用されます。 この値を 0 に設定すると、放送中で入力を使用できなくなります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3245"/>
         <source>Interactions between inputs</source>
-        <translation type="unfinished"></translation>
+        <translation>入力間の相互作用</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3258"/>
         <source>Create a New Input Group</source>
-        <translation type="unfinished"></translation>
+        <translation>新しい入力グループを作る</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="202"/>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>無視</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="203"/>
@@ -21998,7 +22014,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="206"/>
         <source>Interlaced (Reversed)</source>
-        <translation>インターレース(リバース)</translation>
+        <translation>インターレース (リバース)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="204"/>
@@ -22008,12 +22024,12 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="174"/>
         <source>Auto 3D</source>
-        <translation type="unfinished"></translation>
+        <translation>自動 3D</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="175"/>
         <source>Ignore 3D</source>
-        <translation type="unfinished"></translation>
+        <translation>3D を無視</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="228"/>
@@ -22028,7 +22044,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="247"/>
         <source>Black</source>
-        <translation>ブラック</translation>
+        <translation>黒</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="242"/>
@@ -22038,37 +22054,37 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="152"/>
         <source>Exact</source>
-        <translation type="unfinished"></translation>
+        <translation>厳格</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="176"/>
         <source>Discard 3D Side by Side</source>
-        <translation type="unfinished"></translation>
+        <translation>3D サイドバイサイドを破棄</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="177"/>
         <source>Discard 3D Top and Bottom</source>
-        <translation type="unfinished"></translation>
+        <translation>3D トップアンドボトムを破棄</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="204"/>
         <source>Progressive (Forced)</source>
-        <translation type="unfinished"></translation>
+        <translation>プログレッシブ (強制)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="205"/>
         <source>Interlaced (Forced)</source>
-        <translation type="unfinished"></translation>
+        <translation>インターレース (強制)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="206"/>
         <source>Interlaced (Reversed, Forced)</source>
-        <translation type="unfinished"></translation>
+        <translation>インターレース (リバース、強制)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="269"/>
         <source>Half</source>
-        <translation type="unfinished"></translation>
+        <translation>ハーフ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="270"/>
@@ -22078,31 +22094,31 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="273"/>
         <source>V.Fill</source>
-        <translation type="unfinished"></translation>
+        <translation>垂直方向にいっぱいに</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="274"/>
         <source>H.Fill</source>
-        <translation type="unfinished"></translation>
+        <translation>水平方向にいっぱいに</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="292"/>
         <source>Range</source>
-        <translation type="unfinished"></translation>
+        <translation>範囲</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="361"/>
         <source>Zoom %1x%2 @ (%3,%4)</source>
-        <translation type="unfinished"></translation>
+        <translation>ズーム %1x%2 @ (%3,%4)</translation>
     </message>
     <message>
         <source>Adult</source>
         <comment>Adult Movie</comment>
-        <translation>おとな</translation>
+        <translation>成人向け</translation>
     </message>
     <message>
         <source>Kids</source>
-        <translation>こども</translation>
+        <translation>子ども</translation>
     </message>
     <message>
         <source>Jazz</source>
@@ -22114,39 +22130,39 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Religion</source>
-        <translation>しゅうきょう</translation>
+        <translation>宗教</translation>
     </message>
     <message>
         <source>Cooking</source>
-        <translation>クッキング</translation>
+        <translation>料理</translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/filldata.cpp" line="182"/>
         <location filename="../programs/mythfilldatabase/main.cpp" line="295"/>
         <source>currently running.</source>
-        <translation type="unfinished"></translation>
+        <translation>現在実行中。</translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/filldata.cpp" line="211"/>
         <location filename="../programs/mythfilldatabase/filldata.cpp" line="734"/>
         <location filename="../programs/mythfilldatabase/main.cpp" line="344"/>
         <source>Successful.</source>
-        <translation type="unfinished"></translation>
+        <translation>成功。</translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/filldata.cpp" line="218"/>
         <source>FAILED: XMLTV grabber ran but was interrupted.</source>
-        <translation type="unfinished"></translation>
+        <translation>失敗 : XMLTV グラバーを実行しましたが中断されました。</translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/filldata.cpp" line="224"/>
         <source>FAILED: XMLTV grabber returned error code %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>失敗 : XMLTV グラバーがエラーコード %1 を返しました。</translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/filldata.cpp" line="725"/>
         <source>mythfilldatabase ran, but did not insert any new data into the Guide for %1 of %2 sources. This can indicate a potential grabber failure.</source>
-        <translation type="unfinished"></translation>
+        <translation>mythfilldatabase を実行しましたが、%2 の %1 ソースの番組表への新しいデータは追加されませんでした。これはグラバーの潜在的失敗の現象と思われます。</translation>
     </message>
     <message>
         <source>5.1</source>
@@ -22183,332 +22199,332 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="195"/>
         <source>IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>IP アドレス</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="404"/>
         <source>Delay between wake attempts (secs)</source>
-        <translation type="unfinished"></translation>
+        <translation>起動試行の間隔 (秒)</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="480"/>
         <source>Idle shutdown timeout (secs)</source>
-        <translation type="unfinished"></translation>
+        <translation>電源オフ待機のタイムアウト (秒)</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="527"/>
         <source>The command used to set the wakeup time (passed as $time) for the Master Backend</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンドを起動する時間 ($time として渡す) の設定コマンド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="157"/>
         <source>Unless you&apos;ve got good reason, don&apos;t change this.</source>
-        <translation type="unfinished"></translation>
+        <translation>特に理由がない場合は、変更しないでください。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="167"/>
         <source>Status port</source>
-        <translation type="unfinished"></translation>
+        <translation>ステータスポート</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="169"/>
         <source>Port on which the server will listen for HTTP requests, including backend status and MythXML requests.</source>
-        <translation type="unfinished"></translation>
+        <translation>サーバーがバックエンドステータスや MythXML リクエストなどの HTTP リクエストをリスンするポート。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="212"/>
         <source>Security PIN (required)</source>
-        <translation type="unfinished"></translation>
+        <translation>セキュリティー PIN (必須)</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="214"/>
         <source>PIN code required for a frontend to connect to the backend. Blank prevents all connections; 0000 allows any client to connect.</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドが接続するフロントエンドに要求する PIN コード。空白はすべての接続を防ぎ、0000 はすべてのクライアントの接続を許可します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="241"/>
         <source>The VBI (Vertical Blanking Interval) is used to carry Teletext or Closed Captioning data.</source>
-        <translation type="unfinished"></translation>
+        <translation>VBI (垂直帰線消去期間) はテレテキストやクローズド・キャプションデータを保持するのに利用されます。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="255"/>
         <source>Select the appropriate frequency table for your system. If you have an antenna, use a &quot;-bcast&quot; frequency.</source>
-        <translation type="unfinished"></translation>
+        <translation>お使いのシステムに適切な周波数テーブルを選択してください。アンテナをお持ちなら、「-bcast」周波数をお使いください。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="266"/>
         <source>If enabled and the transcoder is active, the original files will be renamed to .old once the transcoding is complete.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、トランスコーダーが有効になり、トランスコードが完了するごとに元のファイルは .old に変名されます。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="277"/>
         <source>Some filesystems use a lot of resources when deleting large files. If enabled, this option makes MythTV delete files slowly on this backend to lessen the impact.</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルシステムによっては、大きなファイルの削除に大量のリソースを使用するものがあります。有効にすると、この設定は MythTV のバックエンドによるファイル削除をゆっくりにすることで、衝撃をやわらげます。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="289"/>
         <source>If enabled, MythTV will follow symlinks when recordings and related files are deleted, instead of deleting the symlink and leaving the actual file.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、録画ファイルと関連ファイルの削除時にシンボリックリンクをたどります。無効の場合は、シンボリックリンクを削除するのみで、実際のファイルは削除されません。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="299"/>
         <source>HD ringbuffer size (kB)</source>
-        <translation type="unfinished"></translation>
+        <translation>HD リングバッファーサイズ (KB)</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="300"/>
         <source>The HD device ringbuffer allows the backend to weather moments of stress. The larger the ringbuffer (in kilobytes), the longer the moments of stress can be. However, setting the size too large can cause swapping, which is detrimental.</source>
-        <translation type="unfinished"></translation>
+        <translation>HDリングバッファによって瞬間的なストレスを緩衝できます。リングバッファ (キロバイトで) を大きくすると、長時間のストレスを許容しますが、大きすぎると有害なスワップを発生させます。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="313"/>
         <source>Storage Group disk scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージグループ ディスク スケジューラー</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="314"/>
         <source>Balanced free space</source>
-        <translation type="unfinished"></translation>
+        <translation>空き容量のバランスをとる</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="315"/>
         <source>Balanced percent free space</source>
-        <translation type="unfinished"></translation>
+        <translation>空き容量比率のバランスをとる</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="316"/>
         <source>Balanced disk I/O</source>
-        <translation type="unfinished"></translation>
+        <translation>ディスク I/O のバランスをとる</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="319"/>
         <source>This setting controls how the Storage Group scheduling code will balance new recordings across directories. &apos;Balanced Free Space&apos; is the recommended method for most users.</source>
-        <translation type="unfinished"></translation>
+        <translation>この設定は、ストレージグループのスケジュールコードが新たな録画にあたってどのようにディレクトリー間のバランスをとるかを制御します。「空き容量のバランスをとる」が多くのユーザーにおすすめです。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="329"/>
         <source>Disable automatic database backup</source>
-        <translation type="unfinished"></translation>
+        <translation>自動データベース バックアップを無効に</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="331"/>
         <source>If enabled, MythTV will not backup the database before upgrades. You should therefore have your own database backup strategy in place.</source>
-        <translation type="unfinished"></translation>
+        <translation>設定すると、MythTV はアップグレード前のデータベース バックアップを行いません。ご自身によるデータベース バックアップ戦略を立てる必要があります。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="341"/>
         <source>Disable FireWire reset</source>
-        <translation type="unfinished"></translation>
+        <translation>FireWire リセットを無効に</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="355"/>
         <source>Miscellaneous status application</source>
-        <translation type="unfinished"></translation>
+        <translation>その他のステータスアプリケーション</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="357"/>
         <source>External application or script that outputs extra information for inclusion in the backend status page. See http://www.mythtv.org/wiki/Miscellaneous_Status_Information</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドのステータスページに内包する追加情報を出力する外部アプリケーション、スクリプト。参照先 : http://www.mythtv.org/wiki/Miscellaneous_Status_Information</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="367"/>
         <source>EIT transport timeout (mins)</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表データ転送タイムアウト (分)</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="369"/>
         <source>Maximum time to spend waiting (in minutes) for listings data on one digital TV channel before checking for new listings data on the next channel.</source>
-        <translation type="unfinished"></translation>
+        <translation>1 つのデジタル テレビ チャンネルでの番組表データ取得の際、次のチャンネルのデータに移る前に待機する最大時間 (分で)。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="380"/>
         <source>Master backend override</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンドオーバーライド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="382"/>
         <source>If enabled, the master backend will stream and delete files if it finds them in a storage directory. Useful if you are using a central storage location, like a NFS share, and your slave backend isn&apos;t running.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、マスターバックエンドがファイルをストレージディレクトリーで見付けた際、ストリームと削除をできるようにします。NFS 共有のような保存場所の集中管理を使用していて、かつスレーブバックエンドを実行させていない場合に有効です。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="392"/>
         <source>Backend idle before EIT crawl (secs)</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表スキャン前のバックエンドの待機時間 (秒)</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="406"/>
         <source>Length of time the frontend waits between tries to wake up the master backend. This should be the time your master backend needs to startup. Set to 0 to disable.</source>
-        <translation type="unfinished"></translation>
+        <translation>フロントエンドがマスターバックエンドの起動を試行する間隔。これはマスターバックエンドの起動に要する時間となります。0 で無効に。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="416"/>
         <source>Wake attempts</source>
-        <translation type="unfinished"></translation>
+        <translation>起動試行回数</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="436"/>
         <source>Sleep command</source>
-        <translation type="unfinished"></translation>
+        <translation>スリープコマンド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="449"/>
         <source>The command used to wake up this slave from sleep. This setting is not used on the master backend.</source>
-        <translation type="unfinished"></translation>
+        <translation>このスレーブをスリープから起動するのに使用するコマンド。この設定はマスターバックエンドには使用しません。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="458"/>
         <source>Backend stop command</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンド停止コマンド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="460"/>
         <source>The command used to stop the backend when running on the master backend server (e.g. sudo /etc/init.d/mythtv-backend stop)</source>
-        <translation type="unfinished"></translation>
+        <translation>実行中のマスターバックエンドサーバーで、バックエンドを停止するコマンド (例 : /etc/init.d/mythtv-backend stop ) 。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="469"/>
         <source>Backend start command</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンド起動コマンド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="471"/>
         <source>The command used to start the backend when running on the master backend server (e.g. sudo /etc/init.d/mythtv-backend start).</source>
-        <translation type="unfinished"></translation>
+        <translation>実行中のマスターバックエンドサーバーで、バックエンドを起動するコマンド (例 : /etc/init.d/mythtv-backend start )。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="482"/>
         <source>The number of seconds the master backend idles before it shuts down all other backends. Set to 0 to disable automatic shutdown.</source>
-        <translation type="unfinished"></translation>
+        <translation>他のバックエンドの電源オフまでにマスターバックエンドが待機する秒数。自動電源オフを無効にするには 0 を設定します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="491"/>
         <source>Maximum wait for recording (mins)</source>
-        <translation type="unfinished"></translation>
+        <translation>最大録画待ち時間(分)</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="503"/>
         <source>Startup before recording (secs)</source>
-        <translation type="unfinished"></translation>
+        <translation>録画前起動時間(秒)</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="505"/>
         <source>The number of seconds the master backend will be woken up before a recording starts.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画開始の何秒前にマスターバックエンドを起動するかを指定します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="515"/>
         <source>The format of the time string passed to the &apos;Command to set wakeup time&apos; as $time. See QT::QDateTime.toString() for details. Set to &apos;time_t&apos; for seconds since epoch.</source>
-        <translation type="unfinished"></translation>
+        <translation>「起動時間設定コマンド」に $time として渡す、時間文字列の書式。詳細は QT::QDateTime.toString() を参照。エポック秒は「time_t」を設定します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="525"/>
         <source>Command to set wakeup time</source>
-        <translation type="unfinished"></translation>
+        <translation>起動時間設定コマンド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="544"/>
         <source>Pre-shutdown-check command</source>
-        <translation type="unfinished"></translation>
+        <translation>シャットダウン前のチェックコマンド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="559"/>
         <source>If enabled, the automatic shutdown routine will be disabled until a client connects.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、クライアントが接続中は自動電源オフは無効になります。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="589"/>
         <source>Job Queue check frequency (secs)</source>
-        <translation type="unfinished"></translation>
+        <translation>ジョブキュー監視間隔 (秒)</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="590"/>
         <source>When looking for new jobs to process, the Job Queue will wait this many seconds between checks.</source>
-        <translation type="unfinished"></translation>
+        <translation>処理すべき新しいジョブを検索してから、ジョブキューは次のチェックまでこの秒数待機します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="599"/>
         <source>CPU usage</source>
-        <translation>CPU使用</translation>
+        <translation>CPU使用量</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="603"/>
         <source>This setting controls approximately how much CPU jobs in the queue may consume. On &apos;High&apos;, all available CPU time may be used, which could cause problems on slower systems.</source>
-        <translation type="unfinished"></translation>
+        <translation>この設定でキューのジョブに どの程度 CPU を使用するかのおおよその制御をします。「高」では、すべてのCPU時間を使うため、遅いシステムでは問題を引き起こす可能性があります。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="613"/>
         <source>Job Queue start time</source>
-        <translation type="unfinished"></translation>
+        <translation>ジョブキュー開始時間</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="614"/>
         <source>This setting controls the start of the Job Queue time window, which determines when new jobs will be started.</source>
-        <translation type="unfinished"></translation>
+        <translation>この設定で、新しいジョブをいつ開始するかを決定するジョブキュー時間ウィンドウの開始を制御します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="623"/>
         <source>Job Queue end time</source>
-        <translation type="unfinished"></translation>
+        <translation>ジョブキュー終了時間</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="624"/>
         <source>This setting controls the end of the Job Queue time window, which determines when new jobs will be started.</source>
-        <translation type="unfinished"></translation>
+        <translation>この設定で、新しいジョブをいつ開始するかを決定するジョブキュー時間ウィンドウの終了を制御します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="633"/>
         <source>Run jobs only on original recording backend</source>
-        <translation type="unfinished"></translation>
+        <translation>オリジナルを録画したバックエンドでのみジョブを実行</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="635"/>
         <source>If enabled, jobs in the queue will be required to run on the backend that made the original recording.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、キューのジョブを元の録画を行ったバックエンド上でのみ実行します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="644"/>
         <source>Run transcode jobs before auto commercial detection</source>
-        <translation type="unfinished"></translation>
+        <translation>自動CM検出の前にトランスコードジョブを実行</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="647"/>
         <source>If enabled, and if both auto-transcode and commercial detection are turned ON for a recording, transcoding will run first; otherwise, commercial detection runs first.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、自動トランスコードとCM検出の両方が ON になっている録画について、先にCM検出する設定になっていたとしても、トランスコードを最初に実行します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="657"/>
         <source>Start auto-commercial-detection jobs when the recording starts</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の開始時に自動CM検出ジョブを開始</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="660"/>
         <source>If enabled, and Auto Commercial Detection is ON for a recording, the flagging job will be started as soon as the recording starts. NOT recommended on underpowered systems.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、録画で自動CM検出が ON のときに、録画開始してすぐに検出ジョブを開始します。非力なシステムではおすすめしません。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="670"/>
         <source>User Job #%1 command</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ #%1 コマンド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="681"/>
         <source>User Job #%1 description</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ #%1 の説明</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="682"/>
         <source>User Job #%1</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ #%1</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="683"/>
         <source>The description for this User Job.</source>
-        <translation type="unfinished"></translation>
+        <translation>このユーザージョブの説明。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="700"/>
         <source>Allow commercial-detection jobs</source>
-        <translation type="unfinished"></translation>
+        <translation>CM検知ジョブを許可</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="692"/>
@@ -22517,42 +22533,42 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="722"/>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="764"/>
         <source>If enabled, allow jobs of this type to run on this backend.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、このバックエンドでこのタイプのジョブの実行を許可します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="493"/>
         <source>The number of minutes the master backend waits for a recording. If the backend is idle but a recording starts within this time period, it won&apos;t shut down.</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンドが録画を待つ分数。もしバックエンドが待機中でこの時間内に録画が始まる場合、電源オフしません。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="690"/>
         <source>Allow metadata lookup jobs</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ検索ジョブを許可</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="710"/>
         <source>Allow transcoding jobs</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスコードジョブを許可</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="740"/>
         <source>Commercial-detection command</source>
-        <translation type="unfinished"></translation>
+        <translation>CM検出コマンド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="742"/>
         <source>The program used to detect commercials in a recording. The default is &apos;mythcommflag&apos; if this setting is empty.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画内の CM を検出するのに利用するコマンド。この設定が空の場合は、デフォルトの「mythcommflag」です。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="752"/>
         <source>Allow %1 jobs</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ジョブを許可</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="773"/>
         <source>Include recordings in video list</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオリストに録画を含める</translation>
     </message>
     <message>
         <source>Maximum number of entries per module</source>
@@ -22661,137 +22677,137 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="973"/>
         <source>Master Backend</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="923"/>
         <source>Locale Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>地域設定</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="15"/>
         <source>This server is the Master Backend</source>
-        <translation type="unfinished"></translation>
+        <translation>このサーバーはマスターバックエンド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="17"/>
         <source>Enable this if this is the only backend or is the master backend server. If enabled, all frontend and non-master backend machines will connect to this server. To change to a new master backend, run setup on that server and select it as master backend.</source>
-        <translation type="unfinished"></translation>
+        <translation>これが唯一のバックエンドか、マスターバックエンドサーバーかの場合は有効にします。有効にすると、すべてのフロントエンドと非マスターバックエンドのマシンはこのサーバーに接続します。新しいマスターバックエンドに変更するには、該当のサーバーで setup を実行し、自身をマスターバックエンドとして選択します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="30"/>
         <source>Master Backend Name</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンド名</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="34"/>
         <source>Host name of Master Backend. This is set by selecting &quot;This server is the Master Backend&quot; on that server.</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンドのホスト名。サーバーで「このサーバーはマスターバックエンド」を選択すると設定されます。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="43"/>
         <source>Allow Connections from all Subnets</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのサブネットからの接続を許可</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="45"/>
         <source>Allow this backend to receive connections from any IP address on the internet. NOT recommended for most users. Use this only if you have secure IPV4 and IPV6 firewalls.</source>
-        <translation type="unfinished"></translation>
+        <translation>このバックエンドはインターネットのあらゆる IP アドレスからの接続を受信することを許可します。多くのユーザーにはおすすめしません。セキュアな IPV4・IPV6 ファイアーウォールをもっているユーザーだけがお使いください。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="55"/>
         <source>IPv4 address</source>
-        <translation type="unfinished"></translation>
+        <translation>IPv4アドレス</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="65"/>
         <source>Enter the IP address of this machine. Use an externally accessible address (ie, not 127.0.0.1) if you are going to be running a frontend on a different machine than this one. Note, in IPv6 setups, this is still required for certain extras such as UPnP.</source>
-        <translation type="unfinished"></translation>
+        <translation>このマシンの IP アドレスを入力してください。このマシンとは別のマシンでフロントエンドを実行するには、外部からアクセスできるアドレス (例 : 127.0.0.1 以外) を設定します。メモ : IPv6 設定においても、この設定は UPnP といった周辺機器から引き続き要求されます。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="77"/>
         <source>Listen on IPv6 address</source>
-        <translation type="unfinished"></translation>
+        <translation>IPv6 アドレスをリスンする</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="102"/>
         <source>Enter the IPv6 address of this machine. Use an externally accessible address (ie, not ::1) if you are going to be running a frontend on a different machine than this one.</source>
-        <translation type="unfinished"></translation>
+        <translation>このマシンの IPv6 アドレスを入力してください。このマシンとは別のマシンでフロントエンドを実行するには、外部からアクセスできるアドレス (例 : ::1 以外) を設定します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="112"/>
         <source>Listen on Link-Local addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Link-Loca アドレスをリスンする</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="114"/>
         <source>Enable servers on this machine to listen on link-local addresses. These are auto-configured addresses and not accessible outside the local network. This must be enabled for anything requiring Bonjour to work.</source>
-        <translation type="unfinished"></translation>
+        <translation>このマシンのサーバーで link-local アドレスでのリスンを有効にします。自動設定アドレスがあり、LAN の外からは接続できません。Bonjour を動作させる必要がある場合は、これを有効にしなければなりません。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="178"/>
         <source>Primary IP address / DNS name</source>
-        <translation type="unfinished"></translation>
+        <translation>プライマリー IP アドレス / DNS 名</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="180"/>
         <source>The Primary IP address of this backend server. You can select an IP address from the list or type a DNS name or host name. Other systems will contact this server using this address. If you use a host name make sure it is assigned an ip address other than 127.0.0.1 in the hosts file.</source>
-        <translation type="unfinished"></translation>
+        <translation>このバックエンドサーバーの プライマリー IP アドレス。リストから IP アドレスを選ぶことも、DNS 名または ホスト名を入力することもできます。別のシステムからこのサーバーに接続する際にこのアドレスを使います。ホスト名を利用する場合、host ファイルの IP アドレスに 127.0.0.1 以外の IP アドレスを割り当ててあることを確認してください。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="343"/>
         <source>By default, MythTV resets the FireWire bus when a FireWire recorder stops responding to commands. If this causes problems, you can disable this behavior here.</source>
-        <translation type="unfinished"></translation>
+        <translation>デフォルトでは、FireWire レコーダーがコマンドへの応答を停止した際に、MythTV は FireWire バスをリセットします。これが問題を引き起こす場合は、この振る舞いをここで無効にすることができます。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="428"/>
         <source>The command used to wake up your master backend server (e.g. wakeonlan 00:00:00:00:00:00).</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンドサーバーを起動するのに使うコマンド (例 : wakeonlan 00:00:00:00:00:00 )。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="720"/>
         <source>Allow preview jobs</source>
-        <translation type="unfinished"></translation>
+        <translation>プレビュージョブを許可</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="786"/>
         <source>Video content to show a WMP client</source>
-        <translation type="unfinished"></translation>
+        <translation>WMP クライアントに表示するビデオコンテンツ</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="837"/>
         <source>If enabled, allow a guide data provider to specify the next download time in order to distribute load on their servers. Guide data program execution start/end times are also ignored.</source>
-        <translation type="unfinished"></translation>
+        <translation>有効にすると、番組表データ提供者に、提供者のサーバー負荷分散のため、次回ダウンロード時間を指定することを許可します。番組表データプログラムの実行開始・終了時間は無視します。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="930"/>
         <source>Miscellaneous Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>その他設定</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="933"/>
         <source>File Management Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル管理設定</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="970"/>
         <source>Backend Wakeup settings</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンド起動設定</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="980"/>
         <source>Slave Backends</source>
-        <translation type="unfinished"></translation>
+        <translation>スレーブバックエンド</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="993"/>
         <source>Job Queue (Backend-Specific)</source>
-        <translation type="unfinished"></translation>
+        <translation>ジョブキュー (バックエンド固有)</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="941"/>
         <source>UPnP Server Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>UPnP サーバー設定</translation>
     </message>
     <message>
         <source>Tuner %1 is recording:
@@ -22805,7 +22821,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Date Format</source>
-        <translation>日付の書式</translation>
+        <translation>日付書式</translation>
     </message>
     <message>
         <source>Searching</source>
@@ -22814,27 +22830,27 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/cardutil.cpp" line="2329"/>
         <source>ERROR, Compile with V4L support to query audio inputs</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー、音声入力のクエリーを利用するには V4L サポート付きでコンパルしてください</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="268"/>
         <source>Updated Channel %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 チャンネル更新</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="292"/>
         <source>Added Channel %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 チャンネル追加</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="293"/>
         <source>Failed to add channel %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 チャンネルの追加に失敗</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="680"/>
         <source>Program %1 Testing Decryption</source>
-        <translation type="unfinished"></translation>
+        <translation>番組 %1 復号化テスト中</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="1009"/>
@@ -22844,53 +22860,53 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="1010"/>
         <source>Unknown decryption status</source>
-        <translation type="unfinished"></translation>
+        <translation>不明な復号ステータス</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="1012"/>
         <source>Encrypted</source>
-        <translation type="unfinished"></translation>
+        <translation>暗号化</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="1014"/>
         <source>Decrypted</source>
-        <translation type="unfinished"></translation>
+        <translation>復号化</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="1051"/>
         <source>%1 -- Timed out</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 -- タイムアウト</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="1107"/>
         <source>%1 possible channels</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 個のチャンネル候補</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="1108"/>
         <source>no channels</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルなし</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="1119"/>
         <source>%1, no signal</source>
-        <translation type="unfinished"></translation>
+        <translation>%1、信号なし</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="1124"/>
         <source>%1 -- Found %2 probable channels</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 -- %2 個のチャンネル候補</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="2222"/>
         <source>ScanTransport Tuning to %1 mplexid(%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスポートスキャン %1 mplexid (%2) にチューニング中</translation>
     </message>
     <message numerus="yes">
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="2236"/>
         <source>Found %n</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 件発見</numerusform>
         </translation>
     </message>
     <message>
@@ -22901,16 +22917,16 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="2671"/>
         <source>as</source>
-        <translation type="unfinished"></translation>
+        <translation>-</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/channelscan_sm.cpp" line="2676"/>
         <source>Skipping %1, not in imported channel map</source>
-        <translation type="unfinished"></translation>
+        <translation>インポートしたチャンネルマップにない %1 をスキップ</translation>
     </message>
     <message>
         <source>Error tuning to transport</source>
-        <translation>トランスポートチューニングエラー</translation>
+        <translation>トランスポート チューニングエラー</translation>
     </message>
     <message>
         <source>Failed to open &apos;%1&apos;</source>
@@ -22919,22 +22935,22 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="76"/>
         <source>New Zealand</source>
-        <translation type="unfinished"></translation>
+        <translation>ニュージーランド</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programtypes.cpp" line="107"/>
         <source>Blank Frame + Logo Detection</source>
-        <translation type="unfinished"></translation>
+        <translation>ブランクフレーム + ロゴ検出</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programtypes.cpp" line="109"/>
         <source>Scene Change + Logo Detection</source>
-        <translation type="unfinished"></translation>
+        <translation>場面変更 + ロゴ検出</translation>
     </message>
     <message>
         <source>UNKNOWN</source>
         <comment>Synthesized callsign</comment>
-        <translation>不明</translation>
+        <translation>UNKNOWN</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recorders/dtvsignalmonitor.cpp" line="46"/>
@@ -22945,7 +22961,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../libs/libmythtv/recorders/dtvsignalmonitor.cpp" line="51"/>
         <location filename="../libs/libmythtv/recorders/dtvsignalmonitor.cpp" line="52"/>
         <source>Seen</source>
-        <translation type="unfinished"></translation>
+        <translation>検出</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recorders/dtvsignalmonitor.cpp" line="53"/>
@@ -22956,26 +22972,26 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../libs/libmythtv/recorders/dtvsignalmonitor.cpp" line="58"/>
         <location filename="../libs/libmythtv/recorders/dtvsignalmonitor.cpp" line="59"/>
         <source>Matching</source>
-        <translation type="unfinished"></translation>
+        <translation>照合中</translation>
     </message>
     <message>
         <source>Signal To Noise</source>
-        <translation>シグナル to ノイズ</translation>
+        <translation>SN比</translation>
     </message>
     <message numerus="yes">
         <location filename="../libs/libmyth/programinfo.cpp" line="1714"/>
         <location filename="../libs/libmyth/programinfo.cpp" line="1718"/>
         <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 時間</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../libs/libmyth/programinfo.cpp" line="1703"/>
         <location filename="../libs/libmyth/programinfo.cpp" line="1712"/>
         <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 分</numerusform>
         </translation>
     </message>
     <message>
@@ -22991,45 +23007,45 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../libs/libmyth/programinfo.cpp" line="1696"/>
         <source>%1 GB</source>
         <comment>GigaBytes</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 GB</translation>
     </message>
     <message numerus="yes">
         <location filename="../libs/libmyth/programinfo.cpp" line="1830"/>
         <source>%n star(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>☆ %n</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="1870"/>
         <source>DVD</source>
-        <translation type="unfinished">DVD</translation>
+        <translation>DVD</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="1874"/>
         <source>HTTP Streaming</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP ストリーミング</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="1878"/>
         <source>RTSP Streaming</source>
-        <translation type="unfinished"></translation>
+        <translation>RTSP ストリーミング</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="1882"/>
         <source>Blu-ray Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray ディスク</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="1887"/>
         <source>Recording</source>
         <comment>Recorded file, object not action</comment>
-        <translation type="unfinished">録画中</translation>
+        <translation>録画</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="3223"/>
         <source>File transfer</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル転送</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="3227"/>
@@ -23039,7 +23055,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="3231"/>
         <source>Preview Generation</source>
-        <translation type="unfinished"></translation>
+        <translation>プレビュー生成</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="3233"/>
@@ -23050,7 +23066,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../libs/libmyth/programinfo.cpp" line="5304"/>
         <source>Default</source>
         <comment>Recording Profile Default</comment>
-        <translation>既定値</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5305"/>
@@ -23086,31 +23102,31 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../libs/libmyth/programinfo.cpp" line="5310"/>
         <source>RTjpeg/MPEG-4</source>
         <comment>Recording Profile RTjpeg/MPEG-4</comment>
-        <translation>RTjpeg/MPEG-4</translation>
+        <translation>RTjpeg・MPEG-4</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5332"/>
         <source>Software Encoders (V4L based)</source>
         <comment>Recording Profile Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>ソフトウェアエンコード (V4Lベース)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5336"/>
         <source>USB MPEG-4 Encoder (Plextor ConvertX, etc)</source>
         <comment>Recording Profile Group Name</comment>
-        <translation>USB MPEG-4エンコーダーボックス (Plextor ConvertX, etc)</translation>
+        <translation>USB MPEG-4 エンコーダー (Plextor ConvertX 等)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5338"/>
         <source>V4L2 Encoders</source>
         <comment>Recording Profile Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>V4L2 エンコーダー</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5343"/>
         <source>All</source>
         <comment>Recording Group All Programs -- short form</comment>
-        <translation>全て</translation>
+        <translation>すべて</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5344"/>
@@ -23122,7 +23138,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../libs/libmyth/programinfo.cpp" line="5349"/>
         <source>All Programs - %1</source>
         <comment>Show all programs from a specific recording group</comment>
-        <translation type="unfinished"></translation>
+        <translation>全番組 - %1</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5354"/>
@@ -23134,55 +23150,55 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../libs/libmyth/programinfo.cpp" line="5314"/>
         <source>CRC IP Recorders</source>
         <comment>Recording Profile Group Name</comment>
-        <translation></translation>
+        <translation>CRC IP レコーダー</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5316"/>
         <source>FireWire Input</source>
         <comment>Recording Profile Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>FireWire 入力</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5318"/>
         <source>Freebox Input</source>
         <comment>Recording Profile Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>Freebox 入力</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5320"/>
         <source>Hardware DVB Encoders</source>
         <comment>Recording Profile Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア DVB エンコーダー</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5322"/>
         <source>Hardware HDTV</source>
         <comment>Recording Profile Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア HDTV</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5324"/>
         <source>Hardware MJPEG Encoders (Matrox G200-TV, Miro DC10, etc)</source>
         <comment>Recording Profile Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア MJPEG エンコーダー (Matrox G200-TV、Miro DC10 等)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5326"/>
         <source>HD-PVR Recorders</source>
         <comment>Recording Profile Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>HD-PVR レコーダー</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5328"/>
         <source>HDHomeRun Recorders</source>
         <comment>Recording Profile Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>HDHomeRun レコーダー</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5330"/>
         <source>MPEG-2 Encoders (PVR-x50, PVR-500)</source>
         <comment>Recording Profile Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>MPEG-2 エンコーダー (PVR-x50、PVR-500)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5334"/>
@@ -23205,19 +23221,19 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../libs/libmyth/programinfo.cpp" line="5345"/>
         <source>Default</source>
         <comment>Recording Group Default</comment>
-        <translation>既定値</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5346"/>
         <source>Deleted</source>
         <comment>Recording Group Deleted</comment>
-        <translation>デリート</translation>
+        <translation>削除済み</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5353"/>
         <source>Default</source>
         <comment>Storage Group Name</comment>
-        <translation>既定値</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <source>LiveTV</source>
@@ -23228,46 +23244,46 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../libs/libmyth/programinfo.cpp" line="5355"/>
         <source>Thumbnails</source>
         <comment>Storage Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>サムネール</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5356"/>
         <source>DB Backups</source>
         <comment>Storage Group Name</comment>
-        <translation type="unfinished"></translation>
+        <translation>DB バックアップ</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="5359"/>
         <source>Default</source>
         <comment>Playback Group Name</comment>
-        <translation>既定値</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <source>MPEG-4 AVC Hardware Encoder</source>
-        <translation>MPEG-2 AVCハードウェアエンコーダ</translation>
+        <translation>MPEG-2 AVC ハードウェアエンコーダ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="952"/>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1042"/>
         <source>Low Resolution</source>
-        <translation>低 レゾリューション</translation>
+        <translation>低解像度</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="960"/>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1051"/>
         <source>Medium Resolution</source>
-        <translation type="unfinished"></translation>
+        <translation>中解像度</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="968"/>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1060"/>
         <source>High Resolution</source>
-        <translation>高レゾリューション</translation>
+        <translation>高解像度</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tvremoteutil.cpp" line="464"/>
         <source>Error querying recorder state</source>
-        <translation type="unfinished"></translation>
+        <translation>レコーダーステータスのクエリー中にエラー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/frequencytablesetting.cpp" line="70"/>
@@ -23277,12 +23293,12 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/tv.cpp" line="79"/>
         <source>Auto-Skip OFF</source>
-        <translation>自動スキップ・オン</translation>
+        <translation>自動スキップ OFF</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv.cpp" line="80"/>
         <source>Auto-Skip ON</source>
-        <translation>自動スキップ・オフ</translation>
+        <translation>自動スキップ ON</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv.cpp" line="81"/>
@@ -23312,22 +23328,22 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <source>Normal</source>
         <comment>Sample: average quality</comment>
-        <translation>ノーマル</translation>
+        <translation>普通</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="697"/>
         <source>Do not configure a grabber</source>
-        <translation type="unfinished"></translation>
+        <translation>グラバーを設定しないでください</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="276"/>
         <source>Transmitted guide only (EIT)</source>
-        <translation type="unfinished"></translation>
+        <translation>転送された番組表のみ (EIT)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="278"/>
         <source>No grabber</source>
-        <translation type="unfinished"></translation>
+        <translation>グラバーなし</translation>
     </message>
     <message>
         <source>Loading...</source>
@@ -23336,17 +23352,17 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3967"/>
         <source>Audio input</source>
-        <translation type="unfinished"></translation>
+        <translation>自動入力</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/httpstatus.cpp" line="414"/>
         <source>master</source>
-        <translation type="unfinished"></translation>
+        <translation>マスター</translation>
     </message>
     <message>
         <location filename="../programs/mythtranscode/transcode.cpp" line="1515"/>
         <source>%1% Completed @ %2 fps.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 % 完了 @ %2 fps。</translation>
     </message>
     <message>
         <source>Queued</source>
@@ -23355,7 +23371,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="143"/>
         <source>Pending</source>
-        <translation>保留中</translation>
+        <translation>保留</translation>
     </message>
     <message>
         <source>Starting</source>
@@ -23367,7 +23383,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Paused</source>
-        <translation>一時停止中</translation>
+        <translation>一時停止</translation>
     </message>
     <message>
         <source>Retrying</source>
@@ -23383,7 +23399,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Done (Invalid status!)</source>
-        <translation>終了 (無効なステータス)</translation>
+        <translation>終了 (無効なステータス！)</translation>
     </message>
     <message>
         <source>Finished</source>
@@ -23391,7 +23407,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Errored</source>
-        <translation>エラー発生</translation>
+        <translation>エラー</translation>
     </message>
     <message>
         <source>Cancelled</source>
@@ -23404,7 +23420,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../programs/mythfilldatabase/main.cpp" line="338"/>
         <source>mythfilldatabase ran, but did not insert any new data into the Guide.  This can indicate a potential problem with the XML file used for the update.</source>
-        <translation type="unfinished"></translation>
+        <translation>mythfilldatabase を実行しましたが、番組表への新しいデータは追加されませんでした。これは更新に利用した XML ファイルの潜在的問題の現象と思われます。</translation>
     </message>
     <message>
         <source>LPCM</source>
@@ -23416,11 +23432,11 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Good</source>
-        <translation>グッド</translation>
+        <translation>良好</translation>
     </message>
     <message>
         <source>Best</source>
-        <translation>ベスト</translation>
+        <translation>最高</translation>
     </message>
     <message>
         <source>DTS</source>
@@ -23429,11 +23445,11 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="151"/>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>無効</translation>
     </message>
     <message>
         <source>Mixer device</source>
-        <translation>ミキサーデバイス</translation>
+        <translation>ミキサー デバイス</translation>
     </message>
     <message>
         <source>Mixer controls</source>
@@ -23441,15 +23457,15 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Master mixer volume</source>
-        <translation>マスターミキサーボリューム</translation>
+        <translation>マスター ミキサー音量</translation>
     </message>
     <message>
         <source>PCM mixer volume</source>
-        <translation>PCMミキサーボリューム</translation>
+        <translation>PCM ミキサー音量</translation>
     </message>
     <message>
         <source>Initial volume for PCM output. Using the volume keys in MythTV will adjust this parameter.</source>
-        <translation>PCMミキサーボリュームの初期値。MythTVのボリュームキーはこの値を調整します。</translation>
+        <translation>PCM 出力の初期音量。MythTV の音量キーで、このパラメーターを調整します。</translation>
     </message>
     <message>
         <source>PIP video location</source>
@@ -23465,15 +23481,15 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>This is the default value used for the automatic commercial detection setting when a new scheduled recording is created.</source>
-        <translation>新しい予約に使用する自動CMマークの初期値です。</translation>
+        <translation>新しく録画予約を作成した際に使用する自動CM検出のデフォルト値です。</translation>
     </message>
     <message>
         <source>This is the default value used for the automatic-transcode setting when a new scheduled recording is created.</source>
-        <translation>新しい予約に使用する自動CMマークの初期値です。</translation>
+        <translation>新しく録画予約を作成した際に使用する自動トランスコードのデフォルト値です。</translation>
     </message>
     <message>
         <source>Default transcoder</source>
-        <translation>規定のトランスコーダー</translation>
+        <translation>デフォルト トランスコーダー</translation>
     </message>
     <message>
         <source>Strict commercial detection</source>
@@ -23481,7 +23497,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Enable stricter commercial detection code. Disable if some commercials are not being detected.</source>
-        <translation>厳密なCM検出を行います。検出させないCMがある場合は設定しないでください。</translation>
+        <translation>より厳密なCM検出を有効にします。未検出のCMがあった場合は、無効にしてください。</translation>
     </message>
     <message>
         <source>When using blank frame detection and automatic flagging, enable this option to include blank frames following commercial breaks as part of the commercial break.</source>
@@ -23489,11 +23505,11 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Commercial skip automatic rewind amount (secs)</source>
-        <translation>CMスキップ自動巻き戻し量</translation>
+        <translation>CMスキップ自動巻戻し量 (秒)</translation>
     </message>
     <message>
         <source>Commercial skip notify amount (secs)</source>
-        <translation>CMスキップ通知秒数</translation>
+        <translation>CMスキップ通知時間 (秒)</translation>
     </message>
     <message>
         <source>Maximum commercial skip (secs)</source>
@@ -23505,31 +23521,31 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Oldest show first</source>
-        <translation>再生済みの中の一番古いもの</translation>
+        <translation>古い順</translation>
     </message>
     <message>
         <source>Lowest priority first</source>
-        <translation>優先度の低い方から</translation>
+        <translation>優先度の低い順</translation>
     </message>
     <message>
         <source>Weighted time/priority combination</source>
-        <translation>時間・優先度の組み合わせで決定</translation>
+        <translation>時間・優先度の組み合わせ</translation>
     </message>
     <message>
         <source>Auto-Expire default</source>
-        <translation>規定の自動削除</translation>
+        <translation>自動削除のデフォルト</translation>
     </message>
     <message>
         <source>MythTV will stop scheduling new recordings on a backend when its free disk space (in megabytes) falls below this value.</source>
-        <translation>MythTVは空きディスク容量がこの値を下回ると新しい録画予約を行いません.</translation>
+        <translation>MythTV はバックエンドで空きディスク容量がこの値 (MB) を下回ると、新しい録画予約を行いません。</translation>
     </message>
     <message>
         <source>Time to record before start of show (secs)</source>
-        <translation>番組開始前の録画時間(秒)</translation>
+        <translation>番組開始前に録画をはじめる時間(秒)</translation>
     </message>
     <message>
         <source>Time to record past end of show (secs)</source>
-        <translation>番組終了後の録画時間(秒)</translation>
+        <translation>番組終了後に録画をつづける時間(秒)</translation>
     </message>
     <message>
         <source>Record past end of show (mins)</source>
@@ -23537,7 +23553,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Sort episodes</source>
-        <translation>番組並び替え</translation>
+        <translation>回の並び</translation>
     </message>
     <message>
         <source>Original air date</source>
@@ -23545,23 +23561,23 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>If enabled, pressing the sticky rewind key in fast forward mode switches to rewind mode, and vice versa. If disabled, it will decrease the current speed or switch to play mode if the speed can&apos;t be decreased further.</source>
-        <translation>早送り/巻き戻し時に逆方向キーにより方向をスイッチします。指定しない場合は減速として動作し、それ以上減速できない場合は再生モードになります。</translation>
+        <translation>有効にすると、早送りモード中に巻戻しキーを長押しすると巻戻しモードに、またはその逆に切り替えます。無効にすると、減速として動作し、それ以上減速できない場合は再生モードになります。</translation>
     </message>
     <message>
         <source>If enabled, captions will be displayed when playing back recordings or watching Live TV. Closed Captioning can be turned on or off by pressing &quot;T&quot; during playback.</source>
-        <translation>録画再生、テレビ視聴時のキャプション表示を有効にします。再生中は&quot;T&quot;キーでオンオフできます。</translation>
+        <translation>有効にすると、録画や放送中番組の視聴の際に字幕を表示します。クローズドキャプションは、視聴中に「T」キーを押すことで表示・非表示を切り替えることができます。</translation>
     </message>
     <message>
         <source>If enabled, browse mode will automatically be activated whenever you use channel up/down while watching Live TV.</source>
-        <translation>テレビのチャンネル変更時に、自動的にブラウズモードを有効にします。</translation>
+        <translation>有効にすると、放送中番組を視聴しているときにチャンネルを上下すると、自動的に閲覧モードになります。</translation>
     </message>
     <message>
         <source>If set to prompt, a menu will be displayed when you exit playback mode. The options available will allow you to save your position, delete the recording, or continue watching.</source>
-        <translation>これを選択すると，再生モードを抜けたときにメニューが表示され，位置を保存するか，録画を消去するか，再生を続けるかを選択できます.</translation>
+        <translation>通知に設定すると、再生モードを抜ける際にメニューを表示します。選択肢の「再生場所を保存」、「録画を削除」、「再生を続行」から選ぶことができます。</translation>
     </message>
     <message>
         <source>Jump to program OSD</source>
-        <translation>番組に移動OSD</translation>
+        <translation>番組に移動 OSD</translation>
     </message>
     <message>
         <source>Confirm exit</source>
@@ -23573,23 +23589,23 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Use arrow key accelerators</source>
-        <translation>矢印キー操作を使用する</translation>
+        <translation>矢印キーアクセラレーションを利用</translation>
     </message>
     <message>
         <source>If enabled, arrow key accelerators will be used, with LEFT performing an exit action and RIGHT selecting the current item.</source>
-        <translation>矢印キーによる操作を有効にします。左キーは終了として働き、右キーはアイテムの選択として機能します。</translation>
+        <translation>有効にすると、矢印キーアクセラレーターが利用できます。左キーは操作終了として、右キーは現在のアイテムの選択として機能します。</translation>
     </message>
     <message>
         <source>Setup PIN code</source>
-        <translation>セットアップピンコード</translation>
+        <translation>PIN コードの設定</translation>
     </message>
     <message>
         <source>This PIN is used to control access to the setup menus. If you want to use this feature, then setting the value to all numbers will make your life much easier. Set it to blank to disable.</source>
-        <translation>このピンはセットアップメニューのアクセスをコントロールします。この機能を使用したい時は値をセットしてください。ブランクにすれば無効になります。</translation>
+        <translation>この PIN はセットアップメニューへのアクセス制御に利用します。この機能を利用する場合、数字の値をセットすれば人生はずっと楽になります。空白を設定にすれば無効です。</translation>
     </message>
     <message>
         <source>Require setup PIN</source>
-        <translation>セットアップピンを要求する</translation>
+        <translation>PIN 設定が必要</translation>
     </message>
     <message>
         <source>Monitor aspect ratio</source>
@@ -23597,35 +23613,35 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>GUI width (pixels)</source>
-        <translation>GUI 幅(px)</translation>
+        <translation>GUI の幅 (ピクセル)</translation>
     </message>
     <message>
         <source>The width of the GUI. Do not make the GUI wider than your actual screen resolution. Set to 0 to automatically scale to fullscreen.</source>
-        <translation>実際の画面解像度より大きい値は設定しないでください．0を指定すると自動的にフルスクリーンになります.</translation>
+        <translation>GUIの幅。実際の画面解像度より大きい値は設定しないでください。0 を指定すると自動的に全画面になります。</translation>
     </message>
     <message>
         <source>GUI height (pixels)</source>
-        <translation>GUI 高さ(px)</translation>
+        <translation>GUI 高さ (ピクセル)</translation>
     </message>
     <message>
         <source>The height of the GUI. Do not make the GUI taller than your actual screen resolution. Set to 0 to automatically scale to fullscreen.</source>
-        <translation>実際の画面解像度より大きい値は設定しないでください．0を指定すると自動的にフルスクリーンになります.</translation>
+        <translation>GUIの高さ。実際の画面解像度より大きい値は設定しないでください。0 を指定すると自動的に全画面になります。</translation>
     </message>
     <message>
         <source>The horizontal offset where the GUI will be displayed. May only work if run in a window.</source>
-        <translation>GUIを表示する水平オフセットを設定します。ウインドウ内表示の時のみ有効です。</translation>
+        <translation>GUIを表示する水平のオフセット位置を設定します。ウインドウ内表示時のみ有効です。</translation>
     </message>
     <message>
         <source>The vertical offset where the GUI will be displayed.</source>
-        <translation>GUI表示の縦オフセット.</translation>
+        <translation>GUIを表示する垂直のオフセット位置を設定します。</translation>
     </message>
     <message>
         <source>Display size - width</source>
-        <translation>ディスプレイサイズ - 幅</translation>
+        <translation>ディスプレーサイズ - 幅</translation>
     </message>
     <message>
         <source>Display size - height</source>
-        <translation>ディスプレイサイズ - 高さ</translation>
+        <translation>ディスプレーサイズ - 高さ</translation>
     </message>
     <message>
         <source>Video output</source>
@@ -23633,11 +23649,11 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Leave at &quot;Default&quot; to use ratio reported by the monitor. Set to 16:9 or 4:3 to force a specific aspect ratio.</source>
-        <translation>\&quot;規定値\&quot;にするとモニターから情報を取得します。16:9か4:3を指定するとその値を使用します。</translation>
+        <translation>「デフォルト」のままでモニターから報告されたアスペクト比を利用します。16:9 か 4:3 を指定の値を強制的に適用します。</translation>
     </message>
     <message>
         <source>Short date format</source>
-        <translation>短い日付の書式</translation>
+        <translation>短い日付書式</translation>
     </message>
     <message>
         <source>Direct3D</source>
@@ -23645,11 +23661,11 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Long channel format</source>
-        <translation>長いチャンネルフォーマット</translation>
+        <translation>長いチャンネル書式</translation>
     </message>
     <message>
         <source>If enabled, Live TV will choose a tuner card that is less likely to have scheduled recordings rather than the best card available.</source>
-        <translation>これを有効にすると、ライブテレビは利用可能な最良のカードではなく録音を予定しておりそうでないチューナー・カードを選ぶでしょう。</translation>
+        <translation>有効にすると、放送中視聴は利用可能な最良のカードではなく、録画予約が一番少ないチューナーカードを選びます。</translation>
     </message>
     <message>
         <source>Display genre colors</source>
@@ -23661,59 +23677,59 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Reschedule higher priorities</source>
-        <translation>優先度の高いものを再スケジュール</translation>
+        <translation>高優先度を再スケジュール</translation>
     </message>
     <message>
         <source>Move higher priority programs to other cards and showings when resolving conflicts. This can be used to record lower priority programs that would otherwise not be recorded, but risks missing a higher priority program if the schedule changes.</source>
-        <translation>予約の衝突時に高優先の番組を他のカードに再スケジュールします。スケジュールが変更されたときに、高優先の番組録画に失敗する可能性があります。</translation>
+        <translation>予約の衝突を解決するため、優先度の高い番組を他のカードに移動します。この措置をとらないと録画されなかった優先度の低い番組が録画されますが、優先度の高い番組の放送時間の変更があった場合は録画しそこねるリスクが発生します。</translation>
     </message>
     <message>
         <source>Single recordings priority</source>
-        <translation>一回録画の優先順位</translation>
+        <translation>1回録画優先度</translation>
     </message>
     <message>
         <source>Single recordings will receive this additional recording priority value.</source>
-        <translation>一回録画にはこの録画優先順位の値が加算されます.</translation>
+        <translation>1回録画にこの追加録画優先度の値を加えます。</translation>
     </message>
     <message>
         <source>Weekslot recordings priority</source>
-        <translation>週間録画の優先順位</translation>
+        <translation>週間録画優先度</translation>
     </message>
     <message>
         <source>Weekslot recordings will receive this additional recording priority value.</source>
-        <translation>週間録画にはこの録画優先順位の値が加算されます.</translation>
+        <translation>週間録画にこの追加録画優先度の値を加えます。</translation>
     </message>
     <message>
         <source>Timeslot recordings priority</source>
-        <translation>時間帯録画の優先順位</translation>
+        <translation>時間帯録画優先度</translation>
     </message>
     <message>
         <source>Timeslot recordings will receive this additional recording priority value.</source>
-        <translation>時間帯録画にはこの録画優先順位の値が加算されます.</translation>
+        <translation>時間帯録画にこの追加録画優先度の値を加えます。</translation>
     </message>
     <message>
         <source>Channel recordings priority</source>
-        <translation>チャンネル録画の優先順位</translation>
+        <translation>チャンネル録画優先度</translation>
     </message>
     <message>
         <source>Channel recordings will receive this additional recording priority value.</source>
-        <translation>チャンネル録画にはこの録画優先順位の値が加算されます.</translation>
+        <translation>チャンネル録画にこの追加録画優先度の値が加えます。</translation>
     </message>
     <message>
         <source>All recordings priority</source>
-        <translation>全録画の優先順位</translation>
+        <translation>全録画優先度</translation>
     </message>
     <message>
         <source>Find one recordings priority</source>
-        <translation>1回検索録画の優先順位</translation>
+        <translation>1回検索録画優先度</translation>
     </message>
     <message>
         <source>Override recordings priority</source>
-        <translation>個別設定録画優先順位</translation>
+        <translation>録画優先度個別設定</translation>
     </message>
     <message>
         <source>Override recordings will receive this additional recording priority value.</source>
-        <translation>個別設定録画にはこの録画優先順位の値が加算されます.</translation>
+        <translation>個別設定録画にこの追加録画優先度の値を加えます。</translation>
     </message>
     <message>
         <source>The program guide starts on this channel if it is run from outside of Live TV mode.</source>
@@ -23725,7 +23741,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Guide language #%1</source>
-        <translation>ガイド言語 #%1</translation>
+        <translation>番組表言語 #%1</translation>
     </message>
     <message>
         <source>Network Remote Control port</source>
@@ -23733,15 +23749,15 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Display time</source>
-        <translation>時間を表示する</translation>
+        <translation>時間を表示</translation>
     </message>
     <message>
         <source>Display recording status</source>
-        <translation>録画ステータスを表示する</translation>
+        <translation>録画ステータスを表示</translation>
     </message>
     <message>
         <source>Display menus</source>
-        <translation>メニューを表示する</translation>
+        <translation>メニューを表示</translation>
     </message>
     <message>
         <source>Menu pop-up time</source>
@@ -23749,43 +23765,43 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Display music artist and title</source>
-        <translation>ミュージックアーティストとタイトルの表示</translation>
+        <translation>音楽のアーティストとタイトルを表示</translation>
     </message>
     <message>
         <source>Display channel information</source>
-        <translation>チャンネル情報を表示する</translation>
+        <translation>チャンネル情報を表示</translation>
     </message>
     <message>
         <source>Display volume information</source>
-        <translation>ボリューム情報を表示する</translation>
+        <translation>音量情報を表示する</translation>
     </message>
     <message>
         <source>Display generic information</source>
-        <translation>一般情報を表示する</translation>
+        <translation>一般情報を表示</translation>
     </message>
     <message>
         <source>Backlight always on</source>
-        <translation>バックライトを常に点灯する</translation>
+        <translation>バックライトを常に点灯</translation>
     </message>
     <message>
         <source>Heartbeat always on</source>
-        <translation>ハートビートを常に有効にする</translation>
+        <translation>ハートビートを常に有効に</translation>
     </message>
     <message>
         <source>LCD key order</source>
-        <translation>LCDキーオーダー</translation>
+        <translation>LCDキー並び</translation>
     </message>
     <message>
         <source>If enabled, QuickTime will correct the gamma of the video to match your monitor. Turning this off can save some CPU cycles.</source>
-        <translation>QuickTimeによるモニタに合わせた映像のガンマ補正が行われます。オフの場合はCPU負荷が下がります。</translation>
+        <translation>有効にすると、QuickTime はディスプレーに合わせた映像のガンマ補正を行います。無効にすると CPU 負荷が少し下がります。</translation>
     </message>
     <message>
         <source>If enabled, video will be scaled to fit your window or screen. If unchecked, video will never be made larger than its actual pixel size.</source>
-        <translation>ウインドウまたはスクリーンに合わせた画像サイズのスケーリングを行います。無効の場合は、実際の画像サイズのままとなります。</translation>
+        <translation>有効にすると、ウインドウまたはディスプレーに合わせてビデオを拡大・縮小します。無効の場合は、実際のピクセルサイズより大きく表示することはありません。</translation>
     </message>
     <message>
         <source>If enabled, video will be displayed in the main GUI window. Disable this when you only want video on the desktop or in a floating window. Only valid when &quot;Use GUI size for TV playback&quot; and &quot;Run the frontend in a window&quot; are checked.</source>
-        <translation>有効にするとビデオをGUIウインドウ内に表示します。デスクトップまたは子ウインドウでビデオを表示する場合は無効にします。「テレビ再生時にGUIサイズを使用する」と「フロントエンドをウインドウ内で実行する」の両方がチェックされている場合に有効になります。</translation>
+        <translation>有効にすると、ビデオをメインGUIウインドウに表示します。デスクトップまたは子ウインドウでビデオを表示する場合は無効にします。「テレビ再生時にGUIサイズを使用する」と「フロントエンドをウインドウ内で実行する」の両方がチェックされている場合に有効になります。</translation>
     </message>
     <message>
         <source>If enabled, video will be displayed in a floating window. Only valid when &quot;Use GUI size for TV playback&quot; and &quot;Run the frontend in a window&quot; are checked.</source>
@@ -23802,17 +23818,17 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmyth/mythmediamonitor.cpp" line="36"/>
         <source>Media Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>メディアモニター</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythmediamonitor.cpp" line="294"/>
         <source>Unable to open or close the empty drive %1</source>
-        <translation type="unfinished"></translation>
+        <translation>空のドライブ %1 の開閉ができません</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythmediamonitor.cpp" line="296"/>
         <source>You may have to use the eject button under its tray</source>
-        <translation type="unfinished"></translation>
+        <translation>トレーの下のイジェクトボタンを押してください</translation>
     </message>
     <message>
         <source>Screen Settings</source>
@@ -23821,38 +23837,38 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../programs/mythtranscode/main.cpp" line="82"/>
         <source>Generating Keyframe Index</source>
-        <translation type="unfinished"></translation>
+        <translation>キーフレーム インデックスを生成中</translation>
     </message>
     <message>
         <location filename="../programs/mythtranscode/main.cpp" line="88"/>
         <source>Transcode Completed</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスコード完了</translation>
     </message>
     <message>
         <location filename="../programs/mythtranscode/main.cpp" line="97"/>
         <location filename="../programs/mythtranscode/transcode.cpp" line="217"/>
         <source>Completed</source>
-        <translation type="unfinished"></translation>
+        <translation>完了</translation>
     </message>
     <message>
         <location filename="../programs/mythtranscode/main.cpp" line="886"/>
         <source>Job errored, unable to find Program Info for job</source>
-        <translation type="unfinished"></translation>
+        <translation>ジョブエラー、ジョブのプログラム情報が見つかりません</translation>
     </message>
     <message>
         <location filename="../programs/mythtranscode/main.cpp" line="1129"/>
         <source>Job Aborted</source>
-        <translation type="unfinished"></translation>
+        <translation>ジョブ中断</translation>
     </message>
     <message>
         <location filename="../programs/mythtranscode/main.cpp" line="1138"/>
         <source>Unrecoverable error</source>
-        <translation type="unfinished"></translation>
+        <translation>復旧不可能なエラー</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="546"/>
         <source>A command executed before the backend would shutdown. The return value determines if the backend can shutdown. 0 - yes, 1 - restart idling, 2 - reset the backend to wait for a frontend.</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドの電源オフ前に実行するコマンド。戻り値は、バックエンドが電源オフできるかどうかを示します。0 …はい、1 …再起動待機、2 …フロントエンドを待ってバックエンドをリセット。</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdstv.cpp" line="134"/>
@@ -23869,32 +23885,32 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../programs/mythtv-setup/checksetup.cpp" line="24"/>
         <source>Path &quot;%1&quot; doesn&apos;t exist.</source>
-        <translation type="unfinished"></translation>
+        <translation>パス「%1」は存在しません。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/checksetup.cpp" line="33"/>
         <source>Unable to create file &quot;%1&quot; - directory is not writable?</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル「%1」を作成できません。ディレクトリーは書き込み可ですか？</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/checksetup.cpp" line="203"/>
         <source>Card %1 (%2) No video source connected</source>
-        <translation type="unfinished"></translation>
+        <translation>カード %1 (%2) にはビデオソースが接続していません</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/checksetup.cpp" line="233"/>
         <source>Card %1 (%2) No visible channels found</source>
-        <translation type="unfinished"></translation>
+        <translation>カード %1 (%2) には表示できるチャンネルが見つかりません</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/checksetup.cpp" line="267"/>
         <source>The display names for one or more inputs are not sufficiently unique.  They must be set and the last two characters must be unique because some themes use them to identify the input.</source>
-        <translation type="unfinished"></translation>
+        <translation>1つ以上の入力の表示名が十分に一意ではありません。設定必須で末尾の2文字は一意でなければなりません。一部のテーマが入力を識別するために利用するためです。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/main.cpp" line="544"/>
         <source>MythTV Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV セットアップ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/playercontext.cpp" line="428"/>
@@ -23904,12 +23920,12 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/playercontext.cpp" line="431"/>
         <source>Rewind</source>
-        <translation type="unfinished"></translation>
+        <translation>巻戻し</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/playercontext.cpp" line="436"/>
         <source>Forward</source>
-        <translation type="unfinished">送る</translation>
+        <translation>早送り</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/programinfo.cpp" line="3218"/>
@@ -23924,23 +23940,23 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../libs/libmythtv/cardutil.cpp" line="2975"/>
         <location filename="../libs/libmythtv/cardutil.cpp" line="3032"/>
         <source>Unable to connect to device.</source>
-        <translation type="unfinished"></translation>
+        <translation>デバイスに接続できません。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/cardutil.cpp" line="2988"/>
         <source>Invalid Device ID</source>
-        <translation type="unfinished"></translation>
+        <translation>無効なデバイスID</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/cardutil.cpp" line="2998"/>
         <source>Invalid Device ID or address.</source>
-        <translation type="unfinished"></translation>
+        <translation>無効なデバイスIDまたはアドレスです。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/guidegrid.cpp" line="1973"/>
         <location filename="../programs/mythfrontend/guidegrid.cpp" line="2273"/>
         <source>All Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのチャンネル</translation>
     </message>
     <message>
         <source>Done</source>
@@ -23957,17 +23973,17 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="271"/>
         <source>H.Stretch</source>
-        <translation type="unfinished"></translation>
+        <translation>水平方向に拡大・縮小</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="272"/>
         <source>V.Stretch</source>
-        <translation type="unfinished"></translation>
+        <translation>垂直方向に拡大・縮小</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="438"/>
         <source>The command used to put this slave to sleep. If set, the master backend will use this command to put this slave to sleep when it is not needed for recording.</source>
-        <translation type="unfinished"></translation>
+        <translation>このスレーブをスリープするコマンド。設定すると、マスターバックエンドが録画に必要ないときにこのスレーブをスリープさせるのに使います。</translation>
     </message>
     <message>
         <source>ATSC TV</source>
@@ -23976,57 +23992,57 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/recorders/ExternalSignalMonitor.cpp" line="130"/>
         <source>Error: stream handler died</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー : ストリーム ハンドラーが中断</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1587"/>
         <source>IP Address</source>
-        <translation type="unfinished"></translation>
+        <translation>IP アドレス</translation>
     </message>
     <message numerus="yes">
         <location filename="../programs/mythbackend/httpstatus.cpp" line="937"/>
         <source> %n day(s),</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform> %n 日、</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../programs/mythbackend/httpstatus.cpp" line="938"/>
         <source> %n hour(s) and</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform> %n 時間と</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../programs/mythbackend/httpstatus.cpp" line="939"/>
         <source> %n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform> %n 分</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/httpstatus.cpp" line="942"/>
         <source>within one minute</source>
         <comment>Recording starting</comment>
-        <translation type="unfinished"></translation>
+        <translation>1 分以内</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/httpstatus.cpp" line="945"/>
         <source>soon</source>
         <comment>Recording starting</comment>
-        <translation type="unfinished"></translation>
+        <translation>まもなく</translation>
     </message>
     <message numerus="yes">
         <location filename="../programs/mythbackend/httpstatus.cpp" line="1441"/>
         <source>(%n day(s))</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>( %n 日)</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="987"/>
         <source>Backend Control</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンド制御</translation>
     </message>
     <message>
         <source>Go Back</source>
@@ -24039,71 +24055,71 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="190"/>
         <source>Could not find specified tuner (%1).</source>
-        <translation type="unfinished"></translation>
+        <translation>指定のチューナー (%1) が見つかりません。</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="195"/>
         <source>Specified tuner (%1) is already in use.</source>
-        <translation type="unfinished"></translation>
+        <translation>指定のチューナー (%1) はすでに使用中です。</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="201"/>
         <source>All tuners are currently in use. If you want to watch TV, you can cancel one of the in-progress recordings from the delete menu</source>
-        <translation type="unfinished"></translation>
+        <translation>現在、すべてのチューナーが使用中です。放送中のテレビを視聴したければ、進行中の録画のどれかを削除メニューで中断することができます</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="221"/>
         <source>Failed to configure plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>プラグインの設定に失敗</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="233"/>
         <source>Plugin failure</source>
-        <translation type="unfinished"></translation>
+        <translation>プラグイン失敗</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="235"/>
         <source>%1 failed to run for some reason</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 の実行は何らかの理由で失敗</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="455"/>
         <source>No UPnP backends found</source>
         <comment>Backend Setup</comment>
-        <translation type="unfinished"></translation>
+        <translation>UPnP バックエンドが見つかりません</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="1037"/>
         <source>Cannot find (ping) database host %1 on the network</source>
         <comment>Backend Setup</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 データベース ホストがネットワーク上に見つかりません (ping が通らない)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="1046"/>
         <source>Cannot login to database</source>
         <comment>Backend Setup</comment>
-        <translation type="unfinished"></translation>
+        <translation>データベースにログインできません</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="1051"/>
         <source>Cannot connect to backend</source>
         <comment>Backend Setup</comment>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドに接続できません</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="1414"/>
         <source>Could not connect to master backend</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンドに接続できません</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="1429"/>
         <source>Backend is online</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドはオンライン</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="1594"/>
         <source>This application is not compatible with the installed MythTV libraries.</source>
-        <translation type="unfinished"></translation>
+        <translation>このアプリケーションは、インストール済みの MythTV ライブラリーと互換性がありません。</translation>
     </message>
     <message>
         <source>Could not connect to the master backend server -- is it running?  Is the IP address set for it in the setup program correct?</source>
@@ -24112,7 +24128,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmyth/mythcontext.cpp" line="1443"/>
         <source>The server uses network protocol version %1, but this client only understands version %2.  Make sure you are running compatible versions of the backend and frontend.</source>
-        <translation type="unfinished"></translation>
+        <translation>サーバーはネットワークプロトコルバージョン : %1 を使用していますが、クライアントが理解できるバージョンは %2 です。バックエンドとフロントエンドで互換性のあるバージョンを実行しているか、確認してください。</translation>
     </message>
     <message>
         <source>The connection to the master backend server has gone away for some reason.. Is it running?</source>
@@ -24121,49 +24137,49 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmyth/programtypes.cpp" line="120"/>
         <source>Pre &amp; Post Roll</source>
-        <translation type="unfinished"></translation>
+        <translation>前と後のロール</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/cardutil.cpp" line="3013"/>
         <source>, firmware: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>、ファームウエア : %2</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="275"/>
         <source>Auto Detect (Default Off)</source>
-        <translation type="unfinished"></translation>
+        <translation>自動検出 (デフォルト : オフ)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videoouttypes.h" line="276"/>
         <source>Auto Detect (Default Half)</source>
-        <translation type="unfinished"></translation>
+        <translation>自動検出 (デフォルト : ハーフ)</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/backendsettings.cpp" line="317"/>
         <source>Combination</source>
-        <translation type="unfinished"></translation>
+        <translation>組み合わせ</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/checksetup.cpp" line="156"/>
         <source>You have a Video Storage Group, but have not set up all Image Groups.  If you continue, video image downloads will be saved in your Videos Storage Group.  Do you want to store them in their own groups?</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオストレージグループは設定していますが、画像イメージグループが全く設定されていません。続行すると、ビデオ画像ダウンロードは、ビデオストレージグループに保存します。よろしいですか？</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/importicons.cpp" line="652"/>
         <source>Searching for icons for channel %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 チャンネルのアイコンを検索中</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/rssparse.cpp" line="121"/>
         <location filename="../libs/libmyth/rssparse.cpp" line="133"/>
         <source>Web Only</source>
-        <translation type="unfinished"></translation>
+        <translation>Web のみ</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/rssparse.cpp" line="123"/>
         <location filename="../libs/libmyth/rssparse.cpp" line="135"/>
         <source>Downloadable</source>
-        <translation type="unfinished"></translation>
+        <translation>ダウンロード可</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/rssparse.cpp" line="129"/>
@@ -24179,29 +24195,29 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmyth/rssparse.cpp" line="518"/>
         <source>Responses</source>
-        <translation type="unfinished"></translation>
+        <translation>評判</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/rssparse.cpp" line="537"/>
         <source>Backlinks</source>
-        <translation type="unfinished"></translation>
+        <translation>バックリンク</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/scanwizardconfig.h" line="110"/>
         <source>Scan Type</source>
-        <translation type="unfinished"></translation>
+        <translation>スキャンタイプ</translation>
     </message>
     <message>
         <source>Starting Parental Level</source>
-        <translation>再生制限レベル</translation>
+        <translation>最初のペアレンタルコントロール レベル</translation>
     </message>
     <message>
         <source>4 - Highest</source>
-        <translation>4 - 高</translation>
+        <translation>4 - 最高</translation>
     </message>
     <message>
         <source>1 - Lowest</source>
-        <translation>1 - 低</translation>
+        <translation>1 - 最低</translation>
     </message>
     <message>
         <source>Show Unknown File Types</source>
@@ -24249,7 +24265,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Directory that holds movie posters</source>
-        <translation>映画ポスターを保存するディレクトリ</translation>
+        <translation>映画ポスター保存ディレクトリー</translation>
     </message>
     <message>
         <source>This directory must exist, and the user running MythVideo needs to have read/write permission to the directory.</source>
@@ -24277,7 +24293,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     </message>
     <message>
         <source>Aggressive Parental Control</source>
-        <translation>積極的な再生制御</translation>
+        <translation>厳格なペアレンタルコントロール</translation>
     </message>
     <message>
         <source>The default view for MythVideo. Other views can be reached via the popup menu available via the MENU key.</source>
@@ -24287,33 +24303,33 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../libs/libmythtv/channelinfo.cpp" line="233"/>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1261"/>
         <source>Yes</source>
-        <translation type="unfinished">はい</translation>
+        <translation>はい</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelinfo.cpp" line="233"/>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1262"/>
         <source>No</source>
-        <translation type="unfinished">いいえ</translation>
+        <translation>いいえ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelinfo.cpp" line="508"/>
         <source>Always Visible</source>
-        <translation type="unfinished"></translation>
+        <translation>常に表示</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelinfo.cpp" line="512"/>
         <source>Not Visible</source>
-        <translation type="unfinished"></translation>
+        <translation>表示不可</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelinfo.cpp" line="514"/>
         <source>Never Visible</source>
-        <translation type="unfinished"></translation>
+        <translation>常に非表示</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdstv.cpp" line="199"/>
         <source>Title</source>
-        <translation type="unfinished">タイトル</translation>
+        <translation>タイトル</translation>
     </message>
     <message>
         <source>Year</source>
@@ -24478,12 +24494,12 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../programs/mythfrontend/videolist.cpp" line="635"/>
         <source>No files found</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルが見つかりません</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videolist.cpp" line="1014"/>
         <source>videos</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ</translation>
     </message>
     <message>
         <source>No rating available.</source>
@@ -24496,288 +24512,288 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../libs/libmythtv/videodbcheck.cpp" line="40"/>
         <source>Error: failed to add new file type &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー : 新しいファイルタイプ「%1」の追加に失敗</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videodbcheck.cpp" line="79"/>
         <source>Error: failed to hash file &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー : 「%1」ファイルのハッシュで失敗</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videolist.cpp" line="625"/>
         <location filename="../programs/mythfrontend/videolist.cpp" line="633"/>
         <source>Video Home</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオホーム</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videolist.cpp" line="922"/>
         <source>Television</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdstv.cpp" line="185"/>
         <location filename="../programs/mythbackend/upnpcdsvideo.cpp" line="81"/>
         <location filename="../programs/mythfrontend/videolist.cpp" line="925"/>
         <source>Movies</source>
-        <translation type="unfinished">ムービー</translation>
+        <translation>映画</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdsvideo.cpp" line="486"/>
         <location filename="../programs/mythfrontend/videolist.cpp" line="938"/>
         <source>Season %1</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン %1</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/audio/audiooutput.cpp" line="373"/>
         <source> (guessing: </source>
-        <translation type="unfinished"></translation>
+        <translation> (推定 : </translation>
     </message>
     <message>
         <location filename="../libs/libmyth/audio/audiooutputalsa.cpp" line="472"/>
         <location filename="../libs/libmyth/audio/audiooutputopensles.cpp" line="173"/>
         <source>Unknown sample format: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>不明なサンプル形式 : %1</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/audio/audiooutputalsa.cpp" line="673"/>
         <source>SetParameters() called with handle == nullptr!</source>
-        <translation type="unfinished"></translation>
+        <translation>SetParameters() called with handle == nullptr!</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/audio/audiooutputbase.cpp" line="640"/>
         <source>Aborting Audio Reconfigure. Can&apos;t handle audio with more than 8 channels.</source>
-        <translation type="unfinished"></translation>
+        <translation>音声の再設定を中断しています。8チャンネル以上の音声を取り扱うことはできません。</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/audio/audiooutputbase.cpp" line="692"/>
         <source>Error creating resampler: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>リサンプラーの作成エラー : %1</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/audio/audiooutputbase.cpp" line="727"/>
         <source>AC-3 encoder initialization failed</source>
-        <translation type="unfinished"></translation>
+        <translation>AC-3 エンコーダーの初期化に失敗</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/audio/audiooutputbase.cpp" line="790"/>
         <source>Aborting reconfigure</source>
-        <translation type="unfinished"></translation>
+        <translation>再設定を中断しています</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/audio/audiooutputdx.cpp" line="452"/>
         <source>DirectSound initialization failed</source>
-        <translation type="unfinished"></translation>
+        <translation>DirectSound の初期化に失敗</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/audio/audiooutputdx.cpp" line="524"/>
         <source>Unsupported format for device %1:%2</source>
-        <translation type="unfinished"></translation>
+        <translation>デバイス %1 : %2 に未対応の形式</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/audio/audiooutputdx.cpp" line="527"/>
         <source>Failed to create DS buffer 0x%1</source>
-        <translation type="unfinished"></translation>
+        <translation>DS バッファ 0x%1 の作成に失敗</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/audio/audiooutputoss.cpp" line="132"/>
         <source>Error opening audio device (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ デバイス (%1) のオープンでエラー</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/standardsettings.cpp" line="557"/>
         <source>New entry</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいエントリー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/inputselectorsetting.cpp" line="45"/>
         <source>Select a capture card from the capture cards that are connected to the currently selected video source.</source>
-        <translation type="unfinished"></translation>
+        <translation>現在選択しているビデオソースに接続しているキャプチャーカードの中から選択してください。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelsettings.cpp" line="348"/>
         <source>Transport ID</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスポート ID</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelsettings.cpp" line="350"/>
         <source>The transport stream ID (tid) can be used to identify the transport of this channel in the Transport Editor.</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスポートID (tid) はトランスポートエディターでこのチャンネルのトランスポートを識別するのに使用します。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelsettings.cpp" line="363"/>
         <source>Frequency of the transport of this channel in Hz for DVB-T/T2/C or in kHz plus polarization H or V for DVB-S/S2.</source>
-        <translation type="unfinished"></translation>
+        <translation>このチャンネルのトランスポート周波数を、DVB-T/T2/C 向けには Hz で、DVB-S/S2向けには kHzプラス偏光を H か V で。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tvbrowsehelper.cpp" line="547"/>
         <source>All channels</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのチャンネル</translation>
     </message>
     <message>
         <location filename="../libs/libmythupnp/mythxmlclient.cpp" line="93"/>
         <source>Version Mismatch</source>
         <comment>UPNP Errors</comment>
-        <translation type="unfinished"></translation>
+        <translation>バージョン不一致</translation>
     </message>
     <message>
         <location filename="../libs/libmythupnp/mythxmlclient.cpp" line="113"/>
         <source>Not Authorized</source>
         <comment>UPNP Errors</comment>
-        <translation type="unfinished"></translation>
+        <translation>認証していません</translation>
     </message>
     <message>
         <location filename="../libs/libmythupnp/mythxmlclient.cpp" line="117"/>
         <source>Unknown Error</source>
         <comment>UPNP Errors</comment>
-        <translation type="unfinished"></translation>
+        <translation>不明なエラー</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdsmusic.cpp" line="104"/>
         <source>All Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのトラック</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdsmusic.cpp" line="118"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>アーチスト</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdsmusic.cpp" line="132"/>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation>アルバム</translation>
     </message>
     <message>
         <location filename="../programs/mythbackend/upnpcdsmusic.cpp" line="146"/>
         <location filename="../programs/mythbackend/upnpcdstv.cpp" line="229"/>
         <location filename="../programs/mythbackend/upnpcdsvideo.cpp" line="118"/>
         <source>Genre</source>
-        <translation type="unfinished">ジャンル</translation>
+        <translation>ジャンル</translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/channeldata.cpp" line="92"/>
         <source>Choose a channel name (any string, long version) </source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル名 (どんな文字列でも可。長い方) を選んでください </translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/channeldata.cpp" line="94"/>
         <source>Choose a channel callsign (any string, short version) </source>
-        <translation type="unfinished"></translation>
+        <translation>コールサイン (どんな文字列でも可。短い方) を選んでください </translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/channeldata.cpp" line="99"/>
         <source>Choose a channel preset (0..999) </source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルプリセットを選んでください (0 〜 999) </translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/channeldata.cpp" line="101"/>
         <source>Choose a frequency id </source>
-        <translation type="unfinished"></translation>
+        <translation>周波数IDを選んでください </translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/channeldata.cpp" line="106"/>
         <source>Choose a channel number </source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル番号を選んでください </translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/channeldata.cpp" line="111"/>
         <source>Choose a channel fine tune offset </source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル微調整オフセットを選んでください </translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/channeldata.cpp" line="114"/>
         <source>Choose a TV format (PAL/SECAM/NTSC/ATSC/Default) </source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ方式 ( PAL・SECAM・NTSC・ATSC・デフォルト) を選んでください </translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/channeldata.cpp" line="118"/>
         <source>Choose a channel icon image (relative path to icon storage group) </source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルのアイコン画像 (アイコンストレージグループへの相対パス) を選んでください </translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/xmltvparser.cpp" line="417"/>
         <source>movie</source>
-        <translation type="unfinished"></translation>
+        <translation>映画</translation>
     </message>
     <message>
         <location filename="../programs/mythfilldatabase/xmltvparser.cpp" line="417"/>
         <source>film</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルム</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/programrecpriority.cpp" line="106"/>
         <source>Default (Template)</source>
-        <translation type="unfinished"></translation>
+        <translation>デフォルト (テンプレート)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2083"/>
         <source>Use any available input</source>
-        <translation type="unfinished">利用できる入力を使用する</translation>
+        <translation>利用可能な入力はどれでも使用</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2090"/>
         <source>Prefer input %1</source>
-        <translation type="unfinished">%1を使用する</translation>
+        <translation>%1を優先使用</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2109"/>
         <source>Record new and repeat episodes</source>
-        <translation type="unfinished"></translation>
+        <translation>新しい回も再放送も録画</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2398"/>
         <source>Record using the %1 profile</source>
-        <translation type="unfinished">&quot;%1&quot;プロファイルで録画する</translation>
+        <translation>「%1」プロファイルで録画</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2405"/>
         <source>LiveTV</source>
-        <translation type="unfinished">放送中</translation>
+        <translation>放送中</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2408"/>
         <source>High Quality</source>
-        <translation type="unfinished">高品質</translation>
+        <translation>高品質</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2411"/>
         <source>Low Quality</source>
-        <translation type="unfinished"></translation>
+        <translation>低品質</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2422"/>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2632"/>
         <source>Include in the &quot;%1&quot; recording group</source>
-        <translation type="unfinished"></translation>
+        <translation>「%1」録画グループに含める</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2424"/>
         <source>Create a new recording group</source>
-        <translation type="unfinished">新しい録画グループを作る</translation>
+        <translation>新しい録画グループを作る</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2454"/>
         <source>Store in the &quot;%1&quot; storage group</source>
-        <translation type="unfinished"></translation>
+        <translation>「 %1」ストレージグループに保存</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2475"/>
         <source>Use &quot;%1&quot; playback group settings</source>
-        <translation type="unfinished">&quot;%1&quot;プレイバックグループ設定を使用</translation>
+        <translation>「%1」再生グループ設定を使用</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2508"/>
         <source>Don&apos;t record if this would exceed the max episodes</source>
-        <translation type="unfinished">最大番組数を超えたら録画しない</translation>
+        <translation>番組回数最大値を超えたら録画しない</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2511"/>
         <source>Delete oldest if this would exceed the max episodes</source>
-        <translation type="unfinished">最大録画数に達したら古い方から削除する</translation>
+        <translation>番組回数最大値に達したら最も古い回を削除する</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2610"/>
         <source>New Recording group name: </source>
-        <translation type="unfinished"></translation>
+        <translation>新しい録画グループ名 : </translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2757"/>
@@ -24785,383 +24801,385 @@ Your grabber does not provide channel numbers, so you have to set them manually.
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2785"/>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="2799"/>
         <source>Run &apos;%1&apos;</source>
-        <translation type="unfinished">&apos;%1&apos;実行</translation>
+        <translation>「%1」を実行</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1035"/>
         <source>%1 TB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 TB</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1040"/>
         <source>%1 GB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 GB</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1045"/>
         <source>%1 MB</source>
-        <translation type="unfinished">%1 MB</translation>
+        <translation>%1 MB</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1048"/>
         <source>%1 KB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 KB</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="72"/>
         <source>Error: Database not open while trying to load setting: %1</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>エラー : 設定 %1 の読み込み試行でデータベースを開けません</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="97"/>
         <location filename="../programs/mythshutdown/main.cpp" line="151"/>
         <source>Error: Waited too long to obtain lock on setting table</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>エラー : 設定テーブルのロックを取得するのに時間がかかりすぎ</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="229"/>
         <source>Error: Could not connect to master server</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>エラー : マスターサーバーに接続できません</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="247"/>
         <source>Transcoding in progress...</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>トランスコード中...</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="254"/>
         <source>Commercial Detection in progress...</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>CM検出中...</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="262"/>
         <source>Grabbing EPG data in progress...</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>番組表データの取得中...</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="270"/>
         <source>Recording in progress...</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>録画中...</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="277"/>
         <source>Shutdown is locked</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>電源オフはロックされています</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="284"/>
         <source>Has queued or pending jobs</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>キューにあるか保留中のジョブ</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="317"/>
         <source>In a daily wakeup period (1).</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>毎日の起動期間 (1)。</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="328"/>
         <source>In a daily wakeup period (2).</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>毎日の起動期間 (2)。</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="342"/>
         <source>About to start daily wakeup period (1)</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>毎日の起動期間 (1) を開始しようとしています</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="354"/>
         <source>About to start daily wakeup period (2)</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>毎日の起動期間 (2) を開始しようとしています</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="363"/>
         <source>Setup is running...</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>セットアップ実行中...</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="368"/>
         <source>Mythshutdown: --status returned: %1</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>Mythshutdown: --status 戻り値: %1</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="386"/>
         <source>Not OK to shutdown</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>電源オフ NG</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="392"/>
         <source>OK to shutdown</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>電源オフ OK</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="407"/>
         <source>Wakeup time given is: %1 (local time)</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>指定の起動時刻 : %1 (ローカルタイム)</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="419"/>
         <source>Setting scheduled wakeup time: Attempting to connect to master server...</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>起動時刻のスケジュールを設定中 : マスターバックエンドへの接続試行中...</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="425"/>
         <source>Setting scheduled wakeup time: Could not connect to master server!</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>起動時刻のスケジュールを設定中 : マスターバックエンドに接続できません！</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="501"/>
         <location filename="../programs/mythshutdown/main.cpp" line="514"/>
         <source>Daily wakeup today at %1</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>今日の起動時刻 : %1</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="536"/>
         <source>Next daily wakeup is tomorrow at %1</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>次の毎日の起動は明日 %1</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="547"/>
         <source>Error: no daily wakeup times are set</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>エラー : 毎日の起動時刻を設定できません</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="560"/>
         <source>Error: no recording time is set</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>エラー : 録画時刻が設定されていません</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="566"/>
         <source>Recording scheduled at: %1</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>録画予約 : %1</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="579"/>
         <source>Scheduled recording time has already passed. Schedule deleted</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>録画予約時刻をすでに経過しました。予約を削除しました</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="597"/>
         <source>Error: no wake up time set and no scheduled program</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>エラー : 起動時刻を設定できず、録画予約もありません</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="607"/>
         <source>Will wake up at next scheduled program</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>次の録画番組に合わせて起動します</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="617"/>
         <source>Will wake up at next daily wakeup</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>次の毎日の起動に合わせて起動します</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="629"/>
         <source>Program is scheduled but will wake up at next daily wakeup</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>録画予約がありますが、次の毎日の起動に合わせて起動します</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="637"/>
         <source>Daily wakeup is set but will wake up at next scheduled program</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>毎日の起動が設定されていますが、次の録画予約に合わせて起動します</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="685"/>
         <source>Sending command to set time in BIOS %1</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>BIOS に時刻を設定するコマンドを送信しています %1</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="692"/>
         <source>Program %1 exited with code %2</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>プログラム %1 は戻り値 %2 で終了</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="698"/>
         <source>Error: nvram-wakeup failed to set time in BIOS</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>エラー : nvram-wakeup BIOS への時刻設定に失敗</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="713"/>
         <source>The next wakeup time is less than 15 mins away, not shutting down.</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>次の起動時刻が 15 分より迫っているため、電源オフしません。</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="727"/>
         <source>everything looks fine, shutting down ...</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>状況は良好です。電源をオフしています...</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="732"/>
         <source>shutting down</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>電源オフ中</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="742"/>
         <source>Everything looks fine, but reboot is needed</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>状況は良好です。しかし再起動が必要です</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="745"/>
         <source>Sending command to bootloader</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>ブートローダーにコマンドを送信中</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="752"/>
         <source>rebooting</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>再起動中</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="763"/>
         <source>Error: Invalid shutdown mode, doing nothing.</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>エラー : 無効な電源オフモードのため、何もしません。</translation>
     </message>
     <message>
         <location filename="../programs/mythshutdown/main.cpp" line="894"/>
         <source>Error: --setwakeup invalid date format (%1)
 			must be yyyy-MM-ddThh:mm:ss</source>
         <comment>mythshutdown</comment>
-        <translation type="unfinished"></translation>
+        <translation>エラー: --setwakeup は無効な書式です (%1)
+			yyyy-MM-ddThh:mm:ss とすべきです</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="608"/>
         <source>Select a video source. &apos;All&apos; cannot be used. If there is no video source then create one in the &apos;Video sources&apos; menu page and connect a capture card.</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオソースを選択します。「すべて」は使えません。ビデオソースがなければ、「ビデオソース」メニューページでキャプチャーカードを接続し、作成してください。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="637"/>
         <source>No capture card!
 Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connections&apos; menu page.</source>
-        <translation type="unfinished"></translation>
+        <translation>キャプチャーカードがありません！
+「入力接続」メニューページのビデオソース「%1」にキャプチャーカードを接続してください。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/channeleditor.cpp" line="651"/>
         <source>The capture card(s) connected to video source &apos;%1&apos; cannot be used for channel scanning.</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオソース「%1」に接続したキャプチャーカードが、チャンネルスキャンで使用できません。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/scanwizardconfig.cpp" line="242"/>
         <source>For DVB-T/T2 and scan type &apos;Full Scan&apos; select a country to get the correct set of frequencies.</source>
-        <translation type="unfinished"></translation>
+        <translation>DVB-T/T2 のスキャンタイプ「フルスキャン」では、正しい周波数セットを取得するために国・地域を選択してください。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/mythplayeravsync.cpp" line="72"/>
         <source>%1 ms</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ミリ秒</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/restoredata.cpp" line="63"/>
         <source>Restore XMLTV ID</source>
-        <translation type="unfinished"></translation>
+        <translation>XMLTV ID の復元</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/restoredata.cpp" line="65"/>
         <source>If checked, copy the XMLTV ID in field &quot;xmltvid&quot; from a deleted channel or from a channel in another video source.</source>
-        <translation type="unfinished"></translation>
+        <translation>チェックすると、削除済みのチャンネルまたは別のビデオソースの「xmltv」フィールドにある XMLTV ID をコピーします。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/restoredata.cpp" line="78"/>
         <source>Restore Visible status</source>
-        <translation type="unfinished"></translation>
+        <translation>表示ステータスを復元</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/restoredata.cpp" line="80"/>
         <source>If checked, copy the Visible status in field &quot;visible&quot; from a deleted channel in this video source.</source>
-        <translation type="unfinished"></translation>
+        <translation>チェックすると、このビデオソース上の削除済みチャンネルから「表示」フィールドの表示ステータスをコピーします。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/restoredata.cpp" line="92"/>
         <source>Restore Icon filename</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコンファイル名を復元</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/restoredata.cpp" line="94"/>
         <source>If checked, copy the Icon filename in field &quot;icon&quot; from a deleted channel or from a channel in another video source.</source>
-        <translation type="unfinished"></translation>
+        <translation>チェックすると、削除済みのチャンネルまたは別のビデオソースから「icon」フィールドのアイコンファイル名をコピーします。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/restoredata.cpp" line="109"/>
         <source>The video source is selected in the Channel Editor page. Searching for non-scanned data is done for all channels in this video source.</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル編集ページでビデオソースを選択しています。このビデオソース上のすべてのチャンネルの未スキャンデータ検索は完了しています。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/restoredata.cpp" line="126"/>
         <source>Start searching for non-scanned data. The data is written to the database when &apos;Save and Exit&apos; is selected in the &apos;Exit Settings?&apos; dialog box.</source>
-        <translation type="unfinished"></translation>
+        <translation>未スキャンデータの検索を開始。「設定を終了しますか？」ダイアログボックスで「保存して終了」を選択すると、データはデータベースに書き込まれます。</translation>
     </message>
     <message>
         <location filename="../libs/libmythui/mythdisplaymode.cpp" line="266"/>
         <source>%1x%2@%3Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1x%2@%3Hz</translation>
     </message>
     <message>
         <location filename="../libs/libmythui/mythhdr.cpp" line="68"/>
         <source>HDR10</source>
-        <translation type="unfinished"></translation>
+        <translation>HDR10</translation>
     </message>
     <message>
         <location filename="../libs/libmythui/mythhdr.cpp" line="69"/>
         <source>Hybrid Log-Gamma</source>
-        <translation type="unfinished"></translation>
+        <translation>ハイブリッド・ログ＝ガンマ</translation>
     </message>
     <message>
         <location filename="../libs/libmythui/mythvrr.cpp" line="123"/>
         <source>FreeSync</source>
-        <translation type="unfinished"></translation>
+        <translation>FreeSync</translation>
     </message>
     <message>
         <location filename="../libs/libmythui/mythvrr.cpp" line="124"/>
         <source>GSync</source>
-        <translation type="unfinished"></translation>
+        <translation>GSync</translation>
     </message>
     <message>
         <location filename="../libs/libmythui/mythvrr.cpp" line="125"/>
         <source>GSync Compatible</source>
-        <translation type="unfinished"></translation>
+        <translation>Gsync 互換</translation>
     </message>
     <message>
         <location filename="../libs/libmythui/mythvrr.cpp" line="135"/>
         <source>Range: %1-%2%3</source>
-        <translation type="unfinished"></translation>
+        <translation>範囲 : %1-%2%3</translation>
     </message>
 </context>
 <context>
@@ -25177,12 +25195,12 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5420"/>
         <source>Trying to manually find this recording online...</source>
-        <translation>録画の情報について、手動でのオンライン検索を試みています...</translation>
+        <translation>録画情報を手動オンライン検索しています...</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5542"/>
         <source>No match found for this recording. You can try entering a TVDB/TMDB number, season, and episode manually.</source>
-        <translation>この録画の情報は見つかりません。TVDB・TMDB番号、シーズン、回などを入力して試してください。</translation>
+        <translation>この録画に一致するものは見つかりません。TVDB・TMDBの番号や、シーズンと回を手入力するなどお試しください。</translation>
     </message>
 </context>
 <context>
@@ -25190,7 +25208,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1668"/>
         <source>(Create new profile)</source>
-        <translation>（新しいプロファイルを作成する）</translation>
+        <translation>（新しいグループを作成）</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="1679"/>
@@ -25206,20 +25224,20 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
         <location filename="../libs/libmythtv/recordingrule.h" line="123"/>
         <location filename="../libs/libmythtv/recordingrule.h" line="124"/>
         <source>Default</source>
-        <translation>標準</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingrule.cpp" line="321"/>
         <location filename="../libs/libmythtv/recordingrule.cpp" line="550"/>
         <location filename="../libs/libmythtv/recordingrule.cpp" line="551"/>
         <source>Default (Template)</source>
-        <translation>標準（テンプレート）</translation>
+        <translation>デフォルト (テンプレート)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingrule.cpp" line="327"/>
         <source>%1 (Template)</source>
         <extracomment>%1 is the category</extracomment>
-        <translation>%1（テンプレート）</translation>
+        <translation>%1 (テンプレート)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingrule.cpp" line="351"/>
@@ -25231,19 +25249,19 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
         <location filename="../libs/libmythtv/recordingrule.cpp" line="565"/>
         <source>Default</source>
         <comment>category</comment>
-        <translation>標準</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingrule.cpp" line="633"/>
         <source>(%1 or later) %3</source>
         <comment>e.g. (Sunday or later) program subtitle</comment>
-        <translation>（%1 以降）%3</translation>
+        <translation>(%1 以降) %3</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingrule.cpp" line="664"/>
         <source>Default</source>
         <comment>Default template</comment>
-        <translation>標準</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingrule.cpp" line="811"/>
@@ -25263,7 +25281,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../libs/libmythtv/recordingrule.cpp" line="820"/>
         <source>Unknown Search</source>
-        <translation>その他の検索</translation>
+        <translation>不明な検索</translation>
     </message>
 </context>
 <context>
@@ -25271,12 +25289,12 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../libs/libmythtv/restoredata.cpp" line="105"/>
         <source>Restore Data</source>
-        <translation type="unfinished"></translation>
+        <translation>データ復元</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/restoredata.cpp" line="124"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>検索</translation>
     </message>
 </context>
 <context>
@@ -25580,7 +25598,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     </message>
     <message>
         <source>Match duplicates using subtitle &amp; description</source>
-        <translation>サブタイトルと内容で重複を判断</translation>
+        <translation>サブタイトルと説明で重複を判断</translation>
     </message>
     <message>
         <source>Match duplicates using subtitle</source>
@@ -25699,13 +25717,13 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
         <location filename="../programs/mythfrontend/schedulecommon.cpp" line="358"/>
         <location filename="../programs/mythfrontend/schedulecommon.cpp" line="517"/>
         <source>Record one showing</source>
-        <translation>この番組の1つを録画</translation>
+        <translation>番組を1度録画</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/schedulecommon.cpp" line="363"/>
         <location filename="../programs/mythfrontend/schedulecommon.cpp" line="516"/>
         <source>Record one showing (this episode)</source>
-        <translation>番組を一度録画（この回）</translation>
+        <translation>番組を1度録画（この回）</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/schedulecommon.cpp" line="368"/>
@@ -25976,7 +25994,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../libs/libmyth/schemawizard.cpp" line="270"/>
         <source>There are also other clients using this database. They should be shut down first.</source>
-        <translation>このデータベースを利用している別のクライアントが存在します。先にそちらをシャットダウンすべきです。</translation>
+        <translation>このデータベースを利用している別のクライアントが存在します。先にそちらを電源オフすべきです。</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/schemawizard.cpp" line="274"/>
@@ -25990,7 +26008,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
 Please shut them down before upgrading.</source>
         <translation>エラー : 他のクライアントが使用中のため、MythTV はこのデータベースのスキーマをアップグレードすることができません。
 
-アップグレードの前に、他のクライアントをシャットダウンしてください。</translation>
+アップグレードの前に、他のクライアントを電源オフしてください。</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/schemawizard.cpp" line="348"/>
@@ -26939,7 +26957,7 @@ Directory From Storage Group?</source>
     <name>StoreOptEditor</name>
     <message>
         <source>Record using the %1 profile</source>
-        <translation>「%1」プロファイルで録画する</translation>
+        <translation>「%1」プロファイルで録画</translation>
     </message>
     <message>
         <source>Create a new recording group</source>
@@ -27477,7 +27495,7 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8998"/>
         <source>Medium Quality</source>
-        <translation>最低品質</translation>
+        <translation>中品質</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9006"/>
@@ -27545,7 +27563,7 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6437"/>
         <source>Rotor %1%</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="2812"/>
@@ -28676,7 +28694,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1233"/>
         <source>MythTV is idle and will shutdown shortly.</source>
-        <translation>MythTVはアイドルで間もなくシャットダウンします。</translation>
+        <translation>MythTVは待機中で間もなく電源オフします。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="716"/>
@@ -28711,7 +28729,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="307"/>
         <source>2. Capture cards</source>
-        <translation>2. キャプチャカード</translation>
+        <translation>2. キャプチャーカード</translation>
     </message>
     <message>
         <source>3. Video sources</source>
@@ -29013,7 +29031,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1245"/>
         <source>New</source>
-        <translation>しい</translation>
+        <translation>新しい</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="47"/>
@@ -34835,12 +34853,12 @@ Part |PARTNUMBER| of %%PARTTOTAL%</source>
     <message>
         <location filename="../themes/themestrings.h" line="1305"/>
         <source>Old:</source>
-        <translation type="unfinished"></translation>
+        <translation>古い :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1249"/>
         <source>New:</source>
-        <translation>しい:</translation>
+        <translation>新しい :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="563"/>
@@ -36007,7 +36025,7 @@ When you have completed your configuration, press &quot;OK&quot; to search.</sou
     <message>
         <location filename="../themes/themestrings.h" line="1283"/>
         <source>Normal</source>
-        <translation>ノーマル</translation>
+        <translation>通常</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="282"/>
@@ -41535,18 +41553,18 @@ If they no longer exist please remove them</source>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="535"/>
         <source>MythTV is in a daily wakeup/shutdown period.</source>
-        <translation>MythTVは毎日の起動・シャットダウン処理中。</translation>
+        <translation>MythTVは毎日の起動・電源オフ時間内です。</translation>
     </message>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="537"/>
         <source>MythTV is about to start a wakeup/shutdown period.</source>
-        <translation>MythTVは日毎の起動/シャットダウン処理を開始しようとしています。</translation>
+        <translation>MythTVは起動・電源オフ時間に入ろうとしています。</translation>
     </message>
     <message numerus="yes">
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="544"/>
         <source>MythTV is idle and will shutdown in %n second(s).</source>
         <translation>
-            <numerusform>MythTVはアイドルで、%n秒後にシャットダウンします。</numerusform>
+            <numerusform>MythTVは待機中で、%n秒後に電源オフします。</numerusform>
         </translation>
     </message>
     <message>
@@ -41557,12 +41575,12 @@ If they no longer exist please remove them</source>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="598"/>
         <source>Unlock Shutdown</source>
-        <translation>シャットダウンをアンロック</translation>
+        <translation>電源オフをアンロック</translation>
     </message>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="600"/>
         <source>Lock Shutdown</source>
-        <translation>シャットダウンをロック</translation>
+        <translation>電源オフをロック</translation>
     </message>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="602"/>
@@ -41572,7 +41590,7 @@ If they no longer exist please remove them</source>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="603"/>
         <source>Shutdown Now</source>
-        <translation>すぐにシャットダウン</translation>
+        <translation>すぐに電源オフ</translation>
     </message>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="604"/>
@@ -41587,17 +41605,17 @@ If they no longer exist please remove them</source>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="650"/>
         <source>Cannot shutdown because MythTV is currently recording</source>
-        <translation>MythTVは録画中なのでシャットダウンできません</translation>
+        <translation>MythTV は録画中なので電源オフできません</translation>
     </message>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="661"/>
         <source>Cannot shutdown because MythTV is about to start recording</source>
-        <translation>MythTVは録画を開始しようとしているのでシャットダウンできません</translation>
+        <translation>MythTV は録画を開始しようとしているので電源オフできません</translation>
     </message>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="672"/>
         <source>Cannot shutdown because MythTV is about to start a wakeup/shutdown period.</source>
-        <translation>MythTVは起動・停止を始めようとしているので、シャットダウンできません。</translation>
+        <translation>MythTV は起動・電源オフ時間に入ろうとしているので、電源オフできません。</translation>
     </message>
     <message>
         <source>MythTV is idle and will shutdown in %1 seconds.</source>
