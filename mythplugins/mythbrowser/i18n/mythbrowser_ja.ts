@@ -6,17 +6,17 @@
     <message>
         <location filename="../mythbrowser/bookmarkeditor.cpp" line="57"/>
         <source>Edit Bookmark Details</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマーク の詳細を編集</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkeditor.cpp" line="59"/>
         <source>Enter Bookmark Details</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマーク の詳細を入力</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkeditor.cpp" line="129"/>
         <source>Select a category</source>
-        <translation type="unfinished"></translation>
+        <translation>カテゴリーを選択</translation>
     </message>
 </context>
 <context>
@@ -26,67 +26,69 @@
         <source>No bookmarks defined.
 
 Use the &apos;Add Bookmark&apos; menu option to add new bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークが未定義です。
+
+「ブックマークを追加」メニューオプションで、新しいブックマークを追加してください</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="255"/>
         <source>Actions</source>
-        <translation>アクション</translation>
+        <translation>操作</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="270"/>
         <source>Set Homepage</source>
-        <translation type="unfinished"></translation>
+        <translation>ホームページを設定</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="271"/>
         <source>Add Bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークを追加</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="275"/>
         <source>Edit Bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークを編集</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="276"/>
         <source>Delete Bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークを削除</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="277"/>
         <source>Show Bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークを表示</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="282"/>
         <source>Delete Marked</source>
-        <translation type="unfinished"></translation>
+        <translation>マークを削除</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="283"/>
         <source>Show Marked</source>
-        <translation type="unfinished"></translation>
+        <translation>マークを表示</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="284"/>
         <source>Clear Marked</source>
-        <translation type="unfinished"></translation>
+        <translation>マークをクリアー</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="287"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>設定</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="494"/>
         <source>Are you sure you want to delete the selected bookmark?</source>
-        <translation type="unfinished"></translation>
+        <translation>選択したブックマークを削除します。よろしいですか？</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="538"/>
         <source>Are you sure you want to delete the marked bookmarks?</source>
-        <translation type="unfinished"></translation>
+        <translation>マークしたブックマークを削除します。よろしいですか？</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -98,32 +100,32 @@ Use the &apos;Add Bookmark&apos; menu option to add new bookmarks</source>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="35"/>
         <source>MythBrowser Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>MythBrowser 設定</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="110"/>
         <source>This is the command that will be used to show the web browser. Use &apos;Internal&apos; to use the built in web browser&apos;. %ZOOM% and %URL% will be replaced with the zoom level and URL list.</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ブラウザを表示するコマンド。「内蔵」を指定すると内蔵の Web ブラウザを使用します。%ZOOM% と %URL% は、ズームレベルと URL リストに置き換えます。</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="116"/>
         <source>This is the default text size that will be used. Valid values for the Internal browser are from 0.3 to 5.0 with 1.0 being normal size less than 1 is smaller and greater than 1 is larger than normal size.</source>
-        <translation type="unfinished"></translation>
+        <translation>これはデフォルトのテキストサイズです。内蔵ブラウザで有効な値は、0.3 から 5.0 で 1.0 が標準サイズです。1 未満は小さく、1 を超過すると標準サイズより大きくなります。</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="123"/>
         <source>If checked this will enable browser plugins if the &apos;Internal&apos; browser is being used.</source>
-        <translation type="unfinished"></translation>
+        <translation>「内蔵」ブラウザを使用していて、この項目をチェックすると、ブラウザのプラグインを使用できるようになります。</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="128"/>
         <source>Exit without saving settings</source>
-        <translation type="unfinished"></translation>
+        <translation>設定を保存せずに終了</translation>
     </message>
     <message>
         <location filename="../mythbrowser/bookmarkmanager.cpp" line="132"/>
         <source>Save settings and Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>設定を保存して終了</translation>
     </message>
 </context>
 <context>
@@ -132,17 +134,17 @@ Use the &apos;Add Bookmark&apos; menu option to add new bookmarks</source>
         <location filename="../mythbrowser/mythbrowser.cpp" line="139"/>
         <location filename="../mythbrowser/mythbrowser.cpp" line="351"/>
         <source>Enter URL</source>
-        <translation type="unfinished"></translation>
+        <translation>URL を入力</translation>
     </message>
     <message>
         <location filename="../mythbrowser/mythbrowser.cpp" line="271"/>
         <source>Loading...</source>
-        <translation>ローディング...</translation>
+        <translation>読み込んでいます...</translation>
     </message>
     <message>
         <location filename="../mythbrowser/mythbrowser.cpp" line="340"/>
         <source>Actions</source>
-        <translation>アクション</translation>
+        <translation>操作</translation>
     </message>
     <message>
         <location filename="../mythbrowser/mythbrowser.cpp" line="354"/>
@@ -157,27 +159,27 @@ Use the &apos;Add Bookmark&apos; menu option to add new bookmarks</source>
     <message>
         <location filename="../mythbrowser/mythbrowser.cpp" line="359"/>
         <source>Zoom In</source>
-        <translation type="unfinished"></translation>
+        <translation>ズームイン</translation>
     </message>
     <message>
         <location filename="../mythbrowser/mythbrowser.cpp" line="360"/>
         <source>Zoom Out</source>
-        <translation type="unfinished"></translation>
+        <translation>ズームアウト</translation>
     </message>
     <message>
         <location filename="../mythbrowser/mythbrowser.cpp" line="361"/>
         <source>New Tab</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいタブ</translation>
     </message>
     <message>
         <location filename="../mythbrowser/mythbrowser.cpp" line="364"/>
         <source>Delete Tab</source>
-        <translation type="unfinished"></translation>
+        <translation>タブを削除</translation>
     </message>
     <message>
         <location filename="../mythbrowser/mythbrowser.cpp" line="366"/>
         <source>Add Bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークを追加</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -189,27 +191,27 @@ Use the &apos;Add Bookmark&apos; menu option to add new bookmarks</source>
     <message>
         <location filename="../mythbrowser/main.cpp" line="109"/>
         <source>Move to next browser tab</source>
-        <translation type="unfinished"></translation>
+        <translation>次のブラウザタブへ移動</translation>
     </message>
     <message>
         <location filename="../mythbrowser/main.cpp" line="111"/>
         <source>Move to previous browser tab</source>
-        <translation type="unfinished"></translation>
+        <translation>前のブラウザタブへ移動</translation>
     </message>
     <message>
         <location filename="../mythbrowser/main.cpp" line="114"/>
         <source>Show the bookmark manager</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマーク管理を表示</translation>
     </message>
     <message>
         <location filename="../mythbrowser/main.cpp" line="116"/>
         <source>Show the webbrowser homepage</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ブラウザのホームページを表示</translation>
     </message>
     <message>
         <location filename="../mythbrowser/main.cpp" line="119"/>
         <source>Internal Web Browser</source>
-        <translation type="unfinished"></translation>
+        <translation>内蔵 Web ブラウザ</translation>
     </message>
 </context>
 <context>
@@ -227,39 +229,39 @@ Use the &apos;Add Bookmark&apos; menu option to add new bookmarks</source>
     <message>
         <location filename="themestrings.h" line="12"/>
         <source>Browse your favorite web sites.</source>
-        <translation type="unfinished"></translation>
+        <translation>お好みの Web サイトをブラウズしてください。</translation>
     </message>
     <message numerus="yes">
         <location filename="themestrings.h" line="6"/>
         <source>%name% (%url%)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%name% (%url%)</numerusform>
         </translation>
     </message>
     <message>
         <location filename="themestrings.h" line="8"/>
         <source>Bookmark Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマーク名 :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="9"/>
         <source>Bookmark URL:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマーク URL :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="11"/>
         <source>Browse the web</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ブラウズ</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="13"/>
         <source>Browser</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウザ</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="16"/>
         <source>Browser command:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウザ コマンド :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="17"/>
@@ -269,72 +271,72 @@ Use the &apos;Add Bookmark&apos; menu option to add new bookmarks</source>
     <message>
         <location filename="themestrings.h" line="21"/>
         <source>Choose a bookmark to open in the webbrowser</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ブラウザで開くブックマークを選択</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="23"/>
         <source>Command:</source>
-        <translation type="unfinished"></translation>
+        <translation>コマンド :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="25"/>
         <source>Configure web browser settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ブラウザ設定をおこなう</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="27"/>
         <source>Edit your bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークを編集</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="28"/>
         <source>Enable Plugins:</source>
-        <translation type="unfinished"></translation>
+        <translation>プラグインを有効に :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="31"/>
         <source>Enable browser plugins:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウザ プラグインを有効に :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="35"/>
         <source>Find category</source>
-        <translation type="unfinished"></translation>
+        <translation>カテゴリーを検索</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="39"/>
         <source>Myth Web Browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Myth Web ブラウザ</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="43"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="46"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>検索</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="47"/>
         <source>Select bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークを選択</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="48"/>
         <source>Select bookmark or add a new one</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークを選択するか、新しいブックマークを追加</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="49"/>
         <source>Select bookmark:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークを選択 :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="50"/>
         <source>Text Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>テキストサイズ :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="18"/>
@@ -344,114 +346,116 @@ Use the &apos;Add Bookmark&apos; menu option to add new bookmarks</source>
     <message>
         <location filename="themestrings.h" line="42"/>
         <source>OK</source>
-        <translation>はい</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="33"/>
         <source>Enable plugins:</source>
-        <translation type="unfinished"></translation>
+        <translation>プラグインを有効に :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="32"/>
         <source>Enable plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>プラグインを有効に</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="51"/>
         <source>Text size:</source>
-        <translation type="unfinished"></translation>
+        <translation>テキストサイズ :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="53"/>
         <source>URL Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>URL 名 :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="56"/>
         <source>WEB BROWSER</source>
-        <translation type="unfinished"></translation>
+        <translation>WEB ブラウザ</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="58"/>
         <source>Web Page</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ページ</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="44"/>
         <source>Rating Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>評判設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="30"/>
         <source>Enable browser plugins (Flash, etc):</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウザ プラグイン (Flash 等) を有効に :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="24"/>
         <source>Configure Web Browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ブラウザ設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="62"/>
         <source>You can edit the name, URL, and category for the selected Web Site on this screen.
 
 When you have finished editing, select &quot;OK&quot; or &quot;Cancel&quot; to continue.</source>
-        <translation type="unfinished"></translation>
+        <translation>この画面で選択した Web サイトの名前、URL、カテゴリーを編集できます。
+
+編集がおわったら、「OK」または「キャンセル」で先に進みます。</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="59"/>
         <source>Webbrowser</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ブラウザ</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="10"/>
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマーク</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="55"/>
         <source>Url</source>
-        <translation type="unfinished"></translation>
+        <translation>Url</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="37"/>
         <source>Homepage</source>
-        <translation type="unfinished"></translation>
+        <translation>ホームページ</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="26"/>
         <source>Edit Bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークを編集</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="45"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>保存</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="15"/>
         <source>Browser Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウザ設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="29"/>
         <source>Enable browser plugins (Flash, etc)</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウザ プラグイン (Flash 等) を有効に</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="20"/>
         <source>Category:</source>
-        <translation>カテゴリ:</translation>
+        <translation>カテゴリー :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="41"/>
         <source>Name:</source>
-        <translation>名前:</translation>
+        <translation>名前 :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="54"/>
         <source>URL:</source>
-        <translation>ユーアールエル:</translation>
+        <translation>URL :</translation>
     </message>
     <message>
         <source>Genre:</source>
@@ -460,12 +464,12 @@ When you have finished editing, select &quot;OK&quot; or &quot;Cancel&quot; to c
     <message>
         <location filename="themestrings.h" line="22"/>
         <source>Click to choose from existing categories...</source>
-        <translation type="unfinished"></translation>
+        <translation>既存のカテゴリーをクリック...</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="7"/>
         <source>Bookmark Manager</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマーク管理</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="19"/>
@@ -475,17 +479,17 @@ When you have finished editing, select &quot;OK&quot; or &quot;Cancel&quot; to c
     <message>
         <location filename="themestrings.h" line="60"/>
         <source>Website Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Web サイト名</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="61"/>
         <source>Website URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Web サイト URL</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="63"/>
         <source>Zoom:</source>
-        <translation type="unfinished"></translation>
+        <translation>ズーム :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="64"/>
@@ -505,12 +509,12 @@ When you have finished editing, select &quot;OK&quot; or &quot;Cancel&quot; to c
     <message>
         <location filename="themestrings.h" line="38"/>
         <source>Homepage:</source>
-        <translation type="unfinished"></translation>
+        <translation>ホームページ :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="14"/>
         <source>Browser Command:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウザ コマンド :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="36"/>
@@ -528,7 +532,7 @@ When you have finished editing, select &quot;OK&quot; or &quot;Cancel&quot; to c
     <message>
         <location filename="../mythbrowser/webpage.cpp" line="122"/>
         <source>Loading...</source>
-        <translation>ローディング...</translation>
+        <translation>読み込んでいます...</translation>
     </message>
 </context>
 </TS>
