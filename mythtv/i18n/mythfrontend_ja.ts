@@ -1433,7 +1433,7 @@
     <message>
         <location filename="../libs/libmythtv/channelsettings.cpp" line="399"/>
         <source>Visible</source>
-        <translation>可視</translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelsettings.cpp" line="401"/>
@@ -1648,7 +1648,7 @@
     <message>
         <location filename="../libs/libmythtv/channelsettings.cpp" line="409"/>
         <source>Visible</source>
-        <translation>表示可</translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelsettings.cpp" line="411"/>
@@ -1996,7 +1996,7 @@ Check if the video exists</source>
     <message>
         <location filename="../libs/libmythbase/storagegroup.cpp" line="28"/>
         <source>Coverart</source>
-        <translation>ジャケット写真（映像）</translation>
+        <translation>ジャケット写真 (映像)</translation>
     </message>
     <message>
         <location filename="../libs/libmythbase/storagegroup.cpp" line="29"/>
@@ -2011,7 +2011,7 @@ Check if the video exists</source>
     <message>
         <location filename="../libs/libmythbase/storagegroup.cpp" line="31"/>
         <source>Banners</source>
-        <translation>タイトル文字</translation>
+        <translation>題字</translation>
     </message>
     <message>
         <location filename="../libs/libmythbase/storagegroup.cpp" line="32"/>
@@ -2021,12 +2021,12 @@ Check if the video exists</source>
     <message>
         <location filename="../libs/libmythbase/storagegroup.cpp" line="33"/>
         <source>Music</source>
-        <translation>ミュージック</translation>
+        <translation>音楽</translation>
     </message>
     <message>
         <location filename="../libs/libmythbase/storagegroup.cpp" line="34"/>
         <source>MusicArt</source>
-        <translation>ジャケット写真（ミュージック）</translation>
+        <translation>ジャケット写真 (音楽)</translation>
     </message>
 </context>
 <context>
@@ -3647,7 +3647,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2858"/>
         <source>Default channel group</source>
-        <translation>標準チャンネル グループ</translation>
+        <translation>デフォルトチャンネル グループ</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="2864"/>
@@ -4807,12 +4807,12 @@ Device supports up to %1</source>
     <message>
         <location filename="../libs/libmythtv/deletemap.cpp" line="103"/>
         <source>Cut to Beginning</source>
-        <translation>カットのはじめ</translation>
+        <translation>はじめまでカット</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/deletemap.cpp" line="108"/>
         <source>Cut to End</source>
-        <translation>カットの終わり</translation>
+        <translation>終わりまでカット</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/deletemap.cpp" line="120"/>
@@ -4949,7 +4949,7 @@ Device supports up to %1</source>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="2332"/>
         <source>File does not exist</source>
-        <translation>ファイルが存在しません</translation>
+        <translation>ファイルがありません</translation>
     </message>
 </context>
 <context>
@@ -5427,7 +5427,7 @@ Device supports up to %1</source>
         <location filename="../programs/mythfrontend/editvideometadata.cpp" line="652"/>
         <location filename="../programs/mythfrontend/editvideometadata.cpp" line="1048"/>
         <source>Metadata Editor</source>
-        <translation>メタデータ エディター</translation>
+        <translation>メタデータ編集</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/editvideometadata.cpp" line="667"/>
@@ -7213,7 +7213,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5579"/>
         <source>Recording has been transcoded</source>
-        <translation>録画トランスコード完了</translation>
+        <translation>録画はトランスコード済み</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5582"/>
@@ -7243,7 +7243,7 @@ Error: %1</source>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5588"/>
         <source>Recording has Subtitles Available</source>
-        <translation>録画は字幕あり</translation>
+        <translation>録画に字幕あり</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="5589"/>
@@ -7352,7 +7352,7 @@ Error: %1</source>
     <message>
         <location filename="../html/htmlstrings.h" line="20"/>
         <source>Watching Video</source>
-        <translation>動画を視聴</translation>
+        <translation>ビデオを視聴</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="22"/>
@@ -7982,7 +7982,7 @@ Error: %1</source>
     <message>
         <location filename="../html/htmlstrings.h" line="165"/>
         <source>Category:</source>
-        <translation>カテゴリー:</translation>
+        <translation>カテゴリー :</translation>
     </message>
     <message>
         <location filename="../html/htmlstrings.h" line="166"/>
@@ -8755,7 +8755,7 @@ Error: %1</source>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="1988"/>
         <source>File %1 does not exist</source>
-        <translation>%1 ファイルが存在しません</translation>
+        <translation>%1 ファイルはありません</translation>
     </message>
 </context>
 <context>
@@ -10041,7 +10041,7 @@ Error: %1</source>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="1639"/>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="1882"/>
         <source>Schedule Editor</source>
-        <translation>予約エディター</translation>
+        <translation>予約編集</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="1803"/>
@@ -10296,7 +10296,7 @@ Error: %1</source>
     </message>
     <message>
         <source>OK</source>
-        <translation>はい</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../libs/libmythui/mythmainwindow.cpp" line="818"/>
@@ -13494,7 +13494,7 @@ Returning to the previous menu.</source>
     <message>
         <location filename="../libs/libmythtv/playgroup.cpp" line="60"/>
         <source>Skip ahead (seconds)</source>
-        <translation>送り（秒）</translation>
+        <translation>先にスキップ (秒)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/playgroup.cpp" line="61"/>
@@ -13504,7 +13504,7 @@ Returning to the previous menu.</source>
     <message>
         <location filename="../libs/libmythtv/playgroup.cpp" line="73"/>
         <source>Skip back (seconds)</source>
-        <translation>戻し（秒）</translation>
+        <translation>前にスキップ (秒)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/playgroup.cpp" line="74"/>
@@ -13630,7 +13630,7 @@ Returning to the previous menu.</source>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2720"/>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2724"/>
         <source>Yes, delete it</source>
-        <translation>はい，消去します</translation>
+        <translation>はい、削除します</translation>
     </message>
     <message>
         <source>Recording List Menu</source>
@@ -13775,7 +13775,7 @@ Returning to the previous menu.</source>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2836"/>
         <source>Toggle playlist for this Category/Title</source>
-        <translation>このカテゴリー/タイトルのプレイリストを交換する</translation>
+        <translation>このカテゴリー・タイトルのプレイリストを交換する</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="2846"/>
@@ -13910,7 +13910,7 @@ Returning to the previous menu.</source>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="390"/>
         <source>Watch List</source>
-        <translation>視聴リスト</translation>
+        <translation>注目リスト</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/playbackbox.cpp" line="1518"/>
@@ -14565,7 +14565,7 @@ Are you sure you want to delete:</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="151"/>
         <source>Default group filter to apply</source>
-        <translation>適用する標準グループフィルター</translation>
+        <translation>適用するデフォルトグループフィルター</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="154"/>
@@ -15522,7 +15522,7 @@ name cannot be blank.</source>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="481"/>
         <source>Repeat</source>
-        <translation>繰り返し</translation>
+        <translation>くり返し</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="489"/>
@@ -15668,12 +15668,12 @@ name cannot be blank.</source>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="863"/>
         <source>Watch List Score</source>
-        <translation>視聴リストのスコア</translation>
+        <translation>注目リストのスコア</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="864"/>
         <source>Watch List Status</source>
-        <translation>視聴リストの状態</translation>
+        <translation>注目リストの状態</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="847"/>
@@ -15693,7 +15693,7 @@ name cannot be blank.</source>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="306"/>
         <source> Query FAILED</source>
-        <translation> クエリー 失敗</translation>
+        <translation>クエリー失敗</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/progdetails.cpp" line="308"/>
@@ -17219,7 +17219,7 @@ name cannot be blank.</source>
         <location filename="../libs/libmyth/programinfo.cpp" line="1807"/>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="164"/>
         <source>Repeat</source>
-        <translation>繰り返し</translation>
+        <translation>くり返し</translation>
     </message>
     <message>
         <location filename="../libs/libmythservicecontracts/enums/recStatus.cpp" line="160"/>
@@ -20163,7 +20163,7 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Default group filter to apply</source>
-        <translation>適用する標準グループフィルター</translation>
+        <translation>適用するデフォルトグループフィルター</translation>
     </message>
     <message>
         <source>Default group filter to apply on the View Recordings screen.</source>
@@ -20690,11 +20690,11 @@ The frequency for this transport (multiplex) in</source>
     </message>
     <message>
         <source>Skip ahead (seconds)</source>
-        <translation>早送り (秒)</translation>
+        <translation>先にスキップ (秒)</translation>
     </message>
     <message>
         <source>Skip back (seconds)</source>
-        <translation>巻戻し (秒)</translation>
+        <translation>前にスキップ (秒)</translation>
     </message>
     <message>
         <source>Time stretch (speed x 100)</source>
@@ -21489,12 +21489,12 @@ Most DVB-S transponders transmit at 27.5 million symbols per second.</source>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="687"/>
         <source>If set, the MPEG4 encoder will use interlaced DCT encoding. You may want this when encoding interlaced video; however, this is experimental and may cause damaged video.</source>
-        <translation>設定すると、MPEG4 エンコーダーはインターレースDCTエンコードを使用します。インターレースビデオをエンコードする際に利用したいと思うかもしれませんが、これは実験的機能で動画を破損する恐れがあります。</translation>
+        <translation>設定すると、MPEG4 エンコーダーはインターレースDCTエンコードを使用します。インターレースビデオをエンコードする際に利用したいと思うかもしれませんが、これは実験的機能でビデオファイルを破損する恐れがあります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="703"/>
         <source>If set, the MPEG4 encoder will use interlaced motion estimation. You may want this when encoding interlaced video; however, this is experimental and may cause damaged video.</source>
-        <translation>設定すると、MPEG4 エンコーダーはインターレース エスティメーションを使用します。インターレースビデオをエンコードする際に利用したいと思うかもしれませんが、これは実験的機能で動画を破損する恐れがあります。</translation>
+        <translation>設定すると、MPEG4 エンコーダーはインターレース エスティメーションを使用します。インターレースビデオをエンコードする際に利用したいと思うかもしれませんが、これは実験的機能でビデオファイルを破損する恐れがあります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/recordingprofile.cpp" line="719"/>
@@ -23885,7 +23885,7 @@ Your grabber does not provide channel numbers, so you have to set them manually.
     <message>
         <location filename="../programs/mythtv-setup/checksetup.cpp" line="24"/>
         <source>Path &quot;%1&quot; doesn&apos;t exist.</source>
-        <translation>パス「%1」は存在しません。</translation>
+        <translation>パス「%1」はありません。</translation>
     </message>
     <message>
         <location filename="../programs/mythtv-setup/checksetup.cpp" line="33"/>
@@ -25302,32 +25302,32 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="4082"/>
         <source>Friendly name</source>
-        <translation type="unfinished"></translation>
+        <translation>フレンドリー名</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="4082"/>
         <source>Friendly name of the Sat&gt;IP server</source>
-        <translation type="unfinished"></translation>
+        <translation>Sat&gt;IP サーバーのフレンドリー名</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="4083"/>
         <source>Tuner type</source>
-        <translation type="unfinished"></translation>
+        <translation>チューナータイプ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="4083"/>
         <source>Type of the selected tuner</source>
-        <translation type="unfinished"></translation>
+        <translation>選択したチューナーのタイプ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="4084"/>
         <source>Tuner index</source>
-        <translation type="unfinished"></translation>
+        <translation>チューナーインデックス</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="4084"/>
         <source>Index of the tuner on the Sat&gt;IP server</source>
-        <translation type="unfinished"></translation>
+        <translation>Sat&gt;IP サーバー上チューナーのインデックス</translation>
     </message>
 </context>
 <context>
@@ -25335,12 +25335,12 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="4234"/>
         <source>Device ID</source>
-        <translation type="unfinished">デバイス ID</translation>
+        <translation>デバイス ID</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="4235"/>
         <source>Device ID of the Sat&gt;IP tuner</source>
-        <translation type="unfinished"></translation>
+        <translation>Sat&gt;IP チューナーのデバイスID</translation>
     </message>
 </context>
 <context>
@@ -25348,17 +25348,17 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="4164"/>
         <source>Available devices</source>
-        <translation type="unfinished"></translation>
+        <translation>有効なデバイス</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="4165"/>
         <source>Device IP or ID, tuner number and tuner type of available Sat&gt;IP device</source>
-        <translation type="unfinished"></translation>
+        <translation>デバイスIP または ID、有効な Sat&gt;IP デバイスのチューナー番号とチューナータイプ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="4218"/>
         <source>Warning: already in use</source>
-        <translation type="unfinished"></translation>
+        <translation>警告 : すでに使用中</translation>
     </message>
 </context>
 <context>
@@ -25366,7 +25366,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../libs/libmythtv/recorders/satipsignalmonitor.cpp" line="65"/>
         <source>Error: stream handler died</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー : ストリーム ハンドラーが中断</translation>
     </message>
 </context>
 <context>
@@ -25436,7 +25436,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../libs/libmythtv/channelscan/scanwizardconfig.cpp" line="343"/>
         <source>M3U Import</source>
-        <translation>M3U インポー</translation>
+        <translation>M3U インポート</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/scanwizardconfig.cpp" line="253"/>
@@ -25448,7 +25448,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
         <location filename="../libs/libmythtv/channelscan/scanwizardconfig.cpp" line="309"/>
         <location filename="../libs/libmythtv/channelscan/scanwizardconfig.cpp" line="333"/>
         <source>Import existing scan</source>
-        <translation>既存のものをスキャン</translation>
+        <translation>既存のスキャンをインポート</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/channelscan/scanwizardconfig.cpp" line="337"/>
@@ -25606,7 +25606,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     </message>
     <message>
         <source>Match duplicates using description</source>
-        <translation>重複を内容で判断</translation>
+        <translation>説明で重複を判断</translation>
     </message>
     <message>
         <source>Don&apos;t match duplicates</source>
@@ -25641,7 +25641,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>録画を停止する</translation>
+        <translation>録画を停止</translation>
     </message>
     <message>
         <source>Don&apos;t record</source>
@@ -25657,7 +25657,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     </message>
     <message>
         <source>Edit Options</source>
-        <translation>オプションの編集</translation>
+        <translation>設定の編集</translation>
     </message>
     <message>
         <source>Add Override</source>
@@ -25674,7 +25674,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <source> The following programs will be recorded instead:
 </source>
-        <translation> 代わりに次の番組が録画されます:
+        <translation> 替わりに次の番組を録画します :
 </translation>
     </message>
     <message>
@@ -25693,7 +25693,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../programs/mythfrontend/schedulecommon.cpp" line="326"/>
         <source>The following programs will be recorded instead:</source>
-        <translation>変わりに次の番組が録画されます :</translation>
+        <translation>替わりに次の番組を録画します :</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/schedulecommon.cpp" line="345"/>
@@ -25816,7 +25816,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     </message>
     <message>
         <source>Do not record this program</source>
-        <translation>録画しない</translation>
+        <translation>この番組を録画しない</translation>
     </message>
     <message>
         <source>Record only this showing</source>
@@ -25914,19 +25914,19 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="577"/>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="814"/>
         <source>Schedule Options</source>
-        <translation type="unfinished"></translation>
+        <translation>予約設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="579"/>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="816"/>
         <source>Filter Options</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルター設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="581"/>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="818"/>
         <source>Storage Options</source>
-        <translation type="unfinished">保存オプション</translation>
+        <translation>ストレージ設定</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="583"/>
@@ -25956,7 +25956,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="591"/>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="827"/>
         <source>Preview Changes</source>
-        <translation>プレビュー変更</translation>
+        <translation>変更をプレビュー</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="800"/>
@@ -25976,7 +25976,7 @@ Connect video source &apos;%1&apos; to a capture card in the &apos;Input Connect
     <message>
         <location filename="../programs/mythfrontend/scheduleeditor.cpp" line="858"/>
         <source>Default</source>
-        <translation>標準</translation>
+        <translation>デフォルト</translation>
     </message>
 </context>
 <context>
@@ -26023,12 +26023,12 @@ Please shut them down before upgrading.</source>
     <message>
         <location filename="../libs/libmyth/schemawizard.cpp" line="365"/>
         <source>This version of MythTV requires an updated database. </source>
-        <translation>MythTVのこのバージョンは、より新しいバージョンのデータベースが必要です。 </translation>
+        <translation>MythTV のこのバージョンは、より新しいバージョンのデータベースが必要です。 </translation>
     </message>
     <message>
         <location filename="../libs/libmyth/schemawizard.cpp" line="366"/>
         <source>(schema is %1 versions behind)</source>
-        <translation>（スキーマは %1 。古いバージョン）</translation>
+        <translation>(スキーマは %1 古いバージョン)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/schemawizard.cpp" line="367"/>
@@ -26043,7 +26043,7 @@ Please shut them down before upgrading.</source>
     <message>
         <location filename="../libs/libmyth/schemawizard.cpp" line="388"/>
         <source>MythTV was unable to backup your database.</source>
-        <translation>MythTVはデータベースのバックアップができません。</translation>
+        <translation>MythTV はデータベースのバックアップができません。</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/schemawizard.cpp" line="427"/>
@@ -26188,7 +26188,7 @@ Database Name: %2</source>
     </message>
     <message>
         <source>is recording</source>
-        <translation>が録画中</translation>
+        <translation>は録画中</translation>
     </message>
     <message>
         <source>is not recording</source>
@@ -26222,12 +26222,12 @@ No other details</source>
     </message>
     <message>
         <source>is unavailable</source>
-        <translation>利用できません</translation>
+        <translation>は利用できません</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="990"/>
         <source>Scheduled Run Time:</source>
-        <translation>スケジュール実行時間 :</translation>
+        <translation>予約実行時間 :</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="721"/>
@@ -26271,7 +26271,7 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="119"/>
         <source>Input Status</source>
-        <translation>入力の状態</translation>
+        <translation>入力状態</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="127"/>
@@ -26300,7 +26300,7 @@ No other details</source>
     </message>
     <message>
         <source>Setting priority level to %1</source>
-        <translation>優先度を%1にする</translation>
+        <translation>優先度を %1 にする</translation>
     </message>
     <message>
         <source>Acknowledge this log entry?</source>
@@ -26314,7 +26314,7 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="286"/>
         <source>Job Queue Actions:</source>
-        <translation>ジョブキュー操作:</translation>
+        <translation>ジョブキュー操作 :</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="299"/>
@@ -26340,7 +26340,7 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="307"/>
         <source>Requeue Job?</source>
-        <translation>ジョブをもう一度キューに入れる?</translation>
+        <translation>ジョブをもう一度キューに入れますか?</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="325"/>
@@ -26355,7 +26355,7 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="338"/>
         <source>Move to Default group</source>
-        <translation>標準グループに移動する</translation>
+        <translation>デフォルトグループに移動</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="342"/>
@@ -26410,7 +26410,7 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="522"/>
         <source>Have you run mythfilldatabase?</source>
-        <translation>mythfilldatabaseを実行したことがありますか?</translation>
+        <translation>mythfilldatabase を実行したことがありますか?</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="528"/>
@@ -26420,11 +26420,11 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="538"/>
         <source>WARNING: is mythfilldatabase running?</source>
-        <translation>注意: mythfilldatabase を実行中ですか?</translation>
+        <translation>注意 : mythfilldatabase を実行中ですか?</translation>
     </message>
     <message>
         <source>DataDirect Status: </source>
-        <translation>DataDirect ステータス: </translation>
+        <translation>DataDirect ステータス : </translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="548"/>
@@ -26442,7 +26442,7 @@ No other details</source>
     </message>
     <message>
         <source>is watching Live TV</source>
-        <translation>は放送中のテレビを視聴しています</translation>
+        <translation>は放送中のテレビを視聴中</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="891"/>
@@ -26492,7 +26492,7 @@ No other details</source>
     </message>
     <message>
         <source>Machine Status shows some operating system statistics of this machine</source>
-        <translation>マシンステータスは、このマシーンのOS情報から抜粋して表示します</translation>
+        <translation>マシンステータスは、このマシーンのOS情報の一部を表示します</translation>
     </message>
     <message>
         <source>and the MythTV server</source>
@@ -26562,37 +26562,37 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1486"/>
         <source>Display information.</source>
-        <translation type="unfinished"></translation>
+        <translation>情報を表示する。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1502"/>
         <source>Render information.</source>
-        <translation type="unfinished"></translation>
+        <translation>情報をレンダリング。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1521"/>
         <source>Current fps: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>現在の fps : %1</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1548"/>
         <source>GPU memory used     : %1MB</source>
-        <translation type="unfinished"></translation>
+        <translation>使用 GPU メモリー     : %1MB</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1560"/>
         <source>GPU memory free     : %1MB (or %2%)</source>
-        <translation type="unfinished"></translation>
+        <translation>空き GPU メモリー     : %1MB ( %2%)</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1566"/>
         <source>GPU memory total    : %1MB</source>
-        <translation type="unfinished"></translation>
+        <translation>GPU メモリー合計     : %1MB</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1567"/>
         <source>GPU memory dedicated: %1MB</source>
-        <translation type="unfinished"></translation>
+        <translation>専用 GPU メモリー: %1MB</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1593"/>
@@ -26610,13 +26610,13 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="135"/>
         <source>Rendering</source>
-        <translation type="unfinished"></translation>
+        <translation>レンダリング</translation>
     </message>
     <message numerus="yes">
         <location filename="../programs/mythfrontend/statusbox.cpp" line="561"/>
         <source>%n template rule(s) (is) defined</source>
         <translation>
-            <numerusform>定義済みルールテンプレート : %n</numerusform>
+            <numerusform>%n 個のルールテンプレートが定義済み</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -26630,20 +26630,20 @@ No other details</source>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="591"/>
         <source>%n search rule(s) are defined</source>
         <translation>
-            <numerusform>定義済み検索ルール : %n</numerusform>
+            <numerusform>%n 個の検索ルールが定義済み</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../programs/mythfrontend/statusbox.cpp" line="655"/>
         <source>%n matching showing(s)</source>
         <translation>
-            <numerusform>一致した番組 : %n</numerusform>
+            <numerusform>%n 個の番組が一致</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="768"/>
         <source>Input Status shows the current information about the state of backend inputs</source>
-        <translation>入力ステータスは、バックエンドの入力についての現在の情報を表示します</translation>
+        <translation>入力ステータスは、バックエンド入力の現在の情報を表示します</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="857"/>
@@ -26683,7 +26683,7 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="877"/>
         <source>, </source>
-        <translation>, </translation>
+        <translation>、 </translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="946"/>
@@ -26698,7 +26698,7 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1076"/>
         <source>, using your %1 rate of %2 kb/s</source>
-        <translation>, %2 Kb/秒のレートのうち %1 を使用</translation>
+        <translation>、%2 Kb/秒のレートのうち %1 を使用</translation>
     </message>
     <message numerus="yes">
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1092"/>
@@ -26752,12 +26752,12 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1195"/>
         <source>Machine Status shows some operating system statistics of this machine and the MythTV server.</source>
-        <translation>マシンステータスは、マシンとMythTV サーバーのOS統計情報の抜粋を表示します。</translation>
+        <translation>マシンステータスは、マシンと MythTV サーバーのOS統計情報の一部を表示します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1215"/>
         <source>System time</source>
-        <translation type="unfinished"></translation>
+        <translation>システム時間</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1222"/>
@@ -26768,37 +26768,37 @@ No other details</source>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1223"/>
         <source>OS</source>
-        <translation type="unfinished"></translation>
+        <translation>OS</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1225"/>
         <source>Qt version</source>
-        <translation type="unfinished"></translation>
+        <translation>Qt バージョン</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1240"/>
         <source>WiFi</source>
-        <translation type="unfinished"></translation>
+        <translation>WiFi</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1240"/>
         <source>Ethernet</source>
-        <translation type="unfinished"></translation>
+        <translation>イーサネット</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1242"/>
         <source>Network</source>
-        <translation type="unfinished"></translation>
+        <translation>ネットワーク</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1245"/>
         <source>MAC Address</source>
-        <translation type="unfinished"></translation>
+        <translation>MAC アドレス</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1252"/>
         <source>IP Address</source>
-        <translation type="unfinished"></translation>
+        <translation>IP アドレス</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/statusbox.cpp" line="1330"/>
@@ -26849,7 +26849,8 @@ No other details</source>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="201"/>
         <source>Remove &apos;%1&apos;
 Directory From Storage Group?</source>
-        <translation>%1 ディレクトリーをストレージ グループから削除しますか?</translation>
+        <translation>%1 ディレクトリー
+をストレージ グループから削除しますか？</translation>
     </message>
 </context>
 <context>
@@ -26859,7 +26860,7 @@ Directory From Storage Group?</source>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="78"/>
         <source>Default</source>
         <comment>Default storage group</comment>
-        <translation>標準</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="39"/>
@@ -26880,15 +26881,15 @@ Directory From Storage Group?</source>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="88"/>
         <source>Delete &apos;%1&apos; Storage Group?
 (from remote hosts)</source>
-        <translation>「%1」ディレクトリーをストレージ グループから削除しますか?
-（リモートホストから）</translation>
+        <translation>「%1」ストレージ グループを削除しますか?
+(リモートホストから)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="92"/>
         <source>Delete &apos;%1&apos; Storage Group?
 (from all hosts)</source>
-        <translation>「%1」ディレクトリーをストレージ グループから削除しますか?
-（すべてのホストから）</translation>
+        <translation>「%1」ストレージ グループを削除しますか?
+(すべてのホストから)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="238"/>
@@ -26901,28 +26902,28 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="341"/>
         <source>Storage Groups (directories for new recordings)</source>
-        <translation>ストレージグループ（新しい録画用のディレクトリー）</translation>
+        <translation>ストレージグループ (新しい録画用のディレクトリー)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="343"/>
         <source>Local Storage Groups (directories for new recordings)</source>
-        <translation>ローカル ストレージグループ（新しい録画用のディレクトリー）</translation>
+        <translation>ローカル ストレージグループ (新しい録画用のディレクトリー)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="397"/>
         <source>Default</source>
         <comment>Default storage group</comment>
-        <translation>標準</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="429"/>
         <source>(Create default group)</source>
-        <translation>（標準グループを作成）</translation>
+        <translation>(デフォルトグループを作成)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="448"/>
         <source>(Create new group)</source>
-        <translation>（新しいグループを作成）</translation>
+        <translation>(新しいグループを作成)</translation>
     </message>
     <message>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="477"/>
@@ -26950,7 +26951,7 @@ Directory From Storage Group?</source>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="438"/>
         <location filename="../libs/libmyth/storagegroupeditor.cpp" line="461"/>
         <source>(Create %1 group)</source>
-        <translation>（%1グループを作成）</translation>
+        <translation>(%1グループを作成)</translation>
     </message>
 </context>
 <context>
@@ -26965,7 +26966,7 @@ Directory From Storage Group?</source>
     </message>
     <message>
         <source>Default</source>
-        <translation>標準</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <source>Live TV</source>
@@ -26998,12 +26999,12 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1623"/>
         <source>Let it record and go back to the Main Menu</source>
-        <translation>録画を許してメインメニューに戻る</translation>
+        <translation>録画してメインメニューに戻る</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1627"/>
         <source>Don&apos;t let it record, I want to watch TV</source>
-        <translation>録画せずにテレビを見る</translation>
+        <translation>録画せず、放送中番組を視聴する</translation>
     </message>
     <message>
         <source>Save this position and go to the menu</source>
@@ -27016,7 +27017,7 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9817"/>
         <source>Keep watching</source>
-        <translation>見続ける</translation>
+        <translation>視聴をつづける</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9815"/>
@@ -27027,7 +27028,7 @@ Directory From Storage Group?</source>
         <location filename="../libs/libmythtv/tv_play.cpp" line="4743"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6230"/>
         <source>Paused</source>
-        <translation>一時停止中</translation>
+        <translation>一時停止</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="4079"/>
@@ -27091,7 +27092,7 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="4909"/>
         <source>Forward</source>
-        <translation>送る</translation>
+        <translation>早送り</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="4355"/>
@@ -27104,7 +27105,7 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="4908"/>
         <source>Rewind</source>
-        <translation>戻す</translation>
+        <translation>巻戻し</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="4359"/>
@@ -27145,7 +27146,7 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7788"/>
         <source>Continue Editing</source>
-        <translation>編集を続ける</translation>
+        <translation>編集をつづける</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7789"/>
@@ -27213,7 +27214,7 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8910"/>
         <source>Previous Channel</source>
-        <translation>以前のチャンネル</translation>
+        <translation>前のチャンネル</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8957"/>
@@ -27327,7 +27328,7 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6428"/>
         <source>No Lock</source>
-        <translation>ロック無し</translation>
+        <translation>ロックなし</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="3808"/>
@@ -27349,7 +27350,7 @@ Directory From Storage Group?</source>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9553"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9872"/>
         <source>OK</source>
-        <translation>はい</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9163"/>
@@ -27364,7 +27365,7 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="3772"/>
         <source>Seek:</source>
-        <translation>シーク:</translation>
+        <translation>シーク :</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="5730"/>
@@ -27395,13 +27396,13 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6433"/>
         <source>S/N %1dB</source>
-        <translation></translation>
+        <translation>S/N %1dB</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6435"/>
         <source>BE %1</source>
         <comment>Bit Errors</comment>
-        <translation></translation>
+        <translation>ビットエラー %1</translation>
     </message>
     <message>
         <source>Speed 16X</source>
@@ -27443,12 +27444,12 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9701"/>
         <source>Previous Title</source>
-        <translation>スキップバックはできません</translation>
+        <translation>前のタイトル</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9684"/>
         <source>Skip Back Not Allowed</source>
-        <translation>以前のタイトル</translation>
+        <translation>前にスキップは禁止されています</translation>
     </message>
     <message>
         <source>Callsign</source>
@@ -27475,12 +27476,12 @@ Directory From Storage Group?</source>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8930"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9230"/>
         <source>Recorded Program</source>
-        <translation></translation>
+        <translation>録画済み番組</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8974"/>
         <source>Default</source>
-        <translation>既定値</translation>
+        <translation>デフォルト</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8982"/>
@@ -27500,7 +27501,7 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9006"/>
         <source>Low Quality</source>
-        <translation>オーディオ品質</translation>
+        <translation>低品質</translation>
     </message>
     <message>
         <source>Toggle Teletext Captions</source>
@@ -27514,7 +27515,7 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8858"/>
         <source>Toggle</source>
-        <translation>切替え</translation>
+        <translation>切り替え</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9171"/>
@@ -27563,21 +27564,21 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6437"/>
         <source>Rotor %1%</source>
-        <translation></translation>
+        <translation>ロータ― %1%</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="2812"/>
         <source>End Of Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の終わり</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="2462"/>
         <source>Last Program: %1 Doesn&apos;t Exist</source>
-        <translation type="unfinished"></translation>
+        <translation>最後の番組: %1 はありません</translation>
     </message>
     <message>
         <source>Delete this recording?</source>
-        <translation>この録画を削除する?</translation>
+        <translation>この録画を削除しますか？</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6591"/>
@@ -27593,22 +27594,22 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6599"/>
         <source>Still Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>スチルフレーム</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6609"/>
         <source>Title: %1 (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>タイトル %1 (%2)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6611"/>
         <source>Chapter: %1/%2</source>
-        <translation type="unfinished"></translation>
+        <translation>チャプター : %1/%2</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8905"/>
         <source>DVD Chapter Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD チャプターメニュー</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -27617,27 +27618,27 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1620"/>
         <source>MythTV wants to record &quot;%1&quot; on %2 in %d seconds. Do you want to:</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV は %2 で「%1」を %d 秒後に録画しようとしています。どうしますか？:</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1624"/>
         <source>Let them record and go back to the Main Menu</source>
-        <translation>録画を許してメインメニューに戻る</translation>
+        <translation>録画してメインメニューに戻る</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1625"/>
         <source>Record it later, I want to watch TV</source>
-        <translation type="unfinished"></translation>
+        <translation>後で録画し、放送中番組を視聴する</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1626"/>
         <source>Record them later, I want to watch TV</source>
-        <translation type="unfinished"></translation>
+        <translation>後で録画し、放送中番組を視聴する</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1628"/>
         <source>Don&apos;t let them record, I want to watch TV</source>
-        <translation>録画せずにテレビを見る</translation>
+        <translation>録画せず、放送中番組を視聴する</translation>
     </message>
     <message>
         <source>Volume</source>
@@ -27646,18 +27647,19 @@ Directory From Storage Group?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8840"/>
         <source>Adjust Subtitle Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>字幕ズームの調整</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8848"/>
         <source>Adjust Subtitle Delay</source>
-        <translation type="unfinished"></translation>
+        <translation>字幕の遅延調整</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6997"/>
         <source>MythTV was set to sleep after %1 minutes and will exit in %d seconds.
 Do you wish to continue watching?</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV は、あと %1 分でスリープの設定がされているため、%d 秒後に終了します。
+視聴をつづけますか？</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7002"/>
@@ -27668,262 +27670,262 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7052"/>
         <source>MythTV has been idle for %1 minutes and will exit in %d seconds. Are you still watching?</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV は %1 分間待機中でしたので、%d 秒後に終了します。視聴をつづけますか？</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7705"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7718"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9198"/>
         <source>Edit Cut Points</source>
-        <translation type="unfinished"></translation>
+        <translation>カットポイントの編集</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7727"/>
         <source>Exit Recording Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>録画編集を終了</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7728"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8448"/>
         <source>Save Cuts and Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>カットを保存して終了</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7729"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8440"/>
         <source>Exit Without Saving</source>
-        <translation type="unfinished"></translation>
+        <translation>保存せずに終了</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7730"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8444"/>
         <source>Save Cuts</source>
-        <translation type="unfinished"></translation>
+        <translation>カットを保存</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7731"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8436"/>
         <source>Undo Changes</source>
-        <translation type="unfinished"></translation>
+        <translation>変更を取り消し</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7925"/>
         <source>UNKNOWN%1</source>
         <comment>Synthesized callsign</comment>
-        <translation type="unfinished">不明 %1</translation>
+        <translation>UNKNOWN%1</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8369"/>
         <source>Move Previous Cut End Here</source>
-        <translation type="unfinished"></translation>
+        <translation>前のカット終了点をここに移動</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8369"/>
         <source>Move Start of Cut Here</source>
-        <translation type="unfinished"></translation>
+        <translation>カット開始点をここに移動</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8380"/>
         <source>Move Next Cut Start Here</source>
-        <translation type="unfinished"></translation>
+        <translation>次のカット開始をここに移動</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8380"/>
         <source>Move End of Cut Here</source>
-        <translation type="unfinished"></translation>
+        <translation>カット終了点をここに移動</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8386"/>
         <source>Cut to Beginning</source>
-        <translation type="unfinished"></translation>
+        <translation>はじめまでカット</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8393"/>
         <source>Cut to End</source>
-        <translation type="unfinished"></translation>
+        <translation>終わりまでカット</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8399"/>
         <source>Delete This Cut</source>
-        <translation type="unfinished"></translation>
+        <translation>このカットを削除</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8399"/>
         <source>Join Surrounding Cuts</source>
-        <translation type="unfinished"></translation>
+        <translation>周囲のカットを結合</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8404"/>
         <source>Add New Cut</source>
-        <translation type="unfinished">新しいカットポイントを挿入する</translation>
+        <translation>新しいカットポイントを追加</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8410"/>
         <source>Undo - %1</source>
         <extracomment>%1 is the undo message</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>取り消し - %1</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8418"/>
         <source>Redo - %1</source>
         <extracomment>%1 is the redo message</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>やり直し - %1</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8424"/>
         <source>Clear Cuts</source>
-        <translation type="unfinished"></translation>
+        <translation>カットをクリアー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8428"/>
         <source>Reverse Cuts</source>
-        <translation type="unfinished"></translation>
+        <translation>カットを反転</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8432"/>
         <source>Load Detected Commercials</source>
-        <translation type="unfinished"></translation>
+        <translation>検出済みのCMを読み込む</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8539"/>
         <source>Auto</source>
-        <translation type="unfinished">自動</translation>
+        <translation>自動</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8541"/>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>無視</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8758"/>
         <source>None</source>
-        <translation type="unfinished">無し</translation>
+        <translation>なし</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8543"/>
         <source>Discard Side by Side</source>
-        <translation type="unfinished"></translation>
+        <translation>サイドバイサイドを破棄</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8545"/>
         <source>Discard Top and Bottom</source>
-        <translation type="unfinished"></translation>
+        <translation>トップアンドボトムを破棄</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8603"/>
         <source>0.5x</source>
-        <translation type="unfinished">0% {0.5x?}</translation>
+        <translation>0.5x</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8604"/>
         <source>0.9x</source>
-        <translation type="unfinished">0% {0.9x?}</translation>
+        <translation>0.9x</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8605"/>
         <source>1.0x</source>
-        <translation type="unfinished">0% {1.0x?}</translation>
+        <translation>1.0x</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8606"/>
         <source>1.1x</source>
-        <translation type="unfinished">0% {1.1x?}</translation>
+        <translation>1.1x</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8607"/>
         <source>1.2x</source>
-        <translation type="unfinished">0% {1.2x?}</translation>
+        <translation>1.2x</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8608"/>
         <source>1.3x</source>
-        <translation type="unfinished">0% {1.3x?}</translation>
+        <translation>1.3x</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8609"/>
         <source>1.4x</source>
-        <translation type="unfinished">0% {1.4x?}</translation>
+        <translation>1.4x</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8610"/>
         <source>1.5x</source>
-        <translation type="unfinished">0% {1.5x?}</translation>
+        <translation>1.5x</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8765"/>
         <source>Disable Audio Upmixer</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオアップミキサーを無効に</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8794"/>
         <source>Disable Subtitles</source>
-        <translation type="unfinished"></translation>
+        <translation>字幕を無効に</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8800"/>
         <source>Enable Subtitles</source>
-        <translation type="unfinished"></translation>
+        <translation>字幕を有効に</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8808"/>
         <source>Disable Forced Subtitles</source>
-        <translation type="unfinished"></translation>
+        <translation>強制字幕を無効に</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8817"/>
         <source>Enable Forced Subtitles</source>
-        <translation type="unfinished"></translation>
+        <translation>強制字幕を有効に</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8824"/>
         <source>Disable External Subtitles</source>
-        <translation type="unfinished"></translation>
+        <translation>外部字幕を無効に</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8830"/>
         <source>Enable External Subtitles</source>
-        <translation type="unfinished"></translation>
+        <translation>外部字幕を有効に</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8868"/>
         <source>Cancel Playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>プレイリストをキャンセル</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8872"/>
         <source>Playback Data</source>
-        <translation type="unfinished"></translation>
+        <translation>データを再生</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9161"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9211"/>
         <source>Playback Compact Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>再生コンパクトメニュー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9164"/>
         <source>Visualisation</source>
-        <translation type="unfinished"></translation>
+        <translation>ビジュアライズ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9167"/>
         <source>Adjust Fill</source>
-        <translation type="unfinished"></translation>
+        <translation>最大化調整</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9169"/>
         <source>3D</source>
-        <translation type="unfinished">0% {3D?}</translation>
+        <translation>3D</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9192"/>
         <source>Switch Input</source>
-        <translation type="unfinished"></translation>
+        <translation>入力切り替え</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9913"/>
         <source>No, keep it</source>
-        <translation type="unfinished"></translation>
+        <translation>いいえ、残します</translation>
     </message>
     <message>
         <source>C</source>
@@ -27938,12 +27940,12 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9193"/>
         <source>Switch Source</source>
-        <translation type="unfinished"></translation>
+        <translation>ソースの切り替え</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8922"/>
         <source>Upcoming Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>今後の録画</translation>
     </message>
     <message>
         <source>Error</source>
@@ -27952,7 +27954,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9810"/>
         <source>You are exiting %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 を終了します</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9812"/>
@@ -27963,95 +27965,95 @@ Do you wish to continue watching?</source>
         <location filename="../libs/libmythtv/tv_play.cpp" line="3554"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="3568"/>
         <source>Zoom Committed</source>
-        <translation type="unfinished"></translation>
+        <translation>ズームを承諾しました</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="958"/>
         <source>Off</source>
         <comment>Sleep timer</comment>
-        <translation type="unfinished">オフ</translation>
+        <translation>オフ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="959"/>
         <source>30m</source>
         <comment>Sleep timer</comment>
-        <translation type="unfinished">30分</translation>
+        <translation>30分</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="960"/>
         <source>1h</source>
         <comment>Sleep timer</comment>
-        <translation type="unfinished">1時間</translation>
+        <translation>1時間</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="961"/>
         <source>1h30m</source>
         <comment>Sleep timer</comment>
-        <translation type="unfinished">1時間30分</translation>
+        <translation>1時間30分</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="962"/>
         <source>2h</source>
         <comment>Sleep timer</comment>
-        <translation type="unfinished">2時間</translation>
+        <translation>2時間</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1428"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1429"/>
         <source>External Subtitles</source>
-        <translation type="unfinished"></translation>
+        <translation>外部字幕</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1758"/>
         <source>MythTV wants to record these programs in %d seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV はこの番組を %d 秒後に録画しようとしています:</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1783"/>
         <source>&quot;%1&quot; on %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%2「%1」</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="1796"/>
         <source>Do you want to:</source>
-        <translation type="unfinished"></translation>
+        <translation>行いたい操作 :</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="2107"/>
         <source>Can&apos;t start playback</source>
-        <translation type="unfinished"></translation>
+        <translation>再生できません</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="2108"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="2161"/>
         <source>TV Player</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中視聴</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="3572"/>
         <source>Zoom Ignored</source>
-        <translation type="unfinished"></translation>
+        <translation>ズームを無視しました</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="3579"/>
         <source>%1 Committed</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 を承諾しました</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="4072"/>
         <source>Bookmark Cleared</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークをクリアー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="4081"/>
         <source>Bookmark Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークを保存しました</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="4152"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9955"/>
         <source>Are you sure you want to delete:</source>
-        <translation type="unfinished">削除してもよろしいですか:</translation>
+        <translation>削除してもよろしいですか:</translation>
     </message>
     <message>
         <source>Stopping PIP</source>
@@ -28064,12 +28066,12 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="5294"/>
         <source>Jump Chapter</source>
-        <translation type="unfinished"></translation>
+        <translation>チャプターに移動</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="5380"/>
         <source>Switch Title</source>
-        <translation type="unfinished"></translation>
+        <translation>タイトルの切り替え</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="5418"/>
@@ -28079,12 +28081,12 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="5396"/>
         <source>Switch Angle</source>
-        <translation type="unfinished"></translation>
+        <translation>アングルの切り替え</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6519"/>
         <source>You should have received a channel lock by now. You can continue to wait for a signal, or you can change the channel with %1 or %2, change video source (%3), inputs (%4), etc.</source>
-        <translation type="unfinished"></translation>
+        <translation>現在チャンネルロックの判定です。信号を待つか、%1 か %2 でチャンネルを切り替えるか、ビデオソース (%3)・入力 (%4) を変更するか…などの選択肢があります。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6954"/>
@@ -28111,18 +28113,18 @@ Do you wish to continue watching?</source>
         <location filename="../libs/libmythtv/tv_play.cpp" line="7736"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9151"/>
         <source>Edit</source>
-        <translation>エディット</translation>
+        <translation>編集</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9160"/>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9208"/>
         <source>Playback Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>再生メニュー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9162"/>
         <source>Audio</source>
-        <translation>オーディオ</translation>
+        <translation>音声</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6882"/>
@@ -28133,17 +28135,17 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="6885"/>
         <source>TV</source>
-        <translation type="unfinished">テレビ</translation>
+        <translation>テレビ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9170"/>
         <source>Advanced</source>
-        <translation type="unfinished"></translation>
+        <translation>詳細</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9172"/>
         <source>Deinterlacer</source>
-        <translation type="unfinished"></translation>
+        <translation>インターレース解除</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9173"/>
@@ -28158,22 +28160,22 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9178"/>
         <source>Select Teletext CC</source>
-        <translation type="unfinished"></translation>
+        <translation>テレテキスト CC を選択</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9184"/>
         <source>Navigate</source>
-        <translation type="unfinished"></translation>
+        <translation>ナビゲート</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8889"/>
         <source>Top menu</source>
-        <translation type="unfinished"></translation>
+        <translation>トップメニュー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8895"/>
         <source>Popup menu</source>
-        <translation type="unfinished"></translation>
+        <translation>ポップアップメニュー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9186"/>
@@ -28183,7 +28185,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9187"/>
         <source>Angle</source>
-        <translation type="unfinished"></translation>
+        <translation>アングル</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9188"/>
@@ -28203,121 +28205,121 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8957"/>
         <source>Edit Channel</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル編集</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9179"/>
         <source>Playback</source>
-        <translation>プレイバック</translation>
+        <translation>再生</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8854"/>
         <source>Play</source>
-        <translation type="unfinished">再生</translation>
+        <translation>再生</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8854"/>
         <source>Pause</source>
-        <translation type="unfinished">一時停止</translation>
+        <translation>一時停止</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8863"/>
         <source>Toggle Browse Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウズモードの切り替え</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9189"/>
         <source>Schedule</source>
-        <translation type="unfinished"></translation>
+        <translation>予約</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9199"/>
         <source>Edit Cut Points (Compact)</source>
-        <translation type="unfinished"></translation>
+        <translation>カットポイントの編集 (コンパクト)</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9200"/>
         <source>Cut List Options</source>
-        <translation type="unfinished"></translation>
+        <translation>カットリスト設定</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9535"/>
         <source>MythTV is already using all available inputs for the channel you selected. If you want to watch an in-progress recording, select one from the playback menu.  If you want to watch Live TV, cancel one of the in-progress recordings from the delete menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV は選択したチャンネルに対応する入力をすべて使用中です。現在録画中の番組を見たいなら、再生メニューから選択してください。それ以外の放送中番組を見たいなら、進行中の録画を削除メニューから中止してください。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9544"/>
         <source>Error: MythTV is using all inputs, but there are no active recordings?</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー : 進行中の録画はありませんが、MythTV はすべての入力を使用中です？</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9548"/>
         <source>MythTV has no capture cards defined. Please run the mythtv-setup program.</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV にキャプチャーカードを定義していません。mythtv-setup プログラムを実行してください。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9798"/>
         <source>Live TV</source>
-        <translation>テレビ放送</translation>
+        <translation>放送中</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9800"/>
         <source>this DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>この DVD</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9804"/>
         <source>this Video</source>
-        <translation type="unfinished"></translation>
+        <translation>このビデオ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9808"/>
         <source>this recording</source>
-        <translation type="unfinished"></translation>
+        <translation>この録画</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9848"/>
         <source>Cannot delete program </source>
-        <translation type="unfinished"></translation>
+        <translation>番組を削除できません </translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9855"/>
         <source>because it is not a recording.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ではないため。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9859"/>
         <source>because it is in use by</source>
-        <translation type="unfinished"></translation>
+        <translation>使用中のため</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9905"/>
         <source>Delete it, but allow it to re-record</source>
-        <translation>削除してまた録画する</translation>
+        <translation>削除して、また再録画する</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9906"/>
         <source>Delete it</source>
-        <translation>デリート</translation>
+        <translation>削除</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9907"/>
         <source>Save it so I can watch it again</source>
-        <translation>保存する</translation>
+        <translation>もう一度見られるよう保存する</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9911"/>
         <source>Yes, and allow re-record</source>
-        <translation>はい, 再録画可能にする</translation>
+        <translation>はい、再録画もする</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9912"/>
         <source>Yes, delete it</source>
-        <translation>はい，消去します</translation>
+        <translation>はい、削除します</translation>
     </message>
     <message>
         <source>No, keep it, I changed my mind</source>
-        <translation>いいえ，気が変わったので取っておきます</translation>
+        <translation>いいえ、気が変わって保存します</translation>
     </message>
     <message numerus="yes">
         <location filename="../libs/libmythtv/tv_play.cpp" line="8625"/>
@@ -28327,24 +28329,24 @@ Do you wish to continue watching?</source>
         <location filename="../libs/libmythtv/tvbrowsehelper.cpp" line="23"/>
         <location filename="../libs/libmythtv/tvbrowsehelper.cpp" line="296"/>
         <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 分</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8900"/>
         <source>DVD Title Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD タイトル メニュー</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="9183"/>
         <source>Channel Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル グループ</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8635"/>
         <source>All Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのチャンネル</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_play.cpp" line="8773"/>
@@ -28364,12 +28366,12 @@ Do you wish to continue watching?</source>
         <location filename="../libs/libmythtv/tv_rec.cpp" line="3872"/>
         <location filename="../libs/libmythtv/tv_rec.cpp" line="3927"/>
         <source>See &apos;Tuning timeout&apos; in mythtv-setup for this input.</source>
-        <translation>ここでの入力については mythtv-setup の「チューニング タイムアウト」を参照。</translation>
+        <translation>この入力について、 mythtv-setup の「チューニング タイムアウト」を参照。</translation>
     </message>
     <message>
         <location filename="../libs/libmythtv/tv_rec.cpp" line="3919"/>
         <source>Taking more than %1 ms to get a lock.</source>
-        <translation>ロックを取得するまでに、%1 ms 以上待機します。</translation>
+        <translation>ロック取得までに %1 ms 以上必要です。</translation>
     </message>
 </context>
 <context>
@@ -28438,7 +28440,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../programs/mythfrontend/themechooser.cpp" line="558"/>
         <source>Refresh Downloadable Themes</source>
-        <translation>ダウンロードできるテーマの更新</translation>
+        <translation>ダウンロードできるテーマの再読み込み</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/themechooser.cpp" line="568"/>
@@ -28515,7 +28517,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="272"/>
         <source>(1) All  (2) Important</source>
-        <translation>(1) 全て  (2) 重要な物のみ</translation>
+        <translation>(1) すべて  (2) 重要なもののみ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1814"/>
@@ -28525,7 +28527,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="593"/>
         <source>Channel:</source>
-        <translation>チャンネル:</translation>
+        <translation>チャンネル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2201"/>
@@ -28555,7 +28557,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1461"/>
         <source>Priority:</source>
-        <translation>優先度 : </translation>
+        <translation>優先度 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1477"/>
@@ -28615,7 +28617,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1475"/>
         <source>Program Listings</source>
-        <translation type="unfinished">番組リスト取得</translation>
+        <translation>番組リスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1836"/>
@@ -28630,7 +28632,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1967"/>
         <source>This screen displays the status of various system components</source>
-        <translation>この画面は様様なシステムステータスを表示します</translation>
+        <translation>この画面はさまざまなシステムステータスを表示します</translation>
     </message>
     <message>
         <source>Select a recording to permanently erase:</source>
@@ -28654,12 +28656,12 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="380"/>
         <source>Airdate:</source>
-        <translation type="unfinished">放送日:</translation>
+        <translation>放送日:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="769"/>
         <source>Description:</source>
-        <translation>内容:</translation>
+        <translation>説明:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1452"/>
@@ -28689,12 +28691,12 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="2186"/>
         <source>Welcome to MythTV</source>
-        <translation>MythTVへようこそ</translation>
+        <translation>MythTV へようこそ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1233"/>
         <source>MythTV is idle and will shutdown shortly.</source>
-        <translation>MythTVは待機中で間もなく電源オフします。</translation>
+        <translation>MythTV は待機中で、間もなく電源オフします。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="716"/>
@@ -28704,22 +28706,22 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1568"/>
         <source>Retrieving Recording Status ...</source>
-        <translation type="unfinished">録画情報を取得中 ...</translation>
+        <translation>録画状態を取得中 ...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1256"/>
         <source>Next Scheduled Recording(s)</source>
-        <translation>次の録画スケジュール</translation>
+        <translation>次の録画予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1570"/>
         <source>Retrieving Scheduled Recordings ...</source>
-        <translation type="unfinished">録画スケジュールを取得中 ...</translation>
+        <translation>録画予約を取得中 ...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2145"/>
         <source>WARNING: There are conflicting scheduled recordings!</source>
-        <translation>注意: 録画予約に衝突が発生!</translation>
+        <translation>注意 : 録画予約に衝突が発生!</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="297"/>
@@ -28751,112 +28753,112 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="696"/>
         <source>Core MythTV behavior and system settings</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV コアの動作とシステムの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="395"/>
         <source>Appearance</source>
-        <translation type="unfinished"></translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1642"/>
         <source>Screen Setup Wizards</source>
-        <translation type="unfinished"></translation>
+        <translation>画面設定ウィザード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="641"/>
         <source>Compensate for TVs with overscan</source>
-        <translation type="unfinished"></translation>
+        <translation>オーバースキャンのテレビ補正</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1926"/>
         <source>TV Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1766"/>
         <source>Settings for TV recording and playback</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ録画と再生の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1207"/>
         <source>Music Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="663"/>
         <source>Configure playback and CD ripping</source>
-        <translation type="unfinished"></translation>
+        <translation>再生と CD のデータ化設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2117"/>
         <source>Videos Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="967"/>
         <source>Game Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>ゲーム設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="669"/>
         <source>Configure playback of games</source>
-        <translation type="unfinished"></translation>
+        <translation>ゲームのプレー設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2178"/>
         <source>Weather Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>天気設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2181"/>
         <source>Weather locale and sources</source>
-        <translation type="unfinished"></translation>
+        <translation>天気の場所と情報提供元</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1253"/>
         <source>News Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>ニュース設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="614"/>
         <source>Choose which news sources interest you</source>
-        <translation type="unfinished"></translation>
+        <translation>関心のあるニュースソースの選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2183"/>
         <source>Web Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Web 設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1153"/>
         <source>Manage web bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ブックマークの管理</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1512"/>
         <source>Recipe Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>レシピ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="399"/>
         <source>Archive Files Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD 書き込み設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="654"/>
         <source>Configure how to archive video to DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>どのようにビデオを DVD に書き込むかの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2222"/>
         <source>ZoneMinder Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>ZoneMinder (監視カメラ) 設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1761"/>
         <source>Set up surveillance software</source>
-        <translation type="unfinished"></translation>
+        <translation>監視ソフトウェアを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2157"/>
@@ -28866,17 +28868,17 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1386"/>
         <source>Play Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画を再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2024"/>
         <source>Upcoming Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>今後の録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1701"/>
         <source>See what will be recorded next</source>
-        <translation type="unfinished"></translation>
+        <translation>今後の録画を確認</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1631"/>
@@ -28886,77 +28888,77 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1371"/>
         <source>Pick shows to record</source>
-        <translation type="unfinished"></translation>
+        <translation>録画番組を選り抜く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1524"/>
         <source>Recording Priorities</source>
-        <translation type="unfinished"></translation>
+        <translation>録画優先度</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1913"/>
         <source>System Status</source>
-        <translation type="unfinished"></translation>
+        <translation>システムステータス</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2187"/>
         <source>What your system is doing right now</source>
-        <translation type="unfinished"></translation>
+        <translation>システムが現在何をしているか</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2053"/>
         <source>Utilities / Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>ツール・設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1767"/>
         <source>Settings for TV, Images, Music, Video, Weather, etc.</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ、画像、音楽、ビデオ、天気等の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1760"/>
         <source>Set Recording Priorities</source>
-        <translation type="unfinished"></translation>
+        <translation>録画優先度の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1773"/>
         <source>Settings to prioritize some shows over others</source>
-        <translation type="unfinished"></translation>
+        <translation>番組の一部をほかのものより優先します</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1757"/>
         <source>Set Channel Recording Priorities</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル録画優先度を設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1772"/>
         <source>Settings to prioritize some channels over others</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルの一部をほかのものより優先します</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="729"/>
         <source>Custom Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム優先度</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1188"/>
         <source>Most used DVR options are found on the main menu. Plugin options are in the utilities menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>よく使う DVR 設定はメインメニュー上に、プラグイン設定はツールメニューに配置しています。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1248"/>
         <source>New Titles</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいタイトル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1204"/>
         <source>Movies</source>
-        <translation>ムービー</translation>
+        <translation>映画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1361"/>
         <source>Pick a movie to record</source>
-        <translation type="unfinished"></translation>
+        <translation>録画する映画を選り抜く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="554"/>
@@ -28966,7 +28968,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1362"/>
         <source>Pick a program based on category</source>
-        <translation type="unfinished"></translation>
+        <translation>カテゴリーをもとに番組を選り抜く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="595"/>
@@ -28976,7 +28978,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1365"/>
         <source>Pick a program on a given channel</source>
-        <translation type="unfinished"></translation>
+        <translation>指定のチャンネルから番組を選り抜く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1970"/>
@@ -28986,7 +28988,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1363"/>
         <source>Pick a program based on time</source>
-        <translation type="unfinished"></translation>
+        <translation>時間をもとに番組を選り抜く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1472"/>
@@ -28996,7 +28998,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="609"/>
         <source>Choose programs from a grid-style list</source>
-        <translation type="unfinished"></translation>
+        <translation>表から番組を選びます</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1471"/>
@@ -29006,27 +29008,27 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="610"/>
         <source>Choose programs from an alphabetical index</source>
-        <translation type="unfinished"></translation>
+        <translation>アルファベット順から番組を選びます</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1666"/>
         <source>Search Words</source>
-        <translation type="unfinished"></translation>
+        <translation>検索語</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="942"/>
         <source>Find programs matching search words</source>
-        <translation type="unfinished"></translation>
+        <translation>検索語に一致する番組を見つけます</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1656"/>
         <source>Search Lists</source>
-        <translation type="unfinished"></translation>
+        <translation>検索リスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1799"/>
         <source>Shift</source>
-        <translation type="unfinished"></translation>
+        <translation>シフト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1245"/>
@@ -29036,72 +29038,72 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="47"/>
         <source>%DATE%, %TIME%</source>
-        <translation>%DATE%, %TIME%</translation>
+        <translation>%DATE% %TIME%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="985"/>
         <source>Go up a level</source>
-        <translation type="unfinished"></translation>
+        <translation>上位レベルに移動</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1425"/>
         <source>Please Wait...</source>
-        <translation>お待ちください ...</translation>
+        <translation>お待ちください...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2005"/>
         <source>Twitter Timeline</source>
-        <translation type="unfinished"></translation>
+        <translation>Twitter タイムライン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="812"/>
         <source>Edit Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1184"/>
         <source>Modify, Add, and Delete television channels.</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビのチャンネルを変更、追加、そして削除します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1036"/>
         <source>Import Icons</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコンインポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="819"/>
         <source>Edit On Screen Display</source>
-        <translation type="unfinished"></translation>
+        <translation>オンスクリーン表示の編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1741"/>
         <source>Select the menu items you want to see by playback mode.</source>
-        <translation type="unfinished"></translation>
+        <translation>再生モードで利用したいメニュー項目を選択します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1293"/>
         <source>OSD Context</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD コンテキスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1298"/>
         <source>OSD Menu Items</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD メニュー項目</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="815"/>
         <source>Edit Key Bindings</source>
-        <translation type="unfinished"></translation>
+        <translation>キー割り当ての編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="415"/>
         <source>Assign custom keys to MythTV shortcuts.</source>
-        <translation type="unfinished"></translation>
+        <translation>キーを MythTV のショートカットに割り当てます。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1453"/>
         <source>Previous</source>
-        <translation type="unfinished"></translation>
+        <translation>前</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1239"/>
@@ -29129,7 +29131,7 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="832"/>
         <source>Edit the details about this channel.</source>
-        <translation type="unfinished"></translation>
+        <translation>このチャンネルの詳細を編集します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="578"/>
@@ -29149,5531 +29151,5556 @@ Do you wish to continue watching?</source>
     <message>
         <location filename="../themes/themestrings.h" line="1465"/>
         <source>Probe</source>
-        <translation type="unfinished"></translation>
+        <translation>検出</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1373"/>
         <source>Pick the menu layout, font, size, and locale</source>
-        <translation type="unfinished"></translation>
+        <translation>メニューのレイアウト、フォント、サイズ、そして国・地域を選り抜きます</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="421"/>
         <source>Audio</source>
-        <translation type="unfinished">オーディオ</translation>
+        <translation>音声</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="656"/>
         <source>Configure local audio output</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカル音声出力設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1781"/>
         <source>Setup Wizard</source>
-        <translation type="unfinished"></translation>
+        <translation>セットアップ ウィザード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1353"/>
         <source>Perform basic configuration tasks</source>
-        <translation type="unfinished"></translation>
+        <translation>基本的な設定をおこないます</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="407"/>
         <source>Artwork and Data Sources</source>
-        <translation type="unfinished"></translation>
+        <translation>関連画像とデータ取得元</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="674"/>
         <source>Configure sources of artwork and metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>関連画像とメタデータの取得元を設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="665"/>
         <source>Configure playback and metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>再生とメタデータの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2221"/>
         <source>ZoneMinder</source>
-        <translation type="unfinished"></translation>
+        <translation>ZoneMinder</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="895"/>
         <source>File Paths and general options</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルパスなどの全般設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1414"/>
         <source>Player Applications and Optical Drives</source>
-        <translation type="unfinished"></translation>
+        <translation>再生アプリケーションと光学ドライブ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1179"/>
         <source>Metadata Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="987"/>
         <source>Grabber Setup and display preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>グラバー設定と表示の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="417"/>
         <source>Associate new file extensions</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいファイル拡張子の関連付け</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1389"/>
         <source>Play a DVD or Blu-ray</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD・Blu-ray の再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2090"/>
         <source>Video Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="682"/>
         <source>Configure video and DVD playback</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオと DVD 再生の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1047"/>
         <source>Inetref:</source>
-        <translation type="unfinished"></translation>
+        <translation>Inetref:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1176"/>
         <source>Metadata Options</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1636"/>
         <source>Schedule filters</source>
-        <translation type="unfinished"></translation>
+        <translation>予約フィルター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1918"/>
         <source>TMDB/TVDB #:</source>
-        <translation type="unfinished"></translation>
+        <translation>TVDB・TMDB # :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1352"/>
         <source>Perform Query</source>
-        <translation type="unfinished"></translation>
+        <translation>クエリーの実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="930"/>
         <source>Find Online Coverart</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインでジャケット写真を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="931"/>
         <source>Find Online Fanart</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインのファンアートを検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="929"/>
         <source>Find Online Banners</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインの題字を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="926"/>
         <source>Find Local Coverart</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルのジャケット写真を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="927"/>
         <source>Find Local Fanart</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルのファンアートを検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="925"/>
         <source>Find Local Banners</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルの題字を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="452"/>
         <source>Automatically Look Up Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>自動メタデータ検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="485"/>
         <source>Blu-ray Mount:</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray マウント :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="486"/>
         <source>Blu-ray Region:</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray リージョン :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1226"/>
         <source>MythTV</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="768"/>
         <source>Description</source>
-        <translation type="unfinished">内容</translation>
+        <translation>説明</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1654"/>
         <source>Search List</source>
-        <translation type="unfinished"></translation>
+        <translation>検索リスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="951"/>
         <source>Found</source>
-        <translation type="unfinished"></translation>
+        <translation>発見</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1285"/>
         <source>Not Found</source>
-        <translation type="unfinished"></translation>
+        <translation>見つかりません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="409"/>
         <source>Artwork and Metadata Sources</source>
-        <translation type="unfinished"></translation>
+        <translation>関連画像とメタデータ取得元</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1199"/>
         <source>Movie Metadata Source:</source>
-        <translation type="unfinished"></translation>
+        <translation>映画メタデータ取得元 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1935"/>
         <source>Television Metadata Source:</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビメタデータ取得元 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="966"/>
         <source>Game Metadata Source:</source>
-        <translation type="unfinished"></translation>
+        <translation>ゲームメタデータ取得元 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1354"/>
         <source>Perform daily updates of recording artwork</source>
-        <translation type="unfinished"></translation>
+        <translation>録画関連画像の更新を毎日実施</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1227"/>
         <source>MythTV Configuration Wizard</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV 設定ウィザード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1898"/>
         <source>Submit your hardware profile</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア プロファイルの送信</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2135"/>
         <source>View your hardware profile</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア プロファイルの表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="767"/>
         <source>Delete your hardware profile</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア プロファイルを削除</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="7"/>
         <source>% - |year%% - |length%</source>
-        <translation type="unfinished"></translation>
+        <translation>% - |year%% - |length%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="8"/>
         <source>%(|USERRATING)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%(|USERRATING)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="9"/>
         <source>%00x00%</source>
-        <translation type="unfinished"></translation>
+        <translation>%00x00%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="10"/>
         <source>%00x00| %%SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%00x00| %%SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="11"/>
         <source>%00x00| %%TITLE| - %%SUBTITLE| %%|(LENMINS|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%00x00| %%TITLE| - %%SUBTITLE| %%|(LENMINS|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="12"/>
         <source>%00x00| %%subtitle%</source>
-        <translation type="unfinished"></translation>
+        <translation>%00x00| %%subtitle%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="13"/>
         <source>%00x00| %%~ |SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%00x00| %%~ |SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="15"/>
         <source>%00x00| - %%&quot;|SUBTITLE|&quot;
 %%|YEARSTARS| - %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%00x00| - %%&quot;|SUBTITLE|&quot;
+%%|YEARSTARS| - %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="17"/>
         <source>%00x00| ~ %%SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%00x00| ~ %%SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="21"/>
         <source>%1 total</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 total</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="23"/>
         <source>%ASPECT% (%RESOLUTION%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%ASPECT% (%RESOLUTION%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="25"/>
         <source>%CALLSIGN%</source>
-        <translation type="unfinished"></translation>
+        <translation>%CALLSIGN%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="26"/>
         <source>%CALLSIGN% : %STARTTIME% - %ENDTIME% (%LENMINS%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%CALLSIGN% : %STARTTIME% - %ENDTIME% (%LENMINS%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="27"/>
         <source>%CALLSIGN| %%: |YEAR| %%~ |STARTTIME| %%- |ENDTIME% (%LENMINS%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%CALLSIGN| %%: |YEAR| %%~ |STARTTIME| %%- |ENDTIME% (%LENMINS%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="28"/>
         <source>%CALLSIGN| -% %CHANNEL%</source>
-        <translation type="unfinished"></translation>
+        <translation>%CALLSIGN| -% %CHANNEL%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="30"/>
         <source>%CARD% - %TITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%CARD% - %TITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="31"/>
         <source>%CARD% - %TITLESUBTITLE% (%LENMINS%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%CARD% - %TITLESUBTITLE% (%LENMINS%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="32"/>
         <source>%CHANNELNUMBER%   %CALLSIGN%   %CHANNELNAME%</source>
-        <translation type="unfinished"></translation>
+        <translation>%CHANNELNUMBER%   %CALLSIGN%   %CHANNELNAME%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="36"/>
         <source>%CHANNEL|  |  %%STARTTIME| - %%ENDTIME| %(%LENMINS%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%CHANNEL|  |  %%STARTTIME| - %%ENDTIME| %(%LENMINS%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="38"/>
         <source>%CHANNUM% - %CALLSIGN% - %STARTDATE%  (%STARTTIME% - %ENDTIME%)  %LENMINS%</source>
-        <translation type="unfinished"></translation>
+        <translation>%CHANNUM% - %CALLSIGN% - %STARTDATE%  (%STARTTIME% - %ENDTIME%)  %LENMINS%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="39"/>
         <source>%CHANNUM| %%CALLSIGN|
 %%NAME%</source>
-        <translation type="unfinished"></translation>
+        <translation>%CHANNUM| %%CALLSIGN|
+%%NAME%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="40"/>
         <source>%CHANNUM| %%NAME| - %%CALLSIGN| %</source>
-        <translation type="unfinished"></translation>
+        <translation>%CHANNUM| %%NAME| - %%CALLSIGN| %</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="41"/>
         <source>%COUNTRY| %%NATIVECOUNTRY%</source>
-        <translation type="unfinished"></translation>
+        <translation>%COUNTRY| %%NATIVECOUNTRY%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="53"/>
         <source>%DESCRIPTION% (%ERRATA%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%DESCRIPTION% (%ERRATA%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="54"/>
         <source>%DESCRIPTION% (%LENMINS%) %YEARSTARS% %PROGRAMID%</source>
-        <translation type="unfinished"></translation>
+        <translation>%DESCRIPTION% (%LENMINS%) %YEARSTARS% %PROGRAMID%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="57"/>
         <source>%DIRECTOR%</source>
-        <translation type="unfinished"></translation>
+        <translation>%DIRECTOR%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="58"/>
         <source>%DIRECTOR| %%|(YEAR|) %%LENGTH%%| COUNTRIES%</source>
-        <translation type="unfinished"></translation>
+        <translation>%DIRECTOR| %%|(YEAR|) %%LENGTH%%| COUNTRIES%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="59"/>
         <source>%Directed by |DIRECTOR|, %%YEAR%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Directed by |DIRECTOR|, %%YEAR%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="61"/>
         <source>%ENDTIME% %ENDDATE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%ENDTIME% %ENDDATE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="62"/>
         <source>%EXTRA| %%ORIGIN%</source>
-        <translation type="unfinished"></translation>
+        <translation>%EXTRA| %%ORIGIN%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="63"/>
         <source>%FRAMEDISPLAY% / %CUTINDICATOR%</source>
-        <translation type="unfinished"></translation>
+        <translation>%FRAMEDISPLAY% / %CUTINDICATOR%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="65"/>
         <source>%GENRES%</source>
-        <translation type="unfinished"></translation>
+        <translation>%GENRES%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="67"/>
         <source>%LONGCHANNEL| %%on card: |CARD%</source>
-        <translation type="unfinished"></translation>
+        <translation>%LONGCHANNEL| %%on card: |CARD%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="68"/>
         <source>%LONGREPEAT%</source>
-        <translation type="unfinished"></translation>
+        <translation>%LONGREPEAT%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="69"/>
         <source>%LONGREPEAT%     Size: %FILESIZE_STR%</source>
-        <translation type="unfinished"></translation>
+        <translation>%LONGREPEAT%     Size: %FILESIZE_STR%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="71"/>
         <source>%LONGREPEAT%%STARS%%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%LONGREPEAT%%STARS%%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="72"/>
         <source>%LONGREPEAT%%STARS| %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%LONGREPEAT%%STARS| %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="73"/>
         <source>%LONGREPEAT%%YEARSTARS% %DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%LONGREPEAT%%YEARSTARS% %DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="76"/>
         <source>%MODELNAME% ~ %VERSION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%MODELNAME% ~ %VERSION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="77"/>
         <source>%NAME% - %ASPECT% (%RESOLUTION%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%NAME% - %ASPECT% (%RESOLUTION%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="78"/>
         <source>%ORIGIN%</source>
-        <translation type="unfinished"></translation>
+        <translation>%ORIGIN%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="79"/>
         <source>%ORIGINALAIRDATE% %REPEAT%</source>
-        <translation type="unfinished"></translation>
+        <translation>%ORIGINALAIRDATE% %REPEAT%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="83"/>
         <source>%PLAYEDTIME| of% %TOTALTIME% %(|REMAININGTIME| remaining)%%(|BEHINDTIME| behind)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%PLAYEDTIME| of% %TOTALTIME% %(|REMAININGTIME| remaining)%%(|BEHINDTIME| behind)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="84"/>
         <source>%PLAYGROUP% play group</source>
-        <translation type="unfinished"></translation>
+        <translation>%PLAYGROUP% play group</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="85"/>
         <source>%PROGRESS_TEXT% %PROGRESS%</source>
-        <translation type="unfinished"></translation>
+        <translation>%PROGRESS_TEXT% %PROGRESS%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="88"/>
         <source>%RELEASEDATE% %IMDB% %S##E##%</source>
-        <translation type="unfinished"></translation>
+        <translation>%RELEASEDATE% %IMDB% %S##E##%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="92"/>
         <source>%S##E##%</source>
-        <translation type="unfinished"></translation>
+        <translation>%S##E##%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="93"/>
         <source>%SHORTSTARTDATE%   %STARTTIME%</source>
-        <translation type="unfinished"></translation>
+        <translation>%SHORTSTARTDATE%   %STARTTIME%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="94"/>
         <source>%SHORTTIMEDATE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%SHORTTIMEDATE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="95"/>
         <source>%SOURCENAME|
 %%CHANID| %</source>
-        <translation type="unfinished"></translation>
+        <translation>%SOURCENAME|
+%%CHANID| %</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="96"/>
         <source>%STARTDATE%  (%STARTTIME% - %ENDTIME%)  %LENMINS%</source>
-        <translation type="unfinished"></translation>
+        <translation>%STARTDATE%  (%STARTTIME% - %ENDTIME%)  %LENMINS%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="99"/>
         <source>%STARTDATE|, %%STARTTIME%%- |ENDTIME%</source>
-        <translation type="unfinished"></translation>
+        <translation>%STARTDATE|, %%STARTTIME%%- |ENDTIME%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="100"/>
         <source>%STARTTIME% %STARTDATE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%STARTTIME% %STARTDATE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="101"/>
         <source>%STARTTIME% - %ENDTIME%</source>
-        <translation type="unfinished"></translation>
+        <translation>%STARTTIME% - %ENDTIME%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="108"/>
         <source>%STATION% - %CHANNEL%</source>
-        <translation type="unfinished"></translation>
+        <translation>%STATION% - %CHANNEL%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="109"/>
         <source>%STORAGEGROUP% storage group</source>
-        <translation type="unfinished"></translation>
+        <translation>%STORAGEGROUP% storage group</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="110"/>
         <source>%SUBTITLE%%[font]myverysmallsub[/font]  [Part |PARTNUMBER|]%</source>
-        <translation type="unfinished"></translation>
+        <translation>%SUBTITLE%%[font]myverysmallsub[/font]  [Part |PARTNUMBER|]%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="111"/>
         <source>%SUBTITLE| %%STARS| %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%SUBTITLE| %%STARS| %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="112"/>
         <source>%SUBTITLE|&quot;|&quot; %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%SUBTITLE|&quot;|&quot; %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="113"/>
         <source>%SUBTITLE|&quot;|&quot; %%STARS%%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%SUBTITLE|&quot;|&quot; %%STARS%%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="114"/>
         <source>%SUBTITLE|&quot;|&quot;%</source>
-        <translation type="unfinished"></translation>
+        <translation>%SUBTITLE|&quot;|&quot;%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="115"/>
         <source>%SUBTITLE|&quot;|&quot;%%REPEAT%%STARS%%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%SUBTITLE|&quot;|&quot;%%REPEAT%%STARS%%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="116"/>
         <source>%SUBTITLE|&quot;|&quot;%%STARS%%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%SUBTITLE|&quot;|&quot;%%STARS%%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="120"/>
         <source>%TIMEDATE% (%LENMINS%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%TIMEDATE% (%LENMINS%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="121"/>
         <source>%TIMEDATE% : %LENMINS%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TIMEDATE% : %LENMINS%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="122"/>
         <source>%TIMEDISPLAY% %CUTINDICATOR%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TIMEDISPLAY% %CUTINDICATOR%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="123"/>
         <source>%TIMEDISPLAY% %VALUE%%UNITS%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TIMEDISPLAY% %VALUE%%UNITS%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="125"/>
         <source>%TITLE% %SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE% %SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="126"/>
         <source>%TITLE% %|(CATEGORY|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE% %|(CATEGORY|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="127"/>
         <source>%TITLE% - %ARTIST% %(|ALBUM|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE% - %ARTIST% %(|ALBUM|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="128"/>
         <source>%TITLE% - %SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE% - %SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="130"/>
         <source>%TITLE%% - [font]mymediumlight[/font]|SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE%% - [font]mymediumlight[/font]|SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="131"/>
         <source>%TITLE%% - [font]mymediumlight[/font]|SUBTITLE%%[font]myverysmallsub[/font]  [Part |PARTNUMBER|]%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE%% - [font]mymediumlight[/font]|SUBTITLE%%[font]myverysmallsub[/font]  [Part |PARTNUMBER|]%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="132"/>
         <source>%TITLE%% - |00x00%% - |SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE%% - |00x00%% - |SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="135"/>
         <source>%TITLE%% ~ |SUBTITLE%% (|YEAR|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE%% ~ |SUBTITLE%% (|YEAR|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="136"/>
         <source>%TITLE%: %SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE%: %SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="137"/>
         <source>%TITLESUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLESUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="140"/>
         <source>%TITLE| %%~ |00x00| %%~ |SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE| %%~ |00x00| %%~ |SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="141"/>
         <source>%TITLE| %%~ |SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE| %%~ |SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="142"/>
         <source>%USERRATING| - %%RATING%</source>
-        <translation type="unfinished"></translation>
+        <translation>%USERRATING| - %%RATING%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="143"/>
         <source>%USERRATING| /10 -% %RATING%</source>
-        <translation type="unfinished"></translation>
+        <translation>%USERRATING| /10 -% %RATING%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="146"/>
         <source>%VALUE% %UNITS%</source>
-        <translation type="unfinished"></translation>
+        <translation>%VALUE% %UNITS%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="149"/>
         <source>%VIDEOCODEC%/%VIDEODECODER%</source>
-        <translation type="unfinished"></translation>
+        <translation>%VIDEOCODEC%/%VIDEODECODER%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="150"/>
         <source>%VIDEOFRAMES% frames</source>
-        <translation type="unfinished"></translation>
+        <translation>%VIDEOFRAMES% frames</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="151"/>
         <source>%VIDEOWIDTH%x%VIDEOHEIGHT%</source>
-        <translation type="unfinished"></translation>
+        <translation>%VIDEOWIDTH%x%VIDEOHEIGHT%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="153"/>
         <source>%VIDEOWIDTH%x%VIDEOHEIGHT%@%VIDEOFRAMERATE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%VIDEOWIDTH%x%VIDEOHEIGHT%@%VIDEOFRAMERATE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="156"/>
         <source>%YEARSTARS% %DESCRIPTION% (%LENMINS%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%YEARSTARS% %DESCRIPTION% (%LENMINS%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="157"/>
         <source>%YEARSTARS%%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%YEARSTARS%%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="159"/>
         <source>%YEARSTARS| %%SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%YEARSTARS| %%SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="160"/>
         <source>%YEAR|, %%STARS|, %%CATEGORY|. %%DESCRIPTION%% (|LENMINS|)%% |PLAYGROUP%</source>
-        <translation type="unfinished"></translation>
+        <translation>%YEAR|, %%STARS|, %%CATEGORY|. %%DESCRIPTION%% (|LENMINS|)%% |PLAYGROUP%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="161"/>
         <source>%&quot;|SUBTITLE|&quot;  %% |TIMEDATE| %% |LENMINS| %</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|SUBTITLE|&quot;  %% |TIMEDATE| %% |LENMINS| %</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="162"/>
         <source>%&quot;|SUBTITLE|&quot;  %%YEARSTARS| %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|SUBTITLE|&quot;  %%YEARSTARS| %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="171"/>
         <source>%&quot;|SUBTITLE|&quot; %%&quot;|TAGLINE|&quot; %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|SUBTITLE|&quot; %%&quot;|TAGLINE|&quot; %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="172"/>
         <source>%&quot;|SUBTITLE|&quot;: %%LONGREPEAT%%(|STARS|) %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|SUBTITLE|&quot;: %%LONGREPEAT%%(|STARS|) %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="173"/>
         <source>%&quot;|SUBTITLE|&quot;
 %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|SUBTITLE|&quot;
+%%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="176"/>
         <source>%&quot;|SUBTITLE|&quot;
 
 %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|SUBTITLE|&quot;
+
+%%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="177"/>
         <source>%&quot;|subtitle|&quot;
 %%description%</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|subtitle|&quot;
+%%description%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="178"/>
         <source>%album% %(|year|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%album% %(|year|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="179"/>
         <source>%artist% - %title%</source>
-        <translation type="unfinished"></translation>
+        <translation>%artist% - %title%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="180"/>
         <source>%buttontext%</source>
-        <translation type="unfinished"></translation>
+        <translation>%buttontext%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="181"/>
         <source>%buttontext%
 %time%</source>
-        <translation type="unfinished"></translation>
+        <translation>%buttontext%
+%time%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="182"/>
         <source>%callsign%  (Priority: %priority%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%callsign%  (Priority: %priority%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="183"/>
         <source>%cast%</source>
-        <translation type="unfinished"></translation>
+        <translation>%cast%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="184"/>
         <source>%channel%</source>
-        <translation type="unfinished"></translation>
+        <translation>%channel%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="186"/>
         <source>%channelsourcename%</source>
-        <translation type="unfinished"></translation>
+        <translation>%channelsourcename%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="188"/>
         <source>%channum% - %callsign%  |  %STARTTIME%-%ENDTIME% (%LENMINS%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%channum% - %callsign%  |  %STARTTIME%-%ENDTIME% (%LENMINS%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="189"/>
         <source>%chanstr% - %channelname%</source>
-        <translation type="unfinished"></translation>
+        <translation>%chanstr% - %channelname%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="191"/>
         <source>%director%%, |year%</source>
-        <translation type="unfinished"></translation>
+        <translation>%director%%, |year%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="192"/>
         <source>%filesize_str% of %storagegroup% Storage</source>
-        <translation type="unfinished"></translation>
+        <translation>%filesize_str% of %storagegroup% Storage</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="193"/>
         <source>%lastplayed% (played: %playcount% times)</source>
-        <translation type="unfinished"></translation>
+        <translation>%lastplayed% (played: %playcount% times)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="194"/>
         <source>%lenmins%</source>
-        <translation type="unfinished"></translation>
+        <translation>%lenmins%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="195"/>
         <source>%longchannel%  |  %filesize_str% of %storagegroup% Storage</source>
-        <translation type="unfinished"></translation>
+        <translation>%longchannel%  |  %filesize_str% of %storagegroup% Storage</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="196"/>
         <source>%longchannel% - %timedate%</source>
-        <translation type="unfinished"></translation>
+        <translation>%longchannel% - %timedate%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="197"/>
         <source>%longchannel% - %titlesubtitle%</source>
-        <translation type="unfinished"></translation>
+        <translation>%longchannel% - %titlesubtitle%</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="199"/>
         <source>%n in current group</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n in current group</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="202"/>
         <source>%name%</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%name%</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="203"/>
         <source>%name% (%callsign%)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%name% (%callsign%)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="204"/>
         <source>%name% / %callsign%  (Source: %sourcename%)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%name% / %callsign%  (Source: %sourcename%)</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="206"/>
         <source>%playlistplayedtime% of %playlisttotaltime%</source>
-        <translation type="unfinished"></translation>
+        <translation>%playlistplayedtime% of %playlisttotaltime%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="207"/>
         <source>%progpriority% / %finalpriority%</source>
-        <translation type="unfinished"></translation>
+        <translation>%progpriority% / %finalpriority%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="208"/>
         <source>%rating |USERRATING%</source>
-        <translation type="unfinished"></translation>
+        <translation>%rating |USERRATING%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="209"/>
         <source>%recordedpercent%</source>
-        <translation type="unfinished"></translation>
+        <translation>%recordedpercent%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="210"/>
         <source>%rectypechar% - %titlesubtitle%</source>
-        <translation type="unfinished"></translation>
+        <translation>%rectypechar% - %titlesubtitle%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="211"/>
         <source>%rectypestatus% on card number %card%</source>
-        <translation type="unfinished"></translation>
+        <translation>%rectypestatus% on card number %card%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="212"/>
         <source>%rectypestatus%% on card number |card%</source>
-        <translation type="unfinished"></translation>
+        <translation>%rectypestatus%% on card number |card%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="215"/>
         <source>%shortstarttimedate% | %titlesubtitle%</source>
-        <translation type="unfinished"></translation>
+        <translation>%shortstarttimedate% | %titlesubtitle%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="216"/>
         <source>%shortstarttimedate% | %titlesubtitle% | %channel%</source>
-        <translation type="unfinished"></translation>
+        <translation>%shortstarttimedate% | %titlesubtitle% | %channel%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="217"/>
         <source>%startdate%% - |00x00%
 %title%</source>
-        <translation type="unfinished"></translation>
+        <translation>%startdate%% - |00x00%
+%title%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="219"/>
         <source>%startdate%%| year%</source>
-        <translation type="unfinished"></translation>
+        <translation>%startdate%%| year%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="220"/>
         <source>%startdate%%| year%, %starttime% - %endtime% (%lenmins%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%startdate%%| year%, %starttime% - %endtime% (%lenmins%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="223"/>
         <source>%station% - %channel%</source>
-        <translation type="unfinished"></translation>
+        <translation>%station% - %channel%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="224"/>
         <source>%time%</source>
-        <translation type="unfinished"></translation>
+        <translation>%time%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="225"/>
         <source>%timedate% (%channel%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%timedate% (%channel%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="226"/>
         <source>%timedate% (%lenmins%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%timedate% (%lenmins%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="227"/>
         <source>%timedate% (%lenmins%) - %channel%</source>
-        <translation type="unfinished"></translation>
+        <translation>%timedate% (%lenmins%) - %channel%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="228"/>
         <source>%timedate% - %description%</source>
-        <translation type="unfinished"></translation>
+        <translation>%timedate% - %description%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="230"/>
         <source>%title%</source>
-        <translation type="unfinished"></translation>
+        <translation>%title%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="231"/>
         <source>%title%  |  %timedate% on %channel%</source>
-        <translation type="unfinished"></translation>
+        <translation>%title%  |  %timedate% on %channel%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="233"/>
         <source>%title%% - |artist%</source>
-        <translation type="unfinished"></translation>
+        <translation>%title%% - |artist%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="234"/>
         <source>%title%% - |subtitle%</source>
-        <translation type="unfinished"></translation>
+        <translation>%title%% - |subtitle%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="236"/>
         <source>%titlesubtitle%</source>
-        <translation type="unfinished"></translation>
+        <translation>%titlesubtitle%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="237"/>
         <source>%titlesubtitle%  (Priority: %progpriority% / %finalpriority%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%titlesubtitle%  (Priority: %progpriority% / %finalpriority%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="238"/>
         <source>%titlesubtitle%  |  %timedate% (%lenmins%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%titlesubtitle%  |  %timedate% (%lenmins%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="239"/>
         <source>%userrating%</source>
-        <translation type="unfinished"></translation>
+        <translation>%userrating%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="240"/>
         <source>%userrating|/10%</source>
-        <translation type="unfinished"></translation>
+        <translation>%userrating|/10%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="241"/>
         <source>%volume% %(|mute|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%volume% %(|mute|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="242"/>
         <source>%watchedpercent%</source>
-        <translation type="unfinished"></translation>
+        <translation>%watchedpercent%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="243"/>
         <source>%year%% by |director%%, |length%%, rating: |userrating%</source>
-        <translation type="unfinished"></translation>
+        <translation>%year%% by |director%%, |length%%, rating: |userrating%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="244"/>
         <source>%year|, %%timedate%</source>
-        <translation type="unfinished"></translation>
+        <translation>%year|, %%timedate%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="246"/>
         <source>%|(USERRATING)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%|(USERRATING)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="259"/>
         <source>%|recordedpercent|%%</source>
-        <translation type="unfinished"></translation>
+        <translation>%|recordedpercent|%%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="260"/>
         <source>%|recordedpercent|%% recorded</source>
-        <translation type="unfinished"></translation>
+        <translation>%|recordedpercent|%% recorded</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="261"/>
         <source>%|watchedpercent|%%</source>
-        <translation type="unfinished"></translation>
+        <translation>%|watchedpercent|%%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="262"/>
         <source>%|watchedpercent|%% watched</source>
-        <translation type="unfinished"></translation>
+        <translation>%|watchedpercent|%% watched</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="268"/>
         <source>(%card%)</source>
-        <translation type="unfinished"></translation>
+        <translation>(%card%)</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="269"/>
         <source>(%channum%) %name% - %sourcename%</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>(%channum%) %name% - %sourcename%</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="270"/>
         <source>(%statusbefore%) -&gt; (%statusafter%)</source>
-        <translation type="unfinished"></translation>
+        <translation>(%statusbefore%) -&gt; (%statusafter%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="271"/>
         <source>(%statusbefore%) -&gt; (%statusafter%):  %shorttimedate% on %channel%</source>
-        <translation type="unfinished"></translation>
+        <translation>(%statusbefore%) -&gt; (%statusafter%):  %shorttimedate% on %channel%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="287"/>
         <source>0</source>
-        <translation type="unfinished">0</translation>
+        <translation>0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="288"/>
         <source>0 Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ 0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="291"/>
         <source>0.0</source>
-        <translation type="unfinished">0% {0.0?}</translation>
+        <translation>0.0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="292"/>
         <source>0.5</source>
-        <translation type="unfinished">0% {0.5?}</translation>
+        <translation>0.5</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="293"/>
         <source>0:00:00</source>
-        <translation type="unfinished">0% {0:00:00?}</translation>
+        <translation>0:00:00</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="295"/>
         <source>1 Star</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ 1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="298"/>
         <source>1.0</source>
-        <translation type="unfinished">0% {1.0?}</translation>
+        <translation>1.0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="299"/>
         <source>1.5</source>
-        <translation type="unfinished">0% {1.5?}</translation>
+        <translation>1.5</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="300"/>
         <source>10 Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ 10</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="304"/>
         <source>16x9</source>
-        <translation type="unfinished">1時間30分 {16x?} {9?}</translation>
+        <translation>16:9</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="306"/>
         <source>2 Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ 2</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="308"/>
         <source>2.0</source>
-        <translation type="unfinished">0% {2.0?}</translation>
+        <translation>2.0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="309"/>
         <source>2.5</source>
-        <translation type="unfinished">0% {2.5?}</translation>
+        <translation>2.5</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="311"/>
         <source>3 Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ 3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="313"/>
         <source>3.0</source>
-        <translation type="unfinished">0% {3.0?}</translation>
+        <translation>3.0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="314"/>
         <source>3.5</source>
-        <translation type="unfinished">0% {3.5?}</translation>
+        <translation>3.5</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="316"/>
         <source>4 Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ 4</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="318"/>
         <source>4.0</source>
-        <translation type="unfinished">0% {4.0?}</translation>
+        <translation>4.0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="319"/>
         <source>4.5</source>
-        <translation type="unfinished">0% {4.5?}</translation>
+        <translation>4.5</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="320"/>
         <source>5 Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ 5</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="322"/>
         <source>5.0</source>
-        <translation type="unfinished">0% {5.0?}</translation>
+        <translation>5.0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="323"/>
         <source>576p</source>
-        <translation type="unfinished">0% {576p?}</translation>
+        <translation>576p</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="324"/>
         <source>6 Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ 6</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="326"/>
         <source>7 Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ 7</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="329"/>
         <source>720p</source>
-        <translation type="unfinished">0% {720p?}</translation>
+        <translation>720p</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="330"/>
         <source>8 Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ 8</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="332"/>
         <source>9 Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ 9</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="333"/>
         <source>:</source>
-        <translation type="unfinished"></translation>
+        <translation>:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="340"/>
         <source>???</source>
-        <translation type="unfinished"></translation>
+        <translation>???</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="344"/>
         <source>A bookmark is set</source>
-        <translation type="unfinished">ブックマークがセットされています</translation>
+        <translation>ブックマークをセットしました</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="347"/>
         <source>A simple theme of black, white and shades of gray.</source>
-        <translation type="unfinished"></translation>
+        <translation>シンプルなテーマはブラック、ホワイトそしてグレーです。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="349"/>
         <source>A version of Steppes with 25% larger fonts. Reminder: On Watch Recordings screen [Rew] and [FF] can be used to change the Rec. Group.</source>
-        <translation type="unfinished"></translation>
+        <translation>Steppes の 25% 大きなフォントを使ったバージョン。メモ : 録画視聴画面で、[巻戻し]と[早送り]ボタンを録画グループの切り替えに使うことができます。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="352"/>
         <source>A/V Sync:</source>
-        <translation type="unfinished"></translation>
+        <translation>A/V 同期 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="353"/>
         <source>A/V Sync: %avsync%</source>
-        <translation type="unfinished"></translation>
+        <translation>A/V 同期 : %avsync%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="357"/>
         <source>AP</source>
-        <translation type="unfinished"></translation>
+        <translation>AP</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="358"/>
         <source>AUTOEXPIRE</source>
-        <translation type="unfinished"></translation>
+        <translation>AUTOEXPIRE</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="359"/>
         <source>AVCHD</source>
-        <translation type="unfinished"></translation>
+        <translation>AVCHD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="362"/>
         <source>Actions:</source>
-        <translation type="unfinished"></translation>
+        <translation>操作 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="368"/>
         <source>Add File Extensions</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル拡張子の追加</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="370"/>
         <source>Add your storage</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージの追加</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="371"/>
         <source>Add your storage Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージフォルダーの追加</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="381"/>
         <source>Aired</source>
-        <translation type="unfinished"></translation>
+        <translation>放送</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="382"/>
         <source>Aired:</source>
-        <translation type="unfinished"></translation>
+        <translation>放送 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="383"/>
         <source>Album:</source>
-        <translation type="unfinished"></translation>
+        <translation>アルバム :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="384"/>
         <source>All programs alphabetically sorted</source>
-        <translation type="unfinished"></translation>
+        <translation>アルファベット順で前番組</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="386"/>
         <source>Allow recordings to expire:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の自動削除を許可 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="388"/>
         <source>Alphabet</source>
-        <translation type="unfinished"></translation>
+        <translation>アルファベット</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="391"/>
         <source>Alternative player:</source>
-        <translation type="unfinished"></translation>
+        <translation>別のプレーヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="393"/>
         <source>An editing cutlist is present</source>
-        <translation type="unfinished">編集カットリストがあります</translation>
+        <translation>編集カットリストがあります</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="397"/>
         <source>Apply filters to select your movies</source>
-        <translation type="unfinished"></translation>
+        <translation>映画の選択にフィルターを適用する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="400"/>
         <source>Archive Utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD 書き込みツール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="401"/>
         <source>Archives</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD 書き込み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="403"/>
         <source>Article item:</source>
-        <translation type="unfinished"></translation>
+        <translation>記事項目 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="404"/>
         <source>Artist:</source>
-        <translation type="unfinished"></translation>
+        <translation>アーチスト:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="405"/>
         <source>Artwork Results</source>
-        <translation type="unfinished"></translation>
+        <translation>関連画像取得結果</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="408"/>
         <source>Artwork and Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>関連画像とメタデータ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="410"/>
         <source>Artwork selector</source>
-        <translation type="unfinished"></translation>
+        <translation>関連画像選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="411"/>
         <source>Artwork, Metadata Sources</source>
-        <translation type="unfinished"></translation>
+        <translation>関連画像とメタデータの取得元</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="412"/>
         <source>Aspect Ratio</source>
-        <translation type="unfinished">アスペクト比</translation>
+        <translation>アスペクト比</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="413"/>
         <source>Aspect:</source>
-        <translation type="unfinished"></translation>
+        <translation>アスペクト :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="414"/>
         <source>Aspect: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>アスペクト : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="416"/>
         <source>Associate File</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルを関連付ける</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="418"/>
         <source>Attempting to connect to Database.</source>
-        <translation type="unfinished"></translation>
+        <translation>データベース接続の試行。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="419"/>
         <source>Attempting to connect to master backend.</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンドへの接続試行。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="420"/>
         <source>Attempting to wake master backend.</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンドの起動試行。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="423"/>
         <source>Audio Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>音声設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="424"/>
         <source>Audio Details</source>
-        <translation type="unfinished"></translation>
+        <translation>音声の詳細</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="425"/>
         <source>Audio Device:</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオデバイス :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="426"/>
         <source>Audio Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>音声設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="428"/>
         <source>Audio codec:</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="429"/>
         <source>Audio volume:</source>
-        <translation type="unfinished"></translation>
+        <translation>ボリューム :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="430"/>
         <source>Audio: %audiocodec%</source>
-        <translation type="unfinished"></translation>
+        <translation>音声 :%audiocodec%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="431"/>
         <source>Audio: 5 CH.</source>
-        <translation type="unfinished"></translation>
+        <translation>音声 : 5チャンネル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="432"/>
         <source>Audio: 7 CH.</source>
-        <translation type="unfinished"></translation>
+        <translation>音声 : 7チャンネル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="433"/>
         <source>Audio: 7.1 CH.</source>
-        <translation type="unfinished"></translation>
+        <translation>音声 : 7.1チャンネル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="434"/>
         <source>Audio: Mono</source>
-        <translation type="unfinished"></translation>
+        <translation>音声 : モノラル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="435"/>
         <source>AudioChannels: 5.1</source>
-        <translation type="unfinished"></translation>
+        <translation>音声チャンネル : 5.1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="436"/>
         <source>AudioChannels: Stereo</source>
-        <translation type="unfinished"></translation>
+        <translation>音声チャンネル : ステレオ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="437"/>
         <source>AudioCodec: AAC</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック : AAC</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="438"/>
         <source>AudioCodec: AC3</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック : AC3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="439"/>
         <source>AudioCodec: BLURAY</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック : BLURAY</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="440"/>
         <source>AudioCodec: DTS</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック : DTS</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="441"/>
         <source>AudioCodec: E-AC3</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック : E-AC3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="442"/>
         <source>AudioCodec: MP2</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック : MP2</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="443"/>
         <source>AudioCodec: MP3</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック : MP3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="444"/>
         <source>AudioCodec: PCM_DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック : PCM_DVD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="445"/>
         <source>AudioCodec: TRUEHD</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック : True HD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="446"/>
         <source>AudioCodec: VORBIS</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック : VORBIS</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="447"/>
         <source>AudioCodec: WMAPRO</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ コーデック : WMAPRO</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="448"/>
         <source>Auto Extend:</source>
-        <translation type="unfinished"></translation>
+        <translation>自動拡張 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="449"/>
         <source>Auto expire:</source>
-        <translation type="unfinished"></translation>
+        <translation>自動削除 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="451"/>
         <source>Automatically Extend:</source>
-        <translation type="unfinished"></translation>
+        <translation>自動延長 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="456"/>
         <source>Available Buffer: %BUFFERAVAIL% of %BUFFERSIZE%Mb</source>
-        <translation type="unfinished"></translation>
+        <translation>有効なバッファ : %BUFFERAVAIL% / %BUFFERSIZE%Mb</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="460"/>
         <source>BOOKMARKED</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークしました</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="462"/>
         <source>Back more</source>
-        <translation type="unfinished"></translation>
+        <translation>もっと戻す</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="463"/>
         <source>Backend Selection</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンド選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="465"/>
         <source>Backend is idle!</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドは待機中！</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="467"/>
         <source>Backend is offline!</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドはオフライン！</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="469"/>
         <source>Backend is recording!</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドは録画中！</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="474"/>
         <source>Banner Image:</source>
-        <translation type="unfinished"></translation>
+        <translation>題字画像 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="476"/>
         <source>Banner: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>題字 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="478"/>
         <source>Based on Mythbuntu theme with 14ch 4hr guide full menus</source>
-        <translation type="unfinished"></translation>
+        <translation>Mythbuntu テーマをベースに。14 チャンネル・4時間の番組表。フルメニュー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="479"/>
         <source>Basic configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>基本設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="480"/>
         <source>Basic configuration wizard</source>
-        <translation type="unfinished"></translation>
+        <translation>基本設定ウィザード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="484"/>
         <source>Blu-ray</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="491"/>
         <source>BlueRay Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray ディスク</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="493"/>
         <source>Bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマーク</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="500"/>
         <source>Browse Video</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオの閲覧</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="502"/>
         <source>Browse Web</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="504"/>
         <source>Browse popular video sites</source>
-        <translation type="unfinished"></translation>
+        <translation>人気のビデオサイトをブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="505"/>
         <source>Browse the</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="506"/>
         <source>Browse the World Wide Web</source>
-        <translation type="unfinished"></translation>
+        <translation>WWW をブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="511"/>
         <source>Browse your movie library</source>
-        <translation type="unfinished"></translation>
+        <translation>映画ライブラリーをブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="514"/>
         <source>Browse your video games library</source>
-        <translation type="unfinished"></translation>
+        <translation>ゲームギャラリーをブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="519"/>
         <source>Browseable: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウズ可 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="520"/>
         <source>Browseble:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウズ可 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="521"/>
         <source>Browser</source>
-        <translation type="unfinished">ブラウザ</translation>
+        <translation>ブラウザ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="522"/>
         <source>BrowsingLiveTV</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中をブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="525"/>
         <source>Buffer to Decoder: %decoderrate%</source>
-        <translation type="unfinished"></translation>
+        <translation>デコーダーバッファ : %decoderrate%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="526"/>
         <source>Buffer: %bufferstatus%</source>
-        <translation type="unfinished"></translation>
+        <translation>バッファ : %bufferstatus%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="529"/>
         <source>CC</source>
-        <translation type="unfinished">CC</translation>
+        <translation>CC</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="530"/>
         <source>CCTV</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="531"/>
         <source>CD</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="533"/>
         <source>CFLAGQUEUED</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="534"/>
         <source>COMFLAGGED</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="535"/>
         <source>COMFLAGGING</source>
-        <translation type="unfinished"></translation>
+        <translation>COMFLAGGING</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="536"/>
         <source>CPU load:</source>
-        <translation type="unfinished"></translation>
+        <translation>CPU 負荷 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="537"/>
         <source>CPU load: %load%</source>
-        <translation type="unfinished"></translation>
+        <translation>CPU 負荷 : %load%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="539"/>
         <source>CUTLIST</source>
-        <translation type="unfinished"></translation>
+        <translation>CUTLIST</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="544"/>
         <source>Captions</source>
-        <translation type="unfinished"></translation>
+        <translation>キャプション</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="545"/>
         <source>Card: %card%</source>
-        <translation type="unfinished"></translation>
+        <translation>カード : %card%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="546"/>
         <source>Cards</source>
-        <translation type="unfinished"></translation>
+        <translation>カード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="550"/>
         <source>Cast: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>キャスト: %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="551"/>
         <source>Catagories</source>
-        <translation type="unfinished"></translation>
+        <translation>カテゴリー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="552"/>
         <source>Catagory</source>
-        <translation type="unfinished"></translation>
+        <translation>カテゴリー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="553"/>
         <source>Categorie</source>
-        <translation type="unfinished"></translation>
+        <translation>カテゴリー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="559"/>
         <source>Category: %CATEGORY%               PlayBackGroup: %PLAYGROUP%               RecGroup: %RECORDINGGROUP%               StorageGroup: %STORAGEGROUP%</source>
-        <translation type="unfinished"></translation>
+        <translation>カテゴリー : %CATEGORY%               再生グループ : %PLAYGROUP%               録画グループ : %RECORDINGGROUP%               ストレージグループ : %STORAGEGROUP%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="571"/>
         <source>Change display groups</source>
-        <translation type="unfinished"></translation>
+        <translation>ディスプレーグループを変更</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="572"/>
         <source>Change mythtv key bindings</source>
-        <translation type="unfinished"></translation>
+        <translation>mythtv キー割り当てを変更</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="573"/>
         <source>Change recording group password</source>
-        <translation type="unfinished"></translation>
+        <translation>録画グループパスワードを変更</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="574"/>
         <source>Change:</source>
-        <translation type="unfinished"></translation>
+        <translation>変更 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="586"/>
         <source>Channel Rec Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル録画優先度</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="591"/>
         <source>Channel name:</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル名 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="592"/>
         <source>Channel number:</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル番号 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="597"/>
         <source>Channels:</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="598"/>
         <source>Channels: %audiochannels%</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル : %audiochannels%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="599"/>
         <source>Check the</source>
-        <translation type="unfinished"></translation>
+        <translation>チェック</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="600"/>
         <source>Check your Surveillance</source>
-        <translation type="unfinished"></translation>
+        <translation>監視システムを確認</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="601"/>
         <source>Check your Surveillance Cameras</source>
-        <translation type="unfinished"></translation>
+        <translation>監視カメラを確認</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="603"/>
         <source>Choose Country and Language</source>
-        <translation type="unfinished"></translation>
+        <translation>国と言語を選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="604"/>
         <source>Choose a</source>
-        <translation type="unfinished"></translation>
+        <translation>選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="605"/>
         <source>Choose a Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="606"/>
         <source>Choose a local theme or download new</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルテーマか、新しいものをダウンロードするかを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="611"/>
         <source>Choose sources for your</source>
-        <translation type="unfinished"></translation>
+        <translation>ソースを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="612"/>
         <source>Choose which artwork you like most</source>
-        <translation type="unfinished"></translation>
+        <translation>どの関連画像がもっとも好みか選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="613"/>
         <source>Choose which movie or tvserie you look for</source>
-        <translation type="unfinished"></translation>
+        <translation>どの映画またはテレビシリーズを探しているかを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="615"/>
         <source>Choose your mythtv backend server</source>
-        <translation type="unfinished"></translation>
+        <translation>mythtv バックエンドサーバーを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="618"/>
         <source>Clear database contents (Resync required):</source>
-        <translation type="unfinished"></translation>
+        <translation>データベースの内容をクリアー (要・再同期) :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="630"/>
         <source>Codec :</source>
-        <translation type="unfinished"></translation>
+        <translation>コーデック :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="633"/>
         <source>Codec/Dec:</source>
-        <translation type="unfinished"></translation>
+        <translation>Codec/Dec:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="634"/>
         <source>Codec/Dec: %VIDEOCODEC% %VIDEODECODER%</source>
-        <translation type="unfinished"></translation>
+        <translation>Codec/Dec: %VIDEOCODEC% %VIDEODECODER%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="638"/>
         <source>Commercial Flag recordings:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画にCMマークする :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="639"/>
         <source>Commercials are being flagged</source>
-        <translation type="unfinished">CMをマークしています</translation>
+        <translation>CMをマークしています</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="640"/>
         <source>Commercials are flagged</source>
-        <translation type="unfinished">CMがマークされています</translation>
+        <translation>CMがマークされています</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="642"/>
         <source>Conduct Power</source>
-        <translation type="unfinished"></translation>
+        <translation>コンダクトパワー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="643"/>
         <source>Conduct Power search</source>
-        <translation type="unfinished"></translation>
+        <translation>コンダクトパワー検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="644"/>
         <source>Configure</source>
-        <translation type="unfinished">設定</translation>
+        <translation>設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="646"/>
         <source>Configure Mythtv key bindings</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV キー割り当てを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="649"/>
         <source>Configure audio settings</source>
-        <translation type="unfinished"></translation>
+        <translation>音声設定をおこなう</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="650"/>
         <source>Configure display of</source>
-        <translation type="unfinished"></translation>
+        <translation>設定ディスプレー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="651"/>
         <source>Configure display of Pictures</source>
-        <translation type="unfinished"></translation>
+        <translation>画像表示の設定をおこなう</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="653"/>
         <source>Configure how mythtv</source>
-        <translation type="unfinished"></translation>
+        <translation>設定 mythtv の</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="655"/>
         <source>Configure information plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>情報プラグインの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="657"/>
         <source>Configure media plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>メディアプラグインの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="659"/>
         <source>Configure mythtv core</source>
-        <translation type="unfinished"></translation>
+        <translation>mythtv コア設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="660"/>
         <source>Configure mythtv look and feel</source>
-        <translation type="unfinished"></translation>
+        <translation>mythtv の操作性を設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="661"/>
         <source>Configure playback</source>
-        <translation type="unfinished"></translation>
+        <translation>再生設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="662"/>
         <source>Configure playback and</source>
-        <translation type="unfinished"></translation>
+        <translation>再生と設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="664"/>
         <source>Configure playback and TV settings</source>
-        <translation type="unfinished"></translation>
+        <translation>再生とテレビ設定をおこなう</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="666"/>
         <source>Configure playback of</source>
-        <translation type="unfinished"></translation>
+        <translation>再生の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="667"/>
         <source>Configure playback of Music</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽再生の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="668"/>
         <source>Configure playback of Video</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ再生の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="670"/>
         <source>Configure playback of media streams</source>
-        <translation type="unfinished"></translation>
+        <translation>メディアストリームの再生設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="671"/>
         <source>Configure playing of</source>
-        <translation type="unfinished"></translation>
+        <translation>プレーの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="672"/>
         <source>Configure playing of Games</source>
-        <translation type="unfinished"></translation>
+        <translation>ゲームのプレー設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="673"/>
         <source>Configure sources for</source>
-        <translation type="unfinished"></translation>
+        <translation>ソースの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="676"/>
         <source>Configure system settings</source>
-        <translation type="unfinished"></translation>
+        <translation>システム設定をおこなう</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="677"/>
         <source>Configure the metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="679"/>
         <source>Configure the skin and</source>
-        <translation type="unfinished"></translation>
+        <translation>スキンと設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="680"/>
         <source>Configure video and DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオと DVD の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="681"/>
         <source>Configure video and DVD archives</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオと DVD 書き込みの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="685"/>
         <source>Configure your capture</source>
-        <translation type="unfinished"></translation>
+        <translation>キャプチャーの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="686"/>
         <source>Configure your capture cards</source>
-        <translation type="unfinished"></translation>
+        <translation>キャプチャーカードの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="687"/>
         <source>Configure your video</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="688"/>
         <source>Configure your video Sources</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオソースの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="689"/>
         <source>Configure your web</source>
-        <translation type="unfinished"></translation>
+        <translation>web の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="690"/>
         <source>Connect your cards to</source>
-        <translation type="unfinished"></translation>
+        <translation>カードを接続</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="691"/>
         <source>Connect your cards to video sources</source>
-        <translation type="unfinished"></translation>
+        <translation>カードをビデオソースに接続</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="693"/>
         <source>Context:</source>
-        <translation type="unfinished"></translation>
+        <translation>コンテキスト :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="695"/>
         <source>Controls:</source>
-        <translation type="unfinished"></translation>
+        <translation>制御 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="697"/>
         <source>Core Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>コア 設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="700"/>
         <source>Country and Language selection</source>
-        <translation type="unfinished"></translation>
+        <translation>国と言語を選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="708"/>
         <source>Coverart Image:</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャケット写真画像 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="710"/>
         <source>Coverart: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャケット写真 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="711"/>
         <source>Coverfile:</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャケット写真ファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="713"/>
         <source>Create advanced recording rules</source>
-        <translation type="unfinished"></translation>
+        <translation>詳細録画ルールを作成</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="719"/>
         <source>Current Rule Phrase:</source>
-        <translation type="unfinished"></translation>
+        <translation>現在のルールフレーズ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="720"/>
         <source>Current View:</source>
-        <translation type="unfinished"></translation>
+        <translation>現在の表示 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="721"/>
         <source>Current phrase to search for:</source>
-        <translation type="unfinished"></translation>
+        <translation>現在の検索フレーズ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="723"/>
         <source>Currently Playing:</source>
-        <translation type="unfinished"></translation>
+        <translation>現在再生中 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="725"/>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="726"/>
         <source>Custom Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="734"/>
         <source>Customize meta data of your Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画のメタデータをカスタマイズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="735"/>
         <source>Customize meta data of your videos</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオのメタデータをカスタマイズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="736"/>
         <source>Customize your channel icons</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルアイコンをカスタマイズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="737"/>
         <source>Customize your channels settings</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル設定をカスタマイズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="738"/>
         <source>Customize your country settings</source>
-        <translation type="unfinished"></translation>
+        <translation>国設定をカスタマイズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="739"/>
         <source>Customize your grabber settings</source>
-        <translation type="unfinished"></translation>
+        <translation>グラバー設定をカスタマイズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="740"/>
         <source>Customize your recording schedule</source>
-        <translation type="unfinished"></translation>
+        <translation>録画予約をカスタマイズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="741"/>
         <source>DOLBY</source>
-        <translation type="unfinished"></translation>
+        <translation>Dolby</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="746"/>
         <source>DVD drive:</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD ドライブ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="747"/>
         <source>DVD player:</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD プレーヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="748"/>
         <source>Damaged</source>
-        <translation type="unfinished"></translation>
+        <translation>破損</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="750"/>
         <source>Database failed to start.</source>
-        <translation type="unfinished"></translation>
+        <translation>データベースの起動に失敗。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="751"/>
         <source>Database machine failed to wake up.</source>
-        <translation type="unfinished"></translation>
+        <translation>データベースマシンの起動に失敗しました。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="754"/>
         <source>Decoder :</source>
-        <translation type="unfinished"></translation>
+        <translation>デコーダー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="755"/>
         <source>Decoder rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>デコーダー率 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="757"/>
         <source>Default player:</source>
-        <translation type="unfinished"></translation>
+        <translation>デフォルト プレーヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="759"/>
         <source>Deint :</source>
-        <translation type="unfinished"></translation>
+        <translation>インターレース解除 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="763"/>
         <source>Delete Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画を削除</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="764"/>
         <source>Delete Rule</source>
-        <translation type="unfinished">デリートルール</translation>
+        <translation>ルールの削除</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="766"/>
         <source>Delete system Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>システムプロファイルを削除</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="773"/>
         <source>Detailed information about your video</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオについての詳細情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="774"/>
         <source>Detailed information of your video</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオの詳細情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="776"/>
         <source>Details:</source>
-        <translation type="unfinished"></translation>
+        <translation>詳細 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="777"/>
         <source>Directed By:</source>
-        <translation type="unfinished"></translation>
+        <translation>監督 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="780"/>
         <source>Directed by %director%%, |year%</source>
-        <translation type="unfinished"></translation>
+        <translation>監督 %director%%。|year%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="782"/>
         <source>Directed by: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>監督 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="783"/>
         <source>Director</source>
-        <translation type="unfinished">ディレクター</translation>
+        <translation>監督・ディレクター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="785"/>
         <source>Director: %director% - %length%</source>
-        <translation type="unfinished"></translation>
+        <translation>監督 : %director% - %length%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="786"/>
         <source>Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>ディレクトリー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="789"/>
         <source>Disk space:  %1</source>
-        <translation type="unfinished"></translation>
+        <translation>ディスク容量 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="790"/>
         <source>Disks</source>
-        <translation type="unfinished"></translation>
+        <translation>ディスク</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="794"/>
         <source>Download icons</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコンをダウンロード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="796"/>
         <source>Download status</source>
-        <translation type="unfinished"></translation>
+        <translation>ダウンロード状態</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="797"/>
         <source>Downloadable</source>
-        <translation type="unfinished"></translation>
+        <translation>ダウンロード可</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="802"/>
         <source>Duplicate Method:</source>
-        <translation type="unfinished"></translation>
+        <translation>重複方法 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="803"/>
         <source>Duplicate Scope:</source>
-        <translation type="unfinished"></translation>
+        <translation>重複範囲 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="804"/>
         <source>Duplication Methode:</source>
-        <translation type="unfinished"></translation>
+        <translation>重複方法 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="805"/>
         <source>Duplication Scope:</source>
-        <translation type="unfinished"></translation>
+        <translation>重複範囲 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="806"/>
         <source>Duration</source>
-        <translation type="unfinished"></translation>
+        <translation>長さ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="808"/>
         <source>Duration of an image transition (ms):</source>
-        <translation type="unfinished"></translation>
+        <translation>画像遷移の長さ (ミリ秒) :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="813"/>
         <source>Edit Command for</source>
-        <translation type="unfinished"></translation>
+        <translation>コマンドを編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="818"/>
         <source>Edit Metadata Information</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ情報を編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="822"/>
         <source>Edit Powersearch</source>
-        <translation type="unfinished"></translation>
+        <translation>パワー検索を編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="824"/>
         <source>Edit System events</source>
-        <translation type="unfinished"></translation>
+        <translation>システムイベントを編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="828"/>
         <source>Edit keys</source>
-        <translation type="unfinished"></translation>
+        <translation>キーを編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="830"/>
         <source>Edit search item:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索項目を編集 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="833"/>
         <source>Edit your</source>
-        <translation type="unfinished"></translation>
+        <translation>あなたの編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="834"/>
         <source>Edit your Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="835"/>
         <source>Edit your television channels</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビチャンネルを編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="836"/>
         <source>Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>エディター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="837"/>
         <source>Eject</source>
-        <translation type="unfinished"></translation>
+        <translation>取り出し</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="840"/>
         <source>Eject optical from drive</source>
-        <translation type="unfinished"></translation>
+        <translation>光学ドライブの取り出し</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="850"/>
         <source>End late:</source>
-        <translation type="unfinished"></translation>
+        <translation>終了時間の延長 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="855"/>
         <source>End time:</source>
-        <translation type="unfinished"></translation>
+        <translation>終了時間 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="856"/>
         <source>End: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>終了 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="857"/>
         <source>Enter</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="858"/>
         <source>Enter Plot:</source>
-        <translation type="unfinished"></translation>
+        <translation>あらすじを入力 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="860"/>
         <source>Enter Search Text:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索テキストを入力 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="862"/>
         <source>Enter information for action</source>
-        <translation type="unfinished"></translation>
+        <translation>操作の情報を入力</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="863"/>
         <source>Enter phrase to search for:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索フレーズを入力 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="864"/>
         <source>Enter:</source>
-        <translation type="unfinished"></translation>
+        <translation>入力 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="866"/>
         <source>Episode %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 回</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="870"/>
         <source>Events</source>
-        <translation type="unfinished"></translation>
+        <translation>イベント</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="874"/>
         <source>Exit</source>
-        <translation type="unfinished">終了</translation>
+        <translation>終了</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="875"/>
         <source>Exit from MythTV.</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV を終了します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="878"/>
         <source>Extra</source>
-        <translation type="unfinished"></translation>
+        <translation>エクストラ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="882"/>
         <source>FPS:</source>
-        <translation type="unfinished"></translation>
+        <translation>FPS :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="883"/>
         <source>FPS: %framerate%</source>
-        <translation type="unfinished"></translation>
+        <translation>FPS: %framerate%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="886"/>
         <source>Fanart: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>ファンアート : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="887"/>
         <source>Fast Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>早送り</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="888"/>
         <source>Fast fwd</source>
-        <translation type="unfinished"></translation>
+        <translation>早送り</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="889"/>
         <source>File :</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="890"/>
         <source>File Associations</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルの関連付け</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="892"/>
         <source>File Buffer:</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルバッファ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="894"/>
         <source>File Manager</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル管理</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="896"/>
         <source>File Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル サイズ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="898"/>
         <source>File browser</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルブラウザ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="899"/>
         <source>File info:</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル情報 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="902"/>
         <source>FileBrowser</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルブラウザ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="906"/>
         <source>Filename: %filename%</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル名 : %filename%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="907"/>
         <source>Fill</source>
-        <translation type="unfinished">埋める</translation>
+        <translation>埋める</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="908"/>
         <source>Filter Display</source>
-        <translation type="unfinished"></translation>
+        <translation>表示フィルター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="913"/>
         <source>Filter:  %1</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルター : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="915"/>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="917"/>
         <source>Filters you can apply:</source>
-        <translation type="unfinished"></translation>
+        <translation>適用できるフィルター :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="928"/>
         <source>Find OnNet</source>
-        <translation type="unfinished"></translation>
+        <translation>ネットで探す</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="936"/>
         <source>Find broadcasted programs</source>
-        <translation type="unfinished"></translation>
+        <translation>放送済みの番組から探す</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="944"/>
         <source>Find your</source>
-        <translation type="unfinished"></translation>
+        <translation>探す</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="947"/>
         <source>First Conflict:</source>
-        <translation type="unfinished"></translation>
+        <translation>最初の衝突 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="949"/>
         <source>Flag</source>
-        <translation type="unfinished"></translation>
+        <translation>マーク</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="953"/>
         <source>Frame Number</source>
-        <translation type="unfinished"></translation>
+        <translation>フレームバッファ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="954"/>
         <source>Frame audio level +/-0.5</source>
-        <translation type="unfinished"></translation>
+        <translation>音声レベルをかたちづくる +/-0.5</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="955"/>
         <source>Frame: %framedisplay%  |  %cutindicator%</source>
-        <translation type="unfinished"></translation>
+        <translation>フレーム : %framedisplay%  |  %cutindicator%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="958"/>
         <source>Frames decoded/free: %videoframes%</source>
-        <translation type="unfinished"></translation>
+        <translation>復号フレーム/全体 : %videoframes%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="962"/>
         <source>Full plot</source>
-        <translation type="unfinished"></translation>
+        <translation>あらすじのすべて</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="963"/>
         <source>Fwd more</source>
-        <translation type="unfinished"></translation>
+        <translation>もっと先へ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="965"/>
         <source>Gallery Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>ギャラリー設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="972"/>
         <source>General movie</source>
-        <translation type="unfinished"></translation>
+        <translation>映画全般</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="977"/>
         <source>Genres</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャンル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="986"/>
         <source>Grabber</source>
-        <translation type="unfinished"></translation>
+        <translation>グラバー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="989"/>
         <source>Group selector</source>
-        <translation type="unfinished"></translation>
+        <translation>グループ選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="990"/>
         <source>Group your favorite</source>
-        <translation type="unfinished"></translation>
+        <translation>お気に入りをグループ化</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="992"/>
         <source>Grouplist item:</source>
-        <translation type="unfinished"></translation>
+        <translation>グループリスト項目 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="993"/>
         <source>Groups</source>
-        <translation type="unfinished">グループ</translation>
+        <translation>グループ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="994"/>
         <source>Guide</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="998"/>
         <source>HD</source>
-        <translation type="unfinished"></translation>
+        <translation>HD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="999"/>
         <source>HD1080</source>
-        <translation type="unfinished"></translation>
+        <translation>HD1080</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1000"/>
         <source>HD720P</source>
-        <translation type="unfinished"></translation>
+        <translation>HD720P</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1001"/>
         <source>HDTV</source>
-        <translation type="unfinished">HDTV</translation>
+        <translation>HDTV</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1002"/>
         <source>Handlers</source>
-        <translation type="unfinished"></translation>
+        <translation>ハンドラー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1003"/>
         <source>Hardware Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1007"/>
         <source>Hide Channels without channel number</source>
-        <translation type="unfinished"></translation>
+        <translation>番号のないチャンネルを非表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1009"/>
         <source>Hide Channels without channel number:</source>
-        <translation type="unfinished"></translation>
+        <translation>番号のないチャンネルを非表示 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1017"/>
         <source>IMDB</source>
-        <translation type="unfinished"></translation>
+        <translation>IMDB</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1020"/>
         <source>INETREF:</source>
-        <translation type="unfinished"></translation>
+        <translation>INETREF:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1025"/>
         <source>Icon Import</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコンインポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1032"/>
         <source>Image Loading...</source>
-        <translation type="unfinished"></translation>
+        <translation>画像を読み込んでいます...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1037"/>
         <source>Import and Export</source>
-        <translation type="unfinished"></translation>
+        <translation>インポート・エクスポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1038"/>
         <source>Import and Export your videos</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオをインポート・エクスポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1041"/>
         <source>Import your music from CD</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽を CD からインポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1052"/>
         <source>Info Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>情報セットアップ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1053"/>
         <source>Info about your</source>
-        <translation type="unfinished"></translation>
+        <translation>あなたの情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1054"/>
         <source>Info about your system</source>
-        <translation type="unfinished"></translation>
+        <translation>システムの情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1057"/>
         <source>Information about your System</source>
-        <translation type="unfinished"></translation>
+        <translation>システムの情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1059"/>
         <source>Information and Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>情報とツール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1061"/>
         <source>Inputs</source>
-        <translation type="unfinished"></translation>
+        <translation>入力</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1063"/>
         <source>Install Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールをインストール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1064"/>
         <source>Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>インストール済み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1065"/>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネット</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1072"/>
         <source>Jump Back</source>
-        <translation type="unfinished">後方にジャンプ</translation>
+        <translation>後方にジャンプ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1073"/>
         <source>Jump Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>先にジャンプ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1074"/>
         <source>Jump back</source>
-        <translation type="unfinished"></translation>
+        <translation>後方にジャンプ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1075"/>
         <source>Jump bkmark</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマークへ移動</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1076"/>
         <source>Jump fwd</source>
-        <translation type="unfinished"></translation>
+        <translation>先にジャンプ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1077"/>
         <source>Jump to Bookmark</source>
-        <translation type="unfinished">ブックマークへ移動</translation>
+        <translation>ブックマークへ移動</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1078"/>
         <source>Jump to Start</source>
-        <translation type="unfinished"></translation>
+        <translation>最初に移動</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1079"/>
         <source>Jump to start</source>
-        <translation type="unfinished"></translation>
+        <translation>最初に移動</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1082"/>
         <source>Key Bindings</source>
-        <translation type="unfinished"></translation>
+        <translation>キー割当</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1083"/>
         <source>Key Grabber</source>
-        <translation type="unfinished"></translation>
+        <translation>キーグラバー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1085"/>
         <source>Key pressed:</source>
-        <translation type="unfinished"></translation>
+        <translation>押したキー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1086"/>
         <source>Keys</source>
-        <translation type="unfinished"></translation>
+        <translation>キー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1091"/>
         <source>Language:</source>
-        <translation type="unfinished"></translation>
+        <translation>言語 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1092"/>
         <source>Last Played:</source>
-        <translation type="unfinished"></translation>
+        <translation>最後に再生 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1095"/>
         <source>Last Recorded:</source>
-        <translation type="unfinished"></translation>
+        <translation>最新の録画 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1096"/>
         <source>Last recorded %lastrecordeddate%</source>
-        <translation type="unfinished"></translation>
+        <translation>最終録画 %lastrecordeddate%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1097"/>
         <source>Last: %statusbefore%</source>
-        <translation type="unfinished"></translation>
+        <translation>最終 : %statusbefore%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1099"/>
         <source>Lenght</source>
-        <translation type="unfinished"></translation>
+        <translation>長さ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1102"/>
         <source>Level</source>
-        <translation type="unfinished"></translation>
+        <translation>レベル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1105"/>
         <source>List Overview</source>
-        <translation type="unfinished"></translation>
+        <translation>概要の一覧</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1106"/>
         <source>List item:</source>
-        <translation type="unfinished"></translation>
+        <translation>項目リスト :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1107"/>
         <source>Listen to</source>
-        <translation type="unfinished"></translation>
+        <translation>聴く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1108"/>
         <source>Listen to Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネットを聴く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1109"/>
         <source>Listen to Internet Radio Streams</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネットラジオを聴く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1116"/>
         <source>Lists</source>
-        <translation type="unfinished"></translation>
+        <translation>リスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1118"/>
         <source>Live Television</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1120"/>
         <source>Loading Video Library
  If no videos appear your library is either empty or unconfigured (Press M to adjust settings)</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオライブラリーを読み込み中
+ ライブラリーにビデオが表示されなければ、ライブラリーが空か未設定家です (M を押して設定を調整)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1121"/>
         <source>Loading content for playback...</source>
-        <translation type="unfinished"></translation>
+        <translation>再生に向けてコンテンツを読み込んでいます...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1122"/>
         <source>Local</source>
-        <translation type="unfinished">ローカル</translation>
+        <translation>ローカル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1123"/>
         <source>Local Banner</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルの題字</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1124"/>
         <source>Local Coverart</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルのジャケット写真</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1125"/>
         <source>Local Fanart</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルのファンアート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1126"/>
         <source>Local Search</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカル検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1128"/>
         <source>Locally installed</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルにインストール済み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1129"/>
         <source>Location and sources for</source>
-        <translation type="unfinished"></translation>
+        <translation>場所と情報提供元</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1130"/>
         <source>Lock</source>
-        <translation type="unfinished">ロック</translation>
+        <translation>ロック</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1131"/>
         <source>Lock: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>ロック : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1136"/>
         <source>Look at the TV Guide</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表を見て</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1138"/>
         <source>Look what is on the</source>
-        <translation type="unfinished"></translation>
+        <translation>見て</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1139"/>
         <source>Looks</source>
-        <translation type="unfinished"></translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1142"/>
         <source>MANAGE RECORDING RULES</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルールの管理</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1143"/>
         <source>MONO</source>
-        <translation type="unfinished"></translation>
+        <translation>モノラル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1157"/>
         <source>Manual Schedule your Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の手動予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1159"/>
         <source>Manually Schedule programs</source>
-        <translation type="unfinished"></translation>
+        <translation>手動番組予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1160"/>
         <source>Master backend failed to wake.</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンドの起動に失敗。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1162"/>
         <source>Max episodes:</source>
-        <translation type="unfinished"></translation>
+        <translation>最大番組回数 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1164"/>
         <source>Maximum Number of Episodes to Keep:</source>
-        <translation type="unfinished"></translation>
+        <translation>保存する番組の回の数の最大値 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1165"/>
         <source>Maximum Number of Newest Episodes:</source>
-        <translation type="unfinished"></translation>
+        <translation>最新の番組の回の最大数 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1168"/>
         <source>Media Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>メディア 設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1170"/>
         <source>Menu</source>
-        <translation type="unfinished">メニュー</translation>
+        <translation>メニュー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1171"/>
         <source>Message</source>
-        <translation type="unfinished"></translation>
+        <translation>メッセージ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1172"/>
         <source>MetaData</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1173"/>
         <source>Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1174"/>
         <source>Metadata Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1175"/>
         <source>Metadata OPTIONS</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1180"/>
         <source>Metadata settings</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1183"/>
         <source>Minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>分</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1187"/>
         <source>More Actions</source>
-        <translation type="unfinished"></translation>
+        <translation>さらに操作</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1189"/>
         <source>Move BottomLine</source>
-        <translation type="unfinished"></translation>
+        <translation>最下行に移動</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1191"/>
         <source>Move the selected amber arrow to the corner of the TV screen.  Press SELECT to edit the other arrow.  Press MENU for options and ESC to quit.</source>
-        <translation type="unfinished"></translation>
+        <translation>選択したアンバー色の矢印をテレビ画面の隅に移動します。SELECT を押して反対側の矢印を編集します。設定に移るには MENU を押し、終了するには ESC を押します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1196"/>
         <source>Move the selected corner of the preview image to the corner of the TV screen.  Press SELECT to edit the other corner. Press MENU for options and ESC to quit.</source>
-        <translation type="unfinished"></translation>
+        <translation>選択したプレビュー画像の隅をテレビ画面の隅に移動します。SELECT を押して別の隅を編集します。設定に移るには MENU を押し、終了するには ESC を押します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1197"/>
         <source>Movie Details</source>
-        <translation type="unfinished"></translation>
+        <translation>映画の詳細</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1200"/>
         <source>Movie Rating:</source>
-        <translation type="unfinished"></translation>
+        <translation>映画の評判 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1201"/>
         <source>Movie Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>映画設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1202"/>
         <source>Movie/TV DB</source>
-        <translation type="unfinished"></translation>
+        <translation>映画・テレビ DB</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1203"/>
         <source>Movie/TV DB:</source>
-        <translation type="unfinished"></translation>
+        <translation>映画・テレビ DB :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1209"/>
         <source>Mute</source>
-        <translation type="unfinished">ミュート</translation>
+        <translation>ミュート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1212"/>
         <source>My audio subsystem supports DTS-HD:</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ サブシステムは DTS-HD をサポート :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1213"/>
         <source>My audio subsystem supports DTS:</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ サブシステムは DTS をサポート :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1215"/>
         <source>My audio subsystem supports Dolby Digital:</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ サブシステムは Dolby Digital をサポート :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1217"/>
         <source>My audio subsystem supports E-AC-3:</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ サブシステムは E-AC-3 をサポート :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1219"/>
         <source>My audio subsystem supports TrueHD:</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ サブシステムは TrueHD をサポート :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1229"/>
         <source>MythTV Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV 設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1230"/>
         <source>MythTV Startup Status</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV スタートアップ状態</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1231"/>
         <source>MythTV is a Free Open Source software digital video recorder (DVR) project distributed under the terms of the GNU GPL  -  It has been under heavy development since 2002  -  Now it contains most features one would expect from a good DVR and many new ones that you soon won&apos;t be able to live without  -  This theme is based on and inspired by the original XBMC skin called Aeon by Duncan Harris  -  When using this theme you should select the customized menu called &apos;MythAeon&apos; as this menu lay-out and items are tailored for this particular theme</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTVは、GNU GPLの条件の下で配布される無料のオープンソース ソフトウェア デジタルビデオレコーダー (DVR) プロジェクトです。2002年から大規模な開発が行われています。今では優れた DVR に期待されるほとんどの機能と、多くの新しい機能を含んでおり、すぐにこれなしでは生きられなくなるでしょう。このテーマは、オリジナルの XBMC スキンをベースにインスパイアを受けた Duncan Harris によって作成されたもので、Aeon と呼ばれています。このテーマを使用するときは、このテーマに合わせてメニューレイアウトとアイテムを調整した「MythAeon」と呼ばれるカスタマイズされたメニューを選択するべきです</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1235"/>
         <source>MythTV is in standby mode!</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV はスタンバイモードです！</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1237"/>
         <source>NO</source>
-        <translation type="unfinished"></translation>
+        <translation>いいえ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1241"/>
         <source>Navigate</source>
-        <translation type="unfinished"></translation>
+        <translation>ナビゲート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1242"/>
         <source>Navigation</source>
-        <translation type="unfinished"></translation>
+        <translation>ナビゲーション</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1243"/>
         <source>Navigation control:</source>
-        <translation type="unfinished"></translation>
+        <translation>ナビゲーション コントロール :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1246"/>
         <source>New Password</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいパスワード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1250"/>
         <source>New: %statusafter%</source>
-        <translation type="unfinished"></translation>
+        <translation>最新 : %statusafter%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1251"/>
         <source>News</source>
-        <translation type="unfinished">ニュース</translation>
+        <translation>ニュース</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1258"/>
         <source>Next Song:</source>
-        <translation type="unfinished"></translation>
+        <translation>次の曲 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1266"/>
         <source>No additional info available</source>
-        <translation type="unfinished"></translation>
+        <translation>ほかに情報はありません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1268"/>
         <source>No extra info available</source>
-        <translation type="unfinished"></translation>
+        <translation>ほかに情報はありません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1269"/>
         <source>No listings found for this program search.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組検索では何も見つかりませんでした。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1272"/>
         <source>No resolution specified</source>
-        <translation type="unfinished"></translation>
+        <translation>解像度が指定されていません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1277"/>
         <source>No videos in library, or no files found.  If you have configured a video directory, press &quot;M&quot; (or the MENU key) and select &quot;Scan for Change.&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>ライブラリーにビデオがないか、ファイルが見つかりませんでした。ビデオディレクトリーを設定したのであれば、「M」(または MENU キー) を押して、「変更したのでスキャン」を選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1281"/>
         <source>No volume controls configured</source>
-        <translation type="unfinished"></translation>
+        <translation>音量制御が設定されていません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1286"/>
         <source>Not applicable</source>
-        <translation type="unfinished"></translation>
+        <translation>適用できません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1287"/>
         <source>Not recorded yet</source>
-        <translation type="unfinished"></translation>
+        <translation>まだ録画していません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1288"/>
         <source>Not sure which screen this is:</source>
-        <translation type="unfinished"></translation>
+        <translation>これがどのスクリーンか不確か :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1289"/>
         <source>Number of Recordings:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画数 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1290"/>
         <source>Number of Speakers:</source>
-        <translation type="unfinished"></translation>
+        <translation>スピーカーの数 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1292"/>
         <source>OSD</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1296"/>
         <source>OSD Input Message</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 入力メッセージ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1299"/>
         <source>OSD Notification Message</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 通知メッセージ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1307"/>
         <source>Online Banner</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインの題字</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1308"/>
         <source>Online Coverart</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインのジャケット写真</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1309"/>
         <source>Online Fanart</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインのファンアート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1312"/>
         <source>Optional category:</source>
-        <translation type="unfinished"></translation>
+        <translation>追加のカテゴリー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1313"/>
         <source>Optional channel:</source>
-        <translation type="unfinished"></translation>
+        <translation>追加のチャンネル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1315"/>
         <source>Optional genre:</source>
-        <translation type="unfinished"></translation>
+        <translation>追加のジャンル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1318"/>
         <source>Options</source>
-        <translation type="unfinished">選択肢</translation>
+        <translation>選択肢</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1319"/>
         <source>Order By:</source>
-        <translation type="unfinished"></translation>
+        <translation>並べ替え :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1323"/>
         <source>P</source>
-        <translation type="unfinished"></translation>
+        <translation>P</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1326"/>
         <source>PLAYLIST</source>
-        <translation type="unfinished"></translation>
+        <translation>プレイリスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1327"/>
         <source>POSTPROCESSING OPTIONS</source>
-        <translation type="unfinished"></translation>
+        <translation>事後処理設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1328"/>
         <source>PROGRAM DETAILS</source>
-        <translation type="unfinished"></translation>
+        <translation>番組の詳細</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1329"/>
         <source>PROGRAM GUIDE</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1330"/>
         <source>PROGRAM LIST</source>
-        <translation type="unfinished"></translation>
+        <translation>番組リスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1331"/>
         <source>PROGRAM SEARCH</source>
-        <translation type="unfinished"></translation>
+        <translation>番組検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1332"/>
         <source>Parental</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1348"/>
         <source>Parential level:</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタルレベル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1350"/>
         <source>Pause</source>
-        <translation type="unfinished">一時停止</translation>
+        <translation>一時停止</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1355"/>
         <source>Perform daily updates of recording artwork:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画関連画像の更新を毎日実施 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1356"/>
         <source>Perform daily updates:</source>
-        <translation type="unfinished"></translation>
+        <translation>毎日更新実行 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1359"/>
         <source>Perform query</source>
-        <translation type="unfinished"></translation>
+        <translation>クエリーの実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1364"/>
         <source>Pick a program from a set of lists</source>
-        <translation type="unfinished"></translation>
+        <translation>リストから番組を選り抜く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1370"/>
         <source>Pick programs to be recorded</source>
-        <translation type="unfinished"></translation>
+        <translation>録画する番組を選り抜く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1377"/>
         <source>Play Back Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>再生グループ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1378"/>
         <source>Play Back Group: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>再生グループ : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1379"/>
         <source>Play Blu-ray and DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray と DVD の再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1390"/>
         <source>Play a film on</source>
-        <translation type="unfinished"></translation>
+        <translation>映画の再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1391"/>
         <source>Play a film on Blu-ray Disk</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray の映画を再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1393"/>
         <source>Play a film on a DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD の映画を再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1395"/>
         <source>Play any of your recorded programs</source>
-        <translation type="unfinished"></translation>
+        <translation>録画した番組を再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1397"/>
         <source>Play group:</source>
-        <translation type="unfinished"></translation>
+        <translation>再生グループ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1399"/>
         <source>Play next</source>
-        <translation type="unfinished"></translation>
+        <translation>次に再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1407"/>
         <source>Play your video</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオを再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1411"/>
         <source>Playback starting ...</source>
-        <translation type="unfinished"></translation>
+        <translation>再生を始めています...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1413"/>
         <source>Player</source>
-        <translation type="unfinished"></translation>
+        <translation>プレーヤー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1415"/>
         <source>Player CMD</source>
-        <translation type="unfinished"></translation>
+        <translation>プレーヤー CMD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1419"/>
         <source>Player:</source>
-        <translation type="unfinished"></translation>
+        <translation>プレーヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1420"/>
         <source>Playlist duration:</source>
-        <translation type="unfinished"></translation>
+        <translation>プレイリストの時間 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1421"/>
         <source>Playlist item:</source>
-        <translation type="unfinished"></translation>
+        <translation>プレイリストの項目 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1422"/>
         <source>Playlist position:</source>
-        <translation type="unfinished"></translation>
+        <translation>プレイリストの場所 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1423"/>
         <source>Playlist progress:</source>
-        <translation type="unfinished"></translation>
+        <translation>プレイリストの進行状況 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1424"/>
         <source>Playlist: %playlisttime%</source>
-        <translation type="unfinished"></translation>
+        <translation>プレイリスト : %playlisttime%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1426"/>
         <source>Please Wait....</source>
-        <translation type="unfinished"></translation>
+        <translation>お待ちください...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1430"/>
         <source>Plot: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>あらすじ : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1432"/>
         <source>Position</source>
-        <translation type="unfinished">位置</translation>
+        <translation>位置</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1434"/>
         <source>Post Process Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>事後処理編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1438"/>
         <source>Post Processing Options Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>事後処理設定編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1439"/>
         <source>Post processing</source>
-        <translation type="unfinished"></translation>
+        <translation>事後処理</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1440"/>
         <source>Post-Processing Options</source>
-        <translation type="unfinished"></translation>
+        <translation>事後処理設定編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1441"/>
         <source>Power Search</source>
-        <translation type="unfinished">パワーサーチ</translation>
+        <translation>パワー検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1442"/>
         <source>Powersearch</source>
-        <translation type="unfinished"></translation>
+        <translation>パワー検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1443"/>
         <source>PreRecorded</source>
-        <translation type="unfinished"></translation>
+        <translation>録画前</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1444"/>
         <source>Press &apos;up&apos;, &apos;down, &apos;left&apos; and &apos;right&apos; arrows to move through the files and folders. Press &apos;select&apos; or &apos;enter&apos; key to select the file or folder.</source>
-        <translation type="unfinished"></translation>
+        <translation>「上」「下」「左」「右」の矢印を押すと、ファイルとフォルダーを移動します。「SELECT」または「Enter」キーでファイルまたはフォルダーを選択します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1455"/>
         <source>Priorities</source>
-        <translation type="unfinished"></translation>
+        <translation>優先度</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1458"/>
         <source>Prioritize some shows over others</source>
-        <translation type="unfinished"></translation>
+        <translation>番組の一部をほかのものより優先します</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1462"/>
         <source>Priority:  %1</source>
-        <translation type="unfinished"></translation>
+        <translation>優先度 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1463"/>
         <source>Priority: %finalpriority%</source>
-        <translation type="unfinished"></translation>
+        <translation>優先度 : %finalpriority%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1464"/>
         <source>Priority: %priority%</source>
-        <translation type="unfinished"></translation>
+        <translation>優先度 : %priority%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1466"/>
         <source>Profile</source>
-        <translation type="unfinished">プロファイル</translation>
+        <translation>プロファイル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1467"/>
         <source>Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>プロファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1468"/>
         <source>Profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>プロファイル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1473"/>
         <source>Program Guide Video</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表ビデオ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1479"/>
         <source>Program Searches</source>
-        <translation type="unfinished"></translation>
+        <translation>番組検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1481"/>
         <source>Programid</source>
-        <translation type="unfinished"></translation>
+        <translation>番組ID</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1482"/>
         <source>Programme Finder</source>
-        <translation type="unfinished"></translation>
+        <translation>番組検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1484"/>
         <source>Programs</source>
-        <translation type="unfinished">番組</translation>
+        <translation>番組</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1487"/>
         <source>Protocol: %PROTOCOLVERSION%</source>
-        <translation type="unfinished"></translation>
+        <translation>プロトコル : %PROTOCOLVERSION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1489"/>
         <source>R</source>
-        <translation type="unfinished"></translation>
+        <translation>R</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1490"/>
         <source>RECORDING</source>
-        <translation type="unfinished">ろくが</translation>
+        <translation>録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1492"/>
         <source>Radio</source>
-        <translation type="unfinished"></translation>
+        <translation>ラジオ</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="1494"/>
         <source>Raise recording priority by %n</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n で録画優先度を上げる</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1496"/>
         <source>Rated: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>評判 :%1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1498"/>
         <source>Rating</source>
-        <translation type="unfinished"></translation>
+        <translation>評判</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1500"/>
         <source>Ratings</source>
-        <translation type="unfinished"></translation>
+        <translation>評判</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1501"/>
         <source>Ratings:</source>
-        <translation type="unfinished"></translation>
+        <translation>評判 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1503"/>
         <source>Read the</source>
-        <translation type="unfinished"></translation>
+        <translation>読む</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1504"/>
         <source>Read the news online</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインニュースを読む</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1506"/>
         <source>Rec</source>
-        <translation type="unfinished"></translation>
+        <translation>録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1511"/>
         <source>Recipe</source>
-        <translation type="unfinished"></translation>
+        <translation>レシピ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1515"/>
         <source>Record Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画グループ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1516"/>
         <source>Record Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画プロファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1520"/>
         <source>Recording Group</source>
-        <translation type="unfinished">録画グループ</translation>
+        <translation>録画グループ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1522"/>
         <source>Recording Group: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>録画グループ : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1523"/>
         <source>Recording Groups</source>
-        <translation type="unfinished">録画グループ</translation>
+        <translation>録画グループ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1525"/>
         <source>Recording Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>録画優先度</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1527"/>
         <source>Recording Profile: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>録画プロファイル : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1529"/>
         <source>Recording Rule Active:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルール有効 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1532"/>
         <source>Recording Status</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ステータス</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1533"/>
         <source>Recording Type</source>
-        <translation type="unfinished">録画タイプ</translation>
+        <translation>録画タイプ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1534"/>
         <source>Recording details</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の詳細</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1535"/>
         <source>Recording group:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画グループ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1536"/>
         <source>Recording groups</source>
-        <translation type="unfinished"></translation>
+        <translation>録画グループ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1537"/>
         <source>Recording has Subtitles Available</source>
-        <translation type="unfinished"></translation>
+        <translation>録画に字幕あり</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1538"/>
         <source>Recording has been transcoded</source>
-        <translation type="unfinished"></translation>
+        <translation>録画はトランスコード済み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1539"/>
         <source>Recording has been watched</source>
-        <translation type="unfinished"></translation>
+        <translation>録画は視聴済み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1540"/>
         <source>Recording is Closed Captioned</source>
-        <translation type="unfinished">クローズドキャプションで録画されました</translation>
+        <translation>録画はクローズドキャプション</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1541"/>
         <source>Recording is Subtitled</source>
-        <translation type="unfinished"></translation>
+        <translation>録画は字幕付き</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1542"/>
         <source>Recording is in Dolby Surround Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>録画は Dolby Surround サウンド</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1543"/>
         <source>Recording is in High Definition</source>
-        <translation type="unfinished">High Definition で録画されました</translation>
+        <translation>録画はHD画質</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1544"/>
         <source>Recording is in Mono</source>
-        <translation type="unfinished"></translation>
+        <translation>録画はモノラル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1545"/>
         <source>Recording is in Stereo</source>
-        <translation type="unfinished">ステレオで録画されました</translation>
+        <translation>録画はステレオ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1546"/>
         <source>Recording is in Surround Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>録画はサラウンドサウンド</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1547"/>
         <source>Recording is in WideScreen</source>
-        <translation type="unfinished"></translation>
+        <translation>録画はワイドスクリーン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1548"/>
         <source>Recording is in use</source>
-        <translation type="unfinished"></translation>
+        <translation>録画は使用中</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1549"/>
         <source>Recording is preserved</source>
-        <translation type="unfinished"></translation>
+        <translation>録画は保存済み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1551"/>
         <source>Recordings</source>
-        <translation type="unfinished">ろくが</translation>
+        <translation>録画</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="1553"/>
         <source>Reduce recording priority by %n</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n で録画優先度を下げる</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1555"/>
         <source>Remote</source>
-        <translation type="unfinished"></translation>
+        <translation>リモート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1557"/>
         <source>Resolution %RESOLUTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>解像度 %RESOLUTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1558"/>
         <source>Resolution Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>解像度不明</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1559"/>
         <source>Resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation>解像度 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1560"/>
         <source>Resolution: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>解像度 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1562"/>
         <source>Resolution: %resolution% - %aspect| 
 %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>解像度 : %resolution% - %aspect| 
+%%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1563"/>
         <source>Restore Data</source>
-        <translation type="unfinished"></translation>
+        <translation>データ復元</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1572"/>
         <source>Retry</source>
-        <translation type="unfinished"></translation>
+        <translation>再試行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1573"/>
         <source>Rewind</source>
-        <translation type="unfinished"></translation>
+        <translation>巻戻し</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1575"/>
         <source>Rotor Movement</source>
-        <translation type="unfinished"></translation>
+        <translation>ローター移動</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1576"/>
         <source>Rule Clause:</source>
-        <translation type="unfinished"></translation>
+        <translation>ルール句 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1578"/>
         <source>Rule Overview</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールの概要</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1581"/>
         <source>Rule active:</source>
-        <translation type="unfinished"></translation>
+        <translation>有効なルール :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1582"/>
         <source>Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>ルール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1588"/>
         <source>Run user job four</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 4 を実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1589"/>
         <source>Run user job one</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 1 を実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1590"/>
         <source>Run user job three</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 3 を実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1591"/>
         <source>Run user job two</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 2 を実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1592"/>
         <source>Run userjob #1:</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 1 を実行 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1593"/>
         <source>Run userjob #2:</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 2 を実行 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1594"/>
         <source>Run userjob #3:</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 3 を実行 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1595"/>
         <source>Run userjob #4:</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 4 を実行 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1599"/>
         <source>Runtime: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>所用時間 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1600"/>
         <source>S</source>
-        <translation type="unfinished"></translation>
+        <translation>S</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1601"/>
         <source>SCHEDULE EDITOR</source>
-        <translation type="unfinished"></translation>
+        <translation>予約編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1602"/>
         <source>SCHEDULE FILTERS</source>
-        <translation type="unfinished"></translation>
+        <translation>予約フィルター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1603"/>
         <source>SCHEDULE OPTIONS</source>
-        <translation type="unfinished"></translation>
+        <translation>予約設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1604"/>
         <source>SD</source>
-        <translation type="unfinished"></translation>
+        <translation>SD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1605"/>
         <source>SEARCH</source>
-        <translation type="unfinished"></translation>
+        <translation>検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1606"/>
         <source>STEREO</source>
-        <translation type="unfinished"></translation>
+        <translation>ステレオ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1607"/>
         <source>STORAGE OPTIONS</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1608"/>
         <source>SUB</source>
-        <translation type="unfinished"></translation>
+        <translation>字幕</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1609"/>
         <source>SUBTITLES</source>
-        <translation type="unfinished"></translation>
+        <translation>サブタイトル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1610"/>
         <source>SURROUND</source>
-        <translation type="unfinished"></translation>
+        <translation>サラウンド</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1614"/>
         <source>Sample rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>サンプリングレート :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1615"/>
         <source>Sample rate: %samplerate%</source>
-        <translation type="unfinished"></translation>
+        <translation>サンプルレート : %samplerate%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1618"/>
         <source>Scan</source>
-        <translation type="unfinished">スキャン</translation>
+        <translation>スキャン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1619"/>
         <source>Scan Progress</source>
-        <translation type="unfinished">スキャン進捗</translation>
+        <translation>スキャンの進行状況</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1621"/>
         <source>Scanning</source>
-        <translation type="unfinished">スキャニング</translation>
+        <translation>スキャン中</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1622"/>
         <source>Scanning %1</source>
-        <translation type="unfinished"></translation>
+        <translation>スキャン中 %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1626"/>
         <source>Schedule Filter Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>予約フィルター編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1632"/>
         <source>Schedule Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>予約ルール :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1637"/>
         <source>Schedule info</source>
-        <translation type="unfinished"></translation>
+        <translation>予約情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1638"/>
         <source>Schedule programs</source>
-        <translation type="unfinished"></translation>
+        <translation>番組予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1640"/>
         <source>Schedules Overview</source>
-        <translation type="unfinished"></translation>
+        <translation>予約概要</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1641"/>
         <source>Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>画面</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1643"/>
         <source>Screen setup</source>
-        <translation type="unfinished"></translation>
+        <translation>画面設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1645"/>
         <source>Screenshot Image:</source>
-        <translation type="unfinished"></translation>
+        <translation>スクリーンショット画像 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1647"/>
         <source>Screenshot: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>スクリーンショット : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1650"/>
         <source>Search Field:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索欄 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1657"/>
         <source>Search Local</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルを検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1658"/>
         <source>Search Net</source>
-        <translation type="unfinished"></translation>
+        <translation>ネット上を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1663"/>
         <source>Search Terms:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索語 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1664"/>
         <source>Search Times</source>
-        <translation type="unfinished"></translation>
+        <translation>検索回数</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1665"/>
         <source>Search Video</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1668"/>
         <source>Search by</source>
-        <translation type="unfinished"></translation>
+        <translation>検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1669"/>
         <source>Search by alphabet</source>
-        <translation type="unfinished"></translation>
+        <translation>アルファベットで検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1670"/>
         <source>Search by category</source>
-        <translation type="unfinished"></translation>
+        <translation>カテゴリーで検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1671"/>
         <source>Search by channel</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルで検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1672"/>
         <source>Search files on your harddisk</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードディスクのファイルを検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1674"/>
         <source>Search item:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索項目 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1675"/>
         <source>Search on</source>
-        <translation type="unfinished"></translation>
+        <translation>検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1676"/>
         <source>Search on broadcast times</source>
-        <translation type="unfinished"></translation>
+        <translation>放送時間で検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1677"/>
         <source>Search on keywords</source>
-        <translation type="unfinished"></translation>
+        <translation>キーワードで検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1678"/>
         <source>Search on people</source>
-        <translation type="unfinished"></translation>
+        <translation>人物で検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1679"/>
         <source>Search on titles</source>
-        <translation type="unfinished"></translation>
+        <translation>タイトルで検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1680"/>
         <source>Search or browse popular video sites</source>
-        <translation type="unfinished"></translation>
+        <translation>人気のあるビデオサイトを検索または閲覧</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1682"/>
         <source>Search programs using sorted lists</source>
-        <translation type="unfinished"></translation>
+        <translation>並べ替えたリストから番組を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1683"/>
         <source>Search programs using words</source>
-        <translation type="unfinished"></translation>
+        <translation>単語から番組を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1685"/>
         <source>Search the local network for the MythTV Backend.</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN 上に MythTV バックエンドを探します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1687"/>
         <source>Searches</source>
-        <translation type="unfinished"></translation>
+        <translation>検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1688"/>
         <source>Searchlist item:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索リスト項目 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1691"/>
         <source>Season and Episode</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン・回</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1692"/>
         <source>Season and Episode:</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン・回 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1695"/>
         <source>Season/Episode: %s00e00%               ProgramID: %PROGRAMID%               SeriesID: %SERIESID%</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン・回 : %s00e00%               プログラムID: %PROGRAMID%               シリーズID: %SERIESID%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1699"/>
         <source>See what is previously</source>
-        <translation type="unfinished"></translation>
+        <translation>前にあるものを確認</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1700"/>
         <source>See what is previously recorded</source>
-        <translation type="unfinished"></translation>
+        <translation>以前に録画したものを確認</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1705"/>
         <source>Seek Amount</source>
-        <translation type="unfinished"></translation>
+        <translation>シーク量</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1706"/>
         <source>Seek Back</source>
-        <translation type="unfinished"></translation>
+        <translation>後ろをシーク</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1707"/>
         <source>Seek Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>先をシーク</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1711"/>
         <source>Select Date:</source>
-        <translation type="unfinished"></translation>
+        <translation>日付選択 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1712"/>
         <source>Select Event:</source>
-        <translation type="unfinished"></translation>
+        <translation>イベント選択 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1713"/>
         <source>Select Icons</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコンを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1721"/>
         <source>Select Time:</source>
-        <translation type="unfinished"></translation>
+        <translation>時間を選択 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1726"/>
         <source>Select a recording to permanently erase.</source>
-        <translation type="unfinished"></translation>
+        <translation>完全消去する番組を選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1727"/>
         <source>Select a recording to watch.</source>
-        <translation type="unfinished"></translation>
+        <translation>再生する録画を選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1730"/>
         <source>Select an option below.</source>
-        <translation type="unfinished"></translation>
+        <translation>以下の設定を選んでください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1733"/>
         <source>Select country and language</source>
-        <translation type="unfinished"></translation>
+        <translation>国と言語を選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1735"/>
         <source>Select item to be searched for from the list:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索したい項目を以下のリストから選択 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1736"/>
         <source>Select recording rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルール選択 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1738"/>
         <source>Select the country where you reside.</source>
-        <translation type="unfinished"></translation>
+        <translation>お住まいの国・地域を選んでください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1744"/>
         <source>Select the recording rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルール選択 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1747"/>
         <source>Select your language.</source>
-        <translation type="unfinished"></translation>
+        <translation>あなたの言語を選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1749"/>
         <source>Select your theme</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1752"/>
         <source>Selected Image</source>
-        <translation type="unfinished"></translation>
+        <translation>選択した画像</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1755"/>
         <source>Send and receive</source>
-        <translation type="unfinished"></translation>
+        <translation>送受信</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1758"/>
         <source>Set Priorities for</source>
-        <translation type="unfinished"></translation>
+        <translation>優先度を設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1759"/>
         <source>Set Priorities for channels</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル優先度を設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1762"/>
         <source>Set your recording</source>
-        <translation type="unfinished"></translation>
+        <translation>録画を設定してください</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1763"/>
         <source>Set your recording priorities</source>
-        <translation type="unfinished"></translation>
+        <translation>録画優先度を設定してください</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1764"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1765"/>
         <source>Settings for</source>
-        <translation type="unfinished"></translation>
+        <translation>設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1775"/>
         <source>Setup Audio Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>音声設定をおこなう</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1776"/>
         <source>Setup Custom Priorities rules</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム録画優先度ルールを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1777"/>
         <source>Setup System event</source>
-        <translation type="unfinished"></translation>
+        <translation>システムイベントを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1778"/>
         <source>Setup System event handlers</source>
-        <translation type="unfinished"></translation>
+        <translation>システムイベントハンドラーを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1779"/>
         <source>Setup Video Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ設定をおこなう</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1780"/>
         <source>Setup Weather</source>
-        <translation type="unfinished"></translation>
+        <translation>天気を設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1782"/>
         <source>Setup behavior of the</source>
-        <translation type="unfinished"></translation>
+        <translation>ふるまいを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1783"/>
         <source>Setup file associations for your videos</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオのファイル関連付けを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1784"/>
         <source>Setup filter for your video library</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオライブラリーのフィルターを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1785"/>
         <source>Setup metadata for your video library</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオライブラリーのメタデータを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1786"/>
         <source>Setup navigation and</source>
-        <translation type="unfinished"></translation>
+        <translation>ナビゲーションを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1787"/>
         <source>Setup player to play your videos</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオを再生するプレーヤーを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1788"/>
         <source>Setup recording</source>
-        <translation type="unfinished"></translation>
+        <translation>録画設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1789"/>
         <source>Setup recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1790"/>
         <source>Setup recordings profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>録画プロファイル設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1791"/>
         <source>Setup the behavior of the system events</source>
-        <translation type="unfinished"></translation>
+        <translation>システムイベントのふるまい設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1792"/>
         <source>Setup your</source>
-        <translation type="unfinished"></translation>
+        <translation>設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1793"/>
         <source>Setup your Movie</source>
-        <translation type="unfinished"></translation>
+        <translation>映画設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1794"/>
         <source>Setup your system</source>
-        <translation type="unfinished"></translation>
+        <translation>システム設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1795"/>
         <source>Setup your system events</source>
-        <translation type="unfinished"></translation>
+        <translation>システムイベント設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1797"/>
         <source>Share your</source>
-        <translation type="unfinished"></translation>
+        <translation>共有</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1798"/>
         <source>Share your hardware profile</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア プロファイルの共有</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1812"/>
         <source>Show files that are marked as hidden:</source>
-        <translation type="unfinished"></translation>
+        <translation>非表示マークしたファイルを表示 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1813"/>
         <source>Show:</source>
-        <translation type="unfinished"></translation>
+        <translation>表示 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1816"/>
         <source>Shutting Down!</source>
-        <translation type="unfinished"></translation>
+        <translation>電源オフ中！</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1817"/>
         <source>Signal / Noise</source>
-        <translation type="unfinished"></translation>
+        <translation>信号 / ノイズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1818"/>
         <source>Signal Strength</source>
-        <translation type="unfinished">信号強度</translation>
+        <translation>信号強度</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1819"/>
         <source>Signal/Noise</source>
-        <translation type="unfinished">シグナル/ノイズ</translation>
+        <translation>信号 / ノイズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1820"/>
         <source>Site item:</source>
-        <translation type="unfinished"></translation>
+        <translation>サイト項目 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1821"/>
         <source>Skin</source>
-        <translation type="unfinished"></translation>
+        <translation>スキン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1822"/>
         <source>Skins</source>
-        <translation type="unfinished"></translation>
+        <translation>スキン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1833"/>
         <source>Sort: (1) by Title, (2) by Priority, (4) by Type.</source>
-        <translation type="unfinished"></translation>
+        <translation>並び順 : (1) タイトル、(2) 優先度、(4) タイプ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1834"/>
         <source>Sorting order of the shown images:</source>
-        <translation type="unfinished"></translation>
+        <translation>表示画像の並び順 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1837"/>
         <source>Sources</source>
-        <translation type="unfinished"></translation>
+        <translation>ソース</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1838"/>
         <source>Sources for metadata grabbers</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータの取得元</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1839"/>
         <source>Space</source>
-        <translation type="unfinished"></translation>
+        <translation>宇宙</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1840"/>
         <source>Sports running</source>
-        <translation type="unfinished"></translation>
+        <translation>ランニング スポーツ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1842"/>
         <source>Standby Accessing Database</source>
-        <translation type="unfinished"></translation>
+        <translation>データベース接続スタンバイ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1844"/>
         <source>Star rating</source>
-        <translation type="unfinished"></translation>
+        <translation>☆評価</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1845"/>
         <source>Starring</source>
-        <translation type="unfinished"></translation>
+        <translation>主演</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1846"/>
         <source>Starring:</source>
-        <translation type="unfinished"></translation>
+        <translation>主演 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1848"/>
         <source>Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>☆</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1849"/>
         <source>Stars:</source>
-        <translation type="unfinished"></translation>
+        <translation>☆ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1850"/>
         <source>Start Date:</source>
-        <translation type="unfinished"></translation>
+        <translation>開始日 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1852"/>
         <source>Start Hour:</source>
-        <translation type="unfinished"></translation>
+        <translation>開始時間 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1853"/>
         <source>Start Minute:</source>
-        <translation type="unfinished"></translation>
+        <translation>開始分 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1858"/>
         <source>Start early:</source>
-        <translation type="unfinished"></translation>
+        <translation>開始時間の前倒し :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1864"/>
         <source>Start time:</source>
-        <translation type="unfinished"></translation>
+        <translation>開始時間 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1865"/>
         <source>Start: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>開始 :  %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1867"/>
         <source>Stati</source>
-        <translation type="unfinished"></translation>
+        <translation>局</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1868"/>
         <source>Stations</source>
-        <translation type="unfinished"></translation>
+        <translation>放送局</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1872"/>
         <source>Status:</source>
-        <translation type="unfinished"></translation>
+        <translation>ステータス:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1873"/>
         <source>Status: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>ステータス: %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1874"/>
         <source>Status: %rectypechar%</source>
-        <translation type="unfinished"></translation>
+        <translation>ステータス : %rectypechar%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1876"/>
         <source>Storage</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1877"/>
         <source>Storage Details</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージの詳細</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1879"/>
         <source>Storage Group: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージグループ :%1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1882"/>
         <source>Storage group:</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージグループ  :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1883"/>
         <source>Storage rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージ使用率 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1886"/>
         <source>Storage to Buffer: %storagerate%</source>
-        <translation type="unfinished"></translation>
+        <translation>バッファ用ストレージ : %storagerate%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1887"/>
         <source>Storage:</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1889"/>
         <source>Store Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>保存ルール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1890"/>
         <source>Stored</source>
-        <translation type="unfinished"></translation>
+        <translation>保存済み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1892"/>
         <source>Streams</source>
-        <translation type="unfinished"></translation>
+        <translation>ストリーム</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1894"/>
         <source>Sub Title:</source>
-        <translation type="unfinished"></translation>
+        <translation>サブタイトル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1897"/>
         <source>Submit system Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>システム プロファイルの送信</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1901"/>
         <source>Subtitles</source>
-        <translation type="unfinished">サブタイトル</translation>
+        <translation>字幕</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1908"/>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>システム</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1912"/>
         <source>System Info</source>
-        <translation type="unfinished"></translation>
+        <translation>システム情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1914"/>
         <source>System status</source>
-        <translation type="unfinished"></translation>
+        <translation>システムステータス</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1915"/>
         <source>T: 1%</source>
-        <translation type="unfinished"></translation>
+        <translation>T: 1%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1919"/>
         <source>TMDB/TVDB ID:</source>
-        <translation type="unfinished"></translation>
+        <translation>TMDB・TVDB ID:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1921"/>
         <source>TRANSCODING</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスコード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1924"/>
         <source>TV Guide</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1927"/>
         <source>TV Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1928"/>
         <source>TV Shows</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ番組</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1931"/>
         <source>TVGuide</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1938"/>
         <source>Terminal</source>
-        <translation type="unfinished"></translation>
+        <translation>ターミナル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1943"/>
         <source>Test Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールテスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1945"/>
         <source>Test Speakers</source>
-        <translation type="unfinished"></translation>
+        <translation>スピーカーテスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1949"/>
         <source>The program is able to auto-expire</source>
-        <translation type="unfinished">この番組は自動消去が許可されています</translation>
+        <translation>この番組は自動消去が許可されています</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1955"/>
         <source>There are no Recordings Scheduled...</source>
-        <translation type="unfinished"></translation>
+        <translation>録画予約はありません...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1964"/>
         <source>This is a children&apos;s Christmas version of the popular MythCenter-wide theme with festive backgrounds and colour scheme.</source>
-        <translation type="unfinished"></translation>
+        <translation>MythCenter-wide テーマの子ども向けクリスマス バージョンです。背景や色の設定をふさわしいものにしています。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1971"/>
         <source>Time to display each image during a slideshow (ms):</source>
-        <translation type="unfinished"></translation>
+        <translation>スライドショーで各画像を表示する時間 (ミリ秒) :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1972"/>
         <source>Time:</source>
-        <translation type="unfinished"></translation>
+        <translation>時間 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1979"/>
         <source>To be determined</source>
-        <translation type="unfinished"></translation>
+        <translation>決断する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1983"/>
         <source>To give greater or lesser priority to a channel in your lineup, select it from the list.  To increase the channel&apos;s priority, press the right arrow.  To decrease its priority, press the left arrow.</source>
-        <translation type="unfinished"></translation>
+        <translation>ラインナップ内のチャンネルの優先度を高くしたり低くしたりするには、リストからそのチャンネルを選択します。チャンネルの優先度を上げるには右矢印、 優先度を下げるには左矢印を押します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1988"/>
         <source>Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>ツール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1989"/>
         <source>Tools for your music library</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽ライブラリー用のツール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1990"/>
         <source>Track: %time%</source>
-        <translation type="unfinished"></translation>
+        <translation>トラック : %time%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1994"/>
         <source>Trailer: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>予告編 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1996"/>
         <source>Trans</source>
-        <translation type="unfinished"></translation>
+        <translation>変換</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1998"/>
         <source>Transcode new recordings:</source>
-        <translation type="unfinished"></translation>
+        <translation>新しい録画をトランスコードする :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2000"/>
         <source>Transports</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2002"/>
         <source>Try again to establish connections.</source>
-        <translation type="unfinished"></translation>
+        <translation>接続確立を再試行してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2003"/>
         <source>Tweets</source>
-        <translation type="unfinished"></translation>
+        <translation>Tweet</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2009"/>
         <source>Type of transition between two images:</source>
-        <translation type="unfinished"></translation>
+        <translation>画像から画像への遷移の種類 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2011"/>
         <source>Types</source>
-        <translation type="unfinished"></translation>
+        <translation>タイプ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2012"/>
         <source>Unable to connect to Database.</source>
-        <translation type="unfinished"></translation>
+        <translation>データベースに接続できません。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2013"/>
         <source>Unable to connect to master backend.</source>
-        <translation type="unfinished"></translation>
+        <translation>マスターバックエンドに接続できません。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2016"/>
         <source>Unknown</source>
-        <translation type="unfinished">不明</translation>
+        <translation>不明</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2017"/>
         <source>Unmute</source>
-        <translation type="unfinished"></translation>
+        <translation>ミュート解除</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2020"/>
         <source>Up to date</source>
-        <translation type="unfinished"></translation>
+        <translation>最新</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2021"/>
         <source>UpToDate</source>
-        <translation type="unfinished"></translation>
+        <translation>最新</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2022"/>
         <source>Upcoming</source>
-        <translation type="unfinished"></translation>
+        <translation>これから</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2025"/>
         <source>Update available</source>
-        <translation type="unfinished"></translation>
+        <translation>更新あり</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2027"/>
         <source>Update your channels</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルを更新する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2029"/>
         <source>UpdateAvailable</source>
-        <translation type="unfinished"></translation>
+        <translation>更新あり</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2030"/>
         <source>Upload your hardware</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェアをアップロード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2031"/>
         <source>Upload your hardware profile</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア プロファイルをアップロード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2032"/>
         <source>Uptodate</source>
-        <translation type="unfinished"></translation>
+        <translation>最新</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2033"/>
         <source>Usage:</source>
-        <translation type="unfinished"></translation>
+        <translation>使用量 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2034"/>
         <source>Use Database setup to enter database parameters.</source>
-        <translation type="unfinished"></translation>
+        <translation>データベースパラメーターを入力するためにデータベース設定を実行してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2039"/>
         <source>Use music</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽を使用</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2040"/>
         <source>Use the</source>
-        <translation type="unfinished"></translation>
+        <translation>使用</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2044"/>
         <source>User</source>
-        <translation type="unfinished">ユーザー</translation>
+        <translation>ユーザー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2049"/>
         <source>UserRating:</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザーの評判 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2050"/>
         <source>Userrating:</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザーの評判 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2055"/>
         <source>VCD Drive:</source>
-        <translation type="unfinished"></translation>
+        <translation>VCD ドライブ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2056"/>
         <source>VCD Player:</source>
-        <translation type="unfinished"></translation>
+        <translation>VCD プレーヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2058"/>
         <source>VIDEO BROWSER</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオブラウザ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2059"/>
         <source>VIDEO GALLERY</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオギャラリー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2060"/>
         <source>VIDEO LIST</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオリスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2061"/>
         <source>VIDEO MANAGER</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオマネージャー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2062"/>
         <source>VRC-Like recording scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>VRC のような録画予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2063"/>
         <source>Values from %LOW% to %HIGH% in increments of %STEP%</source>
-        <translation type="unfinished"></translation>
+        <translation>値を %LOW% から %HIGH% まで。ステップは %STEP%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2068"/>
         <source>Video #:</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ # :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2069"/>
         <source>Video #: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ # : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2071"/>
         <source>Video Browse View</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオブラウザ表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2073"/>
         <source>Video Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2078"/>
         <source>Video Gallery View</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオギャラリー表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2081"/>
         <source>Video List View</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオリスト表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2082"/>
         <source>Video Manage View</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオマネージ表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2086"/>
         <source>Video Playback Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ再生プロファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2268"/>
         <source>upcoming recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>今後の録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2269"/>
         <source>widescreen</source>
-        <translation type="unfinished"></translation>
+        <translation>ワイドスクリーン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2270"/>
         <source>year</source>
-        <translation type="unfinished"></translation>
+        <translation>年</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2271"/>
         <source>~</source>
-        <translation type="unfinished"></translation>
+        <translation>〜</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1946"/>
         <source>Test Standard Definition</source>
-        <translation type="unfinished"></translation>
+        <translation>標準画質のテスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1942"/>
         <source>Test High Definition</source>
-        <translation type="unfinished"></translation>
+        <translation>HD画質のテスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1228"/>
         <source>MythTV Servers</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV サーバー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2065"/>
         <source>Version Mismatch</source>
-        <translation type="unfinished"></translation>
+        <translation>バージョン不一致</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="946"/>
         <source>Firewall</source>
-        <translation type="unfinished"></translation>
+        <translation>FireWall</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1745"/>
         <source>Select the server you wish to connect to</source>
-        <translation type="unfinished"></translation>
+        <translation>接続するサーバーを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1154"/>
         <source>Manual</source>
-        <translation type="unfinished"></translation>
+        <translation>マニュアル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="904"/>
         <source>Filename :</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル名:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1885"/>
         <source>Storage to Buffer :</source>
-        <translation type="unfinished"></translation>
+        <translation>バッファ用ストレージ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="524"/>
         <source>Buffer to Decoder :</source>
-        <translation type="unfinished"></translation>
+        <translation>デコーダーバッファ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="455"/>
         <source>Available Buffer :</source>
-        <translation type="unfinished"></translation>
+        <translation>有効なバッファ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="24"/>
         <source>%BUFFERAVAIL% of %BUFFERSIZE%Mb</source>
-        <translation type="unfinished"></translation>
+        <translation>%BUFFERAVAIL% / %BUFFERSIZE% MB</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2070"/>
         <source>Video :</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="154"/>
         <source>%VIDEOWIDTH%x%VIDEOHEIGHT%@%VIDEOFRAMERATE%fps</source>
-        <translation type="unfinished"></translation>
+        <translation>%VIDEOWIDTH%x%VIDEOHEIGHT%@%VIDEOFRAMERATE%fps</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="632"/>
         <source>Codec/Dec :</source>
-        <translation type="unfinished"></translation>
+        <translation>Codec/Dec:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="148"/>
         <source>%VIDEOCODEC% %VIDEODECODER%</source>
-        <translation type="unfinished"></translation>
+        <translation>%VIDEOCODEC% %VIDEODECODER%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="538"/>
         <source>CPUs :</source>
-        <translation type="unfinished"></translation>
+        <translation>CPU :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="881"/>
         <source>FPS :</source>
-        <translation type="unfinished"></translation>
+        <translation>FPS :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="351"/>
         <source>A/V Sync :</source>
-        <translation type="unfinished"></translation>
+        <translation>A/V 同期 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="957"/>
         <source>Frames decoded/free :</source>
-        <translation type="unfinished"></translation>
+        <translation>復号フレーム/全体 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="422"/>
         <source>Audio :</source>
-        <translation type="unfinished"></translation>
+        <translation>音声 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="596"/>
         <source>Channels :</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1613"/>
         <source>Sample rate :</source>
-        <translation type="unfinished"></translation>
+        <translation>サンプリングレート :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2141"/>
         <source>Visible:</source>
-        <translation type="unfinished"></translation>
+        <translation>表示 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2169"/>
         <source>Watched:</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴済み :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="707"/>
         <source>Coverart</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャケット写真</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1648"/>
         <source>Screenshots</source>
-        <translation type="unfinished"></translation>
+        <translation>スクリーンショット</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="477"/>
         <source>Banners</source>
-        <translation type="unfinished"></translation>
+        <translation>題字</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="884"/>
         <source>Fanart</source>
-        <translation type="unfinished"></translation>
+        <translation>ファンアート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="648"/>
         <source>Configure audio playback</source>
-        <translation type="unfinished"></translation>
+        <translation>音声再生の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2067"/>
         <source>Video</source>
-        <translation type="unfinished">ビデオ</translation>
+        <translation>ビデオ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="683"/>
         <source>Configure video recording and playback</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ録画と再生の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="658"/>
         <source>Configure music, video, and other media plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽、ビデオ、その他のメディアプラグインの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="675"/>
         <source>Configure surveillance, weather, news, and the web</source>
-        <translation type="unfinished"></translation>
+        <translation>監視システム、天気、ニュース、そして Web の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1401"/>
         <source>Play or import Blu-ray, DVD, and CDs</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray、DVD、CD の再生とインポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1385"/>
         <source>Play Optical Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>光学ディスクを再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1392"/>
         <source>Play a film on Blu-ray or DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD・Blu-ray の映画の再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="838"/>
         <source>Eject Disc from drive</source>
-        <translation type="unfinished"></translation>
+        <translation>ドライブからの取り出し</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="973"/>
         <source>General video and recording preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオと録画全般の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1771"/>
         <source>Settings for viewing and playing video content</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオコンテンツの表示と再生の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1769"/>
         <source>Settings for the On Screen Display</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD (オン・スクリーン・ディスプレー) の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2153"/>
         <source>Watch A Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>ディスクを視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1404"/>
         <source>Play the video on a Blu-ray or DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray や DVD のビデオを再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1381"/>
         <source>Play Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>ディスクを再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1566"/>
         <source>Results found!</source>
-        <translation type="unfinished"></translation>
+        <translation>結果が見つかりました！</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1274"/>
         <source>No results found.</source>
-        <translation type="unfinished"></translation>
+        <translation>結果が見つかりません。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1982"/>
         <source>To create a custom recording rule, either select an existing rule, or create a new rule by typing in a name. Then select a rule type and hit enter. The SQL code will be transferred below, and you can edit it and insert your own program information.
 
 Finally, you can test, immediately activate, store, or cancel your rule.</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム録画ルールを作成するには、既存のルールを選択するか、名前を入力して新しいルールを作成します。 次に、ルールタイプを選択し Enter キーを押します。 SQLコードは以下に転送され、編集して独自のプログラム情報を挿入できます。
+
+最後に、ルールをテスト、すぐに有効化、保存、またはキャンセルできます。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1963"/>
         <source>This is a Christmas version of the popular MythCenter-wide theme with animated snow backgrounds and festive colour scheme.</source>
-        <translation type="unfinished"></translation>
+        <translation>MythCenter-wide テーマのクリスマス バージョンです。背景や色の設定をふさわしいものにしています。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="167"/>
         <source>%&quot;|SUBTITLE|&quot; %%00X00| %%(|ORIGINALAIRDATE|)
 %%YEARSTARS| %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|SUBTITLE|&quot; %%00X00| %%(|ORIGINALAIRDATE|)
+%%YEARSTARS| %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="138"/>
         <source>%TITLESUBTITLE% %YEARSTARS%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLESUBTITLE% %YEARSTARS%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1010"/>
         <source>Hide channels without channel number</source>
-        <translation type="unfinished"></translation>
+        <translation>番号のないチャンネルを非表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="49"/>
         <source>%DESCRIPTION% %(|EXTRA|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%DESCRIPTION% %(|EXTRA|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="52"/>
         <source>%DESCRIPTION% %
 (|EXTRA|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%DESCRIPTION% %
+(|EXTRA|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="97"/>
         <source>%STARTDATE|, %%STARTTIME%% - |ENDTIME%</source>
-        <translation type="unfinished"></translation>
+        <translation>%STARTDATE|, %%STARTTIME%% - |ENDTIME%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="103"/>
         <source>%STARTTIME%% - |ENDTIME%</source>
-        <translation type="unfinished"></translation>
+        <translation>%STARTTIME%% - |ENDTIME%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="18"/>
         <source>%1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="35"/>
         <source>%CHANNELNUMBER|
 %%CALLSIGN%</source>
-        <translation type="unfinished"></translation>
+        <translation>%CHANNELNUMBER|
+%%CALLSIGN%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="105"/>
         <source>%STARTTIME%%-|ENDTIME| %%00X00| %
 %&quot;|SUBTITLE|&quot; %%(|ORIGINALAIRDATE|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%STARTTIME%%-|ENDTIME| %%00X00| %
+%&quot;|SUBTITLE|&quot; %%(|ORIGINALAIRDATE|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="158"/>
         <source>%YEARSTARS| %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%YEARSTARS| %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1815"/>
         <source>Showing: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>表示 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1021"/>
         <source>INFO</source>
-        <translation type="unfinished"></translation>
+        <translation>INFO</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2245"/>
         <source>for more</source>
-        <translation type="unfinished"></translation>
+        <translation>もっと</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2218"/>
         <source>ZOOMIN</source>
-        <translation type="unfinished"></translation>
+        <translation>ズームイン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2219"/>
         <source>ZOOMOUT</source>
-        <translation type="unfinished"></translation>
+        <translation>ズームアウト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2244"/>
         <source>decoded/free:</source>
-        <translation type="unfinished"></translation>
+        <translation>復号/全体 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2246"/>
         <source>h.264</source>
-        <translation type="unfinished"></translation>
+        <translation>H.264</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2248"/>
         <source>hh:mm AP</source>
-        <translation type="unfinished"></translation>
+        <translation>hh:mm AP</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2249"/>
         <source>key pressed:
 %osd_number_entry%</source>
-        <translation type="unfinished"></translation>
+        <translation>押したキー :
+%osd_number_entry%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2250"/>
         <source>message:
 %message_text%</source>
-        <translation type="unfinished"></translation>
+        <translation>メッセージ :
+%message_text%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2253"/>
         <source>no info available</source>
-        <translation type="unfinished"></translation>
+        <translation>情報はありません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2254"/>
         <source>not recorded yet</source>
-        <translation type="unfinished"></translation>
+        <translation>まだ録画していません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2255"/>
         <source>ok</source>
-        <translation type="unfinished"></translation>
+        <translation>ok</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2257"/>
         <source>publisher:</source>
-        <translation type="unfinished"></translation>
+        <translation>発行者 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2258"/>
         <source>ratings</source>
-        <translation type="unfinished"></translation>
+        <translation>評判</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2259"/>
         <source>recording group filter set on %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 に録画グループ検索をセット</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2261"/>
         <source>save</source>
-        <translation type="unfinished"></translation>
+        <translation>保存</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2262"/>
         <source>smart</source>
-        <translation type="unfinished"></translation>
+        <translation>スマート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2263"/>
         <source>starring
 %cast%</source>
-        <translation type="unfinished"></translation>
+        <translation>主演
+%cast%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2264"/>
         <source>television</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2266"/>
         <source>to adjust text size</source>
-        <translation type="unfinished"></translation>
+        <translation>テキストサイズ調整</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1625"/>
         <source>Schedule Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>予約フィルター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="950"/>
         <source>For %ASPECT% displays.% By |AUTHORNAME%% &lt;|AUTHOREMAIL|&gt;%.</source>
-        <translation type="unfinished"></translation>
+        <translation>%ASPECT% のディスプレー用。% By |AUTHORNAME%% &lt;|AUTHOREMAIL|&gt;%.</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="56"/>
         <source>%DESCRIPTION|
 %%ERRATA%</source>
-        <translation type="unfinished"></translation>
+        <translation>%DESCRIPTION|
+%%ERRATA%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="339"/>
         <source>= Update available</source>
-        <translation type="unfinished"></translation>
+        <translation>= 更新あり</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="348"/>
         <source>A sleek black theme that is the default theme for the Mythbuntu distribution. The Mythbuntu theme is inspired by ProjectGrayhem.</source>
-        <translation type="unfinished"></translation>
+        <translation>つややかなブラックのテーマで、Mythbuntu ディストリビューションのデフォルトテーマ。Mythbuntu theme は ProjectGrayhem にインスパイアされて作成しました。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="133"/>
         <source>%TITLE%% - |SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE%% - |SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="378"/>
         <source>Age:</source>
-        <translation type="unfinished"></translation>
+        <translation>年齢 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1686"/>
         <source>Search...</source>
-        <translation type="unfinished"></translation>
+        <translation>検索...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2015"/>
         <source>Unique Player:</source>
-        <translation type="unfinished"></translation>
+        <translation>固有のプレイヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="98"/>
         <source>%STARTDATE|, %%STARTTIME%% - |ENDTIME|: %%LENMINS%</source>
-        <translation type="unfinished"></translation>
+        <translation>%STARTDATE|, %%STARTTIME%% - |ENDTIME|: %%LENMINS%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="104"/>
         <source>%STARTTIME%% - |ENDTIME|: %%LENMINS%</source>
-        <translation type="unfinished"></translation>
+        <translation>%STARTTIME%% - |ENDTIME|: %%LENMINS%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="166"/>
         <source>%&quot;|SUBTITLE|&quot; %%00X00| %%(|ORIGINALAIRDATE|)
 %</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|SUBTITLE|&quot; %%00X00| %%(|ORIGINALAIRDATE|)
+%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="273"/>
         <source>(1) All (2) Important</source>
-        <translation type="unfinished"></translation>
+        <translation>(1) すべて  (2) 重要なもの</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="55"/>
         <source>%DESCRIPTION%
 %ERRATA%</source>
-        <translation type="unfinished"></translation>
+        <translation>%DESCRIPTION%
+%ERRATA%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1965"/>
         <source>This is the classic Mythbuntu theme. It is not actively developed, but patches are accepted.</source>
-        <translation type="unfinished"></translation>
+        <translation>これは以前の Mythbuntu テーマです。活発には開発されていませんが、パッチは受け付けています。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="45"/>
         <source>%DATE%   %TIME%</source>
-        <translation type="unfinished"></translation>
+        <translation>%DATE%   %TIME%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1448"/>
         <source>Prev</source>
-        <translation type="unfinished"></translation>
+        <translation>前</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2267"/>
         <source>unrestricted</source>
-        <translation type="unfinished"></translation>
+        <translation>無制限</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2256"/>
         <source>partially restricted</source>
-        <translation type="unfinished"></translation>
+        <translation>部分的に制限</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2251"/>
         <source>mostly restricted</source>
-        <translation type="unfinished"></translation>
+        <translation>ほぼ制限</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2260"/>
         <source>restricted</source>
-        <translation type="unfinished"></translation>
+        <translation>制限</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="263"/>
         <source>(%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>(%1)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="248"/>
         <source>%|RATING| %%|(STARS|) %%DESCRIPTION%%
 
 Part |PARTNUMBER| of %%PARTTOTAL%</source>
-        <translation type="unfinished"></translation>
+        <translation>%|RATING| %%|(STARS|) %%DESCRIPTION%%
+
+Part |PARTNUMBER| of %%PARTTOTAL%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="250"/>
         <source>%|[SYNDICATEDEPISODE|]%</source>
-        <translation type="unfinished"></translation>
+        <translation>%|[SYNDICATEDEPISODE|]%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="247"/>
         <source>%|RATING| %%|(STARS|) %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%|RATING| %%|(STARS|) %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="86"/>
         <source>%Part |PARTNUMBER| of %%PARTTOTAL%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Part |PARTNUMBER| of %%PARTTOTAL%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="20"/>
         <source>%1 matches</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 一致</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1554"/>
         <source>Released %1</source>
-        <translation type="unfinished"></translation>
+        <translation>リリース %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2048"/>
@@ -34683,107 +34710,107 @@ Part |PARTNUMBER| of %%PARTTOTAL%</source>
     <message>
         <location filename="../themes/themestrings.h" line="1101"/>
         <source>Let&apos;s set up your DVR! On the next few screens, we will configure your system to play back audio and video, optimize your color and contrast, and make sure we are taking advantage of all of your hardware.  Press next to begin!</source>
-        <translation type="unfinished"></translation>
+        <translation>DVRをセットアップしましょう！&#x3000;次の数画面で、オーディオとビデオの再生の構成、色とコントラストの最適化、すべてのハードウェアを活用する確認をおこないます。 [次へ]を押してはじめましょう！</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1896"/>
         <source>Submit Your Hardware Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア プロファイルの送信</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2142"/>
         <source>Visit Your Hardware Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア プロファイルの表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="765"/>
         <source>Delete Your Hardware Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア プロファイルを削除</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2216"/>
         <source>Your profile is located at:</source>
-        <translation type="unfinished"></translation>
+        <translation>プロファイルの保存場所 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2217"/>
         <source>Your profile&apos;s admin password is:</source>
-        <translation type="unfinished"></translation>
+        <translation>プロファイルの管理パスワード :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1222"/>
         <source>My receiver supports Dolby Digital</source>
-        <translation type="unfinished"></translation>
+        <translation>レシーバーは Dolby Digital をサポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1223"/>
         <source>My receiver supports Dolby Digital Plus</source>
-        <translation type="unfinished"></translation>
+        <translation>レシーバーは Dolby Digital Plus をサポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1220"/>
         <source>My receiver supports DTS</source>
-        <translation type="unfinished"></translation>
+        <translation>レシーバーは DTS をサポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1221"/>
         <source>My receiver supports DTS-HD</source>
-        <translation type="unfinished"></translation>
+        <translation>レシーバーは DTS-HD をサポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1224"/>
         <source>My receiver supports TrueHD</source>
-        <translation type="unfinished"></translation>
+        <translation>レシーバーは TrueHD をサポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1940"/>
         <source>Test Audio</source>
-        <translation type="unfinished"></translation>
+        <translation>音声テスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1944"/>
         <source>Test SD Playback</source>
-        <translation type="unfinished"></translation>
+        <translation>SD 再生のテスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1941"/>
         <source>Test HD Playback</source>
-        <translation type="unfinished"></translation>
+        <translation>HD 再生のテスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="749"/>
         <source>Data and Artwork Sources</source>
-        <translation type="unfinished"></translation>
+        <translation>データと関連画像の取得元</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1205"/>
         <source>Movies:</source>
-        <translation type="unfinished"></translation>
+        <translation>映画 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1936"/>
         <source>Television:</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="969"/>
         <source>Games:</source>
-        <translation type="unfinished"></translation>
+        <translation>ゲーム :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="952"/>
         <source>Frame %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 フレーム</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="124"/>
         <source>%TITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="14"/>
         <source>%00x00| - %%SUBTITLE%</source>
-        <translation type="unfinished"></translation>
+        <translation>%00x00| - %%SUBTITLE%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1550"/>
@@ -34793,7 +34820,7 @@ Part |PARTNUMBER| of %%PARTTOTAL%</source>
     <message>
         <location filename="../themes/themestrings.h" line="1999"/>
         <source>Transcoding...</source>
-        <translation type="unfinished">トランスコードしています...</translation>
+        <translation>トランスコードしています...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1321"/>
@@ -34803,22 +34830,22 @@ Part |PARTNUMBER| of %%PARTTOTAL%</source>
     <message>
         <location filename="../themes/themestrings.h" line="727"/>
         <source>Custom Export</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム エクスポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="787"/>
         <source>Directory Format</source>
-        <translation type="unfinished"></translation>
+        <translation>ディレクトリー書式</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="893"/>
         <source>File Format</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル書式</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="876"/>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>エクスポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="565"/>
@@ -34828,22 +34855,22 @@ Part |PARTNUMBER| of %%PARTTOTAL%</source>
     <message>
         <location filename="../themes/themestrings.h" line="845"/>
         <source>Enable and disable the checkboxes below to filter the way recordings are displayed.</source>
-        <translation type="unfinished"></translation>
+        <translation>下のチェックボックスで表示している録画にフィルターを適用するかどうかを切り替えます。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1805"/>
         <source>Show Program Titles</source>
-        <translation type="unfinished"></translation>
+        <translation>番組タイトルを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1804"/>
         <source>Show Program Categories</source>
-        <translation type="unfinished"></translation>
+        <translation>番組カテゴリーを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1801"/>
         <source>Show Live TV</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="564"/>
@@ -34868,134 +34895,136 @@ Part |PARTNUMBER| of %%PARTTOTAL%</source>
     <message>
         <location filename="../themes/themestrings.h" line="1870"/>
         <source>Status Icon Help</source>
-        <translation type="unfinished"></translation>
+        <translation>ステータスアイコンのヘルプ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1962"/>
         <source>These icons represent information about your recordings.</source>
-        <translation type="unfinished"></translation>
+        <translation>このアイコンは録画の情報を端的に表現しています。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2051"/>
         <source>Using the text areas below, you can change the recording title, subtitle, and description.
 
 Once you have completed your modifications, click the &quot;OK&quot; button.</source>
-        <translation type="unfinished"></translation>
+        <translation>以下のテキストエリアで、録画のタイトル、サブタイトル、説明を編集できます。
+
+変更が完了したら、「OK」ボタンをクリックしてください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1158"/>
         <source>Manually Schedule A Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の手動予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1985"/>
         <source>To manually schedule a recording, enter a title (optional).  Then set the channel, date, start time, and duration of your recording.  Note that this recording will not have any listings data or other information provided by an EPG.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の手動予約するには、タイトルを入力してください (入力しなくても可)。つづいて、チャンネル、日付、開始時刻と録画時間を設定します。メモ : この録画には番組表からの予約で付記されるデータや情報は登録されません。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="753"/>
         <source>Date:</source>
-        <translation type="unfinished"></translation>
+        <translation>日付 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1016"/>
         <source>Hour:</source>
-        <translation type="unfinished"></translation>
+        <translation>時 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1182"/>
         <source>Minute:</source>
-        <translation type="unfinished"></translation>
+        <translation>分 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1264"/>
         <source>No Recordings Scheduled...</source>
-        <translation type="unfinished"></translation>
+        <translation>録画予約はありません...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="914"/>
         <source>Filter: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルター : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1480"/>
         <source>Program Title</source>
-        <translation type="unfinished"></translation>
+        <translation>番組タイトル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="873"/>
         <source>Existing:</source>
-        <translation type="unfinished"></translation>
+        <translation>存在 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="617"/>
         <source>Clause:</source>
-        <translation type="unfinished"></translation>
+        <translation>句 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="616"/>
         <source>Clause SQL:</source>
-        <translation type="unfinished"></translation>
+        <translation>SQL 句 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="624"/>
         <source>Click to add clause...</source>
-        <translation type="unfinished"></translation>
+        <translation>クリックして句を追加...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="820"/>
         <source>Edit Power Search</source>
-        <translation type="unfinished"></translation>
+        <translation>パワー検索を編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="481"/>
         <source>Below you will find the program details of the selected item.  There are two available screens.  You can toggle between them by pressing INFO.</source>
-        <translation type="unfinished"></translation>
+        <translation>選択した番組の詳細を以下で検索できます。2つの画面があり、[INFO]をクリックして切り替えられます。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="948"/>
         <source>First Letter:</source>
-        <translation type="unfinished"></translation>
+        <translation>最初の文字 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1450"/>
         <source>Preview Schedule</source>
-        <translation type="unfinished"></translation>
+        <translation>予約のプレビュー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="312"/>
         <source>3. Recording Profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>3. 録画プロファイル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="678"/>
         <source>Configure the recording and transcoding quality (where applicable)</source>
-        <translation type="unfinished"></translation>
+        <translation>録画と (可能であれば) トランスコード品質を構成</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="317"/>
         <source>4. Video sources</source>
-        <translation type="unfinished">3. ビデオソース {4.?}</translation>
+        <translation>4. ビデオソース</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="321"/>
         <source>5. Input connections</source>
-        <translation type="unfinished">4. 入力接続 {5.?}</translation>
+        <translation>5. 入力接続</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="325"/>
         <source>6. Channel Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>6. チャンネル編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="327"/>
         <source>7. Storage Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>7. ストレージ ディレクトリー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="331"/>
         <source>8. System Events</source>
-        <translation type="unfinished"></translation>
+        <translation>8. システムイベント</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1302"/>
@@ -35005,17 +35034,17 @@ Once you have completed your modifications, click the &quot;OK&quot; button.</so
     <message>
         <location filename="../themes/themestrings.h" line="652"/>
         <source>Configure display of images (deprecated plugin)</source>
-        <translation type="unfinished"></translation>
+        <translation>画像表示 (サポート切れのプラグイン) の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1366"/>
         <source>Pick a program to record from a list of new titles</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいタイトルのリストから、録画する番組を選り抜く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1134"/>
         <source>Look at pictures</source>
-        <translation type="unfinished"></translation>
+        <translation>画像を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1301"/>
@@ -35025,995 +35054,1001 @@ Once you have completed your modifications, click the &quot;OK&quot; button.</so
     <message>
         <location filename="../themes/themestrings.h" line="1135"/>
         <source>Look at pictures (deprecated plugin)</source>
-        <translation type="unfinished"></translation>
+        <translation>画像表示 (サポート切れのプラグイン)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="145"/>
         <source>%Using |TEMPLATE| Template%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Using |TEMPLATE| Template%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1720"/>
         <source>Select Time &amp; Date</source>
-        <translation type="unfinished"></translation>
+        <translation>日時を選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="134"/>
         <source>%TITLE%% - |SUBTITLE%% (|YEAR|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE%% - |SUBTITLE%% (|YEAR|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="46"/>
         <source>%DATE% %TIME%</source>
-        <translation type="unfinished"></translation>
+        <translation>%DATE% %TIME%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2212"/>
         <source>You haven&apos;t defined any channels</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルを定義していません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="170"/>
         <source>%&quot;|SUBTITLE|&quot; %%YEARSTARS| %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|SUBTITLE|&quot; %%YEARSTARS| %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="165"/>
         <source>%&quot;|SUBTITLE|&quot; %%(|YEAR|) %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|SUBTITLE|&quot; %%(|YEAR|) %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1195"/>
         <source>Move the selected corner of the preview image to the corner of the TV screen.  Press SELECT to edit the other corner.  Press MENU for options and ESC to quit.</source>
-        <translation type="unfinished"></translation>
+        <translation>選択したプレビュー画像の隅をテレビ画面の隅に移動します。SELECT を押して別の隅を編集します。設定に移るには MENU を押し、終了するには ESC を押します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="218"/>
         <source>%startdate%%| startyear%, %starttime%</source>
-        <translation type="unfinished"></translation>
+        <translation>%startdate%%| startyear%, %starttime%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="34"/>
         <source>%CHANNELNUMBER%
 %CALLSIGN%</source>
-        <translation type="unfinished"></translation>
+        <translation>%CHANNELNUMBER%
+%CALLSIGN%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1723"/>
         <source>Select a clause from the list:</source>
-        <translation type="unfinished"></translation>
+        <translation>句をリストから選択 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1234"/>
         <source>MythTV is in standby</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV はスタンバイモードです</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="464"/>
         <source>Backend is idle</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドは待機中</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="468"/>
         <source>Backend is recording</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドは録画中</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="470"/>
         <source>Backend is shutting down</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドは電源オフしようとしています</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="466"/>
         <source>Backend is offline</source>
-        <translation type="unfinished"></translation>
+        <translation>バックエンドはオンライン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="718"/>
         <source>Current Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>現在の録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1957"/>
         <source>There are no recordings currently taking place</source>
-        <translation type="unfinished">録画はありません</translation>
+        <translation>現在録画していません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="139"/>
         <source>%TITLESUBTITLE% on %CHANNAME% (%SHORTTIMEDATE%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLESUBTITLE% on %CHANNAME% (%SHORTTIMEDATE%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1261"/>
         <source>Next recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>次の録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1959"/>
         <source>There are no scheduled recordings</source>
-        <translation type="unfinished">録画予約はありません</translation>
+        <translation>録画予約はありません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1214"/>
         <source>My audio subsystem supports Dolby Digital</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ サブシステムは Dolby Digital をサポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1210"/>
         <source>My audio subsystem supports DTS</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ サブシステムは DTS をサポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1216"/>
         <source>My audio subsystem supports E-AC-3</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ サブシステムは E-AC-3 をサポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1218"/>
         <source>My audio subsystem supports TrueHD</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ サブシステムは TrueHD をサポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1211"/>
         <source>My audio subsystem supports DTS-HD</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオ サブシステムは DTS-HD をサポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1046"/>
         <source>Inetref</source>
-        <translation type="unfinished"></translation>
+        <translation>Inetref</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1696"/>
         <source>Season/Epsiode</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン・回</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1273"/>
         <source>No results found for this search</source>
-        <translation type="unfinished"></translation>
+        <translation>この検索では何も見つかりませんでした</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="117"/>
         <source>%Season - |SEASON| %% Episode - |EPISODE| %</source>
-        <translation type="unfinished"></translation>
+        <translation>%Season - |SEASON| %% Episode - |EPISODE| %</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="567"/>
         <source>Change MythTV key bindings</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV キー割り当てを変更</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2123"/>
         <source>View and schedule recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の表示と予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1667"/>
         <source>Search and browse internet video sites</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネットビデオサイトを検索または閲覧</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1398"/>
         <source>Play music files and internet radio streams</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽ファイルとインターネット ラジオ ストリームの再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="508"/>
         <source>Browse the video library</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオライブラリーをブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1400"/>
         <source>Play online streams</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインストリームを再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1396"/>
         <source>Play games</source>
-        <translation type="unfinished"></translation>
+        <translation>ゲームをプレー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2130"/>
         <source>View the weather forecast</source>
-        <translation type="unfinished"></translation>
+        <translation>天気予報を見る</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2133"/>
         <source>View weather statistics</source>
-        <translation type="unfinished"></translation>
+        <translation>天気の統計を見る</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="472"/>
         <source>Backup a program to DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>プログラムを DVD にバックアップ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2124"/>
         <source>View live and recorded home surveillance camera images</source>
-        <translation type="unfinished"></translation>
+        <translation>現在および録画した監視カメラ画像を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1950"/>
         <source>The recording schedule was not changed</source>
-        <translation type="unfinished"></translation>
+        <translation>録画予約は変更されていません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1260"/>
         <source>Next recording(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>次の録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1634"/>
         <source>Schedule conflict(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>予約の衝突</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1259"/>
         <source>Next recording</source>
-        <translation type="unfinished"></translation>
+        <translation>次の録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1111"/>
         <source>Listen to Radio Stream</source>
-        <translation type="unfinished"></translation>
+        <translation>ラジオストリームを聴く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1402"/>
         <source>Play radio streams</source>
-        <translation type="unfinished"></translation>
+        <translation>ラジオストリームの再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2119"/>
         <source>View Images</source>
-        <translation type="unfinished"></translation>
+        <translation>画像を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1193"/>
         <source>Move the selected arrow to the corner of the TV screen. Press SELECT to edit the other arrow. Press MENU for options and ESC to quit.</source>
-        <translation type="unfinished"></translation>
+        <translation>選択した矢印をテレビ画面の隅に移動します。SELECT を押して反対側の矢印を編集します。設定に移るには MENU を押し、終了するには ESC を押します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="303"/>
         <source>1280 x 720</source>
-        <translation type="unfinished"></translation>
+        <translation>1280 x 720</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="289"/>
         <source>0 x 0</source>
-        <translation type="unfinished"></translation>
+        <translation>0 x 0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="296"/>
         <source>1 pixel</source>
-        <translation type="unfinished"></translation>
+        <translation>1 ピクセル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1300"/>
         <source>Ok</source>
-        <translation type="unfinished">はい</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="229"/>
         <source>%title %%messagearea%</source>
-        <translation type="unfinished"></translation>
+        <translation>%title %%messagearea%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1177"/>
         <source>Metadata Results</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータの結果</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="235"/>
         <source>%title%% - |subtitle%% (|year|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%title%% - |subtitle%% (|year|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2265"/>
         <source>text_window_title</source>
-        <translation type="unfinished"></translation>
+        <translation>text_window_title</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="294"/>
         <source>1</source>
-        <translation type="unfinished">1</translation>
+        <translation>1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="305"/>
         <source>2</source>
-        <translation type="unfinished">2</translation>
+        <translation>2</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="310"/>
         <source>3</source>
-        <translation type="unfinished">3</translation>
+        <translation>3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="315"/>
         <source>4</source>
-        <translation type="unfinished">4</translation>
+        <translation>4</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1866"/>
         <source>States</source>
-        <translation type="unfinished"></translation>
+        <translation>状態</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1084"/>
         <source>Key Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>ショートカットキー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="102"/>
         <source>%STARTTIME% - %ENDTIME% (%LENTIME%)</source>
-        <translation type="unfinished"></translation>
+        <translation>%STARTTIME% - %ENDTIME% (%LENTIME%)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="29"/>
         <source>%CARD% - %OUTPUTFILTERS%</source>
-        <translation type="unfinished"></translation>
+        <translation>%CARD% - %OUTPUTFILTERS%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="831"/>
         <source>Edit the details about this channel</source>
-        <translation type="unfinished"></translation>
+        <translation>このチャンネルの詳細を編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="541"/>
         <source>Callsign :</source>
-        <translation type="unfinished"></translation>
+        <translation>コールサイン :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="577"/>
         <source>Channel # :</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル #:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="560"/>
         <source>Chan Name :</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル名:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2192"/>
         <source>XMLTV # :</source>
-        <translation type="unfinished"></translation>
+        <translation>XMLTV #:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="80"/>
         <source>%PLAYEDTIME% of %TOTALTIME% %(|REMAININGTIME| remaining)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%PLAYEDTIME% of %TOTALTIME% %(|REMAININGTIME| remaining)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1119"/>
         <source>LiveTV</source>
-        <translation type="unfinished">放送中</translation>
+        <translation>放送中</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1518"/>
         <source>Recorded</source>
-        <translation type="unfinished">録画済み</translation>
+        <translation>録画済み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="457"/>
         <source>BD</source>
-        <translation type="unfinished"></translation>
+        <translation>BD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1519"/>
         <source>Recording</source>
-        <translation type="unfinished">録画中</translation>
+        <translation>録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1325"/>
         <source>PCM-DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>PCM-DVD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1324"/>
         <source>PCM-BluRay</source>
-        <translation type="unfinished"></translation>
+        <translation>PCM-BluRay</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="355"/>
         <source>AC3</source>
-        <translation type="unfinished"></translation>
+        <translation>AC3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="810"/>
         <source>E-AC3</source>
-        <translation type="unfinished"></translation>
+        <translation>E-AC3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2001"/>
         <source>TrueHD</source>
-        <translation type="unfinished"></translation>
+        <translation>TrueHD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2148"/>
         <source>WMAPro</source>
-        <translation type="unfinished"></translation>
+        <translation>WMAPro</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="742"/>
         <source>DTS</source>
-        <translation type="unfinished">DTS</translation>
+        <translation>DTS</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="354"/>
         <source>AAC</source>
-        <translation type="unfinished"></translation>
+        <translation>AAC</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1147"/>
         <source>MPEG2</source>
-        <translation type="unfinished"></translation>
+        <translation>MPEG2</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1144"/>
         <source>MP3</source>
-        <translation type="unfinished"></translation>
+        <translation>MP3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2143"/>
         <source>Vorbis</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorbis</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1186"/>
         <source>Mono 1.0</source>
-        <translation type="unfinished"></translation>
+        <translation>モノラル 1.0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1875"/>
         <source>Stereo 2.0</source>
-        <translation type="unfinished"></translation>
+        <translation>ステレオ 2.0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1904"/>
         <source>Surround 5.0</source>
-        <translation type="unfinished"></translation>
+        <translation>サラウンド 5.0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1905"/>
         <source>Surround 5.1</source>
-        <translation type="unfinished"></translation>
+        <translation>サラウンド 5.1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1906"/>
         <source>Surround 7.0</source>
-        <translation type="unfinished"></translation>
+        <translation>サラウンド 7.0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1907"/>
         <source>Surround 7.1</source>
-        <translation type="unfinished"></translation>
+        <translation>サラウンド 7.1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1145"/>
         <source>MPEG-2</source>
-        <translation type="unfinished">MPEG-2</translation>
+        <translation>MPEG-2</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2054"/>
         <source>VC-1</source>
-        <translation type="unfinished"></translation>
+        <translation>VC-1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="997"/>
         <source>H.264</source>
-        <translation type="unfinished"></translation>
+        <translation>H.264</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1146"/>
         <source>MPEG-4</source>
-        <translation type="unfinished">MPEG-4</translation>
+        <translation>MPEG-4</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1491"/>
         <source>RTjpeg</source>
-        <translation type="unfinished"></translation>
+        <translation>RTjpeg</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2149"/>
         <source>WMV3</source>
-        <translation type="unfinished"></translation>
+        <translation>WMV3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="996"/>
         <source>H.263</source>
-        <translation type="unfinished"></translation>
+        <translation>H.263</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1841"/>
         <source>Standard</source>
-        <translation type="unfinished">規格</translation>
+        <translation>標準</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="328"/>
         <source>720P</source>
-        <translation type="unfinished">0% {720P?}</translation>
+        <translation>720P</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="301"/>
         <source>1080i</source>
-        <translation type="unfinished">0% {1080i?}</translation>
+        <translation>1080i</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="302"/>
         <source>1080p</source>
-        <translation type="unfinished">0% {1080p?}</translation>
+        <translation>1080p</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1690"/>
         <source>Season</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="865"/>
         <source>Episode</source>
-        <translation type="unfinished"></translation>
+        <translation>回</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="566"/>
         <source>Change Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>グループの変更</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="568"/>
         <source>Change Password</source>
-        <translation type="unfinished"></translation>
+        <translation>パスワードの変更</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="221"/>
         <source>%startdate|, %%starttime%</source>
-        <translation type="unfinished"></translation>
+        <translation>%startdate|, %%starttime%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="16"/>
         <source>%00x00| - %%&quot;|description|&quot;%</source>
-        <translation type="unfinished"></translation>
+        <translation>%00x00| - %%&quot;|description|&quot;%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="222"/>
         <source>%startdate|, %%starttime%% - |endtime%</source>
-        <translation type="unfinished"></translation>
+        <translation>%startdate|, %%starttime%% - |endtime%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="198"/>
         <source>%longchannel%% (|RECSTARTTIME%% - |RECENDTIME|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%longchannel%% (|RECSTARTTIME%% - |RECENDTIME|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="87"/>
         <source>%REC_COUNT| recordings in this group%</source>
-        <translation type="unfinished"></translation>
+        <translation>%REC_COUNT| recordings in this group%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="587"/>
         <source>Channel Rec. Prio.</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル録画優先度</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1238"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>名前</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1835"/>
         <source>Source</source>
-        <translation type="unfinished">ソース</translation>
+        <translation>ソース</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1981"/>
         <source>To create a custom recording rule, either select an existing rule, or create a new rule by typing in a name.  Then select a rule type and hit enter.  The SQL code will be transferred below, and you can edit it and insert your own program information. Finally, you can test, immediately activate, store, or cancel your rule.</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム録画ルールを作成するには、既存のルールを選択するか、名前を入力して新しいルールを作成します。 次に、ルールタイプを選択し Enter キーを押します。 SQLコードは以下に転送され、編集して独自のプログラム情報を挿入できます。最後に、ルールをテスト、すぐに有効化、保存、またはキャンセルできます。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="557"/>
         <source>Category list:</source>
-        <translation type="unfinished"></translation>
+        <translation>カテゴリーリスト :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="978"/>
         <source>Genres list:</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャンルリスト :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="590"/>
         <source>Channel list:</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルリスト :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1150"/>
         <source>Manage Rec. Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルールの管理</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="64"/>
         <source>%Final Priority: |finalpriority%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Final Priority: |finalpriority%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="258"/>
         <source>%|&quot;subtitle|&quot;%% |stars| %%description%</source>
-        <translation type="unfinished"></translation>
+        <translation>%|&quot;subtitle|&quot;%% |stars| %%description%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="91"/>
         <source>%Recording Profile: |recordingprofile%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Recording Profile: |recordingprofile%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="90"/>
         <source>%Rec. Group: |recgroup%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Rec. Group: |recgroup%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="118"/>
         <source>%Storage Group: |storagegroup%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Storage Group: |storagegroup%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="43"/>
         <source>%Category: |category%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Category: |category%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1855"/>
         <source>Start Time (hh:mm):</source>
-        <translation type="unfinished"></translation>
+        <translation>開始時間 (hh:mm):</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="807"/>
         <source>Duration (min):</source>
-        <translation type="unfinished"></translation>
+        <translation>長さ (分):</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="185"/>
         <source>%channel% - %shortstarttimedate%</source>
-        <translation type="unfinished"></translation>
+        <translation>%channel% - %shortstarttimedate%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1829"/>
         <source>Sort by (1) Time, (2) Title:</source>
-        <translation type="unfinished"></translation>
+        <translation>並び順 (1) 時間、(2) タイトル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1830"/>
         <source>Sort by (1) Title, (2) Priority, (4) Type</source>
-        <translation type="unfinished"></translation>
+        <translation>並び順 : (1) タイトル、(2) 優先度、(4) タイプ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="921"/>
         <source>Final Priority: %finalpriority%</source>
-        <translation type="unfinished"></translation>
+        <translation>最終的な優先度 : %finalpriority%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="257"/>
         <source>%|&quot;subtitle|&quot; %%stars| %%description%</source>
-        <translation type="unfinished"></translation>
+        <translation>%|&quot;subtitle|&quot; %%stars| %%description%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1476"/>
         <source>Program Priority : %progpriority%</source>
-        <translation type="unfinished"></translation>
+        <translation>番組優先度 : %progpriority%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2007"/>
         <source>Type Priority : %storagegroup%</source>
-        <translation type="unfinished"></translation>
+        <translation>タイプ優先度 : %storagegroup%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2203"/>
         <source>You Haven&apos;t Scheduled Any Programs To Be Recorded. To schedule a recording, exit this screen and select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>録画する番組の予約を設定していません。録画予約するには、この画面を終了し、「番組表」または「番組検索」を選択してください</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1828"/>
         <source>Sort by (1) Time, (2) Important</source>
-        <translation type="unfinished"></translation>
+        <translation>並び順 (1) 時間、(2) 重要なもの</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1911"/>
         <source>System Event command Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>システム イベント コマンド エディター</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="205"/>
         <source>%name%% (v.|version%)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%name%% (v.|version%)</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="213"/>
         <source>%resolution% %(|aspect|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%resolution% %(|aspect|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="394"/>
         <source>Animation, transparency and fanart for mythtv 0.25</source>
-        <translation type="unfinished"></translation>
+        <translation>アニメーション、透過度、ファンアートは mythtv 0.25 用</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="232"/>
         <source>%title%% (|year|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%title%% (|year|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="60"/>
         <source>%Director: |director%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Director: |director%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="42"/>
         <source>%Cast: |cast%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Cast: |cast%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="89"/>
         <source>%Rating: |rating%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Rating: |rating%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2089"/>
         <source>Video Res:</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ解像度 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2093"/>
         <source>Video details</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオの詳細</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2094"/>
         <source>Video sites you can</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオサイト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2095"/>
         <source>Video#:</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ # :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2096"/>
         <source>Video: %VIDEOWIDTH%x%VIDEOHEIGHT%@%VIDEOFRAMERATE%fps</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ : %VIDEOWIDTH%x%VIDEOHEIGHT%@%VIDEOFRAMERATE%fps</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2097"/>
         <source>VideoCodec: H.263</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオコーデック :H.263</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2098"/>
         <source>VideoCodec: H.264</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオコーデック :H.264</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2099"/>
         <source>VideoCodec: MPEG-2</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオコーデック :MPEG-2</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2100"/>
         <source>VideoCodec: MPEG-4</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオコーデック :MPEG-4</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2101"/>
         <source>VideoCodec: RTjpeg</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオコーデック :RTjpeg</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2102"/>
         <source>VideoCodec: VC-1</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオコーデック :VC-1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2103"/>
         <source>VideoCodec: WMV3</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオコーデック :WMV3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2104"/>
         <source>VideoDesc: HD_1080_I</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ情報 :HD_1080_I</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2105"/>
         <source>VideoDesc: HD_1080_P</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ情報 :HD_1080_P</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2106"/>
         <source>VideoDesc: HD_720_P</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ情報 :HD_720_P</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2107"/>
         <source>VideoDesc: SD</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ情報 :SD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2108"/>
         <source>Videolevel: 1</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオレベル : 1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2109"/>
         <source>Videolevel: 2</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオレベル : 2</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2110"/>
         <source>Videolevel: 3</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオレベル : 3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2111"/>
         <source>Videolevel: 4</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオレベル : 4</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="817"/>
         <source>Edit Metadata</source>
-        <translation type="unfinished">メタデータ編集</translation>
+        <translation>メタデータ編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1416"/>
         <source>Player Cmd:</source>
-        <translation type="unfinished"></translation>
+        <translation>プレーヤー CMD :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="702"/>
         <source>Cover Art</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャケット写真</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1244"/>
         <source>Net Search</source>
-        <translation type="unfinished"></translation>
+        <translation>ネット検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="473"/>
         <source>Banner</source>
-        <translation type="unfinished"></translation>
+        <translation>題字</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1644"/>
         <source>Screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>スクリーンショット</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1991"/>
         <source>Trailer</source>
-        <translation type="unfinished"></translation>
+        <translation>予告編</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1279"/>
         <source>No videos in library, or no files found. If you have configured a video directory, press &quot;M&quot; (or the MENU key) and select &quot;Scan for Changes.&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>ライブラリーにビデオがないか、ファイルが見つかりませんでした。ビデオディレクトリーを設定したのであれば、「M」(または MENU キー) を押して、「変更したのでスキャン」を選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1497"/>
         <source>Rated: %rating%</source>
-        <translation type="unfinished"></translation>
+        <translation>評判 : %rating%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1343"/>
         <source>Parental: 0</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタル : 0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1344"/>
         <source>Parental: 1</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタル : 1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1345"/>
         <source>Parental: 2</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタル : 2</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1346"/>
         <source>Parental: 3</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタル : 3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1347"/>
         <source>Parental: 4</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタル : 4</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="487"/>
         <source>BluRay Player:</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray プレーヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="488"/>
         <source>BluRay Region:</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray リージョン :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2185"/>
         <source>Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>ようこそ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1194"/>
         <source>Move the selected corner of the preview image to the corner of the TV screen.</source>
-        <translation type="unfinished"></translation>
+        <translation>プレビュー画像の隅をテレビ画面の隅に移動します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1446"/>
         <source>Press SELECT to edit the other corner.</source>
-        <translation type="unfinished"></translation>
+        <translation>SELECT を押して別の隅を編集します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1445"/>
         <source>Press MENU for options and ESC to quit.</source>
-        <translation type="unfinished"></translation>
+        <translation>MENU を押して設定画面を表示、ESC を押して終了です。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="762"/>
         <source>Delete Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル削除</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="129"/>
         <source>%TITLE%% (|YEAR|)%</source>
-        <translation type="unfinished"></translation>
+        <translation>%TITLE%% (|YEAR|)%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="266"/>
         <source>(%STARTTIME% - %ENDTIME%) %LONGREPEAT% %YEARSTARS%%CHANNEL%
 %DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>(%STARTTIME% - %ENDTIME%) %LONGREPEAT% %YEARSTARS%%CHANNEL%
+%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="33"/>
         <source>%CHANNELNUMBER% %CALLSIGN%</source>
-        <translation type="unfinished"></translation>
+        <translation>%CHANNELNUMBER% %CALLSIGN%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1986"/>
         <source>To manually schedule a recording, enter a title (optional). Then set the channel, date, start time, and duration of your recording. Note that this recording will not have any listings data or other information provided by an EPG.</source>
-        <translation type="unfinished"></translation>
+        <translation>すべてのチャネルを取り付け済みの CAM・SmartCard で復号化できるかどうかをテストします。暗号化フラグが擬似的に設定されることがあります。注意 : この設定を有効にすると、各暗号化チャンネルのスキャン時間が数秒増加します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1984"/>
         <source>To give greater or lesser priority to a channel in your lineup, select it from the list. To increase the channel&apos;s priority, press the right arrow. To decrease its priority, press the left arrow.</source>
-        <translation type="unfinished"></translation>
+        <translation>ラインナップ内のチャンネルの優先度を高くしたり低くしたりするには、リストからそのチャンネルを選択します。チャンネルの優先度を上げるには右矢印、 優先度を下げるには左矢印を押します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1980"/>
         <source>To create a custom priority rule, enter a name and priority adjustment. You can them select from existing priority templates or create one of your own using SQL syntax in the &quot;Clause SQL&quot; edit box.
 
 Once you have completed your rule, can can Test, Delete, or Install it right away.</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム優先度ルールを作成するには、名前と優先度調整値を入力します。既存の優先度テンプレートから選択することも、SQL 構文を「SQL句」編集ボックスに入力して自作することもできます。
+
+ルールができたら、テスト、削除、またはすぐに配置することができます。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2211"/>
         <source>You can specify basic criteria to create powerful search and record rules. Below, you may enter title, subtitle, and description phrases (all optional), as well as category, genre, and channel values to refine a complex search for programs.
 
 When you have completed your configuration, press &quot;OK&quot; to search.</source>
-        <translation type="unfinished"></translation>
+        <translation>基本的な文法をもとに、強力な検索および録画ルールを作成できます。以下に、タイトル、サブタイトル、説明フレーズ (どれも入力しなくても可)、カテゴリー、ジャンル、チャンネルの値を入力して、複雑な検索ができます。
+
+設定が完了したら、「OK」を押して検索します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="482"/>
         <source>Below you will find the program details of the selected item. There are two available screens. You can toggle between them by pressing INFO.</source>
-        <translation type="unfinished"></translation>
+        <translation>選択した番組の詳細を以下で検索できます。2つの画面があり、[INFO]をクリックして切り替えられます。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="909"/>
         <source>Filter Options</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルター設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1742"/>
         <source>Select the options for this recording.</source>
-        <translation type="unfinished"></translation>
+        <translation>この録画の設定を選択してください。</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="284"/>
@@ -36037,332 +36072,338 @@ When you have completed your configuration, press &quot;OK&quot; to search.</sou
     <message>
         <location filename="../themes/themestrings.h" line="1060"/>
         <source>Input:</source>
-        <translation type="unfinished"></translation>
+        <translation>入力 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1854"/>
         <source>Start Offset:</source>
-        <translation type="unfinished"></translation>
+        <translation>開始オフセット :</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="201"/>
         <source>%n minute(s) late</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 分遅れ</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1859"/>
         <source>Start on time</source>
-        <translation type="unfinished"></translation>
+        <translation>時間通り開始</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="200"/>
         <source>%n minute(s) early</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 分早く</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="849"/>
         <source>End Offset:</source>
-        <translation type="unfinished"></translation>
+        <translation>終了オフセット :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="851"/>
         <source>End on time</source>
-        <translation type="unfinished"></translation>
+        <translation>時間通り終了</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="798"/>
         <source>Dup Method:</source>
-        <translation type="unfinished"></translation>
+        <translation>重複方法 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="799"/>
         <source>Dup Scope:</source>
-        <translation type="unfinished"></translation>
+        <translation>重複範囲 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1530"/>
         <source>Recording Rule is Active</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルール有効</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1739"/>
         <source>Select the filter options for this recording.</source>
-        <translation type="unfinished"></translation>
+        <translation>この録画のフィルター設定を選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1734"/>
         <source>Select how the recording file should be treated.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ファイルをどのように取り扱うか選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1510"/>
         <source>Rec. Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画プロファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1509"/>
         <source>Rec. Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画グループ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1893"/>
         <source>Strg. Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージグループ  :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1383"/>
         <source>Play Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>再生グループ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1163"/>
         <source>Max to Keep:</source>
-        <translation type="unfinished"></translation>
+        <translation>最大保持数 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1161"/>
         <source>Max Newest:</source>
-        <translation type="unfinished"></translation>
+        <translation>最大最新数 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="385"/>
         <source>Allow Recordings to Auto-Expire</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の自動削除を許可</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1437"/>
         <source>Post Processing Options</source>
-        <translation type="unfinished"></translation>
+        <translation>事後処理設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1731"/>
         <source>Select any jobs you want run on the recording.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画に対して実行したいジョブを選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="450"/>
         <source>Automatically Commercial Flag Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画への自動CM検出</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="453"/>
         <source>Automatically Transcode Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画への自動トランスコード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1067"/>
         <source>Internet and Information</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネットと情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1903"/>
         <source>Surf the net, read news and more</source>
-        <translation type="unfinished"></translation>
+        <translation>ネットのブラウズ、ニュースを読むなど</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="879"/>
         <source>Extras</source>
-        <translation type="unfinished"></translation>
+        <translation>エクストラ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1796"/>
         <source>Setup, status information and import</source>
-        <translation type="unfinished"></translation>
+        <translation>ステータス情報とインポートの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1294"/>
         <source>OSD Debug Information</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD デバッグ情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1295"/>
         <source>OSD Input</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 入力</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="492"/>
         <source>Bluray</source>
-        <translation type="unfinished"></translation>
+        <translation>Blu-ray</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="959"/>
         <source>Frames: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 フレーム</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1708"/>
         <source>Seek: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>シーク : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="360"/>
         <source>Action: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>操作 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2205"/>
         <source>You Haven&apos;t Scheduled Any Programs To Be Recorded.
 To schedule a recording, exit this screen and select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>録画する番組の予約を設定していません。
+録画予約するには、この画面を終了し、「番組表」または「番組検索」を選択してください</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2206"/>
         <source>You Haven&apos;t Scheduled Any Programs To Be Recorded
  To schedule a recording, exit this screen and Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>録画する番組の予約を設定していません。
+ 録画予約するには、この画面を終了し、「番組表」または「番組検索」を選択してください</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="733"/>
         <source>Custom Recording Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム録画ルール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1909"/>
         <source>System Event Command Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>システム イベント コマンド エディター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="869"/>
         <source>Event command:</source>
-        <translation type="unfinished"></translation>
+        <translation>イベントコマンド :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1561"/>
         <source>Resolution: %RESOLUTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>解像度 : %RESOLUTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="795"/>
         <source>Download progress:</source>
-        <translation type="unfinished"></translation>
+        <translation>ダウンロードの進行状況 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="770"/>
         <source>Description: %DESCRIPTION%
 Errata: %ERRATA%</source>
-        <translation type="unfinished"></translation>
+        <translation>説明 : %DESCRIPTION%
+エラー : %ERRATA%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="960"/>
         <source>Frontend in standby mode</source>
-        <translation type="unfinished"></translation>
+        <translation>フロントエンドはスタンバイモード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="489"/>
         <source>Blue-abstract is a modern looking theme meant for widescreen HD displays. The blue background and the consistent layout makes it an attractive and elegant looking theme. It also contains a custom menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>Blue-abstract は現代的な見た目のテーマで、ワイド HD スクリーン向けに作成しています。青い背景と一貫したレイアウトで、魅力的でエレガントな外観のテーマになっています。カスタムメニューも含まれています。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1275"/>
         <source>No videos in library or files are being loaded...</source>
-        <translation type="unfinished"></translation>
+        <translation>ライブラリーにビデオがないか、ファイルを読み込んでいます...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1280"/>
         <source>No videos in library, or no files found.
 
  If you have configured a video directory, press &quot;M&quot; (or the MENU key) and select &quot;Scan for Changes.&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>ライブラリーにビデオがないか、ファイルが見つかりませんでした。
+
+ビデオディレクトリーを設定したのであれば、「M」(または MENU キー) を押して、「変更したのでスキャン」を選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2092"/>
         <source>Video Tree</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオツリー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="814"/>
         <source>Edit File Extensions</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル拡張子の編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1045"/>
         <source>InetRef:</source>
-        <translation type="unfinished"></translation>
+        <translation>InetRef:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1832"/>
         <source>Sort by:</source>
-        <translation type="unfinished"></translation>
+        <translation>並び順 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2074"/>
         <source>Video Details</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオの詳細</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="518"/>
         <source>Browseable:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウズ可 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1358"/>
         <source>Perform metadata update after video scan:</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオのスキャン後、メタデータの更新を実施 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="844"/>
         <source>Enable Random Trailer Playback:</source>
-        <translation type="unfinished"></translation>
+        <translation>ランダム予告編再生を有効に :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="847"/>
         <source>Enable metadata in file browse mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルブラウザーモードでメタデータを有効に :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="792"/>
         <source>Display unknown file types:</source>
-        <translation type="unfinished"></translation>
+        <translation>不明なファイルタイプを表示 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="341"/>
         <source>A UI and OSD theme with focus on fanart, banners and cover display.</source>
-        <translation type="unfinished"></translation>
+        <translation>ファンアート、題字そしてジャケット写真を中心とした UI と OSD のテーマ。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1088"/>
         <source>LCARS</source>
-        <translation type="unfinished"></translation>
+        <translation>LCARS</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1968"/>
         <source>This theme is based on, and inspired by, the original XBMC skin called Aeon Nox by BigNoid. When using this theme you should select the customized menu called &apos;MythAeon&apos; as this menu lay-out and items are tailored for this particular theme.</source>
-        <translation type="unfinished"></translation>
+        <translation>このテーマは、BigNoid が作成した「Aeon Nox」という XBMC スキンをベースにインスパイアを受けたものです。このテーマを使用するときは、このテーマに合わせてメニューレイアウトとアイテムを調整した「MythAeon」と呼ばれるカスタマイズされたメニューを選択するべきです。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="346"/>
         <source>A redesign of the MythMediaStream theme, inspired by the MediaStream Redux skin created by JezzX: This theme has been made to look like the original XBMC skin were posible and/or applicable. Looks best with the matching menu called &apos;MythMediaStream&apos; as this menu lay-out and items are tailored for this particular theme.</source>
-        <translation type="unfinished"></translation>
+        <translation>JezzX が作成した MediaStreamRedux スキンにインスパイアされた MythMediaStream テーマの再設計 : このテーマは、元の XBMC スキンとよく似た見た目に作成しています。メニューレイアウトと項目はこの特定のテーマに合わせた「MythMediaStream」メニューで、見た目が完成します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1505"/>
         <source>Readability is a theme for MythTV 0.25 and above that focusses on showing UI elements in a way that is easily readable on a TV when viewed from a distance. It is based on the Mythbuntu theme, but also borrows from a number of XBMC theme (Aeon and Confluence) for inspiration.</source>
-        <translation type="unfinished"></translation>
+        <translation>Readability は、MythTV 0.25 以降のテーマであり、離れた場所からテレビを見る際に読みやすい方法で UI 要素を表示することに重点を置いています。Mythbuntu テーマをもとにしていますが、多くの XBMC テーマ (AeonとConfluence) からインスパイアされています。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="5"/>
         <source> Retro Originally by Gerhard Aldorf MythUI version based on MythCenter by Jeroen Brosens Conversion of Retro to MythUI by Chris Candreva A generally blue theme. Icon style is realistic based on clasic, &apos;Retro&apos; styles. </source>
-        <translation type="unfinished"></translation>
+        <translation>Gerhard Aldorf による Retro のオリジナルを元に、Jeroen Brosens による MythCenter をベースに作成したのが、この Retro MythUI バージョンです。この変換をおこなったのが Chris Candreva で、全体として青いテーマ。アイコンスタイルは、古典的な「Retro」スタイルをベースに現代化しています。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1973"/>
         <source>TintedGlass is a transparent theme that is a little old school MythTV yet takes advantage of new MythUI features.</source>
-        <translation type="unfinished"></translation>
+        <translation>TintedGlass 透明なテーマで、少し古めかしい MythTV テーマでありながら、新しい MythUI 機能を利用しています。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2228"/>
         <source>[font]myverysmalllabel[/font]%(|s00e00|) %%|RATING| %%|(STARS|) %[font]mydesc[/font]%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>[font]myverysmalllabel[/font]%(|s00e00|) %%|RATING| %%|(STARS|) %[font]mydesc[/font]%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2229"/>
         <source>[font]myverysmalllabel[/font]%(|s00e00|) %%|RATING| %%|(STARS|) %[font]mydesc[/font]%DESCRIPTION%%
 [font]myverysmallsub[/font]|CAST| %</source>
-        <translation type="unfinished"></translation>
+        <translation>[font]myverysmalllabel[/font]%(|s00e00|) %%|RATING| %%|(STARS|) %[font]mydesc[/font]%DESCRIPTION%%
+[font]myverysmallsub[/font]|CAST| %</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2230"/>
@@ -36371,163 +36412,168 @@ Errata: %ERRATA%</source>
 [font]myverysmallsub[/font]Part |PARTNUMBER| of %%PARTTOTAL%%
 [font]myverysmallsub[/font]|CAST| %%[font]myverysmallsub[/font]  
 [font]myverysmalllabel[/font]Director: |DIRECTOR| %</source>
-        <translation type="unfinished"></translation>
+        <translation>[font]myverysmalllabel[/font]%(|s00e00|) %%|RATING| %%|(STARS|) %[font]myverysmall[/font]%DESCRIPTION%%
+
+[font]myverysmallsub[/font]Part |PARTNUMBER| of %%PARTTOTAL%%
+[font]myverysmallsub[/font]|CAST| %%[font]myverysmallsub[/font]  
+[font]myverysmalllabel[/font]Director: |DIRECTOR| %</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2231"/>
         <source>[font]myverysmalllabel[/font]%|RATING| %%|(STARS|) %[font]mydesc[/font]%DESCRIPTION%%
 [font]myverysmallsub[/font]|CAST| %</source>
-        <translation type="unfinished"></translation>
+        <translation>[font]myverysmalllabel[/font]%|RATING| %%|(STARS|) %[font]mydesc[/font]%DESCRIPTION%%
+[font]myverysmallsub[/font]|CAST| %</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2232"/>
         <source>]</source>
-        <translation type="unfinished"></translation>
+        <translation>]</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2233"/>
         <source>] =</source>
-        <translation type="unfinished"></translation>
+        <translation>] =</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2234"/>
         <source>a nice transparent theme to use your own background if you want. just copy your favorite picture (be sure that its resolution is 1920x1200) to /usr/share/mythtv/themes/TransBlue/background.jpg</source>
-        <translation type="unfinished"></translation>
+        <translation>好みの背景を使いたい方向けにナイスな透明テーマ。お気に入りの画像 (解像度が1920x1200であることを確認してください) を /usr/share/mythtv/themes/TransBlue/background.jpg にコピーするだけです</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2235"/>
         <source>album</source>
-        <translation type="unfinished"></translation>
+        <translation>アルバム</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2236"/>
         <source>artist</source>
-        <translation type="unfinished"></translation>
+        <translation>アーチスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2237"/>
         <source>blootube-ng is a theme based on the original blootube-wide by Justin Hornsby (justin.hornsby@gmail.com) which uses very large graphics associated with every menu entry. All changes where made to bring this theme forward to MythTV 0.24.</source>
-        <translation type="unfinished"></translation>
+        <translation>blootube-ngは、Justin Hornsby (justin.hornsby@gmail.com) 作のオリジナルの blootube-wide をベースにしたテーマです。すべてのメニューエントリーに非常に大きな画像を関連付けています。すべての変更は Myth TV0.24 に移行するために行われたものです。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1584"/>
         <source>Run User Job #2</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ #2 を実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1094"/>
         <source>Last Recorded/Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>最新の録画・優先度</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="712"/>
         <source>Create a Custom Recording Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム録画ルールの作成</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1580"/>
         <source>Rule Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールタイプ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1579"/>
         <source>Rule SQL:</source>
-        <translation type="unfinished"></translation>
+        <translation>ルール SQL :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1932"/>
         <source>Tables:</source>
-        <translation type="unfinished"></translation>
+        <translation>テーブル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2204"/>
         <source>You Haven&apos;t Scheduled Any Programs To Be Recorded...</source>
-        <translation type="unfinished"></translation>
+        <translation>録画予約した番組はありません...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="528"/>
         <source>By %1</source>
-        <translation type="unfinished"></translation>
+        <translation>By %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1240"/>
         <source>Native Resolution: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>ネイティブ解像度 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2064"/>
         <source>Version %1</source>
-        <translation type="unfinished"></translation>
+        <translation>バージョン %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1098"/>
         <source>Learn what your system is up to.</source>
-        <translation type="unfinished"></translation>
+        <translation>システムが何をしているのかを学びましょう。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="402"/>
         <source>Arclight is a sleek theme meant for widescreen HD displays.  It is high contrast and uses shapes and an attractive layout to convey information simply and consistently.</source>
-        <translation type="unfinished"></translation>
+        <translation>Arclightは、ワイドスクリーン HD ディスプレー向けの洗練されたテーマです。コントラストが高く、形と魅力的なレイアウトで、情報をシンプルかつ一貫して伝達します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2010"/>
         <source>Type your tweet below.  Select &quot;Send&quot; to submit it.</source>
-        <translation type="unfinished"></translation>
+        <translation>下に tweet を入力してください。「送信する」を選択して投稿します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1753"/>
         <source>Send</source>
-        <translation type="unfinished"></translation>
+        <translation>送信する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="861"/>
         <source>Enter Your Twitter Login Details</source>
-        <translation type="unfinished"></translation>
+        <translation>Twitter のログイン情報を入力してください</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1132"/>
         <source>Login:</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザー名 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1349"/>
         <source>Password:</source>
-        <translation type="unfinished"></translation>
+        <translation>パスワード :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1754"/>
         <source>Send a Tweet</source>
-        <translation type="unfinished"></translation>
+        <translation>Tweet を送信</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1232"/>
         <source>MythTV is idle and will shut down shortly.</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV は待機中で、間もなく電源オフします。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="717"/>
         <source>Current Recording(s):</source>
-        <translation type="unfinished"></translation>
+        <translation>現在の録画 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1569"/>
         <source>Retrieving Recording Status...</source>
-        <translation type="unfinished"></translation>
+        <translation>録画状態を取得中 ...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1257"/>
         <source>Next Scheduled Recording(s):</source>
-        <translation type="unfinished"></translation>
+        <translation>次の録画予約 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1571"/>
         <source>Retrieving Scheduled Recordings...</source>
-        <translation type="unfinished"></translation>
+        <translation>録画予約を取得中 ...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2018"/>
         <source>Up</source>
-        <translation type="unfinished"></translation>
+        <translation>上</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1427"/>
@@ -36537,7 +36583,7 @@ Errata: %ERRATA%</source>
     <message>
         <location filename="../themes/themestrings.h" line="1024"/>
         <source>Icon Downloader</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコン ダウンローダー</translation>
     </message>
     <message>
         <source>[x]</source>
@@ -36546,22 +36592,22 @@ Errata: %ERRATA%</source>
     <message>
         <location filename="../themes/themestrings.h" line="1478"/>
         <source>Program Search</source>
-        <translation type="unfinished"></translation>
+        <translation>番組検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1310"/>
         <source>Optical</source>
-        <translation type="unfinished"></translation>
+        <translation>光学</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1049"/>
         <source>Info Center</source>
-        <translation type="unfinished"></translation>
+        <translation>情報センター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1499"/>
         <source>Rating:</source>
-        <translation type="unfinished"></translation>
+        <translation>評判 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="155"/>
@@ -36571,42 +36617,42 @@ Errata: %ERRATA%</source>
     <message>
         <location filename="../themes/themestrings.h" line="585"/>
         <source>Channel Priorities</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル優先度</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1006"/>
         <source>Hello</source>
-        <translation type="unfinished"></translation>
+        <translation>やあ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1474"/>
         <source>Program List</source>
-        <translation type="unfinished">番組リスト</translation>
+        <translation>番組リスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1451"/>
         <source>Preview Schedule Changes</source>
-        <translation type="unfinished"></translation>
+        <translation>予約変更のプレビュー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="602"/>
         <source>Childish is the first MythTV theme designed specifically with children in mind.  It was the winner of MythTV&apos;s v0.23 theming contest.</source>
-        <translation type="unfinished"></translation>
+        <translation>Childish は、子どもを念頭において特別に設計された最初の MythTV テーマです。MythTV の v0.23 テーマコンテストで優勝しました。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="903"/>
         <source>Filename</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイル名</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1729"/>
         <source>Select an Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコンを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1023"/>
         <source>Icon Download Status...</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコン ダウンロード状態...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="251"/>
@@ -36616,7 +36662,7 @@ Errata: %ERRATA%</source>
     <message>
         <location filename="../themes/themestrings.h" line="1263"/>
         <source>No Recordings Present...</source>
-        <translation type="unfinished"></translation>
+        <translation>録画はありません...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="267"/>
@@ -36627,404 +36673,407 @@ Errata: %ERRATA%</source>
         <location filename="../themes/themestrings.h" line="2207"/>
         <source>You Haven&apos;t Scheduled Any Programs To Be Recorded
  To schedule a recording, exit this screen and Select &apos;Program Guide&apos; or &apos;Program Finder&apos; </source>
-        <translation type="unfinished"></translation>
+        <translation>録画する番組の予約を設定していません。
+ 録画予約するには、この画面を終了し、「番組表」または「番組検索」を選択してください </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1661"/>
         <source>Search Term</source>
-        <translation type="unfinished"></translation>
+        <translation>検索語</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="811"/>
         <source>Edit</source>
-        <translation>エディット</translation>
+        <translation>編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1732"/>
         <source>Select artwork, and find recording information online.</source>
-        <translation type="unfinished"></translation>
+        <translation>関連画像を選択し、録画の情報をオンラインで検索します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1693"/>
         <source>Season/Episode:</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン・回 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="923"/>
         <source>Find Coverart Online</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインでジャケット写真を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1715"/>
         <source>Select Local Coverart</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルのジャケット写真を選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="924"/>
         <source>Find Fanart Online</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインのファンアートを検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1716"/>
         <source>Select Local Fanart</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルのファンアートを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="922"/>
         <source>Find Banners Online</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインの題字を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1714"/>
         <source>Select Local Banner</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルの題字を選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="547"/>
         <source>Cast</source>
-        <translation type="unfinished"></translation>
+        <translation>キャスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1428"/>
         <source>Plot</source>
-        <translation type="unfinished"></translation>
+        <translation>あらすじ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1694"/>
         <source>Season/Episode: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン・回 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1847"/>
         <source>Starring: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>主演 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1335"/>
         <source>Parental Level 0</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタルレベル 0</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1336"/>
         <source>Parental Level 1</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタルレベル 1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1337"/>
         <source>Parental Level 2</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタルレベル 2</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1338"/>
         <source>Parental Level 3</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタルレベル 3</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1339"/>
         <source>Parental Level 4</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタルレベル 4</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="369"/>
         <source>Add New File Types</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいファイルタイプを追加</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1306"/>
         <source>On this screen, you can add new extensions to be recognized by the Video Plugin.  If a scan does not add your files, create a new extension below by clicking the &quot;New&quot; button.
 
 If you select &quot;Use Default Player,&quot; the player command set for the extension will be ignored.  &quot;Ignore This File Type&quot; prevents the items from appearing in a scan.</source>
-        <translation type="unfinished"></translation>
+        <translation>この画面では、ビデオプラグインが認識する新しい拡張子を追加できます。スキャンしてもファイルが追加されない場合は、「新規」ボタンをクリックして、以下に新しい拡張子を追加してください。
+
+「デフォルトのプレーヤーを使用」を選択すると、拡張子に設定するプレーヤーコマンドは無視されます。「このファイル拡張子を無視」は、スキャンで該当の拡張子のファイルを見つけないようにします。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2035"/>
         <source>Use Default Player</source>
-        <translation type="unfinished"></translation>
+        <translation>デフォルト プレーヤーを使う</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1029"/>
         <source>Ignore This File Type</source>
-        <translation type="unfinished"></translation>
+        <translation>このファイル拡張子を無視</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1933"/>
         <source>Tagline:</source>
-        <translation type="unfinished"></translation>
+        <translation>タグライン :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1916"/>
         <source>TMDB Number:</source>
-        <translation type="unfinished"></translation>
+        <translation>TMDB 番号 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1014"/>
         <source>Homepage:</source>
-        <translation type="unfinished"></translation>
+        <translation>ホームページ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="728"/>
         <source>Custom Player:</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタムプレーヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1255"/>
         <source>Next File:</source>
-        <translation type="unfinished"></translation>
+        <translation>次のファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="620"/>
         <source>Click here to search existing coverart...</source>
-        <translation type="unfinished"></translation>
+        <translation>ここをクリックして、既存のジャケット写真を検索します...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="626"/>
         <source>Click to select from online coverart...</source>
-        <translation type="unfinished"></translation>
+        <translation>クリックして、オンラインのジャケット写真を選択します...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="622"/>
         <source>Click here to search existing screenshots...</source>
-        <translation type="unfinished"></translation>
+        <translation>ここをクリックして、既存のスクリーンショットを検索します...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="628"/>
         <source>Click to select from online screenshots...</source>
-        <translation type="unfinished"></translation>
+        <translation>クリックして、オンラインのスクリーンショットを選択します...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="619"/>
         <source>Click here to search existing banners...</source>
-        <translation type="unfinished"></translation>
+        <translation>ここをクリックして、既存の題字を検索します...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="625"/>
         <source>Click to select from online banners...</source>
-        <translation type="unfinished"></translation>
+        <translation>クリックして、オンラインの題字を選択します...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="621"/>
         <source>Click here to search existing fanart...</source>
-        <translation type="unfinished"></translation>
+        <translation>ここをクリックして、既存のファンアートを検索します...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="627"/>
         <source>Click to select from online fanart...</source>
-        <translation type="unfinished"></translation>
+        <translation>クリックして、オンラインのファンアートを選択します...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="623"/>
         <source>Click here to search existing trailers...</source>
-        <translation type="unfinished"></translation>
+        <translation>ここをクリックして、既存の予告編を検索します...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="910"/>
         <source>Filter Videos</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオフィルター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="701"/>
         <source>Country:</source>
-        <translation type="unfinished"></translation>
+        <translation>国 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="366"/>
         <source>Actor/Actress:</source>
-        <translation type="unfinished"></translation>
+        <translation>俳優 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="516"/>
         <source>Browse:</source>
-        <translation type="unfinished"></translation>
+        <translation>表示:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="779"/>
         <source>Directed by %1</source>
-        <translation type="unfinished"></translation>
+        <translation>監督 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1966"/>
         <source>This item was released on %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>この項目は %1 にリリース。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1068"/>
         <source>It was added to your collection on %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 のコレクションに追加しました。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2087"/>
         <source>Video Player Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオプレーヤー設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="758"/>
         <source>Default:</source>
-        <translation type="unfinished"></translation>
+        <translation>デフォルト :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="458"/>
         <source>BD Mount:</source>
-        <translation type="unfinished"></translation>
+        <translation>BD マウント :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="459"/>
         <source>BD Region:</source>
-        <translation type="unfinished"></translation>
+        <translation>BD リージョン :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="841"/>
         <source>Enable Alternate Player</source>
-        <translation type="unfinished"></translation>
+        <translation>別のプレーヤーを有効に</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="389"/>
         <source>Alt. Player:</source>
-        <translation type="unfinished"></translation>
+        <translation>別プレーヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2026"/>
         <source>Update metadata after video scan</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオスキャン後、メタデータを更新</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1992"/>
         <source>Trailer #:</source>
-        <translation type="unfinished"></translation>
+        <translation>予告編 # :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2076"/>
         <source>Video File Associations</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオファイルの関連付け</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="901"/>
         <source>File to Play Next:</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルを次に再生 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2115"/>
         <source>Videos - Manager</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ - マネージャー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="549"/>
         <source>Cast:</source>
-        <translation type="unfinished"></translation>
+        <translation>キャスト :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2113"/>
         <source>Videos - Browser</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ - ブラウザ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1198"/>
         <source>Movie Grabber:</source>
-        <translation type="unfinished"></translation>
+        <translation>映画グラバー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1923"/>
         <source>TV Grabber:</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビグラバー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1803"/>
         <source>Show Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>番組名 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="379"/>
         <source>Air Date:</source>
-        <translation type="unfinished"></translation>
+        <translation>放送日:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="800"/>
         <source>Dupe Method:</source>
-        <translation type="unfinished"></translation>
+        <translation>重複方法 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="801"/>
         <source>Dupe Scope:</source>
-        <translation type="unfinished"></translation>
+        <translation>重複範囲 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1508"/>
         <source>Rec Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画プロファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1507"/>
         <source>Rec Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画グループ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="6"/>
         <source># to Keep:</source>
-        <translation type="unfinished"></translation>
+        <translation>保持数 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1103"/>
         <source>Limit Handling:</source>
-        <translation type="unfinished"></translation>
+        <translation>取り扱い限界 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="988"/>
         <source>Graphite is a theme emphasizing MythUI interface improvements such as alpha, animation, unique layouts, and user-supplied backdrop content.  It is extremely memory-hungry.</source>
-        <translation type="unfinished"></translation>
+        <translation>Graphite は、透過、アニメーション、独自のレイアウト、ユーザー提供の背景コンテンツなど、MythUI インターフェイスの改善を強調するテーマです。 非常にメモリを消費します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1920"/>
         <source>TMDB:</source>
-        <translation type="unfinished"></translation>
+        <translation>TMDB:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1341"/>
         <source>Parental Lvl:</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタルレベル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="517"/>
         <source>Browseable</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウズ可</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1417"/>
         <source>Player Command:</source>
-        <translation type="unfinished"></translation>
+        <translation>プレイヤーコマンド :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1947"/>
         <source>Text Filter :</source>
-        <translation type="unfinished"></translation>
+        <translation>テキスト フィルター :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1689"/>
         <source>Seas/Ep:</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン・回 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1265"/>
         <source>No Recordings available, or screen loading...</source>
-        <translation type="unfinished"></translation>
+        <translation>録画がないか、画面を読み込み中...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1629"/>
         <source>Schedule Options Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>予約設定編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1881"/>
         <source>Storage Options Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージ設定編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1436"/>
         <source>Post Processing Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>事後処理編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="471"/>
         <source>Background:</source>
-        <translation type="unfinished"></translation>
+        <translation>背景 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1055"/>
@@ -37034,7 +37083,7 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="743"/>
         <source>DVD</source>
-        <translation type="unfinished">DVD</translation>
+        <translation>DVD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="168"/>
@@ -37067,7 +37116,7 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1271"/>
         <source>No recordings exist</source>
-        <translation type="unfinished"></translation>
+        <translation>録画がありません</translation>
     </message>
     <message>
         <source>%&quot;|SUBTITLE|&quot;%</source>
@@ -37076,7 +37125,7 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="276"/>
         <source>(1) Time (2) Title</source>
-        <translation type="unfinished"></translation>
+        <translation>(1)時間 (2)タイトル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1851"/>
@@ -37091,117 +37140,117 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="607"/>
         <source>Choose a local theme or download new ones</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルテーマか、新しいものをダウンロードするかを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1367"/>
         <source>Pick a program to record from a set of lists</source>
-        <translation type="unfinished"></translation>
+        <translation>リストから番組を選り抜く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="731"/>
         <source>Custom Record</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="377"/>
         <source>Advanced program finder</source>
-        <translation type="unfinished"></translation>
+        <translation>詳細番組検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1156"/>
         <source>Manual Schedule</source>
-        <translation type="unfinished"></translation>
+        <translation>手動予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2057"/>
         <source>VCR-like recording scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>VRC のような録画予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1978"/>
         <source>Titles</source>
-        <translation type="unfinished"></translation>
+        <translation>タイトル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="933"/>
         <source>Find a program based on title</source>
-        <translation type="unfinished"></translation>
+        <translation>時間をもとに番組を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1087"/>
         <source>Keywords</source>
-        <translation type="unfinished"></translation>
+        <translation>キーワード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="935"/>
         <source>Find a program matching a keyword</source>
-        <translation type="unfinished"></translation>
+        <translation>キーワードに一致する番組を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1351"/>
         <source>People</source>
-        <translation type="unfinished"></translation>
+        <translation>人</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="934"/>
         <source>Find a program including a given person</source>
-        <translation type="unfinished"></translation>
+        <translation>指定の人物から番組を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="374"/>
         <source>Advanced</source>
-        <translation type="unfinished"></translation>
+        <translation>詳細</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="635"/>
         <source>Combine more than one word search</source>
-        <translation type="unfinished"></translation>
+        <translation>単語検索を結合</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1891"/>
         <source>Stored Searches</source>
-        <translation type="unfinished"></translation>
+        <translation>保存した検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1567"/>
         <source>Results of searches you have saved</source>
-        <translation type="unfinished"></translation>
+        <translation>保存済み検索の結果</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1930"/>
         <source>TV navigation and recording preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビナビゲーションと録画プロファイル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="995"/>
         <source>Guide appearance and behavior</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表の表示とふるまい</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1408"/>
         <source>Playback</source>
-        <translation type="unfinished">プレイバック</translation>
+        <translation>再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1770"/>
         <source>Settings for viewing and playing TV</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビの表示と再生の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1410"/>
         <source>Playback OSD</source>
-        <translation type="unfinished"></translation>
+        <translation>再生 OSD</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1954"/>
         <source>Theme and settings for OSD</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD のテーマと設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1297"/>
         <source>OSD Menu Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD メニュー編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1409"/>
@@ -37211,27 +37260,27 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="373"/>
         <source>Adjust settings for different playback styles</source>
-        <translation type="unfinished"></translation>
+        <translation>異なる再生スタイルの調整設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="580"/>
         <source>Channel Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル グループ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="984"/>
         <source>Global recording priority and scheduling</source>
-        <translation type="unfinished"></translation>
+        <translation>全体の録画優先度と予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2158"/>
         <source>Watch TV</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビを視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2163"/>
         <source>Watch live television</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中テレビを視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1454"/>
@@ -37241,82 +37290,82 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1703"/>
         <source>See what you have recorded before</source>
-        <translation type="unfinished"></translation>
+        <translation>以前に録画したものを確認</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1929"/>
         <source>TV Utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビツール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1206"/>
         <source>Music</source>
-        <translation>ミュージック</translation>
+        <translation>音楽</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2112"/>
         <source>Videos</source>
-        <translation type="unfinished">ビデオ</translation>
+        <translation>ビデオ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1033"/>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>画像</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="968"/>
         <source>Games</source>
-        <translation type="unfinished"></translation>
+        <translation>ゲーム</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2177"/>
         <source>Weather</source>
-        <translation type="unfinished"></translation>
+        <translation>天気</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1252"/>
         <source>News Feeds</source>
-        <translation type="unfinished"></translation>
+        <translation>ニュース Feed</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2182"/>
         <source>Web</source>
-        <translation type="unfinished"></translation>
+        <translation>Web</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="527"/>
         <source>Burn DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD 書き込み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1513"/>
         <source>Recipes</source>
-        <translation type="unfinished"></translation>
+        <translation>レシピ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="398"/>
         <source>Archive Files</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD 書き込み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="816"/>
         <source>Edit Keys</source>
-        <translation type="unfinished"></translation>
+        <translation>キーを編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1774"/>
         <source>Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>セットアップ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1270"/>
         <source>No listings found for this program.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組では何も見つかりませんでした。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1005"/>
         <source>Heading</source>
-        <translation type="unfinished"></translation>
+        <translation>見出し</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="543"/>
@@ -37331,12 +37380,12 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1026"/>
         <source>Icon Importer</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコンインポーター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1684"/>
         <source>Search terms:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索語 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1649"/>
@@ -37351,62 +37400,62 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="579"/>
         <source>Channel Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1104"/>
         <source>List Options</source>
-        <translation type="unfinished"></translation>
+        <translation>一覧設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1825"/>
         <source>Sort By:</source>
-        <translation type="unfinished"></translation>
+        <translation>並び順 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1008"/>
         <source>Hide Channels without channel number.</source>
-        <translation type="unfinished"></translation>
+        <translation>番号のないチャンネルを非表示。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="761"/>
         <source>Delete All</source>
-        <translation type="unfinished"></translation>
+        <translation>すべて削除</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="983"/>
         <source>Global Options</source>
-        <translation type="unfinished"></translation>
+        <translation>全体設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="589"/>
         <source>Channel Scan</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル スキャン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1022"/>
         <source>Icon Download</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコン ダウンロード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="825"/>
         <source>Edit Transports</source>
-        <translation type="unfinished"></translation>
+        <translation>トランスポート編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="793"/>
         <source>Done</source>
-        <translation type="unfinished">終了</translation>
+        <translation>終了</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1382"/>
         <source>Play Games</source>
-        <translation type="unfinished"></translation>
+        <translation>ゲームをプレー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2199"/>
         <source>Year:</source>
-        <translation>年:</translation>
+        <translation>年 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="976"/>
@@ -37424,12 +37473,12 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1934"/>
         <source>Television</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1148"/>
         <source>Main Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>メインメニュー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="964"/>
@@ -37439,102 +37488,102 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1623"/>
         <source>Schedule</source>
-        <translation type="unfinished"></translation>
+        <translation>予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1483"/>
         <source>Programme Searches</source>
-        <translation type="unfinished"></translation>
+        <translation>番組検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="532"/>
         <source>CD/DVD Options</source>
-        <translation type="unfinished"></translation>
+        <translation>CD・DVD 設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1166"/>
         <source>Media Library</source>
-        <translation type="unfinished"></translation>
+        <translation>メディアライブラリー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1051"/>
         <source>Info Centre</source>
-        <translation type="unfinished"></translation>
+        <translation>情報センター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1282"/>
         <source>None</source>
-        <translation type="unfinished">無し</translation>
+        <translation>なし</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="562"/>
         <source>Change Displayed Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>表示したグループを変更</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1808"/>
         <source>Show Titles</source>
-        <translation type="unfinished"></translation>
+        <translation>タイトルを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1800"/>
         <source>Show Categories</source>
-        <translation type="unfinished"></translation>
+        <translation>カテゴリーを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1806"/>
         <source>Show Recording Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>録画グループを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1809"/>
         <source>Show Watch List</source>
-        <translation type="unfinished"></translation>
+        <translation>注目リストを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1807"/>
         <source>Show Searches</source>
-        <translation type="unfinished"></translation>
+        <translation>検索を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1802"/>
         <source>Show LiveTV</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1811"/>
         <source>Show Watched Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴済み録画を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1616"/>
         <source>Save</source>
-        <translation type="unfinished">セーブ</translation>
+        <translation>保存</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="569"/>
         <source>Change Recording Group Password</source>
-        <translation type="unfinished"></translation>
+        <translation>録画グループパスワードを変更</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1303"/>
         <source>Old Password</source>
-        <translation type="unfinished"></translation>
+        <translation>古いパスワード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1247"/>
         <source>New Password:</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいパスワード :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1291"/>
         <source>OK</source>
-        <translation type="unfinished">はい</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="823"/>
         <source>Edit Recording Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>録画メタデータの編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1974"/>
@@ -37549,117 +37598,117 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1155"/>
         <source>Manual Recording Schedule</source>
-        <translation type="unfinished"></translation>
+        <translation>手動録画予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1975"/>
         <source>Title (Optional):</source>
-        <translation type="unfinished"></translation>
+        <translation>タイトル (任意) :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="752"/>
         <source>Date, or day of week:</source>
-        <translation type="unfinished"></translation>
+        <translation>日付または曜日 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1856"/>
         <source>Start Time:</source>
-        <translation type="unfinished"></translation>
+        <translation>開始時間 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1015"/>
         <source>Hour</source>
-        <translation type="unfinished"></translation>
+        <translation>時</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1181"/>
         <source>Minute</source>
-        <translation type="unfinished"></translation>
+        <translation>分</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="809"/>
         <source>Duration:</source>
-        <translation type="unfinished"></translation>
+        <translation>長さ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1254"/>
         <source>Next</source>
-        <translation type="unfinished"></translation>
+        <translation>次</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1639"/>
         <source>Scheduled Recordings</source>
-        <translation type="unfinished">録画予約</translation>
+        <translation>録画予約</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="912"/>
         <source>Filter:</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルター :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="542"/>
         <source>Callsign:</source>
-        <translation type="unfinished"></translation>
+        <translation>コールサイン :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="275"/>
         <source>(1) Channel (2) Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>(1) チャンネル (2) 優先度</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1630"/>
         <source>Schedule Priorities</source>
-        <translation type="unfinished"></translation>
+        <translation>予約情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="918"/>
         <source>Final</source>
-        <translation type="unfinished"></translation>
+        <translation>最後</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2008"/>
         <source>Type Priority:</source>
-        <translation type="unfinished"></translation>
+        <translation>タイプ優先度 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="920"/>
         <source>Final Priority:</source>
-        <translation type="unfinished"></translation>
+        <translation>最終優先度 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="278"/>
         <source>(1) Title (2) Priority (4) Type</source>
-        <translation type="unfinished"></translation>
+        <translation>(1) タイトル   (2) 優先度   (4) タイプ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="730"/>
         <source>Custom Priority Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム優先度ルール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="872"/>
         <source>Existing Rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>既存ルール :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1577"/>
         <source>Rule Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>ルール名 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1460"/>
         <source>Priority Change:</source>
-        <translation type="unfinished"></translation>
+        <translation>優先度変更 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1722"/>
         <source>Select a clause from the list.</source>
-        <translation type="unfinished"></translation>
+        <translation>句をリストから選んでください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="367"/>
         <source>Add Clause</source>
-        <translation type="unfinished"></translation>
+        <translation>句を追加</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="760"/>
@@ -37674,62 +37723,62 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1062"/>
         <source>Install</source>
-        <translation type="unfinished"></translation>
+        <translation>インストール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1360"/>
         <source>Phrase</source>
-        <translation type="unfinished">フレーズ</translation>
+        <translation>フレーズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1719"/>
         <source>Select Time</source>
-        <translation type="unfinished"></translation>
+        <translation>時間を選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1718"/>
         <source>Select Search</source>
-        <translation type="unfinished"></translation>
+        <translation>選択して検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="821"/>
         <source>Edit Power Search Fields</source>
-        <translation type="unfinished"></translation>
+        <translation>パワー検索のフィールド編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1317"/>
         <source>Optional title phrase:</source>
-        <translation type="unfinished"></translation>
+        <translation>追加のタイトル語 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1316"/>
         <source>Optional subtitle phrase:</source>
-        <translation type="unfinished"></translation>
+        <translation>追加のサブタイトル語 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1314"/>
         <source>Optional description phrase:</source>
-        <translation type="unfinished"></translation>
+        <translation>追加の説明語 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1433"/>
         <source>Position:</source>
-        <translation type="unfinished"></translation>
+        <translation>位置 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1624"/>
         <source>Schedule Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>予約編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1743"/>
         <source>Select the recording rule</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルール選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1628"/>
         <source>Schedule Options</source>
-        <translation type="unfinished"></translation>
+        <translation>予約設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1880"/>
@@ -37739,42 +37788,42 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1435"/>
         <source>Post Processing</source>
-        <translation type="unfinished"></translation>
+        <translation>事後処理</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1627"/>
         <source>Schedule Info</source>
-        <translation type="unfinished"></translation>
+        <translation>予約情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1449"/>
         <source>Preview</source>
-        <translation type="unfinished"></translation>
+        <translation>プレビュー</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="1552"/>
         <source>Reduce priority by %n</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n で優先度を下げる</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1284"/>
         <source>Normal recording priority</source>
-        <translation type="unfinished"></translation>
+        <translation>標準の録画優先度</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="1493"/>
         <source>Raise priority by %n</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n で優先度を上げる</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="1861"/>
         <source>Start recording %n minute(s) late</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>録画を %n 分遅れで開始</numerusform>
         </translation>
     </message>
     <message>
@@ -37785,15 +37834,15 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="1860"/>
         <source>Start recording %n minute(s) early</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>録画を %n 分早めて開始</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="852"/>
         <source>End recording %n minute(s) early</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>録画を %n 分早めて終了</numerusform>
         </translation>
     </message>
     <message>
@@ -37804,19 +37853,19 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="853"/>
         <source>End recording %n minute(s) late</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>録画を %n 分遅れで終了</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1528"/>
         <source>Recording Rule Active</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルール有効</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="461"/>
         <source>Back</source>
-        <translation type="unfinished"></translation>
+        <translation>後方</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1267"/>
@@ -37826,54 +37875,54 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="1080"/>
         <source>Keep at most %n episode(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>最大 %n 回を残す</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="387"/>
         <source>Allow recordings to expire?</source>
-        <translation type="unfinished"></translation>
+        <translation>自動削除を許可しますか？</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="637"/>
         <source>Commercial Flag new recordings</source>
-        <translation>CMマークする</translation>
+        <translation>新しい録画にCMマークする</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1997"/>
         <source>Transcode new recordings</source>
-        <translation>トランスコードする</translation>
+        <translation>新しい録画をトランスコードする</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1652"/>
         <source>Search For:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1659"/>
         <source>Search Results</source>
-        <translation type="unfinished"></translation>
+        <translation>検索結果</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="548"/>
         <source>Cast Members</source>
-        <translation type="unfinished"></translation>
+        <translation>キャスト メンバー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="961"/>
         <source>Full Plot</source>
-        <translation type="unfinished"></translation>
+        <translation>あらすじのすべて</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2080"/>
         <source>Video List Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオリストフィルター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1948"/>
         <source>Text Filter:</source>
-        <translation type="unfinished"></translation>
+        <translation>テキスト フィルター :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="555"/>
@@ -37893,7 +37942,7 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="364"/>
         <source>Actor/Actress</source>
-        <translation type="unfinished"></translation>
+        <translation>俳優 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2197"/>
@@ -37927,7 +37976,7 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1651"/>
         <source>Search For</source>
-        <translation type="unfinished"></translation>
+        <translation>検索 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="169"/>
@@ -37937,32 +37986,32 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="343"/>
         <source>A blue theme.  Originally designed before the MythUI rewrite, MythCenter has been updated to take advantage of the new UI library while still maintaining the look and feel that long-time MythTV users are used to.</source>
-        <translation type="unfinished"></translation>
+        <translation>青いテーマ。MythUI の書き換え前に設計された MythCenter を長年 MythTV ユーザーが慣れ親しんでいるルックアンドフィールを維持しながら、新しい UI ライブラリを利用するように更新しました。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2047"/>
         <source>User Rating:</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザーの評判 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1278"/>
         <source>No videos in library, or no files found.  If you have configured a video directory, press &quot;M&quot; (or the MENU key) and select &quot;Scan for Changes.&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>ライブラリーにビデオがないか、ファイルが見つかりませんでした。ビデオディレクトリーを設定したのであれば、「M」(または MENU キー) を押して、「変更したのでスキャン」を選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1340"/>
         <source>Parental Level:</source>
-        <translation>再生制限レベル:</translation>
+        <translation>ペアレンタルレベル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1429"/>
         <source>Plot:</source>
-        <translation>荒筋:</translation>
+        <translation>あらすじ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2085"/>
         <source>Video Num.:</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ 番号 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="778"/>
@@ -37992,17 +38041,17 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1070"/>
         <source>Item has been watched:</source>
-        <translation type="unfinished"></translation>
+        <translation>アイテムは視聴済み :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="286"/>
         <source>/path/to/the/thing.jpg</source>
-        <translation type="unfinished"></translation>
+        <translation>/path/to/the/thing.jpg</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="916"/>
         <source>Filters video list</source>
-        <translation>ビデオリスト絞りこみ</translation>
+        <translation>ビデオリストフィルター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="556"/>
@@ -38017,62 +38066,62 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="699"/>
         <source>Country :</source>
-        <translation>国:</translation>
+        <translation>国 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="365"/>
         <source>Actor/Actress :</source>
-        <translation type="unfinished"></translation>
+        <translation>俳優 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2198"/>
         <source>Year :</source>
-        <translation>年:</translation>
+        <translation>年 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1597"/>
         <source>Runtime :</source>
-        <translation>所用時間:</translation>
+        <translation>所用時間 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2046"/>
         <source>User Rating :</source>
-        <translation>ユーザーの評判:</translation>
+        <translation>ユーザーの評判 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="498"/>
         <source>Browse :</source>
-        <translation>表示:</translation>
+        <translation>表示 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1044"/>
         <source>InetRef :</source>
-        <translation type="unfinished"></translation>
+        <translation>Inetref:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="705"/>
         <source>Cover File :</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャケット写真ファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1831"/>
         <source>Sort by :</source>
-        <translation>並び換え:</translation>
+        <translation>並び順 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2166"/>
         <source>Watched :</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴済み :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1564"/>
         <source>Result</source>
-        <translation type="unfinished"></translation>
+        <translation>結果</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1617"/>
         <source>Save as default</source>
-        <translation type="unfinished">規定で保存</translation>
+        <translation>デフォルトとして保存</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="66"/>
@@ -38092,108 +38141,108 @@ If you select &quot;Use Default Player,&quot; the player command set for the ext
     <message>
         <location filename="../themes/themestrings.h" line="1611"/>
         <source>Sample Clauses:</source>
-        <translation type="unfinished"></translation>
+        <translation>句のサンプル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1969"/>
         <source>This was adapted from the Jeroen Brosens&apos; MythCenter theme.  The fonts have been changed to freely redistributable ones and layout changes have been made to make this theme look good on 1280x720 and 1920x1080 screens with a 1:1 pixel aspect ratio.</source>
-        <translation type="unfinished"></translation>
+        <translation>これは JeroenBrosens の MythCenter テーマから採用されました。フォントを自由に再配布可能なフォントに変更し、レイアウトを変更し、1：1 ピクセルのアスペクト比 1280x720 および 1920x1080 の画面で見栄えがするようになりました。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="709"/>
         <source>Coverart:</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャケット写真 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="932"/>
         <source>Find Online...</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインで検索...</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1418"/>
         <source>Player Settings</source>
-        <translation type="unfinished">プレイヤー設定</translation>
+        <translation>プレイヤー設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="756"/>
         <source>Default Player:</source>
-        <translation type="unfinished"></translation>
+        <translation>デフォルト プレーヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="745"/>
         <source>DVD Player:</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD プレーヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="744"/>
         <source>DVD Drive:</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD ドライブ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="842"/>
         <source>Enable Alternate Player:</source>
-        <translation type="unfinished"></translation>
+        <translation>別のプレーヤーを有効に :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="390"/>
         <source>Alternate Player:</source>
-        <translation type="unfinished"></translation>
+        <translation>別のプレーヤー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2084"/>
         <source>Video Metadata Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオメタデータ設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1357"/>
         <source>Perform metadata update after video scan</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオのスキャン後、メタデータの更新を実施</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="843"/>
         <source>Enable Random Trailer Playback</source>
-        <translation type="unfinished"></translation>
+        <translation>ランダム予告編再生を有効に</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="791"/>
         <source>Display unknown file types</source>
-        <translation type="unfinished"></translation>
+        <translation>不明なファイルタイプを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="846"/>
         <source>Enable metadata in file browse mode</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルブラウザーモードでメタデータを有効に</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1995"/>
         <source>Trailers to Play:</source>
-        <translation type="unfinished"></translation>
+        <translation>再生する予告編 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2238"/>
         <source>browse your Pictures library</source>
-        <translation type="unfinished"></translation>
+        <translation>画像ライブラリーをブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2239"/>
         <source>callsign: %callsign%</source>
-        <translation type="unfinished"></translation>
+        <translation>コールサイン : %callsign%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2240"/>
         <source>dddd,  MMMM dd,  yyyy  |  hh:mm AP</source>
-        <translation type="unfinished"></translation>
+        <translation>dddd,  MMMM dd,  yyyy  |  hh:mm AP</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2241"/>
         <source>dddd, MMMM dd, yyyy  |</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2243"/>
         <source>dddd
 dd MMMM yyyy</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="44"/>
@@ -38203,12 +38252,12 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="2247"/>
         <source>hh:mm</source>
-        <translation type="unfinished"></translation>
+        <translation>hh:mm</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1412"/>
         <source>Playback starting...</source>
-        <translation type="unfinished"></translation>
+        <translation>再生開始...</translation>
     </message>
     <message>
         <source>%TITLE%  by  %ARTIST%</source>
@@ -38217,12 +38266,12 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="1048"/>
         <source>Info</source>
-        <translation type="unfinished"></translation>
+        <translation>情報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="497"/>
         <source>Browse</source>
-        <translation type="unfinished"></translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="147"/>
@@ -38239,12 +38288,12 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="2075"/>
         <source>Video Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1190"/>
         <source>Move by %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 により移動</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="584"/>
@@ -38264,72 +38313,72 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="392"/>
         <source>An earth toned theme, Terra was the first theme to use MythTV&apos;s new MythUI library and is designed to showcase some of the capabilities of the new user interface.</source>
-        <translation type="unfinished"></translation>
+        <translation>アーストーンのテーマである Terra は、MythTV の新しい MythUI ライブラリを使用した最初のテーマであり、新しいユーザーインターフェイスの機能の一部を紹介するように設計されています。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1043"/>
         <source>InetRef</source>
-        <translation type="unfinished"></translation>
+        <translation>InetRef</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="704"/>
         <source>Cover File</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャケット写真ファイル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1827"/>
         <source>Sort by</source>
-        <translation type="unfinished"></translation>
+        <translation>並び順</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2165"/>
         <source>Watched</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴済み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1149"/>
         <source>Make default</source>
-        <translation type="unfinished"></translation>
+        <translation>デフォルトに</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2083"/>
         <source>Video Manager</source>
-        <translation type="unfinished">ビデオマネージャ</translation>
+        <translation>ビデオマネージャー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="784"/>
         <source>Director:</source>
-        <translation>ディレクター:</translation>
+        <translation>監督 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1342"/>
         <source>Parental:</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1141"/>
         <source>Lowest</source>
-        <translation type="unfinished"></translation>
+        <translation>最低</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1140"/>
         <source>Low</source>
-        <translation type="unfinished">低</translation>
+        <translation>低</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1169"/>
         <source>Medium</source>
-        <translation type="unfinished">中</translation>
+        <translation>中</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1011"/>
         <source>High</source>
-        <translation type="unfinished">高</translation>
+        <translation>高</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1495"/>
         <source>Rated:</source>
-        <translation>定格:</translation>
+        <translation>評判 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="496"/>
@@ -38349,87 +38398,87 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="706"/>
         <source>Cover File:</source>
-        <translation>カバーファイル:</translation>
+        <translation>ジャケット写真ファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1018"/>
         <source>IMDB ID:</source>
-        <translation type="unfinished"></translation>
+        <translation>IMDB ID:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2072"/>
         <source>Video Browser</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオブラウザ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2114"/>
         <source>Videos - Gallery</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ - ギャラリー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2116"/>
         <source>Videos - Tree</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオ - ツリー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1334"/>
         <source>Parental Level</source>
-        <translation type="unfinished"></translation>
+        <translation>ペアレンタルレベル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="877"/>
         <source>Extension:</source>
-        <translation>拡張子:</translation>
+        <translation>拡張子 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="636"/>
         <source>Command:</source>
-        <translation>コマンド:</translation>
+        <translation>コマンド :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2038"/>
         <source>Use default player:</source>
-        <translation>既定のプレイヤー:</translation>
+        <translation>デフォルト プレーヤーを使う :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1030"/>
         <source>Ignore:</source>
-        <translation>無視:</translation>
+        <translation>無視 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="827"/>
         <source>Edit Video Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオメタデータ編集</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1977"/>
         <source>Title:</source>
-        <translation type="unfinished"></translation>
+        <translation>タイトル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1900"/>
         <source>Subtitle:</source>
-        <translation type="unfinished"></translation>
+        <translation>サブタイトル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1697"/>
         <source>Season:</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="867"/>
         <source>Episode:</source>
-        <translation type="unfinished"></translation>
+        <translation>回 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="558"/>
         <source>Category:</source>
-        <translation>カテゴリー:</translation>
+        <translation>カテゴリー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1333"/>
         <source>Parental Control:</source>
-        <translation>再生制限:</translation>
+        <translation>ペアレンタル コントロール :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="900"/>
@@ -38439,142 +38488,142 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="1042"/>
         <source>Include while Browsing:</source>
-        <translation>表示する:</translation>
+        <translation>ブラウズ中も :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1069"/>
         <source>Item has been Watched:</source>
-        <translation type="unfinished"></translation>
+        <translation>アイテムは視聴済み :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="703"/>
         <source>Cover Art:</source>
-        <translation>カバー絵:</translation>
+        <translation>ジャケット写真 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1646"/>
         <source>Screenshot:</source>
-        <translation type="unfinished"></translation>
+        <translation>スクリーンショット :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="475"/>
         <source>Banner:</source>
-        <translation type="unfinished"></translation>
+        <translation>題字 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="885"/>
         <source>Fanart:</source>
-        <translation type="unfinished"></translation>
+        <translation>ファンアート :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1993"/>
         <source>Trailer:</source>
-        <translation type="unfinished"></translation>
+        <translation>予告編 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2014"/>
         <source>Unique Player Command:</source>
-        <translation>固有のプレイヤーコマンド:</translation>
+        <translation>固有のプレイヤーコマンド :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="781"/>
         <source>Directed by:</source>
-        <translation type="unfinished"></translation>
+        <translation>監督 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1375"/>
         <source>Play</source>
-        <translation type="unfinished">再生</translation>
+        <translation>再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1225"/>
         <source>MythStream Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>MythStream 設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2180"/>
         <source>Weather Station Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>天気予報ステーション設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1922"/>
         <source>TV</source>
-        <translation type="unfinished">テレビ</translation>
+        <translation>テレビ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1384"/>
         <source>Play Online Streams</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインストリームを再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2179"/>
         <source>Weather Station</source>
-        <translation type="unfinished"></translation>
+        <translation>天気予報ステーション</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="345"/>
         <source>A long menu which breaks down the options by their category. TV, Music, Video etc</source>
-        <translation type="unfinished"></translation>
+        <translation>設定をカテゴリ別に分類した長いメニュー。 テレビ、音楽、ビデオなど</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1655"/>
         <source>Search Listings</source>
-        <translation type="unfinished"></translation>
+        <translation>検索リスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1531"/>
         <source>Recording Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="829"/>
         <source>Edit or delete any recording rule</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルールの編集または削除</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1388"/>
         <source>Play TV Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ録画を再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="396"/>
         <source>Appearance Wizard</source>
-        <translation type="unfinished"></translation>
+        <translation>表示ウィザード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1192"/>
         <source>Move the selected arrow to the corner of the TV screen.  Press SELECT to edit the other arrow.  Press MENU for options and ESC to quit.</source>
-        <translation type="unfinished"></translation>
+        <translation>選択した矢印をテレビ画面の隅に移動します。SELECT を押して反対側の矢印を編集します。設定に移るには MENU を押し、終了するには ESC を押します。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2019"/>
         <source>Up Level</source>
-        <translation type="unfinished"></translation>
+        <translation>上位レベル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1012"/>
         <source>Home</source>
-        <translation type="unfinished"></translation>
+        <translation>ホーム</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1826"/>
         <source>Sort Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>並びモード :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2091"/>
         <source>Video Source:</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオソース :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="694"/>
         <source>Contexts</source>
-        <translation type="unfinished"></translation>
+        <translation>コンテキスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="361"/>
         <source>Actions</source>
-        <translation type="unfinished">アクション</translation>
+        <translation>アクション</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="253"/>
@@ -38584,22 +38633,22 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="570"/>
         <source>Change View</source>
-        <translation type="unfinished"></translation>
+        <translation>表示の変更</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1810"/>
         <source>Show Watched Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴済み番組を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1304"/>
         <source>Old Password:</source>
-        <translation type="unfinished"></translation>
+        <translation>古いパスワード :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1871"/>
         <source>Status Icons</source>
-        <translation type="unfinished"></translation>
+        <translation>状態アイコン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="74"/>
@@ -38617,12 +38666,13 @@ dd MMMM yyyy</source>
         <location filename="../themes/themestrings.h" line="2208"/>
         <source>You Haven&apos;t Scheduled Any Programs To Be Recorded
  To schedule a recording, exit this screen and select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>録画する番組の予約を設定していません。
+ 録画予約するには、この画面を終了し、「番組表」または「番組検索」を選択してください</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1151"/>
         <source>Manage Recording Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルールの管理</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="575"/>
@@ -38632,32 +38682,32 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="1093"/>
         <source>Last Recorded</source>
-        <translation type="unfinished"></translation>
+        <translation>最新の録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1521"/>
         <source>Recording Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画グループ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1878"/>
         <source>Storage Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>ストレージグループ  :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1526"/>
         <source>Recording Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>録画プロファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="859"/>
         <source>Enter Search Text</source>
-        <translation type="unfinished"></translation>
+        <translation>検索テキストを入力</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="629"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>閉じる</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="255"/>
@@ -38669,12 +38719,12 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="732"/>
         <source>Custom Record Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム録画ルール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="372"/>
         <source>Additional Tables:</source>
-        <translation type="unfinished"></translation>
+        <translation>追加テーブル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1514"/>
@@ -38694,82 +38744,82 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="775"/>
         <source>Details</source>
-        <translation type="unfinished"></translation>
+        <translation>詳細</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1583"/>
         <source>Run User Job #1</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ 1 を実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1587"/>
         <source>Run User job #2</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ #2 を実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1585"/>
         <source>Run User Job #3</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ #3 を実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1586"/>
         <source>Run User Job #4</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザージョブ #4 を実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1081"/>
         <source>Keep up with the news</source>
-        <translation type="unfinished"></translation>
+        <translation>最新のニュース</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1127"/>
         <source>Local weather forecast</source>
-        <translation type="unfinished"></translation>
+        <translation>地域の天気予報</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="509"/>
         <source>Browse the web</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1857"/>
         <source>Start cooking!</source>
-        <translation type="unfinished"></translation>
+        <translation>料理開始！</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1013"/>
         <source>Home surveillance</source>
-        <translation type="unfinished"></translation>
+        <translation>ホーム監視システム</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1004"/>
         <source>Hardware profile</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェア プロファイル</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1937"/>
         <source>Tell us what hardware you have so we can support it</source>
-        <translation type="unfinished"></translation>
+        <translation>どんなハードウェアをお持ちかお知らせいただけば、サポートします</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1403"/>
         <source>Play recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画を再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2159"/>
         <source>Watch Videos</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオを視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1406"/>
         <source>Play videos</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオを再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1110"/>
         <source>Listen to Music</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽を聴く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1031"/>
@@ -38779,24 +38829,24 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="848"/>
         <source>Enable random trailer playback</source>
-        <translation type="unfinished"></translation>
+        <translation>ランダム予告編再生を有効に</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="1376"/>
         <source>Play %n trailer(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 本の予告編を再生</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1066"/>
         <source>Internet Video</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネットビデオ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1737"/>
         <source>Select the country in which you currently reside</source>
-        <translation type="unfinished"></translation>
+        <translation>お住まいの国・地域を選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1089"/>
@@ -38806,7 +38856,7 @@ dd MMMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="1748"/>
         <source>Select your preferred language</source>
-        <translation>あなたの好きな言語を選択してください</translation>
+        <translation>お好みの言語を選択してください</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="107"/>
@@ -38822,7 +38872,8 @@ dd MMMM yyyy</source>
         <location filename="../themes/themestrings.h" line="2242"/>
         <source>dddd
 dd MMM yyyy</source>
-        <translation type="unfinished"></translation>
+        <translation>dddd
+dd MMM yyyy</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2004"/>
@@ -38832,153 +38883,153 @@ dd MMM yyyy</source>
     <message>
         <location filename="../themes/themestrings.h" line="1756"/>
         <source>Send and receive tweets</source>
-        <translation type="unfinished"></translation>
+        <translation>Tweet を送受信</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1704"/>
         <source>See what your system is doing</source>
-        <translation type="unfinished"></translation>
+        <translation>システムが何をしているか見る</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="513"/>
         <source>Browse your recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画をブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="515"/>
         <source>Browse your video library</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオライブラリーをブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="512"/>
         <source>Browse your music library</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽ライブラリーをブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1653"/>
         <source>Search Internet Video</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネットビデオを検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1681"/>
         <source>Search popular video sites</source>
-        <translation type="unfinished"></translation>
+        <translation>人気のあるビデオサイトを検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="499"/>
         <source>Browse Internet Video</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネットビデオをブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="503"/>
         <source>Browse highlights and entire sites</source>
-        <translation type="unfinished"></translation>
+        <translation>ハイライトとサイト全体をブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="581"/>
         <source>Channel Icons</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルアイコン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1090"/>
         <source>Language Selection</source>
-        <translation type="unfinished"></translation>
+        <translation>言語選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1884"/>
         <source>Storage to Buffer</source>
-        <translation type="unfinished"></translation>
+        <translation>バッファ用ストレージ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="334"/>
         <source>: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>: %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="523"/>
         <source>Buffer to Decoder</source>
-        <translation type="unfinished"></translation>
+        <translation>デコーダーバッファ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="454"/>
         <source>Available Buffer</source>
-        <translation type="unfinished"></translation>
+        <translation>有効なバッファ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="335"/>
         <source>: %BUFFERAVAIL% of %BUFFERSIZE%Mb</source>
-        <translation type="unfinished"></translation>
+        <translation>: %BUFFERAVAIL% of %BUFFERSIZE%MB</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="880"/>
         <source>FPS</source>
-        <translation type="unfinished"></translation>
+        <translation>FPS</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="350"/>
         <source>A/V Sync</source>
-        <translation type="unfinished"></translation>
+        <translation>A/V 同期</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="956"/>
         <source>Frames decoded /free</source>
-        <translation type="unfinished"></translation>
+        <translation>復号フレーム/全体</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="631"/>
         <source>Codec/Dec</source>
-        <translation type="unfinished"></translation>
+        <translation>Codec/Dec</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="336"/>
         <source>: %VIDEOCODEC% %VIDEODECODER%</source>
-        <translation type="unfinished"></translation>
+        <translation>: %VIDEOCODEC% %VIDEODECODER%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="337"/>
         <source>: %VIDEOWIDTH%x%VIDEOHEIGHT%@%VIDEOFRAMERATE%fps</source>
-        <translation type="unfinished"></translation>
+        <translation>: %VIDEOWIDTH%x%VIDEOHEIGHT%@%VIDEOFRAMERATE%fps</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1612"/>
         <source>Sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation>サンプリングレート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="50"/>
         <source>%DESCRIPTION% %(|REMAININGTIME|)%%(|BEHINDTIME|)%%VALUE%%UNITS%</source>
-        <translation type="unfinished"></translation>
+        <translation>%DESCRIPTION% %(|REMAININGTIME|)%%(|BEHINDTIME|)%%VALUE%%UNITS%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="214"/>
         <source>%s00e00%   %STARTDATE%   %STARTTIME%% - |ENDTIME%</source>
-        <translation type="unfinished"></translation>
+        <translation>%s00e00%   %STARTDATE%   %STARTTIME%% - |ENDTIME%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="254"/>
         <source>%|&quot;SUBTITLE|&quot;% %|(STARS|) %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%|&quot;SUBTITLE|&quot;% %|(STARS|) %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="187"/>
         <source>%channum% %callsign%</source>
-        <translation type="unfinished"></translation>
+        <translation>%channum% %callsign%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="583"/>
         <source>Channel Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル名 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2195"/>
         <source>XMLTV ID:</source>
-        <translation type="unfinished"></translation>
+        <translation>XMLTV ID:</translation>
     </message>
     <message numerus="yes">
         <location filename="../themes/themestrings.h" line="1961"/>
         <source>There is/are %n recording(s) in this display group</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>この表示グループには %n 個の録画があります</numerusform>
         </translation>
     </message>
     <message>
@@ -38986,153 +39037,156 @@ dd MMM yyyy</source>
         <source>Using the text areas below, you can change the recording title, subtitle, and description.
 
 Once you have completed your modifications, click the &quot;Save&quot; button.</source>
-        <translation type="unfinished"></translation>
+        <translation>以下のテキストエリアで、録画のタイトル、サブタイトル、説明を編集できます。
+
+変更が完了したら、「OK」ボタンをクリックしてください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2252"/>
         <source>name</source>
-        <translation type="unfinished">名前</translation>
+        <translation>名前</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="722"/>
         <source>Current:</source>
-        <translation type="unfinished"></translation>
+        <translation>現在 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1447"/>
         <source>Press Up/Down from letter list, to navigate to another list.  Press Left/Right from Show or Episode list to navigate to another list.</source>
-        <translation type="unfinished"></translation>
+        <translation>文字リストで「上」「下」を押すと別のリストにナビゲートします。番組または番組回で「左」「右」を押すと別のリストにナビゲートします。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="144"/>
         <source>%Using the &apos;|TEMPLATE|&apos; template%</source>
-        <translation type="unfinished"></translation>
+        <translation>%Using the &apos;|TEMPLATE|&apos; template%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="363"/>
         <source>Active filters</source>
-        <translation type="unfinished"></translation>
+        <translation>有効なフィルター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2036"/>
         <source>Use [Menu] or [PREVVIEW]/[NEXTVIEW] to cycle through other settings</source>
-        <translation type="unfinished"></translation>
+        <translation>「メニュー」または「前の画面」・「次の画面」で別の設定に移動し周回します</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1633"/>
         <source>Schedule Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>予約タイプ :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1556"/>
         <source>Repeats:</source>
-        <translation type="unfinished"></translation>
+        <translation>くり返し :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1740"/>
         <source>Select the filters that should be applied for this recording.</source>
-        <translation type="unfinished"></translation>
+        <translation>この番組に適用するフィルターを選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1951"/>
         <source>The recording schedule was not changed.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画予約は変更されていません。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="285"/>
         <source>-&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>-&gt;</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1917"/>
         <source>TMDB/TVDB #</source>
-        <translation type="unfinished"></translation>
+        <translation>TVDB・TMDB # :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="190"/>
         <source>%description%
       Errata: %errata%</source>
-        <translation type="unfinished"></translation>
+        <translation>%description%
+      エラー : %errata%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="22"/>
         <source>%1:</source>
-        <translation type="unfinished"></translation>
+        <translation>%1:</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="871"/>
         <source>Execute</source>
-        <translation type="unfinished"></translation>
+        <translation>実行</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1869"/>
         <source>Status</source>
-        <translation type="unfinished">ステータス</translation>
+        <translation>ステータス</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2023"/>
         <source>Upcoming Recording(s):</source>
-        <translation type="unfinished"></translation>
+        <translation>今後の録画 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1960"/>
         <source>There are no scheduled recordings.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画予約はありません。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="724"/>
         <source>Currently recording:</source>
-        <translation type="unfinished"></translation>
+        <translation>現在の録画 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1958"/>
         <source>There are no recordings currently taking place.</source>
-        <translation type="unfinished"></translation>
+        <translation>現在録画していません。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1635"/>
         <source>Schedule conflict(s):</source>
-        <translation type="unfinished"></translation>
+        <translation>予約の衝突 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="264"/>
         <source>(%1) +</source>
-        <translation type="unfinished"></translation>
+        <translation>(%1) +</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="338"/>
         <source>= %1</source>
-        <translation type="unfinished"></translation>
+        <translation>= %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="281"/>
         <source>(Last: %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>(最終 : %1)</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="245"/>
         <source>%|(STARS|) %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%|(STARS|) %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="772"/>
         <source>Designed to show off some different element arrangements.  Tested at 1280x720 and with Français. Reminder: On Watch Recordings screen [Rew] and [FF] can be used to change the Rec. Group.</source>
-        <translation type="unfinished"></translation>
+        <translation>いくつかの異なる要素の配置を表示するように設計されています。1280x720 およびフランス語でテスト済み。メモ : 録画の視聴画面では、[巻戻し]と[早送り]を使って録画グループを変更できます。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2200"/>
         <source>Year: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>年 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1019"/>
         <source>IMDB: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>IMDB: %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1276"/>
         <source>No videos in library, or no files found.  If you have configured a video directory, press MENU and select &quot;Scan for Changes.&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>ライブラリーにビデオがないか、ファイルが見つかりませんでした。ビデオディレクトリーを設定したのであれば、「MENU」を押して、「変更したのでスキャン」を選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="249"/>
@@ -39143,497 +39197,503 @@ Part |PARTNUMBER| of %%PARTTOTAL%%
 Cast: |CAST%%
 
 Director: |DIRECTOR%</source>
-        <translation type="unfinished"></translation>
+        <translation>%|RATING| %%|(STARS|) %%DESCRIPTION%%
+
+パート |PARTNUMBER| of %%PARTTOTAL%%
+
+キャスト : |CAST%%
+
+監督 : |DIRECTOR%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2037"/>
         <source>Use default player</source>
-        <translation type="unfinished"></translation>
+        <translation>デフォルト プレーヤーを使う</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1028"/>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>無視</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="941"/>
         <source>Find local trailers</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルの予告編を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="979"/>
         <source>Get Banner</source>
-        <translation type="unfinished"></translation>
+        <translation>題字を取得する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="937"/>
         <source>Find local banner</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルの題字を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="982"/>
         <source>Get coverart</source>
-        <translation type="unfinished"></translation>
+        <translation>ジャケット写真を取得する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="938"/>
         <source>Find local coverart</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルのジャケット写真を検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="980"/>
         <source>Get Fanart</source>
-        <translation type="unfinished"></translation>
+        <translation>ファンアートを取得する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="939"/>
         <source>Find local fanart</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルのファンアートを検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="981"/>
         <source>Get Screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>スクリーンショットを取得する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="940"/>
         <source>Find local screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルのスクリーンショットを検索</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="495"/>
         <source>Browsable</source>
-        <translation type="unfinished"></translation>
+        <translation>ブラウズ可</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="911"/>
         <source>Filter video list</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオリストフィルター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1843"/>
         <source>Standby Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>スタンバイモード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="771"/>
         <source>Designed to show off some different element arrangements.  Reminder: On Watch Recordings screen [Rew] and [FF] can be used to change the Rec. Group.</source>
-        <translation type="unfinished"></translation>
+        <translation>いくつかの異なる要素の配置を表示するように設計されています。1280x720 およびフランス語でテスト済み。メモ : 録画の視聴画面では、[巻戻し]と[早送り]を使って録画グループを変更できます。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1035"/>
         <source>Import DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD インポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1040"/>
         <source>Import video from a movie DVD and convert it</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD から映画をインポートし変換します</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1502"/>
         <source>Read music from a CD and convert it</source>
-        <translation type="unfinished"></translation>
+        <translation>CD から音楽を読み込み変換します</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2184"/>
         <source>Webbrowser</source>
-        <translation type="unfinished"></translation>
+        <translation>Web ブラウザ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1863"/>
         <source>Start surfing from your selected homepage</source>
-        <translation type="unfinished"></translation>
+        <translation>選択したホームページからブラウズします</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="494"/>
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>ブックマーク</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="608"/>
         <source>Choose favourite webpages from a list</source>
-        <translation type="unfinished"></translation>
+        <translation>リストからお気に入りの Web ページを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2223"/>
         <source>Zoneminder</source>
-        <translation type="unfinished"></translation>
+        <translation>ZoneMinder</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1185"/>
         <source>Monitor your cameras</source>
-        <translation type="unfinished"></translation>
+        <translation>カメラを監視</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1114"/>
         <source>Listen to your Music</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽を聴く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1113"/>
         <source>Listen to music from your current playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>現在のプレイリストから音楽を聴く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1387"/>
         <source>Play Streams</source>
-        <translation type="unfinished"></translation>
+        <translation>ストリームの再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1112"/>
         <source>Listen to music from the internet</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネットから音楽を聴く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1717"/>
         <source>Select Music</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽を選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="714"/>
         <source>Create and manage your music playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽のプレイリストを作成・管理する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1620"/>
         <source>Scan for New Music</source>
-        <translation type="unfinished"></translation>
+        <translation>新しい音楽をスキャン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2028"/>
         <source>Update your collection by looking for new music</source>
-        <translation type="unfinished"></translation>
+        <translation>新しい音楽を見つけてあなたのコレクションを更新します</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="490"/>
         <source>Blue-abstract is a modern looking theme meant for widescreen HD displays. The blue background and the consistent layout makes it an attractive and elegant looking theme. This contains an adjusted menu structure for the theme.</source>
-        <translation type="unfinished"></translation>
+        <translation>Blue-abstract は現代的な見た目のテーマで、ワイド HD スクリーン向けに作成しています。青い背景と一貫したレイアウトで、魅力的でエレガントな外観のテーマになっています。カスタムメニューも含まれています。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1117"/>
         <source>Live TV</source>
-        <translation>テレビ放送</translation>
+        <translation>放送中テレビ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1137"/>
         <source>Look at the program list and schedule them</source>
-        <translation type="unfinished"></translation>
+        <translation>番組表を見て、予約してください</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1320"/>
         <source>Organize Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の整理</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="943"/>
         <source>Find shows or pick shows to record or delete</source>
-        <translation type="unfinished"></translation>
+        <translation>番組を検索、または番組を選り抜いて、録画・削除</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="376"/>
         <source>Advanced planning</source>
-        <translation type="unfinished"></translation>
+        <translation>詳細計画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1673"/>
         <source>Search for shows and more options</source>
-        <translation type="unfinished"></translation>
+        <translation>番組検索その他の設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1925"/>
         <source>TV Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1380"/>
         <source>Play DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>DVDを再生する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="510"/>
         <source>Browse video highlights and popular sites</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオハイライトや人気のサイトのブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="891"/>
         <source>File Browser</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルブラウザ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="788"/>
         <source>Directory:</source>
-        <translation type="unfinished"></translation>
+        <translation>ディレクトリー :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1178"/>
         <source>Metadata Search Results</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ検索結果</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="406"/>
         <source>Artwork Search Results</source>
-        <translation type="unfinished"></translation>
+        <translation>関連画像検索結果</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1662"/>
         <source>Search Term:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索語 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1660"/>
         <source>Search State:</source>
-        <translation type="unfinished"></translation>
+        <translation>検索状態 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="163"/>
         <source>%&quot;|SUBTITLE|&quot; %%(|ORIGINALAIRDATE|) %%(|STARS|) %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%&quot;|SUBTITLE|&quot; %%(|ORIGINALAIRDATE|) %%(|STARS|) %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="594"/>
         <source>Channel: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="70"/>
         <source>%LONGREPEAT%%(|STARS|) %%DESCRIPTION%</source>
-        <translation type="unfinished"></translation>
+        <translation>%LONGREPEAT%%(|STARS|) %%DESCRIPTION%</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1698"/>
         <source>Season: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>シーズン : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="868"/>
         <source>Episode: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>回 : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1027"/>
         <source>Icon import</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコンインポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1565"/>
         <source>Result:</source>
-        <translation type="unfinished"></translation>
+        <translation>結果 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="19"/>
         <source>%1 -</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 -</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2043"/>
         <source>Use this language for the Movie Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>この言語を映画メタデータに使用</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2042"/>
         <source>Use this language for TV Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>この言語をテレビメタデータに使用</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2041"/>
         <source>Use this language for Game Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>この言語をゲームメタデータに使用</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="715"/>
         <source>Current Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>現在のプロファイル :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2118"/>
         <source>View</source>
-        <translation type="unfinished"></translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1895"/>
         <source>Submit</source>
-        <translation type="unfinished"></translation>
+        <translation>送信</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2088"/>
         <source>Video Profile Format:</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオプロファイル書式 :</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2066"/>
         <source>Version: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>バージョン : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1486"/>
         <source>Protocol-Version: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>プロトコルバージョン : %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="692"/>
         <source>Connection Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>接続 Ok</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1485"/>
         <source>Protocol Version Mismatch</source>
-        <translation type="unfinished"></translation>
+        <translation>プロトコルバージョン不一致</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="483"/>
         <source>Blocked By Firewall</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイアーウォールによりブロック</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2162"/>
         <source>Watch live TV or schedule recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中のテレビ視聴や予約録画</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="507"/>
         <source>Browse the internet or your video library</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネットまたはビデオライブラリーをブラウズ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1115"/>
         <source>Listen to your music or from the internet</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネットから音楽を聴く</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1374"/>
         <source>Pictures</source>
-        <translation type="unfinished"></translation>
+        <translation>画像</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1133"/>
         <source>Look at Pictures</source>
-        <translation type="unfinished"></translation>
+        <translation>画像を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1405"/>
         <source>Play video games</source>
-        <translation type="unfinished"></translation>
+        <translation>ゲームをプレー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1167"/>
         <source>Media Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>メディア設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1768"/>
         <source>Settings for all non-TV media</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビ以外のすべてのメディアの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1050"/>
         <source>Info Center Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>情報センター設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="684"/>
         <source>Configure weather, news, movie info, web, and recipes</source>
-        <translation type="unfinished"></translation>
+        <translation>天気、ニュース、映画情報、Web、レシピの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1910"/>
         <source>System Event Handlers</source>
-        <translation type="unfinished"></translation>
+        <translation>システムイベントハンドラー</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="647"/>
         <source>Configure System Event handler commands</source>
-        <translation type="unfinished"></translation>
+        <translation>システムイベントハンドラー コマンドを設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1394"/>
         <source>Play any of your media</source>
-        <translation type="unfinished"></translation>
+        <translation>メディアの再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1152"/>
         <source>Manage Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画の管理</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1369"/>
         <source>Pick and prioritize shows to record</source>
-        <translation type="unfinished"></translation>
+        <translation>録画する番組を選り抜いて、優先する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1056"/>
         <source>Information Center</source>
-        <translation type="unfinished"></translation>
+        <translation>情報センター</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1368"/>
         <source>Pick and prioritize recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>録画を選り抜いて、優先する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1058"/>
         <source>Information and Communications</source>
-        <translation type="unfinished"></translation>
+        <translation>情報とコミュニケーション</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1311"/>
         <source>Optical Disks</source>
-        <translation type="unfinished"></translation>
+        <translation>光学ディスク</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="645"/>
         <source>Configure MythTV and plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>MythTV とプラグインの設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1702"/>
         <source>See what you have recorded</source>
-        <translation type="unfinished"></translation>
+        <translation>録画したものを確認</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1456"/>
         <source>Prioritize some channels over others</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネルの一部をほかのものより優先</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1457"/>
         <source>Prioritize some recordings over others</source>
-        <translation type="unfinished"></translation>
+        <translation>番組の一部をほかのものより優先</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="991"/>
         <source>Group your favorite channels together</source>
-        <translation type="unfinished"></translation>
+        <translation>お気に入りのチャンネルをいっしょにグループ化</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2191"/>
         <source>Write video to a data DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオを DVD にデータとして書き込む</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1034"/>
         <source>Import CD</source>
-        <translation type="unfinished"></translation>
+        <translation>CD インポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1039"/>
         <source>Import music from an audio CD</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽 CD からインポート</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="839"/>
         <source>Eject media</source>
-        <translation type="unfinished"></translation>
+        <translation>メディアを取り出す</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1208"/>
         <source>Music Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>音楽ツール</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1750"/>
         <source>Select, import, or play music</source>
-        <translation type="unfinished"></translation>
+        <translation>インポートするか音楽を再生するかを選択</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="48"/>
@@ -39648,7 +39708,7 @@ Director: |DIRECTOR%</source>
     <message>
         <location filename="../themes/themestrings.h" line="576"/>
         <source>Channel #</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル #</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="582"/>
@@ -39658,187 +39718,187 @@ Director: |DIRECTOR%</source>
     <message>
         <location filename="../themes/themestrings.h" line="2120"/>
         <source>View all</source>
-        <translation type="unfinished"></translation>
+        <translation>すべて表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2121"/>
         <source>View all movies</source>
-        <translation type="unfinished"></translation>
+        <translation>すべての映画を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2122"/>
         <source>View all searches stored</source>
-        <translation type="unfinished"></translation>
+        <translation>保存した検索をすべて表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2125"/>
         <source>View new</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいものを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2126"/>
         <source>View new titles</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいタイトルを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2127"/>
         <source>View stored</source>
-        <translation type="unfinished"></translation>
+        <translation>保存したものを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2128"/>
         <source>View system Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>システムプロファイルを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2129"/>
         <source>View the</source>
-        <translation type="unfinished"></translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2131"/>
         <source>View upcoming</source>
-        <translation type="unfinished"></translation>
+        <translation>これからを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2132"/>
         <source>View upcoming recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>今後の録画を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2134"/>
         <source>View your</source>
-        <translation type="unfinished"></translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2136"/>
         <source>View your recording</source>
-        <translation type="unfinished"></translation>
+        <translation>録画を表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2137"/>
         <source>View your recording rules</source>
-        <translation type="unfinished"></translation>
+        <translation>録画ルールを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2139"/>
         <source>Viewing and TV</source>
-        <translation type="unfinished"></translation>
+        <translation>テレビを表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2140"/>
         <source>Visible</source>
-        <translation type="unfinished">可視</translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2144"/>
         <source>W</source>
-        <translation type="unfinished">W</translation>
+        <translation>W</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2146"/>
         <source>WATCH RECORDINGS</source>
-        <translation type="unfinished"></translation>
+        <translation>録画を見る</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2147"/>
         <source>WATCHED</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴済み</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2150"/>
         <source>Waiting for Database to start.</source>
-        <translation type="unfinished"></translation>
+        <translation>データベースの起動待ち。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2151"/>
         <source>Waking up Database Machine.</source>
-        <translation type="unfinished"></translation>
+        <translation>データベースマシンを起動。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2152"/>
         <source>Watch</source>
-        <translation type="unfinished"></translation>
+        <translation>再生する</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2154"/>
         <source>Watch List</source>
-        <translation type="unfinished"></translation>
+        <translation>注目リスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2160"/>
         <source>Watch list</source>
-        <translation type="unfinished"></translation>
+        <translation>注目リスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2161"/>
         <source>Watch live</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中を視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2164"/>
         <source>Watch your</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2167"/>
         <source>Watched Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴済み番組</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2168"/>
         <source>Watched programs</source>
-        <translation type="unfinished"></translation>
+        <translation>視聴済み番組</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2170"/>
         <source>WatchingBD</source>
-        <translation type="unfinished"></translation>
+        <translation>BD を視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2171"/>
         <source>WatchingDVD</source>
-        <translation type="unfinished"></translation>
+        <translation>DVD を視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2172"/>
         <source>WatchingLiveTM</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中を視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2173"/>
         <source>WatchingPreRecorded</source>
-        <translation type="unfinished"></translation>
+        <translation>事前録画を視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2174"/>
         <source>WatchingRecording</source>
-        <translation type="unfinished"></translation>
+        <translation>録画を視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2175"/>
         <source>WatchingVideo</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオを視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2176"/>
         <source>Watchlist</source>
-        <translation type="unfinished"></translation>
+        <translation>注目リスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2188"/>
         <source>Wizard</source>
-        <translation type="unfinished"></translation>
+        <translation>ウィザード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2189"/>
         <source>Wizard for main mythtv settings</source>
-        <translation type="unfinished"></translation>
+        <translation>mythtv のおもな設定ウィザード</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2190"/>
         <source>Words</source>
-        <translation type="unfinished"></translation>
+        <translation>言葉</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2194"/>
@@ -39848,19 +39908,21 @@ Director: |DIRECTOR%</source>
     <message>
         <location filename="../themes/themestrings.h" line="2196"/>
         <source>XXXXXX %1</source>
-        <translation type="unfinished"></translation>
+        <translation>XXXXXX %1</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2202"/>
         <source>You Haven&apos;t Scheduled Any Programs To Be Recorded!
 To schedule a recording, exit this screen and select &apos;Program Guide&apos; or &apos;Program Finder&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>録画する番組の予約を設定していません。
+録画予約するには、この画面を終了し、「番組表」または「番組検索」を選択してください。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2209"/>
         <source>You Haven&apos;t Scheduled Any Programs To Be Recorded
  To schedule a recording, exit this screen and select &apos;Program Guide&apos; or &apos;Program Finder&apos; </source>
-        <translation type="unfinished"></translation>
+        <translation>録画する番組の予約を設定していません。
+ 録画予約するには、この画面を終了し、「番組表」または「番組検索」を選択してください </translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2210"/>
@@ -39868,42 +39930,45 @@ To schedule a recording, exit this screen and select &apos;Program Guide&apos; o
 
 To schedule a recording, exit this screen and
 Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>録画する番組の予約を設定していません。
+
+録画予約するには、この画面を終了し、
+「番組表」または「番組検索」を選択してください</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2213"/>
         <source>You haven&apos;t made any changes</source>
-        <translation type="unfinished"></translation>
+        <translation>なにも変更していません</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2214"/>
         <source>You haven&apos;t made any changes in your Schedule.</source>
-        <translation type="unfinished"></translation>
+        <translation>予約をなにも変更していません。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2215"/>
         <source>You may enter a value here or cancel to continue using the Spinbox.</source>
-        <translation type="unfinished"></translation>
+        <translation>ここに値を入れることも、スピンボックスで継続することもできます。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2220"/>
         <source>Zone Minder</source>
-        <translation type="unfinished"></translation>
+        <translation>ZoneMinder</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2224"/>
         <source>[</source>
-        <translation type="unfinished"></translation>
+        <translation>[</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2225"/>
         <source>[%statusbefore% &gt;&gt; %statusafter%]</source>
-        <translation type="unfinished"></translation>
+        <translation>[%statusbefore% &gt;&gt; %statusafter%]</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2226"/>
         <source>[O]k</source>
-        <translation type="unfinished"></translation>
+        <translation>[O]k</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2227"/>
@@ -39913,32 +39978,32 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     <message>
         <location filename="../themes/themestrings.h" line="2155"/>
         <source>Watch Live TV</source>
-        <translation type="unfinished"></translation>
+        <translation>放送中を視聴</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2156"/>
         <source>Watch Online Streams</source>
-        <translation type="unfinished"></translation>
+        <translation>オンラインストリームを再生</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1431"/>
         <source>Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>プラグイン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1322"/>
         <source>Other Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>その他のプラグイン</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="375"/>
         <source>Advanced Options</source>
-        <translation type="unfinished"></translation>
+        <translation>詳細設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="342"/>
         <source>A &quot;Media Center&quot; menu theme. This menu theme is basically meant to bring the common &quot;media player/DVR&quot; functionality to the forefront, organize the plugins, and to make some of myth&apos;s more daunting options a little more subtle. Places the common media items on the top level (Recordings, Videos, TV, DVD, Music), places all informational plugins in &quot;Plugins.&quot; Puts all setup and scheduling in &quot;Advanced.&quot; The top two menu levels will seem new, the ones beneath Advanced-&gt;Setup are as in the default menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>メニューの「Media Center」テーマ。このメニューテーマは、基本的に、一般的な「メディアプレーヤー・DVR」機能を前面に押し出し、プラグインを整理し、MythTV のより難しいオプションのいくつかをもう少しやわらげることを目的としています。 一般的なメディアアイテムをトップレベル（録画、ビデオ、テレビ、DVD、音楽）に配置し、すべての情報プラグインを「プラグイン」に配置します。すべてのセットアップと予約を「詳細」に配置します。上位2つのメニューレベルは新しいように見えますが、[詳細設定]-&gt;[設定]の下のレベルはデフォルトのメニューと同じです。</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="1574"/>
@@ -39993,27 +40058,27 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     <message>
         <location filename="../themes/themestrings.h" line="971"/>
         <source>General Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>全般設定</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="897"/>
         <source>File Types</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルタイプ</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="501"/>
         <source>Browse Videos</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオの閲覧</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2079"/>
         <source>Video List</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオリスト</translation>
     </message>
     <message>
         <location filename="../themes/themestrings.h" line="2077"/>
         <source>Video Gallery</source>
-        <translation type="unfinished"></translation>
+        <translation>ビデオギャラリー</translation>
     </message>
 </context>
 <context>
@@ -40021,7 +40086,7 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     <message>
         <location filename="../programs/mythfrontend/themechooser.cpp" line="1164"/>
         <source>Version %1 of the %2 theme is now available in the Theme Chooser. The currently installed version is %3.</source>
-        <translation>%2 テーマのバージョン %1 がテーマ セレクトで利用できるようになりました。現在インストールしているバージョン: %3 。</translation>
+        <translation>%2 テーマのバージョン %1 がテーマ選択で利用できるようになりました。現在インストールしているバージョンは %3。</translation>
     </message>
 </context>
 <context>
@@ -40106,7 +40171,7 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     </message>
     <message>
         <source>Yes, delete the transport</source>
-        <translation>はい。トランスポートを削除します</translation>
+        <translation>はい。トランスポートを削除</translation>
     </message>
     <message>
         <source>No, don&apos;t</source>
@@ -40335,7 +40400,7 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
         <location filename="../programs/mythfrontend/videodlg.cpp" line="2012"/>
         <location filename="../programs/mythfrontend/videodlg.cpp" line="2041"/>
         <source>Season %1, Episode %2</source>
-        <translation>シーズン %1 第 %2 回</translation>
+        <translation>シーズン %1・%2 回</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videodlg.cpp" line="2032"/>
@@ -40586,7 +40651,7 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     <message>
         <location filename="../programs/mythfrontend/videodlg.cpp" line="2565"/>
         <source>View Full Plot</source>
-        <translation>完全なプロットを表示</translation>
+        <translation>あらすじをすべて表示</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videodlg.cpp" line="2571"/>
@@ -40812,12 +40877,12 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="28"/>
         <source>This is the &apos;level&apos; that Video starts at. Any videos with a level at or below this will be shown in the list or while browsing by default. The Parental PIN should be set to limit changing of the default level.</source>
-        <translation>これはビデオ開始時の「レベル」です。このレベル以下のあらゆるビデオがリストに表示されるか、標準で閲覧されます。標準のレベルを変更することを制限するには、ペアレンタル PIN を設定しなくてはなりません。</translation>
+        <translation>これはビデオ開始時の「レベル」です。このレベル以下のあらゆるビデオがリストに表示されるか、標準で閲覧されます。標準のレベルの変更を制限するには、ペアレンタル PIN を設定しなくてはなりません。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="40"/>
         <source>Setting this value to all numbers will make your life much easier.</source>
-        <translation>ここにすべての番号を設定すれば人生はずっと簡単になるでしょう。</translation>
+        <translation>ここにすべて番号で設定すれば、人生はずっと楽になるでしょう。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="48"/>
@@ -40857,7 +40922,7 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="94"/>
         <source>If set, you will not be able to return to this screen and reset the Parental PIN without first entering the current PIN. You have been warned.</source>
-        <translation>警告 : これを設定すると、まず現在の PIN を入力しないとこの画面に戻ってペアレンタル PIN をリセットすることができなくなります。</translation>
+        <translation>警告 : これを設定すると、まず現在の PIN を入力しなければ、この画面でペアレンタル PIN をリセットすることができなくなります。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="106"/>
@@ -40901,12 +40966,12 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="185"/>
         <source>Directory that holds movie trailers</source>
-        <translation>映画予告編保存Dio</translation>
+        <translation>映画予告編保存ディレクトリー</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="207"/>
         <source>On DVD insertion</source>
-        <translation>DVDディスク挿入時</translation>
+        <translation>DVD ディスク挿入時</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="209"/>
@@ -40921,7 +40986,7 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="211"/>
         <source>Play DVD</source>
-        <translation>DVDを再生する</translation>
+        <translation>DVD を再生する</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="213"/>
@@ -40936,7 +41001,7 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="229"/>
         <source>If set, the current position in the Video Tree is persistent.</source>
-        <translation>設定すると、ビデオのツリーの現在位置を永続化します。</translation>
+        <translation>設定すると、ビデオのツリーの現在位置を固定します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="238"/>
@@ -40946,7 +41011,7 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="242"/>
         <source>If enabled, searches will automatically set the Parental Level to the one matching the rating below.</source>
-        <translation>有効にすると、検索結果を、評価以下にマッチするペアレンタルレベルを自動で設定します。</translation>
+        <translation>有効にすると、検索結果を自動でペアレンタルレベル以下にマッチするものだけにします。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="253"/>
@@ -40980,7 +41045,7 @@ Select &apos;Program Guide&apos; or &apos;Program Finder&apos;</source>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="272"/>
         <source>Ratings containing these strings (separated by :) will be assigned to Parental Level %1.</source>
-        <translation>評判にこれらの文字列が含まれていた場合（区切りに「 : 」）、ペアレンタルレベルに %1 を割り当てます。</translation>
+        <translation>評判にこれらの文字列 (区切りに「 : 」) を含んでいる場合、ペアレンタルレベルに %1 を割り当てます。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/videoglobalsettings.cpp" line="295"/>
@@ -41255,7 +41320,7 @@ If they no longer exist please remove them</source>
     </message>
     <message>
         <source>Yes, delete video source</source>
-        <translation>はい。ビデオソースを削除します</translation>
+        <translation>はい。ビデオソースを削除</translation>
     </message>
     <message>
         <source>No, don&apos;t</source>
@@ -41272,7 +41337,7 @@ If they no longer exist please remove them</source>
     <message>
         <location filename="../libs/libmythtv/videosource.cpp" line="3679"/>
         <source>Are you sure you want to delete ALL video sources?</source>
-        <translation>「すべての」ビデオソースをを削除します。よろしいですか?</translation>
+        <translation>「すべての」ビデオソースを削除します。よろしいですか?</translation>
     </message>
     <message>
         <source>Yes, delete video sources</source>
@@ -41308,7 +41373,7 @@ If they no longer exist please remove them</source>
     <message>
         <location filename="../programs/mythfrontend/viewschedulediff.cpp" line="128"/>
         <source>The following programs will be recorded instead:</source>
-        <translation type="unfinished">次の番組が変わりに録画されます:</translation>
+        <translation>替わりに次の番組を録画します :</translation>
     </message>
 </context>
 <context>
@@ -41459,7 +41524,7 @@ If they no longer exist please remove them</source>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3516"/>
         <source>Set this if you turn off Auto-Expire only for recordings that you&apos;ve seen and intend to keep. This option will exclude these recordings from the &apos;Watch List&apos;.</source>
-        <translation>視聴して保存しておきたい録画を自動消去しない場合に、設定します。</translation>
+        <translation>視聴して保存しておきたい録画を自動消去しない場合に、設定します。この設定は「注目リスト」の録画は除外します。</translation>
     </message>
     <message>
         <location filename="../programs/mythfrontend/globalsettings.cpp" line="3529"/>
@@ -41548,29 +41613,29 @@ If they no longer exist please remove them</source>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="531"/>
         <source>MythTV is locked by a user.</source>
-        <translation>MythTVをユーザーがロックしています。</translation>
+        <translation>MythTV をユーザーがロックしています。</translation>
     </message>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="535"/>
         <source>MythTV is in a daily wakeup/shutdown period.</source>
-        <translation>MythTVは毎日の起動・電源オフ時間内です。</translation>
+        <translation>MythTV は毎日の起動・電源オフ時間内です。</translation>
     </message>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="537"/>
         <source>MythTV is about to start a wakeup/shutdown period.</source>
-        <translation>MythTVは起動・電源オフ時間に入ろうとしています。</translation>
+        <translation>MythTV は起動・電源オフ時間に入ろうとしています。</translation>
     </message>
     <message numerus="yes">
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="544"/>
         <source>MythTV is idle and will shutdown in %n second(s).</source>
         <translation>
-            <numerusform>MythTVは待機中で、%n秒後に電源オフします。</numerusform>
+            <numerusform>MythTV は待機中で、%n秒後に電源オフします。</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="549"/>
         <source>MythTV is idle.</source>
-        <translation>MythTVはアイドルです。</translation>
+        <translation>MythTV はアイドルです。</translation>
     </message>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="598"/>
@@ -41585,7 +41650,7 @@ If they no longer exist please remove them</source>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="602"/>
         <source>Run mythfilldatabase</source>
-        <translation>mythfilldatabaseを実行</translation>
+        <translation>mythfilldatabase を実行</translation>
     </message>
     <message>
         <location filename="../programs/mythwelcome/welcomedialog.cpp" line="603"/>
