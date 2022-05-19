@@ -19,6 +19,7 @@ trans.files += mytharchive_fi.qm
 trans.files += mytharchive_fr.qm
 trans.files += mytharchive_hu.qm
 trans.files += mytharchive_it.qm
+trans.files += mytharchive_ja.qm
 trans.files += mytharchive_nb.qm
 trans.files += mytharchive_nl.qm
 trans.files += mytharchive_pl.qm
