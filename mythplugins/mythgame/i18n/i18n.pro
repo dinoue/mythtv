@@ -20,6 +20,7 @@ trans.files += mythgame_fi.qm
 trans.files += mythgame_fr.qm
 trans.files += mythgame_hu.qm
 trans.files += mythgame_it.qm
+trans.files += mythgame_ja.qm
 trans.files += mythgame_nb.qm
 trans.files += mythgame_nl.qm
 trans.files += mythgame_pl.qm
