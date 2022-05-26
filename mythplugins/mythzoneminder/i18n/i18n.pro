@@ -19,6 +19,7 @@ trans.files += mythzoneminder_fi.qm
 trans.files += mythzoneminder_fr.qm
 trans.files += mythzoneminder_hu.qm
 trans.files += mythzoneminder_it.qm
+trans.files += mythzoneminder_ja_jp.qm
 trans.files += mythzoneminder_nb.qm
 trans.files += mythzoneminder_nl.qm
 trans.files += mythzoneminder_pl.qm
