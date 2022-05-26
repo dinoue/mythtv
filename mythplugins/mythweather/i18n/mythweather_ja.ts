@@ -6,37 +6,37 @@
     <message>
         <location filename="../mythweather/weatherUtils.cpp" line="16"/>
         <source>Current Conditions</source>
-        <translation type="unfinished"></translation>
+        <translation>気象情報</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherUtils.cpp" line="19"/>
         <source>Three Day Forecast</source>
-        <translation type="unfinished"></translation>
+        <translation>3 日間予報</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherUtils.cpp" line="22"/>
         <source>18 Hour Forecast</source>
-        <translation type="unfinished"></translation>
+        <translation>18 時間予報</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherUtils.cpp" line="25"/>
         <source>Severe Weather Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>気象警報・注意報</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherUtils.cpp" line="28"/>
         <source>Six Day Forecast</source>
-        <translation type="unfinished"></translation>
+        <translation>6 日間予報</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherUtils.cpp" line="31"/>
         <source>Static Map</source>
-        <translation type="unfinished"></translation>
+        <translation>地図</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherUtils.cpp" line="34"/>
         <source>Animated Map</source>
-        <translation type="unfinished"></translation>
+        <translation>アニメーション地図</translation>
     </message>
 </context>
 <context>
@@ -44,7 +44,7 @@
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="42"/>
         <source>Finish</source>
-        <translation type="unfinished"></translation>
+        <translation>完了</translation>
     </message>
 </context>
 <context>
@@ -52,27 +52,27 @@
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="899"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>検索</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="910"/>
         <source>Searching...</source>
-        <translation type="unfinished"></translation>
+        <translation>検索しています...</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="932"/>
         <source>Searching... Results: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>検索しています... 結果 : %1</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="985"/>
         <source>Search Complete. Results: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>検索完了。結果 : %1</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="1006"/>
         <source>Source: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>情報元 : %1</translation>
     </message>
 </context>
 <context>
@@ -80,19 +80,19 @@
     <message>
         <location filename="../mythweather/main.cpp" line="47"/>
         <source>Weather forecasts</source>
-        <translation type="unfinished"></translation>
+        <translation>天気予報</translation>
     </message>
     <message>
         <location filename="../mythweather/main.cpp" line="49"/>
         <source>Pause current page</source>
-        <translation type="unfinished"></translation>
+        <translation>現在のページを一時停止</translation>
     </message>
     <message>
         <location filename="../mythweather/main.cpp" line="51"/>
         <location filename="../mythweather/main.cpp" line="53"/>
         <location filename="../mythweather/main.cpp" line="55"/>
         <source>Search List</source>
-        <translation type="unfinished"></translation>
+        <translation>検索リスト</translation>
     </message>
 </context>
 <context>
@@ -100,116 +100,116 @@
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="126"/>
         <source>Active Screens</source>
-        <translation type="unfinished"></translation>
+        <translation>表示する画面</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="130"/>
         <source>Inactive Screens</source>
-        <translation type="unfinished"></translation>
+        <translation>表示しない画面</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="151"/>
         <source>Finish</source>
-        <translation type="unfinished"></translation>
+        <translation>完了</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="207"/>
         <source>Add desired screen to the Active Screens list by pressing SELECT.</source>
-        <translation type="unfinished"></translation>
+        <translation>お好みの画面について、SELECT を押すことで「表示する画面」に追加してください。</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="210"/>
         <source>Sources</source>
-        <translation type="unfinished"></translation>
+        <translation>情報元</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="225"/>
         <source>Units: </source>
-        <translation type="unfinished"></translation>
+        <translation>単位 : </translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="227"/>
         <location filename="../mythweather/weatherSetup.cpp" line="550"/>
         <source>English Units</source>
-        <translation type="unfinished"></translation>
+        <translation>ヤード・ポンド法</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="227"/>
         <location filename="../mythweather/weatherSetup.cpp" line="551"/>
         <source>SI Units</source>
-        <translation type="unfinished"></translation>
+        <translation>SI 単位 (メートル法)</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="233"/>
         <source>Location: </source>
-        <translation type="unfinished"></translation>
+        <translation>場所 : </translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="234"/>
         <location filename="../mythweather/weatherSetup.cpp" line="237"/>
         <source>Not Defined</source>
-        <translation type="unfinished"></translation>
+        <translation>未定義</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="236"/>
         <source>Source: </source>
-        <translation type="unfinished"></translation>
+        <translation>情報元 : </translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="240"/>
         <source>Press SELECT to </source>
-        <translation type="unfinished"></translation>
+        <translation>SELECT を押して </translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="242"/>
         <source>change location; </source>
-        <translation type="unfinished"></translation>
+        <translation>場所の変更 </translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="244"/>
         <source>change units; </source>
-        <translation type="unfinished"></translation>
+        <translation>単位系の変更 </translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="245"/>
         <source>move screen up or down; or remove screen.</source>
-        <translation type="unfinished"></translation>
+        <translation>画面を上下に移動、または画面を削除します。</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="458"/>
         <source>Manipulate Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>画面の操作</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="472"/>
         <source>Move Up</source>
-        <translation type="unfinished"></translation>
+        <translation>上へ移動</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="473"/>
         <source>Move Down</source>
-        <translation type="unfinished"></translation>
+        <translation>下へ移動</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="474"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>削除</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="475"/>
         <source>Change Location</source>
-        <translation type="unfinished"></translation>
+        <translation>場所の変更</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="477"/>
         <location filename="../mythweather/weatherSetup.cpp" line="538"/>
         <source>Change Units</source>
-        <translation type="unfinished"></translation>
+        <translation>単位系の変更</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="478"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>キャンセル</translation>
     </message>
 </context>
 <context>
@@ -217,7 +217,7 @@
     <message>
         <location filename="../mythweather/sourceManager.cpp" line="92"/>
         <source>Searching for scripts</source>
-        <translation type="unfinished"></translation>
+        <translation>スクリプトを検索しています</translation>
     </message>
 </context>
 <context>
@@ -225,22 +225,22 @@
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="732"/>
         <source>Finish</source>
-        <translation type="unfinished"></translation>
+        <translation>完了</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="844"/>
         <source>Author: </source>
-        <translation type="unfinished"></translation>
+        <translation>制作 : </translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="846"/>
         <source>Email: </source>
-        <translation type="unfinished"></translation>
+        <translation>E メール : </translation>
     </message>
     <message>
         <location filename="../mythweather/weatherSetup.cpp" line="847"/>
         <source>Version: </source>
-        <translation type="unfinished"></translation>
+        <translation>バージョン : </translation>
     </message>
 </context>
 <context>
@@ -286,17 +286,17 @@
     <message>
         <location filename="strings.h" line="34"/>
         <source>Cloudy</source>
-        <translation>曇り</translation>
+        <translation>くもり</translation>
     </message>
     <message>
         <location filename="strings.h" line="35"/>
         <source>Mostly Cloudy</source>
-        <translation>ほぼ曇り</translation>
+        <translation>ほぼくもり</translation>
     </message>
     <message>
         <location filename="strings.h" line="36"/>
         <source>Partly Cloudy</source>
-        <translation>一時曇り</translation>
+        <translation>一時くもり</translation>
     </message>
     <message>
         <location filename="strings.h" line="37"/>
@@ -317,7 +317,7 @@
     <message>
         <location filename="strings.h" line="40"/>
         <source>AM Showers</source>
-        <translation>午前中 雨</translation>
+        <translation>午前 にわか雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="41"/>
@@ -327,37 +327,37 @@
     <message>
         <location filename="strings.h" line="42"/>
         <source>Few Showers</source>
-        <translation>まれににわか雨</translation>
+        <translation>ややにわか雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="43"/>
         <source>Mostly Sunny</source>
-        <translation>ほぼ晴れ</translation>
+        <translation>晴れ</translation>
     </message>
     <message>
         <location filename="strings.h" line="44"/>
         <source>Sunny</source>
-        <translation>晴れ</translation>
+        <translation>快晴</translation>
     </message>
     <message>
         <location filename="strings.h" line="45"/>
         <source>Scattered Flurries</source>
-        <translation>ときどき通り雨</translation>
+        <translation>所により小雪</translation>
     </message>
     <message>
         <location filename="strings.h" line="46"/>
         <source>AM Clouds/PM Sun</source>
-        <translation>午前 曇り/午後 晴れ</translation>
+        <translation>午前 くもり/午後 晴れ</translation>
     </message>
     <message>
         <location filename="strings.h" line="47"/>
         <source>Isolated T-Storms</source>
-        <translation>一時雷雨</translation>
+        <translation>局地的に激しい雷雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="48"/>
         <source>Scattered Thunderstorms</source>
-        <translation>ときどき雷雨</translation>
+        <translation>所により雷雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="49"/>
@@ -377,22 +377,22 @@
     <message>
         <location filename="strings.h" line="52"/>
         <source>Few Snow Showers</source>
-        <translation>まれににわか雪</translation>
+        <translation>ややにわか雪</translation>
     </message>
     <message>
         <location filename="strings.h" line="53"/>
         <source>Cloudy/Wind</source>
-        <translation>曇り/強風</translation>
+        <translation>くもり/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="54"/>
         <source>Flurries/Wind</source>
-        <translation>通り雨/強風</translation>
+        <translation>小雪/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="55"/>
         <source>Mostly Cloudy/Windy</source>
-        <translation>ほぼ曇り/強風</translation>
+        <translation>薄曇り/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="56"/>
@@ -403,17 +403,17 @@
         <location filename="strings.h" line="57"/>
         <location filename="strings.h" line="134"/>
         <source>Partly Cloudy/Windy</source>
-        <translation>一時曇り/強風</translation>
+        <translation>一時くもり/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="58"/>
         <source>AM Rain/Snow Showers</source>
-        <translation>午前中 にわか雨/にわか雪</translation>
+        <translation>午前 にわか雨/にわか雪</translation>
     </message>
     <message>
         <location filename="strings.h" line="59"/>
         <source>Light Rain/Wind</source>
-        <translation>弱い雨/強風</translation>
+        <translation>小雨/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="60"/>
@@ -423,12 +423,12 @@
     <message>
         <location filename="strings.h" line="61"/>
         <source>Mostly Sunny/Wind</source>
-        <translation>ほぼ晴れ/強風</translation>
+        <translation>晴れ/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="62"/>
         <source>Flurries</source>
-        <translation>通り雨</translation>
+        <translation>小雪</translation>
     </message>
     <message>
         <location filename="strings.h" line="63"/>
@@ -438,17 +438,17 @@
     <message>
         <location filename="strings.h" line="64"/>
         <source>Sct Flurries/Wind</source>
-        <translation>一時にわか雨/強風</translation>
+        <translation>所により小雪/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="65"/>
         <source>Sct Strong Storms</source>
-        <translation>一時強い暴風雨</translation>
+        <translation>所により強い暴風雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="66"/>
         <source>PM T-Storms</source>
-        <translation>午後 雷雨</translation>
+        <translation>午後 激しい雷雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="67"/>
@@ -458,22 +458,22 @@
     <message>
         <location filename="strings.h" line="68"/>
         <source>Sunny/Windy</source>
-        <translation>晴れ/強風</translation>
+        <translation>快晴/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="69"/>
         <source>AM Thunderstorms</source>
-        <translation>午前中 雷雨</translation>
+        <translation>午前 雷雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="70"/>
         <source>AM Rain</source>
-        <translation>午前中 雨</translation>
+        <translation>午前 雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="71"/>
         <source>Iso T-Storms/Wind</source>
-        <translation>一時雷雨/強風</translation>
+        <translation>局地的に激しい雷雨/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="72"/>
@@ -483,22 +483,22 @@
     <message>
         <location filename="strings.h" line="73"/>
         <source>Sct T-Storms/Wind</source>
-        <translation>ときどき雷雨/強風</translation>
+        <translation>所により激しい雷雨/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="74"/>
         <source>AM Showers/Wind</source>
-        <translation>午前中 にわか雨/強風</translation>
+        <translation>午前 にわか雨/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="75"/>
         <source>Sct Snow Showers</source>
-        <translation>ときどきにわか雪</translation>
+        <translation>所によりにわか雪</translation>
     </message>
     <message>
         <location filename="strings.h" line="76"/>
         <source>Snow to Ice/Wind</source>
-        <translation>雪のち氷/強風</translation>
+        <translation>雪のちあられ/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="77"/>
@@ -508,12 +508,12 @@
     <message>
         <location filename="strings.h" line="78"/>
         <source>AM Light Rain</source>
-        <translation>午前中 弱い雨</translation>
+        <translation>午前 小雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="79"/>
         <source>PM Light Rain</source>
-        <translation>午後 弱い雨</translation>
+        <translation>午後 小雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="80"/>
@@ -538,7 +538,7 @@
     <message>
         <location filename="strings.h" line="84"/>
         <source>Few Showers/Wind</source>
-        <translation>まれににわか雨/強風</translation>
+        <translation>ややにわか雨/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="85"/>
@@ -569,7 +569,7 @@
     <message>
         <location filename="strings.h" line="90"/>
         <source>Light Snow</source>
-        <translation>弱い雪</translation>
+        <translation>小雪</translation>
     </message>
     <message>
         <location filename="strings.h" line="91"/>
@@ -579,12 +579,12 @@
     <message>
         <location filename="strings.h" line="92"/>
         <source>Few Snow Showers/Wind</source>
-        <translation>まれににわか雪/強風</translation>
+        <translation>ややにわか雪/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="93"/>
         <source>Light Snow/Wind</source>
-        <translation>弱い雪/強風</translation>
+        <translation>小雪/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="94"/>
@@ -594,28 +594,28 @@
     <message>
         <location filename="strings.h" line="95"/>
         <source>AM Wintry Mix</source>
-        <translation>午前中 みぞれ</translation>
+        <translation>午前 みぞれ</translation>
     </message>
     <message>
         <location filename="strings.h" line="96"/>
         <location filename="strings.h" line="132"/>
         <source>Hvy Rain/Freezing Rain</source>
-        <translation>強い雨/氷雨</translation>
+        <translation>強い雨か雪</translation>
     </message>
     <message>
         <location filename="strings.h" line="97"/>
         <source>AM Light Snow</source>
-        <translation>午前中 弱い雪</translation>
+        <translation>午前 小雪</translation>
     </message>
     <message>
         <location filename="strings.h" line="99"/>
         <source>Rain/Freezing Rain</source>
-        <translation>雨/氷雨</translation>
+        <translation>雨か雪</translation>
     </message>
     <message>
         <location filename="strings.h" line="100"/>
         <source>T-Storms/Wind</source>
-        <translation>雷雨/強風</translation>
+        <translation>激しい雷雨/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="101"/>
@@ -625,17 +625,17 @@
     <message>
         <location filename="strings.h" line="102"/>
         <source>AM Snow Showers</source>
-        <translation>午前中にわか雪</translation>
+        <translation>午前 にわか雪</translation>
     </message>
     <message>
         <location filename="strings.h" line="103"/>
         <source>AM Clouds/PM Sun/Wind</source>
-        <translation>午前中 曇り/午後 晴れ/強風</translation>
+        <translation>午前 曇り/午後 晴れ/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="104"/>
         <source>AM Rain/Snow/Wind</source>
-        <translation>午前中 雨/雪/強風</translation>
+        <translation>午前 雨/雪/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="105"/>
@@ -655,7 +655,7 @@
     <message>
         <location filename="strings.h" line="108"/>
         <source>Snow and Ice to Rain</source>
-        <translation>雪と氷のち雨</translation>
+        <translation>雪かあられのち雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="109"/>
@@ -665,32 +665,32 @@
     <message>
         <location filename="strings.h" line="110"/>
         <source>AM Rain/Ice</source>
-        <translation>午前中 雨/氷</translation>
+        <translation>午前 雨/あられ</translation>
     </message>
     <message>
         <location filename="strings.h" line="111"/>
         <source>AM Snow Showers/Wind</source>
-        <translation>午前中 にわか雪/強風</translation>
+        <translation>午前 にわか雪/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="112"/>
         <source>AM Light Snow/Wind</source>
-        <translation>午前中 弱い雪/強風</translation>
+        <translation>午前 小雪/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="113"/>
         <source>PM Light Rain/Wind</source>
-        <translation>午後 弱い雪/強風</translation>
+        <translation>午後 小雨/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="114"/>
         <source>AM Light Wintry Mix</source>
-        <translation>午前中 弱いみぞれ</translation>
+        <translation>午前 弱いみぞれ</translation>
     </message>
     <message>
         <location filename="strings.h" line="115"/>
         <source>PM Light Snow/Wind</source>
-        <translation>午後 弱い雪/強風</translation>
+        <translation>午後 小雪/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="116"/>
@@ -710,17 +710,17 @@
     <message>
         <location filename="strings.h" line="119"/>
         <source>PM Light Rain/Ice</source>
-        <translation>午後 弱い雨/氷</translation>
+        <translation>午後 小雨/あられ</translation>
     </message>
     <message>
         <location filename="strings.h" line="120"/>
         <source>AM Snow</source>
-        <translation>午前中 雪</translation>
+        <translation>午前 雪</translation>
     </message>
     <message>
         <location filename="strings.h" line="121"/>
         <source>Snow to Ice</source>
-        <translation>雪のち氷</translation>
+        <translation>雪のちあられ</translation>
     </message>
     <message>
         <location filename="strings.h" line="122"/>
@@ -735,7 +735,7 @@
     <message>
         <location filename="strings.h" line="124"/>
         <source>AM Drizzle</source>
-        <translation>午前中 小雨</translation>
+        <translation>午前 霧雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="125"/>
@@ -745,22 +745,22 @@
     <message>
         <location filename="strings.h" line="126"/>
         <source>PM Drizzle</source>
-        <translation>午後 小雨</translation>
+        <translation>午後 霜雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="127"/>
         <source>Drizzle</source>
-        <translation>小雨</translation>
+        <translation>霧雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="128"/>
         <source>AM Light Rain/Wind</source>
-        <translation>午前中 弱い雨/強風</translation>
+        <translation>午前 小雨/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="129"/>
         <source>AM Rain/Wind</source>
-        <translation>午前中 雨/強風</translation>
+        <translation>午前 雨/強風</translation>
     </message>
     <message>
         <location filename="strings.h" line="130"/>
@@ -775,17 +775,17 @@
     <message>
         <location filename="strings.h" line="135"/>
         <source>Light Rain Shower</source>
-        <translation>ときどき弱い雨</translation>
+        <translation>弱いにわか雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="136"/>
         <source>Light Rain with Thunder</source>
-        <translation>雷を伴う弱い雨</translation>
+        <translation>雷を伴う小雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="137"/>
         <source>Light Drizzle</source>
-        <translation>霧雨</translation>
+        <translation>弱い霧雨</translation>
     </message>
     <message>
         <location filename="strings.h" line="138"/>
@@ -795,7 +795,7 @@
     <message>
         <location filename="strings.h" line="139"/>
         <source>Smoke</source>
-        <translation>煙</translation>
+        <translation>霧</translation>
     </message>
     <message>
         <location filename="strings.h" line="140"/>
@@ -815,7 +815,7 @@
     <message>
         <location filename="strings.h" line="143"/>
         <source>Clear</source>
-        <translation>晴れ</translation>
+        <translation>快晴</translation>
     </message>
     <message>
         <location filename="strings.h" line="144"/>
@@ -921,17 +921,17 @@
     <message>
         <location filename="themestrings.h" line="41"/>
         <source>Low: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>低 : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="42"/>
         <source>N/A</source>
-        <translation type="unfinished"></translation>
+        <translation>不明</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="45"/>
         <source>Precip: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>降水量 : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="46"/>
@@ -941,52 +941,52 @@
     <message>
         <location filename="themestrings.h" line="48"/>
         <source>Pressure: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>気圧 : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="49"/>
         <source>Results</source>
-        <translation type="unfinished"></translation>
+        <translation>結果</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="53"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>保存する</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="56"/>
         <source>Screen setup</source>
-        <translation type="unfinished"></translation>
+        <translation>画面設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="58"/>
         <source>Search locations for your weather forecast</source>
-        <translation type="unfinished"></translation>
+        <translation>天気予報を表示する場所を検索</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="61"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="62"/>
         <source>Setup sources for your weather forecast</source>
-        <translation type="unfinished"></translation>
+        <translation>天気予報の情報元を設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="67"/>
         <source>Source setup</source>
-        <translation type="unfinished"></translation>
+        <translation>情報元設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="68"/>
         <source>Sources</source>
-        <translation type="unfinished"></translation>
+        <translation>情報元</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="70"/>
         <source>Temp: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>気温 : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="75"/>
@@ -996,421 +996,427 @@
     <message>
         <location filename="themestrings.h" line="77"/>
         <source>Visibility: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>視界 : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="78"/>
         <source>Visibilty</source>
-        <translation type="unfinished"></translation>
+        <translation>視界</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="79"/>
         <source>WEATHER</source>
-        <translation type="unfinished"></translation>
+        <translation>天気</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="80"/>
         <source>Weather</source>
-        <translation type="unfinished"></translation>
+        <translation>天気</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="82"/>
         <source>Weather Global Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>天気の全体設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="84"/>
         <source>Weather Report</source>
-        <translation type="unfinished"></translation>
+        <translation>天気予報</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="89"/>
         <source>Weather Source Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>天気情報元設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="91"/>
         <source>Weather forecasts to</source>
-        <translation type="unfinished"></translation>
+        <translation>天気予報</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="92"/>
         <source>Weather forecasts to display on screen</source>
-        <translation type="unfinished"></translation>
+        <translation>画面に表示する天気予報</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="97"/>
         <source>Wind Direction: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>風向き : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="98"/>
         <source>Wind(Dir)</source>
-        <translation type="unfinished"></translation>
+        <translation>風向き</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="99"/>
         <source>Wind(Gust)</source>
-        <translation type="unfinished"></translation>
+        <translation>風 (突風)</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="100"/>
         <source>Wind(Gust):</source>
-        <translation type="unfinished"></translation>
+        <translation>風 (突風) :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="101"/>
         <source>Wind(Gust): %1</source>
-        <translation type="unfinished"></translation>
+        <translation>風 (突風) : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="102"/>
         <source>dddd,  MMMM dd,  yyyy  |  hh:mm AP</source>
-        <translation type="unfinished"></translation>
+        <translation>dddd,  MMMM dd,  yyyy  |  hh:mm AP</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="103"/>
         <source>updating</source>
-        <translation type="unfinished"></translation>
+        <translation>更新しています</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="95"/>
         <source>Wind Direction</source>
-        <translation type="unfinished"></translation>
+        <translation>風向き</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="13"/>
         <source>Configure your global weather settings</source>
-        <translation type="unfinished"></translation>
+        <translation>天気の全体設定をおこなう</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="14"/>
         <source>Configure your weather</source>
-        <translation type="unfinished"></translation>
+        <translation>天気の設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="16"/>
         <source>Display</source>
-        <translation type="unfinished"></translation>
+        <translation>表示</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="19"/>
         <source>Enter location:</source>
-        <translation type="unfinished"></translation>
+        <translation>場所を入力 :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="21"/>
         <source>Enter your current location, nearest large town or city. In some countries postal codes are also supported. Hit the right or down arrow to continue.</source>
-        <translation type="unfinished"></translation>
+        <translation>現在地、近くの大きな町や市を入力してください。いくつかの国では郵便番号も対応しています。右か下の矢印を押して続行します。</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="22"/>
         <source>Feels Like</source>
-        <translation type="unfinished"></translation>
+        <translation>体感</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="24"/>
         <source>Feels Like: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>体感 : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="26"/>
         <source>General Mythweather options</source>
-        <translation type="unfinished"></translation>
+        <translation>Mythweather の全体設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="27"/>
         <source>General weather</source>
-        <translation type="unfinished"></translation>
+        <translation>全体の天気</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="31"/>
         <source>High</source>
-        <translation type="unfinished"></translation>
+        <translation>高</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="33"/>
         <source>High: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>高 : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="36"/>
         <source>Humidity: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>湿度 : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="39"/>
         <source>Low</source>
-        <translation type="unfinished"></translation>
+        <translation>低</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="29"/>
         <source>Global Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>全体設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="60"/>
         <source>Seconds to display each page:</source>
-        <translation type="unfinished"></translation>
+        <translation>各画面を表示する秒数 :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="52"/>
         <source>Retrieve data in the background:</source>
-        <translation type="unfinished"></translation>
+        <translation>バックグラウンドでデータを取得する :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="65"/>
         <source>Source Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>情報元設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="15"/>
         <source>Data Retrieval Interval (minutes):</source>
-        <translation type="unfinished"></translation>
+        <translation>バックグラウンドでデータを取得する間隔 (秒) :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="66"/>
         <source>Source Update Timeout (seconds):</source>
-        <translation type="unfinished"></translation>
+        <translation>情報元更新がタイムアウト (秒) :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="5"/>
         <source>%DATE%, %TIME%</source>
-        <translation type="unfinished"></translation>
+        <translation>%DATE% %TIME%</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="37"/>
         <source>Last Updated %1</source>
-        <translation type="unfinished"></translation>
+        <translation>最終更新 %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="32"/>
         <source>High Temperature:  %1</source>
-        <translation type="unfinished"></translation>
+        <translation>高温 : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="40"/>
         <source>Low Temperature:  %1</source>
-        <translation type="unfinished"></translation>
+        <translation>低温 :  %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="71"/>
         <source>Temperature:  %1</source>
-        <translation type="unfinished"></translation>
+        <translation>気温 (%1)</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="10"/>
         <source>Chance of Precipitation:  %1</source>
-        <translation type="unfinished"></translation>
+        <translation>降水確率 : %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="85"/>
         <source>Weather Screen Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>天気画面設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="72"/>
         <source>This screen governs the behavior of the weather screens.  You can enable a background weather update which will run regardless of being on the weather screen, and configure how many seconds each screen will display.
 
 When you are done configuring the weather plugin, click &quot;Finish&quot; to continue.</source>
-        <translation type="unfinished"></translation>
+        <translation>この画面では、天気画面の動作を管理します。天気画面に表示しているかどうかと関係なくバックグラウンドで実行する天気更新を有効にし、各画面に表示する秒数を設定できます。
+
+天気プラグインの設定が終わったら、「完了」をクリックして先に進みます。</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="50"/>
         <source>Retrieve data in background:</source>
-        <translation type="unfinished"></translation>
+        <translation>バックグラウンドでデータを取得する :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="43"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="88"/>
         <source>Weather Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>天気の設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="9"/>
         <source>Available Screens</source>
-        <translation type="unfinished"></translation>
+        <translation>有効な画面</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="8"/>
         <source>Active Screens</source>
-        <translation type="unfinished"></translation>
+        <translation>表示する画面</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="87"/>
         <source>Weather Script Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>天気スクリプト設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="74"/>
         <source>This settings screen governs the behavior of individual weather scripts.  Select the script whose behavior you with to change and press the right arrow. Adjust the interval at which data is retrieved, and the timeout for accessing the site.
 
 When you have completed your changes, click &quot;Finish&quot; to continue.</source>
-        <translation type="unfinished"></translation>
+        <translation>この設定画面では、個々の天気に関するスクリプトの動作を管理します。動作を変更したいスクリプトを選択して、右矢印を押します。データを取得する間隔を調整し、サイトにアクセスする際のタイムアウトを設定します。
+
+天気プラグインの設定が終わったら、「完了」をクリックして先に進みます。</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="25"/>
         <source>Finish</source>
-        <translation type="unfinished"></translation>
+        <translation>完了</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="57"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>検索</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="17"/>
         <source>Enter Current Location</source>
-        <translation type="unfinished"></translation>
+        <translation>現在の場所を入力</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="73"/>
         <source>This screen governs the behavior of the weather screens. You can enable a background weather update which will run regardless of being on the weather screen, and configure how many seconds each screen will display. When you are done configuring the weather plugin, click &quot;Finish&quot; to continue.</source>
-        <translation type="unfinished"></translation>
+        <translation>この画面では、天気画面の動作を管理します。天気画面に表示しているかどうかと関係なくバックグラウンドで実行する天気更新を有効にし、各画面に表示する秒数を設定できます。
+
+天気プラグインの設定が終わったら、「完了」をクリックして先に進みます。</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="93"/>
         <source>Weather settings</source>
-        <translation type="unfinished"></translation>
+        <translation>天気の設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="86"/>
         <source>Weather Screen Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>天気画面設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="90"/>
         <source>Weather Source Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>天気情報元設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="63"/>
         <source>Source</source>
-        <translation type="unfinished"></translation>
+        <translation>情報元</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="83"/>
         <source>Weather Location Search</source>
-        <translation type="unfinished"></translation>
+        <translation>天気の位置検索</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="35"/>
         <source>Humidity:</source>
-        <translation type="unfinished"></translation>
+        <translation>湿度 :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="47"/>
         <source>Pressure:</source>
-        <translation type="unfinished"></translation>
+        <translation>気圧 :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="94"/>
         <source>Wind (Gust):</source>
-        <translation type="unfinished"></translation>
+        <translation>風 (突風) :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="96"/>
         <source>Wind Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>風向き :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="76"/>
         <source>Visibility:</source>
-        <translation type="unfinished"></translation>
+        <translation>視界 :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="23"/>
         <source>Feels Like:</source>
-        <translation type="unfinished"></translation>
+        <translation>体感 :</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="7"/>
         <source>: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>: %1</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="6"/>
         <source>100%</source>
-        <translation type="unfinished"></translation>
+        <translation>100%</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="30"/>
         <source>Global Weather Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>天気の全体設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="59"/>
         <source>Seconds to display each page</source>
-        <translation type="unfinished"></translation>
+        <translation>各画面を表示する秒数</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="51"/>
         <source>Retrieve data in the background</source>
-        <translation type="unfinished"></translation>
+        <translation>バックグラウンドでデータを取得する</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="28"/>
         <source>General weather options</source>
-        <translation type="unfinished"></translation>
+        <translation>天気の全般設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="54"/>
         <source>Screen Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>画面設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="11"/>
         <source>Choose which weather forecasts to display</source>
-        <translation type="unfinished"></translation>
+        <translation>どの天気予報を表示するかを選択</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="64"/>
         <source>Source Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>情報元設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="12"/>
         <source>Configure the behavior of weather scripts</source>
-        <translation type="unfinished"></translation>
+        <translation>天気スクリプトの動作を設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="81"/>
         <source>Weather Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>気象警報・注意報</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="69"/>
         <source>Temp</source>
-        <translation type="unfinished"></translation>
+        <translation>気温</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="44"/>
         <source>Precip</source>
-        <translation type="unfinished"></translation>
+        <translation>降水量</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="55"/>
         <source>Screen Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>画面設定</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="38"/>
         <source>Location Search</source>
-        <translation type="unfinished"></translation>
+        <translation>位置検索</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="20"/>
         <source>Enter your current location, nearest large town or city. In some countries postal codes are also supported.</source>
-        <translation type="unfinished"></translation>
+        <translation>現在地、近くの大きな町や市を入力してください。いくつかの国では郵便番号も対応しています。</translation>
     </message>
     <message>
         <location filename="themestrings.h" line="18"/>
         <source>Enter Location:</source>
-        <translation type="unfinished"></translation>
+        <translation>場所を入力 :</translation>
     </message>
 </context>
 <context>
@@ -1418,12 +1424,12 @@ When you have completed your changes, click &quot;Finish&quot; to continue.</sou
     <message>
         <location filename="../mythweather/weather.cpp" line="86"/>
         <source>Paused</source>
-        <translation type="unfinished"></translation>
+        <translation>一時停止</translation>
     </message>
     <message>
         <location filename="../mythweather/weather.cpp" line="197"/>
         <source>None of the configured screens are complete in this theme (missing copyright information).</source>
-        <translation type="unfinished"></translation>
+        <translation>このテーマでの設定が完了した画面がありません (著作権情報がありません)。</translation>
     </message>
 </context>
 <context>
@@ -1431,37 +1437,37 @@ When you have completed your changes, click &quot;Finish&quot; to continue.</sou
     <message>
         <location filename="../mythweather/weatherScreen.cpp" line="201"/>
         <source>Sunday</source>
-        <translation type="unfinished">日曜日</translation>
+        <translation>日曜</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherScreen.cpp" line="204"/>
         <source>Monday</source>
-        <translation type="unfinished">月曜日</translation>
+        <translation>月曜</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherScreen.cpp" line="207"/>
         <source>Tuesday</source>
-        <translation type="unfinished">火曜日</translation>
+        <translation>火曜</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherScreen.cpp" line="210"/>
         <source>Wednesday</source>
-        <translation type="unfinished">水曜日</translation>
+        <translation>水曜</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherScreen.cpp" line="213"/>
         <source>Thursday</source>
-        <translation type="unfinished">木曜日</translation>
+        <translation>木曜</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherScreen.cpp" line="216"/>
         <source>Friday</source>
-        <translation type="unfinished">金曜日</translation>
+        <translation>金曜</translation>
     </message>
     <message>
         <location filename="../mythweather/weatherScreen.cpp" line="219"/>
         <source>Saturday</source>
-        <translation type="unfinished">土曜日</translation>
+        <translation>土曜</translation>
     </message>
 </context>
 </TS>
