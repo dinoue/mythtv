@@ -22,6 +22,7 @@ TRANSLATIONS += mytharchive_fi.ts
 TRANSLATIONS += mytharchive_fr.ts
 TRANSLATIONS += mytharchive_hu.ts
 TRANSLATIONS += mytharchive_it.ts
+TRANSLATIONS += mytharchive_ja.ts
 TRANSLATIONS += mytharchive_nb.ts
 TRANSLATIONS += mytharchive_nl.ts
 TRANSLATIONS += mytharchive_pl.ts

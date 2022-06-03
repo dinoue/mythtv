@@ -2905,12 +2905,12 @@ Broadcaster: %1 - Channel: %2</source>
 <context>
     <name>ThemeUI</name>
     <message>
-        <location filename="themestrings.h" line="371"/>
+        <location filename="themestrings.h" line="372"/>
         <source>Please Wait...</source>
         <translation>お待ちください ...</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="497"/>
+        <location filename="themestrings.h" line="498"/>
         <source>Track Information</source>
         <translation>トラック情報</translation>
     </message>
@@ -2925,7 +2925,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>アルバム :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="492"/>
+        <location filename="themestrings.h" line="493"/>
         <source>Title:</source>
         <translation>タイトル :</translation>
     </message>
@@ -2935,22 +2935,22 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>ジャンル :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="531"/>
+        <location filename="themestrings.h" line="532"/>
         <source>Year:</source>
         <translation>年 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="500"/>
+        <location filename="themestrings.h" line="501"/>
         <source>Track No.:</source>
         <translation>トラック番号 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="389"/>
+        <location filename="themestrings.h" line="390"/>
         <source>Rating:</source>
         <translation>評価 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="334"/>
+        <location filename="themestrings.h" line="335"/>
         <source>Play Count:</source>
         <translation>再生回数 :</translation>
     </message>
@@ -2960,12 +2960,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>最終再生 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="128"/>
+        <location filename="themestrings.h" line="129"/>
         <source>Compilation:</source>
         <translation>コラボ :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="200"/>
+        <location filename="themestrings.h" line="201"/>
         <source>Filename:</source>
         <translation>ファイル名 :</translation>
     </message>
@@ -2975,17 +2975,17 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>データベースに既存</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="426"/>
+        <location filename="themestrings.h" line="427"/>
         <source>Search</source>
         <translation>検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="144"/>
+        <location filename="themestrings.h" line="145"/>
         <source>Cover Art</source>
         <translation>ジャケット写真</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="332"/>
+        <location filename="themestrings.h" line="333"/>
         <source>Play</source>
         <translation>再生</translation>
     </message>
@@ -2995,7 +2995,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>追加</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="301"/>
+        <location filename="themestrings.h" line="302"/>
         <source>Next New</source>
         <translation>次の新曲</translation>
     </message>
@@ -3005,12 +3005,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>すべての新曲を追加</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="140"/>
+        <location filename="themestrings.h" line="141"/>
         <source>Copy</source>
         <translation>コピー</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="125"/>
+        <location filename="themestrings.h" line="126"/>
         <source>Comp. Artist:</source>
         <translation>コラボアーチスト :</translation>
     </message>
@@ -3020,7 +3020,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>ジャケット写真</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="313"/>
+        <location filename="themestrings.h" line="314"/>
         <source>Now Playing: %TITLE% by %ARTIST% on %ALBUM%</source>
         <translation>再生中 : %TITLE% (%ARTIST%) ―― %ALBUM%</translation>
     </message>
@@ -3050,47 +3050,47 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>%1 -</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="351"/>
+        <location filename="themestrings.h" line="352"/>
         <source>Played %1 times</source>
         <translation>%1 回再生</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="393"/>
+        <location filename="themestrings.h" line="394"/>
         <source>Repeat Mode: Off</source>
         <translation>くり返しモード : OFF</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="394"/>
+        <location filename="themestrings.h" line="395"/>
         <source>Repeat Mode: Track</source>
         <translation>くり返しモード : トラック</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="392"/>
+        <location filename="themestrings.h" line="393"/>
         <source>Repeat Mode: All</source>
         <translation>くり返しモード : すべて</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="467"/>
+        <location filename="themestrings.h" line="468"/>
         <source>Shuffle Mode: Off</source>
         <translation>シャッフルモード : OFF</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="468"/>
+        <location filename="themestrings.h" line="469"/>
         <source>Shuffle Mode: Random</source>
         <translation>シャッフルモード : ランダム</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="466"/>
+        <location filename="themestrings.h" line="467"/>
         <source>Shuffle Mode: Intelligent</source>
         <translation>Shuffle Mode: インテリジェント</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="464"/>
+        <location filename="themestrings.h" line="465"/>
         <source>Shuffle Mode: Album</source>
         <translation>シャッフルモード : アルバム</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="465"/>
+        <location filename="themestrings.h" line="466"/>
         <source>Shuffle Mode: Artist</source>
         <translation>シャッフルモード : アーチスト</translation>
     </message>
@@ -3100,12 +3100,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>%VOLUMEPERCENT% %|(MUTE|)%</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="305"/>
+        <location filename="themestrings.h" line="306"/>
         <source>Next: %NEXTTITLE% by %NEXTARTIST%</source>
         <translation>次 : %NEXTTITLE% (%NEXTARTIST%)</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="533"/>
+        <location filename="themestrings.h" line="534"/>
         <source>You haven&apos;t selected any tracks to play</source>
         <translation>再生するトラックを選んでいません</translation>
     </message>
@@ -3115,52 +3115,52 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>%TITLE% (%ARTIST%) ―― %ALBUM%</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="306"/>
+        <location filename="themestrings.h" line="307"/>
         <source>No Album Art Found</source>
         <translation>アルバム画像が見つかりません</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="505"/>
+        <location filename="themestrings.h" line="506"/>
         <source>Type:</source>
         <translation>タイプ :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="276"/>
+        <location filename="themestrings.h" line="277"/>
         <source>Metadata</source>
         <translation>メタデータ</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="165"/>
+        <location filename="themestrings.h" line="166"/>
         <source>Done</source>
         <translation>終了</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="273"/>
+        <location filename="themestrings.h" line="274"/>
         <source>Matches:</source>
         <translation>一致 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="379"/>
+        <location filename="themestrings.h" line="380"/>
         <source>Quality:</source>
         <translation>品質 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="284"/>
+        <location filename="themestrings.h" line="285"/>
         <source>Multi-Artist:</source>
         <translation>複数のアーチスト :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="487"/>
+        <location filename="themestrings.h" line="488"/>
         <source>Switch Titles</source>
         <translation>タイトルの切り替え</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="493"/>
+        <location filename="themestrings.h" line="494"/>
         <source>Track</source>
         <translation>トラック</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="491"/>
+        <location filename="themestrings.h" line="492"/>
         <source>Title</source>
         <translation>タイトル</translation>
     </message>
@@ -3175,12 +3175,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>時間</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="419"/>
+        <location filename="themestrings.h" line="420"/>
         <source>Scan CD</source>
         <translation>CD をスキャン</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="409"/>
+        <location filename="themestrings.h" line="410"/>
         <source>Rip CD</source>
         <translation>CD からのデータ取り出し</translation>
     </message>
@@ -3190,7 +3190,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>CD をインポートしています</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="186"/>
+        <location filename="themestrings.h" line="187"/>
         <source>Encoding Track</source>
         <translation>トラックをエンコードしています</translation>
     </message>
@@ -3210,12 +3210,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>ジャケット写真のインポート</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="197"/>
+        <location filename="themestrings.h" line="198"/>
         <source>File:</source>
         <translation>ファイル :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="162"/>
+        <location filename="themestrings.h" line="163"/>
         <source>Destination:</source>
         <translation>行き先 :</translation>
     </message>
@@ -3225,7 +3225,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>画像タイプ :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="527"/>
+        <location filename="themestrings.h" line="528"/>
         <source>Volume</source>
         <translation>ボリューム</translation>
     </message>
@@ -3235,37 +3235,37 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>%VOLUMEPERCENT%</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="173"/>
+        <location filename="themestrings.h" line="174"/>
         <source>Edit Track Information</source>
         <translation>トラック情報の編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="297"/>
+        <location filename="themestrings.h" line="298"/>
         <source>N/A</source>
         <translation>N/A</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="476"/>
+        <location filename="themestrings.h" line="477"/>
         <source>Smart Playlist Editor</source>
         <translation>スマートプレイリスト編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="117"/>
+        <location filename="themestrings.h" line="118"/>
         <source>Category:</source>
         <translation>カテゴリー :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="270"/>
+        <location filename="themestrings.h" line="271"/>
         <source>Match</source>
         <translation>一致</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="317"/>
+        <location filename="themestrings.h" line="318"/>
         <source>Of The Following Conditions</source>
         <translation>以下の条件に一致</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="324"/>
+        <location filename="themestrings.h" line="325"/>
         <source>Order By:</source>
         <translation>並び順 :</translation>
     </message>
@@ -3275,52 +3275,52 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>制限 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="116"/>
+        <location filename="themestrings.h" line="117"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="462"/>
+        <location filename="themestrings.h" line="463"/>
         <source>Show Results</source>
         <translation>結果を表示</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="417"/>
+        <location filename="themestrings.h" line="418"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="169"/>
+        <location filename="themestrings.h" line="170"/>
         <source>Edit Criteria</source>
         <translation>検索句の編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="170"/>
+        <location filename="themestrings.h" line="171"/>
         <source>Edit Date</source>
         <translation>日付の編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="207"/>
+        <location filename="themestrings.h" line="208"/>
         <source>Fixed Date</source>
         <translation>固定日付</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="154"/>
+        <location filename="themestrings.h" line="155"/>
         <source>Day</source>
         <translation>日</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="278"/>
+        <location filename="themestrings.h" line="279"/>
         <source>Month</source>
         <translation>月</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="530"/>
+        <location filename="themestrings.h" line="531"/>
         <source>Year</source>
         <translation>年</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="519"/>
+        <location filename="themestrings.h" line="520"/>
         <source>Use Current Date</source>
         <translation>今日の日付を利用</translation>
     </message>
@@ -3330,27 +3330,27 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>+/- 日</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="316"/>
+        <location filename="themestrings.h" line="317"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="323"/>
+        <location filename="themestrings.h" line="324"/>
         <source>Order By Fields</source>
         <translation>並べ替えの項目</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="159"/>
+        <location filename="themestrings.h" line="160"/>
         <source>Delete</source>
         <translation>削除</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="281"/>
+        <location filename="themestrings.h" line="282"/>
         <source>Move Up</source>
         <translation>上に移動</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="280"/>
+        <location filename="themestrings.h" line="281"/>
         <source>Move Down</source>
         <translation>下に移動</translation>
     </message>
@@ -3360,12 +3360,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>昇順</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="160"/>
+        <location filename="themestrings.h" line="161"/>
         <source>Descending</source>
         <translation>降順</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="477"/>
+        <location filename="themestrings.h" line="478"/>
         <source>Smart Playlist Result Viewer</source>
         <translation>スマートプレイリスト結果ビューワー</translation>
     </message>
@@ -3375,7 +3375,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>時間 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="152"/>
+        <location filename="themestrings.h" line="153"/>
         <source>Date Added:</source>
         <translation>追加日付 :</translation>
     </message>
@@ -3390,7 +3390,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>最終再生 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="353"/>
+        <location filename="themestrings.h" line="354"/>
         <source>Played:</source>
         <translation>再生回数 :</translation>
     </message>
@@ -3405,7 +3405,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>一般設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="114"/>
+        <location filename="themestrings.h" line="115"/>
         <source>CD device:</source>
         <translation>CDデバイス :</translation>
     </message>
@@ -3415,12 +3415,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>オーディオデバイス :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="139"/>
+        <location filename="themestrings.h" line="140"/>
         <source>Convert stereo to 5.1 sound:</source>
         <translation>ステレオ音声を 5.1 チャンネルに変換 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="199"/>
+        <location filename="themestrings.h" line="200"/>
         <source>Filename Format:</source>
         <translation>ファイル名書式 :</translation>
     </message>
@@ -3435,12 +3435,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>メタデータのタグへの書き込みを許可 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="356"/>
+        <location filename="themestrings.h" line="357"/>
         <source>Player Settings</source>
         <translation>プレーヤー設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="408"/>
+        <location filename="themestrings.h" line="409"/>
         <source>Resume mode:</source>
         <translation>再開モード :</translation>
     </message>
@@ -3460,17 +3460,17 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>自動 CD 再生 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="387"/>
+        <location filename="themestrings.h" line="388"/>
         <source>Rating Settings</source>
         <translation>評価設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="388"/>
+        <location filename="themestrings.h" line="389"/>
         <source>Rating Weight:</source>
         <translation>評価の重み :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="333"/>
+        <location filename="themestrings.h" line="334"/>
         <source>Play Count Weight:</source>
         <translation>再生回数の重み :</translation>
     </message>
@@ -3480,42 +3480,42 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>最終再生の重み :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="383"/>
+        <location filename="themestrings.h" line="384"/>
         <source>Random Weight:</source>
         <translation>ランダムな重み :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="413"/>
+        <location filename="themestrings.h" line="414"/>
         <source>Ripper Settings</source>
         <translation>CD からのデータ取り出し設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="330"/>
+        <location filename="themestrings.h" line="331"/>
         <source>Paranoia Level:</source>
         <translation>パラノイアレベル :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="196"/>
+        <location filename="themestrings.h" line="197"/>
         <source>File storage location:</source>
         <translation>ファイルストレージの場所 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="399"/>
+        <location filename="themestrings.h" line="400"/>
         <source>Replace space with underscore:</source>
         <translation>スペースをアンダーバーに置き換え :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="188"/>
+        <location filename="themestrings.h" line="189"/>
         <source>Encoding Type:</source>
         <translation>エンコードタイプ :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="157"/>
+        <location filename="themestrings.h" line="158"/>
         <source>Default Rip Quality:</source>
         <translation>デフォルト品質 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="522"/>
+        <location filename="themestrings.h" line="523"/>
         <source>Use variable bitrates:</source>
         <translation>可変ビットレートを使用 :</translation>
     </message>
@@ -3525,7 +3525,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>データ取り出しの後、自動的CD取り出し :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="425"/>
+        <location filename="themestrings.h" line="426"/>
         <source>Script Path:</source>
         <translation>スクリプトパス :</translation>
     </message>
@@ -3535,52 +3535,52 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>書き込み設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="183"/>
+        <location filename="themestrings.h" line="184"/>
         <source>Enable CD Writing:</source>
         <translation>CD 書き込みを有効に :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="115"/>
+        <location filename="themestrings.h" line="116"/>
         <source>CD-Writer Device:</source>
         <translation>CD-R/RWデバイス :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="164"/>
+        <location filename="themestrings.h" line="165"/>
         <source>Disk Size:</source>
         <translation>ディスクサイズ :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="111"/>
+        <location filename="themestrings.h" line="112"/>
         <source>CD Write Speed:</source>
         <translation>CD書き込みスピード :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="108"/>
+        <location filename="themestrings.h" line="109"/>
         <source>CD Blanking Type:</source>
         <translation>CD-R タイプ :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="185"/>
+        <location filename="themestrings.h" line="186"/>
         <source>Enable directories on MP3 Creation:</source>
         <translation>MP3 作成でディレクトリー使用を有効に :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="523"/>
+        <location filename="themestrings.h" line="524"/>
         <source>Visualiser Settings</source>
         <translation>ビジュアライズ設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="119"/>
+        <location filename="themestrings.h" line="120"/>
         <source>Change Visualizer on each song:</source>
         <translation>曲ごとにビジュアライズを変更 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="385"/>
+        <location filename="themestrings.h" line="386"/>
         <source>Randomize Visualizer order:</source>
         <translation>ビジュアライズの並びをランダムに :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="529"/>
+        <location filename="themestrings.h" line="530"/>
         <source>Width for Visual Scaling:</source>
         <translation>ビジュアライズの幅の拡大・縮小 :</translation>
     </message>
@@ -3590,42 +3590,42 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>ビジュアライズの高さの拡大・縮小 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="396"/>
+        <location filename="themestrings.h" line="397"/>
         <source>Repeat: Off</source>
         <translation>くり返し : OFF</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="397"/>
+        <location filename="themestrings.h" line="398"/>
         <source>Repeat: Track</source>
         <translation>くり返し : トラック</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="395"/>
+        <location filename="themestrings.h" line="396"/>
         <source>Repeat: All</source>
         <translation>くり返し : すべて</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="472"/>
+        <location filename="themestrings.h" line="473"/>
         <source>Shuffle: Off</source>
         <translation>シャッフル : OFF</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="473"/>
+        <location filename="themestrings.h" line="474"/>
         <source>Shuffle: Random</source>
         <translation>シャッフル : ランダム</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="471"/>
+        <location filename="themestrings.h" line="472"/>
         <source>Shuffle: Intelligent</source>
         <translation>シャッフル : インテリジェント</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="469"/>
+        <location filename="themestrings.h" line="470"/>
         <source>Shuffle: Album</source>
         <translation>シャッフル : アルバム</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="470"/>
+        <location filename="themestrings.h" line="471"/>
         <source>Shuffle: Artist</source>
         <translation>シャッフル : アーチスト</translation>
     </message>
@@ -3635,7 +3635,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>%DATE% %TIME%</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="376"/>
+        <location filename="themestrings.h" line="377"/>
         <source>Press MENU to add some radio streams to play.</source>
         <translation>メニューを押して、再生するラジオストリームを追加してください。</translation>
     </message>
@@ -3650,17 +3650,17 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>局とチャンネルの追加・編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="481"/>
+        <location filename="themestrings.h" line="482"/>
         <source>Station:</source>
         <translation>局 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="121"/>
+        <location filename="themestrings.h" line="122"/>
         <source>Channel:</source>
         <translation>チャンネル :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="517"/>
+        <location filename="themestrings.h" line="518"/>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
@@ -3670,17 +3670,17 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>ロゴ URL:</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="277"/>
+        <location filename="themestrings.h" line="278"/>
         <source>Metadata Format:</source>
         <translation>メタデータ書式 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="436"/>
+        <location filename="themestrings.h" line="437"/>
         <source>Search Radio Station</source>
         <translation>ラジオ局の検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="209"/>
+        <location filename="themestrings.h" line="210"/>
         <source>Found:</source>
         <translation>発見 :</translation>
     </message>
@@ -3695,32 +3695,32 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>ジャンル: %1</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="503"/>
+        <location filename="themestrings.h" line="504"/>
         <source>Track: %1</source>
         <translation>トラック : %1</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="518"/>
+        <location filename="themestrings.h" line="519"/>
         <source>Unknown</source>
         <translation>不明</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="520"/>
+        <location filename="themestrings.h" line="521"/>
         <source>Use Current Date:</source>
         <translation>今日の日付を利用 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="525"/>
+        <location filename="themestrings.h" line="526"/>
         <source>Visualizer</source>
         <translation>ビジュアライズ</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="528"/>
+        <location filename="themestrings.h" line="529"/>
         <source>Volume:</source>
         <translation>ボリューム :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="532"/>
+        <location filename="themestrings.h" line="533"/>
         <source>Year: %1</source>
         <translation>年 : %1</translation>
     </message>
@@ -3730,17 +3730,17 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>最終再生 : %1</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="354"/>
+        <location filename="themestrings.h" line="355"/>
         <source>Played: %1 times</source>
         <translation>%1 回再生</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="391"/>
+        <location filename="themestrings.h" line="392"/>
         <source>Repeat Mode:</source>
         <translation>くり返しモード :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="319"/>
+        <location filename="themestrings.h" line="320"/>
         <source>Off</source>
         <translation>OFF</translation>
     </message>
@@ -3750,17 +3750,17 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>すべて</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="463"/>
+        <location filename="themestrings.h" line="464"/>
         <source>Shuffle Mode:</source>
         <translation>シャッフルモード :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="382"/>
+        <location filename="themestrings.h" line="383"/>
         <source>Random</source>
         <translation>ランダム</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="474"/>
+        <location filename="themestrings.h" line="475"/>
         <source>Smart</source>
         <translation>スマート</translation>
     </message>
@@ -3770,12 +3770,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>アルバム</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="368"/>
+        <location filename="themestrings.h" line="369"/>
         <source>Playlist:</source>
         <translation>プレイリスト :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="304"/>
+        <location filename="themestrings.h" line="305"/>
         <source>Next song:</source>
         <translation>次の曲 :</translation>
     </message>
@@ -3790,17 +3790,17 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>(%ARTIST%)</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="321"/>
+        <location filename="themestrings.h" line="322"/>
         <source>On %ALBUM%</source>
         <translation>――%ALBUM%</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="358"/>
+        <location filename="themestrings.h" line="359"/>
         <source>Playing:</source>
         <translation>再生中 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="309"/>
+        <location filename="themestrings.h" line="310"/>
         <source>None</source>
         <translation>なし</translation>
     </message>
@@ -3810,17 +3810,17 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>%TITLE%  (%ARTIST%)</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="163"/>
+        <location filename="themestrings.h" line="164"/>
         <source>Directory to hold music:</source>
         <translation>音楽保存ディレクトリー :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="405"/>
+        <location filename="themestrings.h" line="406"/>
         <source>Resume mode (Playlist Editor):</source>
         <translation>再開モード (プレイリスト編集) :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="407"/>
+        <location filename="themestrings.h" line="408"/>
         <source>Resume mode (Radio):</source>
         <translation>再開モード (ラジオ) :</translation>
     </message>
@@ -3835,7 +3835,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>書き込み設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="524"/>
+        <location filename="themestrings.h" line="525"/>
         <source>Visualization Settings</source>
         <translation>ビジュアライズ設定</translation>
     </message>
@@ -3855,7 +3855,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>ジャンル :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="442"/>
+        <location filename="themestrings.h" line="443"/>
         <source>Search for Music Stream</source>
         <translation>音楽ストリームの検索</translation>
     </message>
@@ -3865,27 +3865,27 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>%STATION% - %Channel%</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="336"/>
+        <location filename="themestrings.h" line="337"/>
         <source>Play List</source>
         <translation>プレイリスト</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="339"/>
+        <location filename="themestrings.h" line="340"/>
         <source>Play List Editor (tree)</source>
         <translation>プレイリスト編集 (ツリー)</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="337"/>
+        <location filename="themestrings.h" line="338"/>
         <source>Play List Editor (gallery)</source>
         <translation>プレイリスト編集 (ギャラリー)</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="338"/>
+        <location filename="themestrings.h" line="339"/>
         <source>Play List Editor (search)</source>
         <translation>プレイリスト編集 (検索)</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="498"/>
+        <location filename="themestrings.h" line="499"/>
         <source>Track Lyrics</source>
         <translation>トラックの歌詞</translation>
     </message>
@@ -3900,32 +3900,32 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>グラバー :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="488"/>
+        <location filename="themestrings.h" line="489"/>
         <source>Syncronized</source>
         <translation>同期済み</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="267"/>
+        <location filename="themestrings.h" line="268"/>
         <source>Lyrics:</source>
         <translation>歌詞 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="167"/>
+        <location filename="themestrings.h" line="168"/>
         <source>Edit</source>
         <translation>編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="271"/>
+        <location filename="themestrings.h" line="272"/>
         <source>Match:</source>
         <translation>一致 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="534"/>
+        <location filename="themestrings.h" line="535"/>
         <source>of the following conditions:</source>
         <translation>以下の条件に一致 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="126"/>
+        <location filename="themestrings.h" line="127"/>
         <source>Compilation</source>
         <translation>コラボ</translation>
     </message>
@@ -3940,17 +3940,17 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>探す</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="410"/>
+        <location filename="themestrings.h" line="411"/>
         <source>Rip a CD</source>
         <translation>CD からデータを取り出す</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="283"/>
+        <location filename="themestrings.h" line="284"/>
         <source>Multi-Artist</source>
         <translation>複数のアーチスト</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="414"/>
+        <location filename="themestrings.h" line="415"/>
         <source>Ripping CD</source>
         <translation>CD からのデータ取り出し</translation>
     </message>
@@ -3960,57 +3960,56 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>CD インポート :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="187"/>
+        <location filename="themestrings.h" line="188"/>
         <source>Encoding Track:</source>
         <translation>トラックのエンコード :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="123"/>
+        <location filename="themestrings.h" line="124"/>
         <source>Clears the entire database:</source>
         <translation>データベース全体の初期化 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="526"/>
+        <location filename="themestrings.h" line="527"/>
         <source>Visualizer Settings</source>
         <translation>ビジュアライズ設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="445"/>
+        <location filename="themestrings.h" line="446"/>
         <source>Search for Stream</source>
         <translation>ストリームの検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="367"/>
+        <location filename="themestrings.h" line="368"/>
         <source>Playlist View</source>
         <translation>プレイリスト表示</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="210"/>
         <source>From the album %ALBUM% by the artist %ARTIST%</source>
-        <translation>%ARTIST% によるアルバム「%ALBUM%」から</translation>
+        <translation type="vanished">%ARTIST% によるアルバム「%ALBUM%」から</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="366"/>
+        <location filename="themestrings.h" line="367"/>
         <source>Playlist Tree View</source>
         <translation>プレイリスト ツリー表示</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="363"/>
+        <location filename="themestrings.h" line="364"/>
         <source>Playlist Gallery View</source>
         <translation>プレイリスト ギャラリー表示</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="441"/>
+        <location filename="themestrings.h" line="442"/>
         <source>Search View</source>
         <translation>検索表示</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="495"/>
+        <location filename="themestrings.h" line="496"/>
         <source>Track Details</source>
         <translation>トラックの詳細</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="127"/>
+        <location filename="themestrings.h" line="128"/>
         <source>Compilation Artist:</source>
         <translation>コラボアーチスト :</translation>
     </message>
@@ -4020,12 +4019,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>時間 : %1</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="494"/>
+        <location filename="themestrings.h" line="495"/>
         <source>Track Count:</source>
         <translation>トラック数 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="153"/>
+        <location filename="themestrings.h" line="154"/>
         <source>Date added:</source>
         <translation>追加日付 :</translation>
     </message>
@@ -4040,42 +4039,42 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>: %VOLUMEPERCENT%</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="373"/>
+        <location filename="themestrings.h" line="374"/>
         <source>Position:</source>
         <translation>位置 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="110"/>
+        <location filename="themestrings.h" line="111"/>
         <source>CD Ripping</source>
         <translation>CD からのデータ取り出し</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="482"/>
+        <location filename="themestrings.h" line="483"/>
         <source>Status:</source>
         <translation>状態 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="440"/>
+        <location filename="themestrings.h" line="441"/>
         <source>Search Term</source>
         <translation>検索語</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="320"/>
+        <location filename="themestrings.h" line="321"/>
         <source>Ok</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="490"/>
+        <location filename="themestrings.h" line="491"/>
         <source>Tag Encoding:</source>
         <translation>タグ エンコード :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="418"/>
+        <location filename="themestrings.h" line="419"/>
         <source>Scan</source>
         <translation>スキャン</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="381"/>
+        <location filename="themestrings.h" line="382"/>
         <source>Radio Stream</source>
         <translation>ラジオストリーム</translation>
     </message>
@@ -4090,7 +4089,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>%CHANNEL% (%STATION%)</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="138"/>
+        <location filename="themestrings.h" line="139"/>
         <source>Convert stereo to 5.1 sound</source>
         <translation>ステレオ音声を 5.1 チャンネルに変換</translation>
     </message>
@@ -4105,7 +4104,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>メタデータのタグへの書き込みを許可</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="406"/>
+        <location filename="themestrings.h" line="407"/>
         <source>Resume mode (Playlist):</source>
         <translation>再開モード (プレイリスト) :</translation>
     </message>
@@ -4120,12 +4119,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>CDを自動的に再生する</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="398"/>
+        <location filename="themestrings.h" line="399"/>
         <source>Replace space with underscore</source>
         <translation>スペースをアンダーバーに置き換え</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="521"/>
+        <location filename="themestrings.h" line="522"/>
         <source>Use variable bitrates</source>
         <translation>可変ビットレートを使用</translation>
     </message>
@@ -4135,22 +4134,22 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>データ取り出しの後、自動的にCD取り出し</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="182"/>
+        <location filename="themestrings.h" line="183"/>
         <source>Enable CD Writing</source>
         <translation>CD書き込み有効</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="184"/>
+        <location filename="themestrings.h" line="185"/>
         <source>Enable directories on MP3 Creation</source>
         <translation>MP3 作成時にディレクトリーを使用する</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="118"/>
+        <location filename="themestrings.h" line="119"/>
         <source>Change Visualizer on each song</source>
         <translation>ビジュアライズを曲ごとに変える</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="384"/>
+        <location filename="themestrings.h" line="385"/>
         <source>Randomize Visualizer order</source>
         <translation>ビジュアライズの並びをランダムに</translation>
     </message>
@@ -4411,246 +4410,251 @@ Broadcaster: %1 - Channel: %2</source>
     </message>
     <message>
         <location filename="themestrings.h" line="107"/>
+        <source>By the artist &quot;%ARTIST%&quot; from the album &quot;%ALBUM%&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="themestrings.h" line="108"/>
         <source>CD</source>
         <translation>CD</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="112"/>
+        <location filename="themestrings.h" line="113"/>
         <source>CD burning options</source>
         <translation>CD 書き込み設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="120"/>
+        <location filename="themestrings.h" line="121"/>
         <source>Channel Logo:</source>
         <translation>チャンネルロゴ :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="124"/>
+        <location filename="themestrings.h" line="125"/>
         <source>Comp. Artist</source>
         <translation>コラボアーチスト</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="129"/>
+        <location filename="themestrings.h" line="130"/>
         <source>Configure CD copying options</source>
         <translation>CD データ取り出し設定をおこなう</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="130"/>
+        <location filename="themestrings.h" line="131"/>
         <source>Configure Music Burn options</source>
         <translation>音楽の書き込み設定をおこなう</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="131"/>
+        <location filename="themestrings.h" line="132"/>
         <source>Configure Music folders and general options</source>
         <translation>音楽フォルダーと全般設定をおこなう</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="132"/>
+        <location filename="themestrings.h" line="133"/>
         <source>Configure Music playback options</source>
         <translation>音楽再生設定をおこなう</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="133"/>
+        <location filename="themestrings.h" line="134"/>
         <source>Configure Music rating options</source>
         <translation>音楽評価設定をおこなう</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="134"/>
+        <location filename="themestrings.h" line="135"/>
         <source>Configure Music visualization options</source>
         <translation>音楽のビジュアライズ設定をおこなう</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="136"/>
+        <location filename="themestrings.h" line="137"/>
         <source>Configure settings for</source>
         <translation>設定をおこなう</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="137"/>
+        <location filename="themestrings.h" line="138"/>
         <source>Configure your CD</source>
         <translation>CD の設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="141"/>
+        <location filename="themestrings.h" line="142"/>
         <source>Copy your CD into the Music Library</source>
         <translation>CD の音楽データを音楽ライブラリーに取り込む</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="145"/>
+        <location filename="themestrings.h" line="146"/>
         <source>Covert Art</source>
         <translation>ジャケット写真</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="146"/>
+        <location filename="themestrings.h" line="147"/>
         <source>Create playlists with favorite music</source>
         <translation>お気に入りの音楽からプレイリストを作成</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="147"/>
+        <location filename="themestrings.h" line="148"/>
         <source>Create your</source>
         <translation>作成</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="148"/>
+        <location filename="themestrings.h" line="149"/>
         <source>Criteria:</source>
         <translation>検索句 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="149"/>
+        <location filename="themestrings.h" line="150"/>
         <source>Current Play List View</source>
         <translation>現在のプレイリスト表示</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="150"/>
+        <location filename="themestrings.h" line="151"/>
         <source>Current Playlist</source>
         <translation>現在のプレイリスト</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="151"/>
+        <location filename="themestrings.h" line="152"/>
         <source>Current Streamlist</source>
         <translation>現在のストリームリスト</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="155"/>
+        <location filename="themestrings.h" line="156"/>
         <source>Day:</source>
         <translation>日 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="156"/>
+        <location filename="themestrings.h" line="157"/>
         <source>Decrease</source>
         <translation>下げる</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="158"/>
+        <location filename="themestrings.h" line="159"/>
         <source>Default Rip quality:</source>
         <translation>デフォルトの取り込み品質 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="161"/>
+        <location filename="themestrings.h" line="162"/>
         <source>Description:</source>
         <translation>説明 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="166"/>
+        <location filename="themestrings.h" line="167"/>
         <source>Duration</source>
         <translation>長さ</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="168"/>
+        <location filename="themestrings.h" line="169"/>
         <source>Edit Album Art</source>
         <translation>アルバム画像の編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="171"/>
+        <location filename="themestrings.h" line="172"/>
         <source>Edit Metadata</source>
         <translation>メタデータ編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="172"/>
+        <location filename="themestrings.h" line="173"/>
         <source>Edit Order</source>
         <translation>並び順の編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="174"/>
+        <location filename="themestrings.h" line="175"/>
         <source>Edit meta data of your music</source>
         <translation>音楽のメタデータを編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="175"/>
+        <location filename="themestrings.h" line="176"/>
         <source>Edit meta data of your radio streams</source>
         <translation>ラジオストリームのメタデータを編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="176"/>
+        <location filename="themestrings.h" line="177"/>
         <source>Edit metadata of the radio stream</source>
         <translation>ラジオストリームのメタデータを編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="177"/>
+        <location filename="themestrings.h" line="178"/>
         <source>Edit your playlists with your favorite music</source>
         <translation>お気に入りの音楽からプレイリストを編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="178"/>
+        <location filename="themestrings.h" line="179"/>
         <source>Edit your smart playlist</source>
         <translation>スマートプレイリスト編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="181"/>
+        <location filename="themestrings.h" line="182"/>
         <source>Eject your</source>
         <translation>取り出し</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="189"/>
+        <location filename="themestrings.h" line="190"/>
         <source>Enter:</source>
         <translation>入力 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="190"/>
+        <location filename="themestrings.h" line="191"/>
         <source>Field:</source>
         <translation>項目 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="191"/>
+        <location filename="themestrings.h" line="192"/>
         <source>Fields:</source>
         <translation>項目 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="192"/>
+        <location filename="themestrings.h" line="193"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="193"/>
+        <location filename="themestrings.h" line="194"/>
         <source>File Already Exists</source>
         <translation>ファイルがすでに存在します</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="194"/>
+        <location filename="themestrings.h" line="195"/>
         <source>File Information</source>
         <translation>ファイル情報</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="195"/>
+        <location filename="themestrings.h" line="196"/>
         <source>File Storage location:</source>
         <translation>ファイルストレージの場所 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="198"/>
+        <location filename="themestrings.h" line="199"/>
         <source>Filename</source>
         <translation>ファイル名</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="201"/>
+        <location filename="themestrings.h" line="202"/>
         <source>Files</source>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="202"/>
+        <location filename="themestrings.h" line="203"/>
         <source>Find Location</source>
         <translation>場所を検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="203"/>
+        <location filename="themestrings.h" line="204"/>
         <source>Find your radio streams</source>
         <translation>ラジオストリームを検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="204"/>
+        <location filename="themestrings.h" line="205"/>
         <source>Finish</source>
         <translation>完了</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="205"/>
+        <location filename="themestrings.h" line="206"/>
         <source>First Value</source>
         <translation>最初の値</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="206"/>
+        <location filename="themestrings.h" line="207"/>
         <source>First Value:</source>
         <translation>最初の値 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="208"/>
+        <location filename="themestrings.h" line="209"/>
         <source>Fixed Date:</source>
         <translation>固定日付 :</translation>
     </message>
@@ -4765,599 +4769,604 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>最終再生の重み :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="268"/>
+        <location filename="themestrings.h" line="267"/>
+        <source>Lyrics View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="themestrings.h" line="269"/>
         <source>MUSIC PLAYER</source>
         <translation>音楽プレーヤー</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="269"/>
+        <location filename="themestrings.h" line="270"/>
         <source>MUSIC Playlist Editor</source>
         <translation>音楽プレイリスト編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="274"/>
+        <location filename="themestrings.h" line="275"/>
         <source>Matches: %1</source>
         <translation>一致 : %1</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="275"/>
+        <location filename="themestrings.h" line="276"/>
         <source>Media</source>
         <translation>メディア</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="279"/>
+        <location filename="themestrings.h" line="280"/>
         <source>Month:</source>
         <translation>月 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="282"/>
+        <location filename="themestrings.h" line="283"/>
         <source>Multi Artist:</source>
         <translation>複数のアーチスト :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="285"/>
+        <location filename="themestrings.h" line="286"/>
         <source>Music</source>
         <translation>音楽</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="286"/>
+        <location filename="themestrings.h" line="287"/>
         <source>Music Directory:</source>
         <translation>音楽ディレクトリー :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="287"/>
+        <location filename="themestrings.h" line="288"/>
         <source>Music Playlist</source>
         <translation>音楽プレイリスト</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="289"/>
+        <location filename="themestrings.h" line="290"/>
         <source>Music Stream Search</source>
         <translation>音楽ストリームの検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="290"/>
+        <location filename="themestrings.h" line="291"/>
         <source>Music Stream Settings</source>
         <translation>音楽ストリームの設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="291"/>
+        <location filename="themestrings.h" line="292"/>
         <source>Music Tools</source>
         <translation>音楽ツール</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="296"/>
+        <location filename="themestrings.h" line="297"/>
         <source>Mute:</source>
         <translation>消音 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="298"/>
+        <location filename="themestrings.h" line="299"/>
         <source>Navigation</source>
         <translation>ナビゲーション</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="299"/>
+        <location filename="themestrings.h" line="300"/>
         <source>New Field:</source>
         <translation>新しい項目 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="300"/>
+        <location filename="themestrings.h" line="301"/>
         <source>Next</source>
         <translation>次</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="302"/>
+        <location filename="themestrings.h" line="303"/>
         <source>Next Playing</source>
         <translation>次の再生</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="303"/>
+        <location filename="themestrings.h" line="304"/>
         <source>Next new file</source>
         <translation>次の新しいファイル</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="307"/>
+        <location filename="themestrings.h" line="308"/>
         <source>No Album Art Found!</source>
         <translation>アルバム画像が見つかりません！</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="308"/>
+        <location filename="themestrings.h" line="309"/>
         <source>No volume control configured</source>
         <translation>音量コントロールが設定されていません</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="310"/>
+        <location filename="themestrings.h" line="311"/>
         <source>Not muted</source>
         <translation>消音解除</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="311"/>
+        <location filename="themestrings.h" line="312"/>
         <source>Now Playing</source>
         <translation>再生中</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="312"/>
+        <location filename="themestrings.h" line="313"/>
         <source>Now Playing:</source>
         <translation>再生中 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="314"/>
+        <location filename="themestrings.h" line="315"/>
         <source>Now playing</source>
         <translation>再生中</translation>
     </message>
     <message numerus="yes">
-        <location filename="themestrings.h" line="315"/>
+        <location filename="themestrings.h" line="316"/>
         <source>Number of songs found: %n</source>
         <translation>
             <numerusform>見つかった曲数 :%n</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="318"/>
+        <location filename="themestrings.h" line="319"/>
         <source>Of The Following Conditions:</source>
         <translation>以下の条件に一致 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="322"/>
+        <location filename="themestrings.h" line="323"/>
         <source>Operator:</source>
         <translation>操作者 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="325"/>
+        <location filename="themestrings.h" line="326"/>
         <source>Order by Fields</source>
         <translation>並べ替えの項目</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="326"/>
+        <location filename="themestrings.h" line="327"/>
         <source>Order by:</source>
         <translation>並び順 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="327"/>
+        <location filename="themestrings.h" line="328"/>
         <source>Overall Progress</source>
         <translation>全体の進行状況</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="328"/>
+        <location filename="themestrings.h" line="329"/>
         <source>PAUSED</source>
         <translation>一時停止</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="329"/>
+        <location filename="themestrings.h" line="330"/>
         <source>PLAYING</source>
         <translation>再生中</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="331"/>
+        <location filename="themestrings.h" line="332"/>
         <source>Paused</source>
         <translation>一時停止</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="335"/>
+        <location filename="themestrings.h" line="336"/>
         <source>Play Internet Radio</source>
         <translation>インターネットラジオを再生</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="340"/>
+        <location filename="themestrings.h" line="341"/>
         <source>Play List Editor Gallery View</source>
         <translation>プレイリスト編集のギャラリー表示</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="341"/>
+        <location filename="themestrings.h" line="342"/>
         <source>Play List Editor Tree View</source>
         <translation>プレイリスト編集のツリー表示</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="345"/>
+        <location filename="themestrings.h" line="346"/>
         <source>Play count</source>
         <translation>再生回数</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="346"/>
+        <location filename="themestrings.h" line="347"/>
         <source>Play count Weight:</source>
         <translation>再生回数の重み :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="347"/>
+        <location filename="themestrings.h" line="348"/>
         <source>Play file</source>
         <translation>ファイルを再生</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="349"/>
+        <location filename="themestrings.h" line="350"/>
         <source>Play radio streams</source>
         <translation>ラジオストリームを再生</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="350"/>
+        <location filename="themestrings.h" line="351"/>
         <source>Playcount:</source>
         <translation>再生回数 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="352"/>
+        <location filename="themestrings.h" line="353"/>
         <source>Played track:</source>
         <translation>再生したトラック :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="355"/>
+        <location filename="themestrings.h" line="356"/>
         <source>Player</source>
         <translation>プレーヤー</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="357"/>
+        <location filename="themestrings.h" line="358"/>
         <source>Playing</source>
         <translation>再生中</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="359"/>
+        <location filename="themestrings.h" line="360"/>
         <source>Playlist Editor</source>
         <translation>プレイリスト編集</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="360"/>
+        <location filename="themestrings.h" line="361"/>
         <source>Playlist Editor Gallery</source>
         <translation>プレイリスト編集のギャラリー</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="361"/>
+        <location filename="themestrings.h" line="362"/>
         <source>Playlist Editor Tree</source>
         <translation>プレイリスト編集のツリー</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="362"/>
+        <location filename="themestrings.h" line="363"/>
         <source>Playlist Gallery</source>
         <translation>プレイリスト ギャラリー</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="364"/>
+        <location filename="themestrings.h" line="365"/>
         <source>Playlist Position:</source>
         <translation>プレイリストの場所 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="365"/>
+        <location filename="themestrings.h" line="366"/>
         <source>Playlist Tree</source>
         <translation>プレイリスト ツリー</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="369"/>
+        <location filename="themestrings.h" line="370"/>
         <source>Playlists</source>
         <translation>プレイリスト</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="370"/>
+        <location filename="themestrings.h" line="371"/>
         <source>Please Wait ...</source>
         <translation>お待ちください ...</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="372"/>
+        <location filename="themestrings.h" line="373"/>
         <source>Position</source>
         <translation>位置</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="374"/>
+        <location filename="themestrings.h" line="375"/>
         <source>Position: %position%</source>
         <translation>位置 : %position%</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="375"/>
+        <location filename="themestrings.h" line="376"/>
         <source>Post processing scripts:</source>
         <translation>事後処理スクリプト :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="377"/>
+        <location filename="themestrings.h" line="378"/>
         <source>Previous</source>
         <translation>前</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="378"/>
+        <location filename="themestrings.h" line="379"/>
         <source>Quality   :</source>
         <translation>品質 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="380"/>
+        <location filename="themestrings.h" line="381"/>
         <source>RADIO STREAM PLAYER</source>
         <translation>ラジオストリーム プレーヤー</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="386"/>
+        <location filename="themestrings.h" line="387"/>
         <source>Rating</source>
         <translation>評価</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="390"/>
+        <location filename="themestrings.h" line="391"/>
         <source>Ratings</source>
         <translation>評価</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="402"/>
+        <location filename="themestrings.h" line="403"/>
         <source>Result:</source>
         <translation>結果 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="403"/>
+        <location filename="themestrings.h" line="404"/>
         <source>Results of the smartplaylist criteria</source>
         <translation>スマートプレイリスト検索句の結果</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="404"/>
+        <location filename="themestrings.h" line="405"/>
         <source>Resume Mode:</source>
         <translation>再開モード :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="411"/>
+        <location filename="themestrings.h" line="412"/>
         <source>Rip quality:</source>
         <translation>取り込み品質 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="412"/>
+        <location filename="themestrings.h" line="413"/>
         <source>Ripper</source>
         <translation>CD からのデータ取り出し</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="415"/>
+        <location filename="themestrings.h" line="416"/>
         <source>Runtime:</source>
         <translation>再生時間 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="416"/>
+        <location filename="themestrings.h" line="417"/>
         <source>STOPPED</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="420"/>
+        <location filename="themestrings.h" line="421"/>
         <source>Scan Location</source>
         <translation>スキャンする場所</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="421"/>
+        <location filename="themestrings.h" line="422"/>
         <source>Scan current location</source>
         <translation>現在の場所をスキャン</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="423"/>
+        <location filename="themestrings.h" line="424"/>
         <source>Scan for new</source>
         <translation>新しいものをスキャン</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="424"/>
+        <location filename="themestrings.h" line="425"/>
         <source>Scan for new Music</source>
         <translation>新しい音楽をスキャン</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="427"/>
+        <location filename="themestrings.h" line="428"/>
         <source>Search Album</source>
         <translation>アルバムを検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="428"/>
+        <location filename="themestrings.h" line="429"/>
         <source>Search Artist</source>
         <translation>アーチストを検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="429"/>
+        <location filename="themestrings.h" line="430"/>
         <source>Search Category</source>
         <translation>カテゴリーを検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="430"/>
+        <location filename="themestrings.h" line="431"/>
         <source>Search Comp Artist</source>
         <translation>コラボアーチストを検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="431"/>
+        <location filename="themestrings.h" line="432"/>
         <source>Search First Value</source>
         <translation>最初の値を検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="433"/>
+        <location filename="themestrings.h" line="434"/>
         <source>Search Genre</source>
         <translation>ジャンルを検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="434"/>
+        <location filename="themestrings.h" line="435"/>
         <source>Search Music</source>
         <translation>音楽を検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="435"/>
+        <location filename="themestrings.h" line="436"/>
         <source>Search Order</source>
         <translation>その他を検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="437"/>
+        <location filename="themestrings.h" line="438"/>
         <source>Search Second Value</source>
         <translation>2番目の値を検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="438"/>
+        <location filename="themestrings.h" line="439"/>
         <source>Search Stream</source>
         <translation>ストリームを検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="439"/>
+        <location filename="themestrings.h" line="440"/>
         <source>Search String</source>
         <translation>文字列を検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="443"/>
+        <location filename="themestrings.h" line="444"/>
         <source>Search for Music Streams</source>
         <translation>音楽ストリームの検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="444"/>
+        <location filename="themestrings.h" line="445"/>
         <source>Search for Radio Streams</source>
         <translation>ラジオ局の検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="446"/>
+        <location filename="themestrings.h" line="447"/>
         <source>Search for:</source>
         <translation>検索 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="447"/>
+        <location filename="themestrings.h" line="448"/>
         <source>Search library for your favorite music</source>
         <translation>お気に入りの音楽用にライブラリーを検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="448"/>
+        <location filename="themestrings.h" line="449"/>
         <source>Search string</source>
         <translation>文字列を検索</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="449"/>
+        <location filename="themestrings.h" line="450"/>
         <source>Second Value</source>
         <translation>2番目の値</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="450"/>
+        <location filename="themestrings.h" line="451"/>
         <source>Second Value:</source>
         <translation>2番目の値 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="452"/>
+        <location filename="themestrings.h" line="453"/>
         <source>Select folder</source>
         <translation>フォルダーを選択</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="453"/>
+        <location filename="themestrings.h" line="454"/>
         <source>Select tracks to rip:</source>
         <translation>CDからデータを取り出すトラックを選択 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="454"/>
+        <location filename="themestrings.h" line="455"/>
         <source>Selected</source>
         <translation>選択済み</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="455"/>
+        <location filename="themestrings.h" line="456"/>
         <source>Selected Field:</source>
         <translation>選択した項目 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="456"/>
+        <location filename="themestrings.h" line="457"/>
         <source>Selected Image</source>
         <translation>選択した画像</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="457"/>
+        <location filename="themestrings.h" line="458"/>
         <source>Set</source>
         <translation>セット</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="458"/>
+        <location filename="themestrings.h" line="459"/>
         <source>Set the quality and then edit the artist,album,genre and year if needed. Then select the tracks below to rip.</source>
         <translation>品質を選択し、アーチスト、アルバム、ジャンル、必要なら年を編集します。その後、データを取り出すトラックを選択します。</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="459"/>
+        <location filename="themestrings.h" line="460"/>
         <source>Settings</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="460"/>
+        <location filename="themestrings.h" line="461"/>
         <source>Setup you music</source>
         <translation>音楽を設定します</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="461"/>
+        <location filename="themestrings.h" line="462"/>
         <source>Setup your music</source>
         <translation>音楽を設定します</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="475"/>
+        <location filename="themestrings.h" line="476"/>
         <source>Smart Playlist</source>
         <translation>スマートプレイリスト</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="478"/>
+        <location filename="themestrings.h" line="479"/>
         <source>Smart Playlist Results</source>
         <translation>スマートプレイリスト結果</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="479"/>
+        <location filename="themestrings.h" line="480"/>
         <source>Smartlist order fields:</source>
         <translation>スマートリスト並べ替え項目 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="480"/>
+        <location filename="themestrings.h" line="481"/>
         <source>Song title</source>
         <translation>曲のタイトル</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="483"/>
+        <location filename="themestrings.h" line="484"/>
         <source>Stopped</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="484"/>
+        <location filename="themestrings.h" line="485"/>
         <source>Stream Metadata</source>
         <translation>ストリーム メタデータ</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="485"/>
+        <location filename="themestrings.h" line="486"/>
         <source>Streaming Radio</source>
         <translation>ストリーミングラジオ</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="486"/>
+        <location filename="themestrings.h" line="487"/>
         <source>Switch Title</source>
         <translation>タイトルの切り替え</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="496"/>
+        <location filename="themestrings.h" line="497"/>
         <source>Track Info</source>
         <translation>トラック情報</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="499"/>
+        <location filename="themestrings.h" line="500"/>
         <source>Track NO</source>
         <translation>トラックNO</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="501"/>
+        <location filename="themestrings.h" line="502"/>
         <source>Track Number:</source>
         <translation>トラック番号 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="502"/>
+        <location filename="themestrings.h" line="503"/>
         <source>Track:</source>
         <translation>トラック :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="504"/>
+        <location filename="themestrings.h" line="505"/>
         <source>Tracks Lyrics View</source>
         <translation>トラックの歌詞表示</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="506"/>
+        <location filename="themestrings.h" line="507"/>
         <source>URL 1:</source>
         <translation>URL 1 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="507"/>
+        <location filename="themestrings.h" line="508"/>
         <source>URL 2:</source>
         <translation>URL 2 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="508"/>
+        <location filename="themestrings.h" line="509"/>
         <source>URL 3:</source>
         <translation>URL 3 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="509"/>
+        <location filename="themestrings.h" line="510"/>
         <source>URL 4:</source>
         <translation>URL 4 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="510"/>
+        <location filename="themestrings.h" line="511"/>
         <source>URL 5:</source>
         <translation>URL 5 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="535"/>
+        <location filename="themestrings.h" line="536"/>
         <source>storage location:</source>
         <translation>ストレージの場所 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="143"/>
+        <location filename="themestrings.h" line="144"/>
         <source>Country:</source>
         <translation>国 :</translation>
     </message>
@@ -5377,17 +5386,17 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>音楽を聴く</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="109"/>
+        <location filename="themestrings.h" line="110"/>
         <source>CD Ripper</source>
         <translation>CD からのデータ取り出し</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="272"/>
+        <location filename="themestrings.h" line="273"/>
         <source>Matches</source>
         <translation>一致</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="489"/>
+        <location filename="themestrings.h" line="490"/>
         <source>Syncronized:</source>
         <translation>同期済み :</translation>
     </message>
@@ -5397,7 +5406,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>メタデータのタグへの書き込みを許可 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="400"/>
+        <location filename="themestrings.h" line="401"/>
         <source>Reset Database</source>
         <translation>データベースのリセット</translation>
     </message>
@@ -5407,32 +5416,32 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>放送局 / チャンネル :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="511"/>
+        <location filename="themestrings.h" line="512"/>
         <source>URL Logo:</source>
         <translation>URL ロゴ :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="512"/>
+        <location filename="themestrings.h" line="513"/>
         <source>URL1:</source>
         <translation>URL 1 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="513"/>
+        <location filename="themestrings.h" line="514"/>
         <source>URL2:</source>
         <translation>URL 2 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="514"/>
+        <location filename="themestrings.h" line="515"/>
         <source>URL3:</source>
         <translation>URL 3 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="515"/>
+        <location filename="themestrings.h" line="516"/>
         <source>URL4:</source>
         <translation>URL 4 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="516"/>
+        <location filename="themestrings.h" line="517"/>
         <source>URL5:</source>
         <translation>URL 5 :</translation>
     </message>
@@ -5442,12 +5451,12 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>ジャンル・フォーマット :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="142"/>
+        <location filename="themestrings.h" line="143"/>
         <source>Country/Language:</source>
         <translation>国・言語 :</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="432"/>
+        <location filename="themestrings.h" line="433"/>
         <source>Search For Stream</source>
         <translation>ストリームの検索</translation>
     </message>
@@ -5457,57 +5466,57 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>%COUNTRY%/%LANGUAGE%</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="401"/>
+        <location filename="themestrings.h" line="402"/>
         <source>Reset music database</source>
         <translation>音楽データベースのリセット</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="292"/>
+        <location filename="themestrings.h" line="293"/>
         <source>Music folders and general options</source>
         <translation>音楽フォルダーと全般設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="293"/>
+        <location filename="themestrings.h" line="294"/>
         <source>Music playback options</source>
         <translation>音楽再生設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="113"/>
+        <location filename="themestrings.h" line="114"/>
         <source>CD copying options</source>
         <translation>CD データ取り出し設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="294"/>
+        <location filename="themestrings.h" line="295"/>
         <source>Music rating options</source>
         <translation>音楽評価設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="295"/>
+        <location filename="themestrings.h" line="296"/>
         <source>Music visualization options</source>
         <translation>音楽のビジュアライズ設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="342"/>
+        <location filename="themestrings.h" line="343"/>
         <source>Play Music</source>
         <translation>音楽を再生</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="348"/>
+        <location filename="themestrings.h" line="349"/>
         <source>Play music files</source>
         <translation>音楽ファイルを再生</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="343"/>
+        <location filename="themestrings.h" line="344"/>
         <source>Play Radio Streams</source>
         <translation>ラジオストリームを再生</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="344"/>
+        <location filename="themestrings.h" line="345"/>
         <source>Play an internet radio stream</source>
         <translation>インターネット ラジオ ストリームを再生</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="451"/>
+        <location filename="themestrings.h" line="452"/>
         <source>Select Music</source>
         <translation>音楽を選択</translation>
     </message>
@@ -5522,7 +5531,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>ファイルのインポート</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="122"/>
+        <location filename="themestrings.h" line="123"/>
         <source>Choose which tracks to play</source>
         <translation>再生するトラックを選択</translation>
     </message>
@@ -5532,7 +5541,7 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>新しいトラックをインポート</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="422"/>
+        <location filename="themestrings.h" line="423"/>
         <source>Scan for New Music</source>
         <translation>新しい音楽をスキャン</translation>
     </message>
@@ -5542,22 +5551,22 @@ Broadcaster: %1 - Channel: %2</source>
         <translation>新しい音楽を探す</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="180"/>
+        <location filename="themestrings.h" line="181"/>
         <source>Eject media</source>
         <translation>メディア取り出し</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="179"/>
+        <location filename="themestrings.h" line="180"/>
         <source>Eject a CD</source>
         <translation>CD の取り出し</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="288"/>
+        <location filename="themestrings.h" line="289"/>
         <source>Music Settings</source>
         <translation>音楽設定</translation>
     </message>
     <message>
-        <location filename="themestrings.h" line="135"/>
+        <location filename="themestrings.h" line="136"/>
         <source>Configure playback and CD ripping</source>
         <translation>再生と CD からのデータ取り出し設定</translation>
     </message>
